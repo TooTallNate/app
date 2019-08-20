@@ -1,5 +1,8 @@
 {
   "name": "farm-activity-entry",
   "version": 2,
-  "alias": ["farm-entry"]
+  "alias": ["farm-entry"],
+  "env": {
+    "NAV_BASE_URL": "@nav-base-url"
+  }
 }
