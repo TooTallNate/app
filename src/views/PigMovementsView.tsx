@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import ButtonSelector from "../components/ButtonSelector";
-import { Fragment, useState, FormEventHandler } from "react";
+import { Fragment, useState, useEffect, FormEventHandler } from "react";
+import service from "../service";
 
 const ANIMALS = {
   MKT_PIGS: {
@@ -117,6 +118,15 @@ interface FormInputs {
 
 const PigMovementsView: React.FC = () => {
   const [formInputs, setFormInputs] = useState<FormInputs>({});
+  const [jobs, setJobs] = useState<string[]>([]);
+
+  useEffect(() => {
+    service
+      .getJobList()
+      .then(setJobs)
+      .catch(() => setJobs([]));
+    return () => setJobs([]);
+  }, []);
 
   const {
     action,
@@ -131,11 +141,7 @@ const PigMovementsView: React.FC = () => {
     price
   } = formInputs;
 
-  const groups = [
-    { value: "gp-1", title: "Group 1" },
-    { value: "gp-2", title: "Group 2" },
-    { value: "gp-3", title: "Group 3" }
-  ];
+  const groups = jobs.map(job => ({ title: job, value: job }));
   const formConfig = action && config[action];
 
   const onSubmit: FormEventHandler = e => {
