@@ -15,6 +15,7 @@ module.exports = function(app) {
         timeout: 60000,
         freeSocketTimeout: 30000
       }),
+      logLevel: "debug",
       onProxyRes: proxyRes => {
         var key = "www-authenticate";
         proxyRes.headers[key] =
