@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import SelectAction from "../components/SelectAction";
-import SelectAnimal from "../components/SelectAnimal";
+import SelectActionScreen from "./PigMovementsView/SelectActionScreen";
+import SelectAnimalScreen from "./PigMovementsView/SelectAnimalScreen";
 import { Route, RouteComponentProps, Redirect } from "react-router-dom";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ const PigMovementsView: React.FC<RouteComponentProps> = ({
       <Route
         path={`${match.path}/action`}
         render={() => (
-          <SelectAction
+          <SelectActionScreen
             action={action}
             onChange={newAction => {
               setFormState({
@@ -37,7 +37,7 @@ const PigMovementsView: React.FC<RouteComponentProps> = ({
         path={`${match.path}/animal`}
         render={() =>
           action ? (
-            <SelectAnimal
+            <SelectAnimalScreen
               action={action}
               animal={animal}
               onChange={newAnimal => {
@@ -45,7 +45,6 @@ const PigMovementsView: React.FC<RouteComponentProps> = ({
                   ...state,
                   animal: newAnimal
                 }));
-                history.push(`${match.url}/animal`);
               }}
             />
           ) : (

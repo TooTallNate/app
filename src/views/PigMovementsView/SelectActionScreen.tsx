@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import Selector from "./Selector";
+import SelectScreen from "../../components/SelectScreen";
 
 const ITEMS = [
   { value: "CATTLE PURCHASE", title: "Purchase" },
@@ -16,16 +16,18 @@ interface SelectActionProps {
   onChange?: (value: string) => void;
 }
 
-const SelectAction: React.FC<SelectActionProps> = ({
+const SelectActionScreen: React.FC<SelectActionProps> = ({
   action,
   onChange = () => {}
 }) => {
   return (
-    <div>
-      <h1>Select Action</h1>
-      <Selector items={ITEMS} value={action} onChange={onChange} />
-    </div>
+    <SelectScreen
+      title="Select Action"
+      items={ITEMS}
+      value={action}
+      onChange={onChange}
+    />
   );
 };
 
-export default SelectAction;
+export default SelectActionScreen;
