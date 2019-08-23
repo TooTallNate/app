@@ -41,41 +41,36 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
   );
 };
 
-interface SelectActionProps {
+interface SelectorProps {
   items: { value: string; title: string }[];
   value?: string;
-  title: string;
   onChange?: (value: string) => void;
 }
 
-const SelectAction: React.FC<SelectActionProps> = ({
+const Selector: React.FC<SelectorProps> = ({
   items,
   value,
-  title,
   onChange = () => {}
 }) => {
   return (
-    <div>
-      <h1>{title}</h1>
-      <div
-        css={{
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: 4
-        }}
-      >
-        {items.map(item => (
-          <SelectorOption
-            selected={value}
-            value={item.value}
-            title={item.title}
-            key={value}
-            onClick={() => onChange(item.value)}
-          />
-        ))}
-      </div>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 4
+      }}
+    >
+      {items.map(item => (
+        <SelectorOption
+          selected={value}
+          value={item.value}
+          title={item.title}
+          key={item.value}
+          onClick={() => onChange(item.value)}
+        />
+      ))}
     </div>
   );
 };
 
-export default SelectAction;
+export default Selector;

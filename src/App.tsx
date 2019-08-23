@@ -1,6 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from "react-router-dom";
 import PigMovementsView from "./views/PigMovementsView";
 
 const App: React.FC = () => {
@@ -8,12 +13,13 @@ const App: React.FC = () => {
     <Router>
       <div
         css={{
-          margin: "0 16px"
+          margin: "0 16px",
+          height: "100vh"
         }}
       >
         <Switch>
           <Route path="/form" component={PigMovementsView} />
-          <Route path="*" render={() => <p>Not Found</p>} />
+          <Redirect to="/form" />
         </Switch>
       </div>
     </Router>

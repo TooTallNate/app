@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import SelectScreen from "../../components/SelectScreen";
+import Selector from "../../components/Selector";
+import { RouteComponentProps } from "react-router-dom";
 
 const ITEMS = [
   { value: "CATTLE PURCHASE", title: "Purchase" },
@@ -11,22 +12,33 @@ const ITEMS = [
   { value: "WEAN", title: "Wean" }
 ];
 
-interface SelectActionProps {
-  action?: string;
-  onChange?: (value: string) => void;
-}
-
-const SelectActionScreen: React.FC<SelectActionProps> = ({
-  action,
-  onChange = () => {}
+const SelectActionScreen: React.FC<RouteComponentProps> = ({
+  location,
+  history
 }) => {
+  const { action }: { action?: string } = location.state || {};
   return (
-    <SelectScreen
-      title="Select Action"
-      items={ITEMS}
-      value={action}
-      onChange={onChange}
-    />
+    <div>
+      <h1>Select Action</h1>
+      <Selector
+        items={ITEMS}
+        value={action}
+        onChange={newAction => {
+          const state = {
+            formPath: location.state.formPath,
+            action: newAction
+          };
+          history.replace({
+            ...location,
+            state
+          });
+          history.push({
+            pathname: `${state.formPath}/animal`,
+            state
+          });
+        }}
+      />
+    </div>
   );
 };
 
