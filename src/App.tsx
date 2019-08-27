@@ -6,7 +6,7 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-import PigMovementsView from "./views/PigMovementsView";
+import PigMovementsView from "./views/PigMovementsFlow/PigMovementsView";
 
 const App: React.FC = () => {
   return (

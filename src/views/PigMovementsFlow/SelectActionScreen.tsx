@@ -2,30 +2,29 @@
 import { jsx } from "@emotion/core";
 import Selector from "../../components/Selector";
 import { RouteComponentProps } from "react-router-dom";
-
-const ITEMS = [
-  { value: "CATTLE PURCHASE", title: "Purchase" },
-  { value: "GRADE OFF", title: "Grade Off" },
-  { value: "MORTALITY", title: "Mortality" },
-  { value: "MOVE", title: "Move" },
-  { value: "QTY ADJ", title: "Adjustment" },
-  { value: "WEAN", title: "Wean" }
-];
+import { ACTIONS, FormState } from "./config";
 
 const SelectActionScreen: React.FC<RouteComponentProps> = ({
   location,
   history
 }) => {
-  const { action }: { action?: string } = location.state || {};
+  const { action, formPath }: FormState = location.state || {};
   return (
-    <div>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+      }}
+    >
       <h1>Select Action</h1>
       <Selector
-        items={ITEMS}
+        items={Object.values(ACTIONS)}
         value={action}
         onChange={newAction => {
-          const state = {
+          const state: FormState = {
             formPath: location.state.formPath,
+            step: 0,
             action: newAction
           };
           history.replace({
@@ -33,7 +32,7 @@ const SelectActionScreen: React.FC<RouteComponentProps> = ({
             state
           });
           history.push({
-            pathname: `${state.formPath}/animal`,
+            pathname: `${state.formPath}/${ACTIONS[newAction].steps[0]}`,
             state
           });
         }}
