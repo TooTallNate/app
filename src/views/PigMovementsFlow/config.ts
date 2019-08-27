@@ -15,6 +15,8 @@ export interface FormState {
   step: number;
   action?: string;
   animal?: string;
+  fromAnimal?: string;
+  toAnimal?: string;
 }
 
 export const ANIMALS: {
@@ -68,7 +70,7 @@ export const ACTIONS: {
     value: "MOVE",
     title: "Move",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS],
-    steps: ["submit"]
+    steps: ["from-animal", "to-animal", "submit"]
   },
   QTY_ADJ: {
     value: "QTY_ADJ",

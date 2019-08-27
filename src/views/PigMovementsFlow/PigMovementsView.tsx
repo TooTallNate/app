@@ -3,6 +3,8 @@ import { jsx } from "@emotion/core";
 import { Route, Switch, RouteComponentProps, Redirect } from "react-router-dom";
 import SelectActionScreen from "./SelectActionScreen";
 import SelectAnimalScreen from "./SelectAnimalScreen";
+import SelectFromAnimalScreen from "./SelectFromAnimalScreen";
+import SelectToAnimalScreen from "./SelectToAnimalScreen";
 import SubmitScreen from "./SubmitScreen";
 import { FormState } from "./config";
 
@@ -31,6 +33,14 @@ const PigMovementsView: React.FC<RouteComponentProps> = ({
       <Switch>
         <Route path={`${match.url}/action`} component={SelectActionScreen} />
         <Route path={`${match.url}/animal`} component={SelectAnimalScreen} />
+        <Route
+          path={`${match.url}/from-animal`}
+          component={SelectFromAnimalScreen}
+        />
+        <Route
+          path={`${match.url}/to-animal`}
+          component={SelectToAnimalScreen}
+        />
         <Route path={`${match.url}/submit`} component={SubmitScreen} />
         <Redirect to={`${match.url}/action`} />
       </Switch>

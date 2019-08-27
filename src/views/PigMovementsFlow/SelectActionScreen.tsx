@@ -23,7 +23,7 @@ const SelectActionScreen: React.FC<RouteComponentProps> = ({
         value={action}
         onChange={newAction => {
           const state: FormState = {
-            formPath: location.state.formPath,
+            formPath: formPath,
             step: 0,
             action: newAction
           };
