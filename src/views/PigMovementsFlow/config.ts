@@ -15,8 +15,12 @@ export interface FormState {
   step: number;
   action?: string;
   animal?: string;
+  group?: string;
   fromAnimal?: string;
   toAnimal?: string;
+  quantity?: number;
+  weight?: number;
+  price?: number;
 }
 
 export const ANIMALS: {
@@ -52,36 +56,36 @@ export const ACTIONS: {
     value: "PURCHASE",
     title: "Purchase",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS, ANIMALS.SOWS],
-    steps: ["animal", "submit"]
+    steps: ["animal", "group", "quantity", "weight", "price", "submit"]
   },
   GRADE_OFF: {
     value: "GRADE_OFF",
     title: "Grade Off",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS],
-    steps: ["animal", "submit"]
+    steps: ["animal", "group", "quantity", "weight", "submit"]
   },
   MORTALITY: {
     value: "MORTALITY",
     title: "Mortality",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS, ANIMALS.SOWS],
-    steps: ["animal", "submit"]
+    steps: ["animal", "group", "quantity", "weight", "submit"]
   },
   MOVE: {
     value: "MOVE",
     title: "Move",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS],
-    steps: ["from-animal", "to-animal", "submit"]
+    steps: ["from-animal", "quantity", "to-animal", "weight", "submit"]
   },
   QTY_ADJ: {
     value: "QTY_ADJ",
     title: "Adjustment",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS, ANIMALS.SOWS],
-    steps: ["animal", "submit"]
+    steps: ["animal", "group", "quantity", "weight", "submit"]
   },
   WEAN: {
     value: "WEAN",
     title: "Wean",
     animals: [ANIMALS.MKT_PIGS, ANIMALS.GDU_PIGS],
-    steps: ["animal", "submit"]
+    steps: ["animal", "group", "quantity", "weight", "submit"]
   }
 };

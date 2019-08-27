@@ -5,8 +5,12 @@ import SelectActionScreen from "./SelectActionScreen";
 import SelectAnimalScreen from "./SelectAnimalScreen";
 import SelectFromAnimalScreen from "./SelectFromAnimalScreen";
 import SelectToAnimalScreen from "./SelectToAnimalScreen";
+import QuantityScreen from "./QuantityScreen";
+import WeightScreen from "./WeightScreen";
 import SubmitScreen from "./SubmitScreen";
 import { FormState } from "./config";
+import PriceScreen from "./PriceScreen";
+import GroupScreen from "./GroupScreen";
 
 const PigMovementsView: React.FC<RouteComponentProps> = ({
   match,
@@ -41,6 +45,10 @@ const PigMovementsView: React.FC<RouteComponentProps> = ({
           path={`${match.url}/to-animal`}
           component={SelectToAnimalScreen}
         />
+        <Route path={`${match.url}/group`} component={GroupScreen} />
+        <Route path={`${match.url}/quantity`} component={QuantityScreen} />
+        <Route path={`${match.url}/weight`} component={WeightScreen} />
+        <Route path={`${match.url}/price`} component={PriceScreen} />
         <Route path={`${match.url}/submit`} component={SubmitScreen} />
         <Redirect to={`${match.url}/action`} />
       </Switch>
