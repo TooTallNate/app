@@ -20,6 +20,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   const [textValue, setTextValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  // When the external value changes, update text value.
   useEffect(() => {
     const selected = items.find(item => item.value === value);
     if (selected) {
@@ -27,30 +28,33 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
     }
   }, [value, items]);
 
-  const matcher = new RegExp(textValue, "i");
-
+  // Filter items to the ones that match the text value.
+  const matcher = new RegExp(textValue);
   const matchedItems = items.filter(item =>
-    matcher.test(item.title || item.value)
+    matcher.test(item.title || item.value.toString())
   );
 
+  // When an child element focuses, ensure that the menu stays open.
   const onFocus = () => {
     if (blurTimeout.current) {
       clearTimeout(blurTimeout.current);
     }
     setIsOpen(true);
   };
+
+  // When a child element blurs, start to close the menu,
+  // but let it be cancelled if another element focuses.
   const onBlur = () => {
     if (blurTimeout.current) {
       clearTimeout(blurTimeout.current);
     }
     blurTimeout.current = setTimeout(() => {
       setIsOpen(false);
+      // When the entire input blurs, trigger the change event.
       const selected = items.find(
         ({ title, value }) => (title || value).toString() === textValue
       );
-      if (selected) {
-        onChange(selected.value);
-      }
+      onChange(selected ? selected.value : null);
     });
   };
 
@@ -93,6 +97,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
                 input.current.focus();
               }
               setIsOpen(false);
+              onChange(value);
             }}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -122,7 +127,10 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
           boxSizing: "border-box"
         }}
         value={textValue}
-        onChange={e => setTextValue(e.target.value)}
+        onChange={e => {
+          setTextValue(e.target.value);
+          setIsOpen(true);
+        }}
         onFocus={onFocus}
         onBlur={onBlur}
       />
