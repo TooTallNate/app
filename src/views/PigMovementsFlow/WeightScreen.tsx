@@ -25,9 +25,9 @@ const WeightScreen: React.FC<RouteComponentProps> = ({ location, history }) => {
         aria-labelledby="weight-label"
         onChange={e =>
           history.replace({
-            ...history.location,
+            ...location,
             state: {
-              ...history.location.state,
+              ...location.state,
               weight: e.target.value
             }
           })
@@ -39,7 +39,7 @@ const WeightScreen: React.FC<RouteComponentProps> = ({ location, history }) => {
           history.push({
             pathname: ACTIONS[action].steps[step + 1],
             state: {
-              ...history.location.state,
+              ...location.state,
               step: step + 1
             }
           });

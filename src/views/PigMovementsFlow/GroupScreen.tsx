@@ -24,14 +24,27 @@ const GroupScreen: React.FC<RouteComponentProps> = ({ location, history }) => {
       }}
     >
       <h1 id="weight-label">Enter Group No</h1>
-      <TypeaheadInput css={{ marginBottom: 16 }} items={GROUPS} />
+      <TypeaheadInput
+        css={{ marginBottom: 16 }}
+        items={GROUPS}
+        value={group}
+        onChange={newGroup => {
+          history.replace({
+            ...location,
+            state: {
+              ...location.state,
+              group: newGroup
+            }
+          });
+        }}
+      />
       <ButtonInput
         disabled={!group}
         onClick={() => {
           history.push({
             pathname: ACTIONS[action].steps[step + 1],
             state: {
-              ...history.location.state,
+              ...location.state,
               step: step + 1
             }
           });
