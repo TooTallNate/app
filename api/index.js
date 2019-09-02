@@ -9,27 +9,48 @@ const session = require("express-session");
 const uuid = require("uuid/v4");
 const FileStore = require("session-file-store")(session);
 
+// Make a request to a NAV server using NTLM.
+function ntlmRequest({ url, domainUsername, password, method }) {
+  const [domain, username] = domainUsername.split("\\");
+  return new Promise((resolve, reject) =>
+    request[method]({ url, domain, username, password }, (err, result) => {
+      if (err) reject(err);
+      else resolve(result);
+    })
+  );
+}
+
+// Configure passport to use NAV windows authentication and sessions.
 passport.use(
-  new LocalStrategy((domainUsername, password, done) => {
+  new LocalStrategy(async (username, password, done) => {
+    console.log(username);
     // Get the user info from NAV. If we succeed, the user is logged in.
-    const [domain, username] = domainUsername.split("\\");
-    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${domainUsername}'`;
-    console.log(url);
-    request.get({ url, username, password, domain }, (err, result) => {
-      if (err) return done(err);
-      done(null, { ...JSON.parse(result.body).value[0], password });
-    });
+    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'`;
+    try {
+      const { body } = await ntlmRequest({
+        url,
+        domainUsername: username,
+        password,
+        method: "get"
+      });
+      done(null, { ...JSON.parse(body).value[0], password });
+    } catch (error) {
+      done(error);
+    }
   })
 );
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
+// Log handled URLS.
 app.use((req, res, next) => {
   console.log(req.url);
   next();
 });
 
 app.use(bodyParser.json());
+
+// Initialize sessions and authentication
 app.use(
   session({
     genid: uuid,
@@ -42,6 +63,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Authentication routes.
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   res.status(204).end();
 });
@@ -54,19 +76,19 @@ app.post("/api/logout", (req, res, next) => {
 });
 
 // Proxy requests to the NAV server using the auth information in the session.
-app.use("/api", (req, res, next) => {
-  const [domain, username] = req.user.User_Name.split("\\");
-  request.get(
-    {
+app.use("/api", async (req, res, next) => {
+  const { User_Name: domainUsername, password } = req.user;
+  try {
+    const { body, statusCode } = await ntlmRequest({
+      domainUsername,
+      password,
       url: `${process.env.NAV_BASE_URL}/${req.url}`,
-      domain,
-      username,
-      password: req.user.password
-    },
-    (err, result) => {
-      res.status(result.statusCode).send(result.body);
-    }
-  );
+      method: "get"
+    });
+    res.status(statusCode).send(body);
+  } catch (error) {
+    next(error);
+  }
 });
 
 const port = process.env.PORT || 3001;
