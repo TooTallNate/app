@@ -3,6 +3,7 @@ import { render as renderRTL } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
 import App from "./App";
 
+// Useful render methods.
 interface RenderComponentOptions {
   routes?: RouteProps[];
   initialRoute?: string;
@@ -31,5 +32,22 @@ function renderView(initialRoute: string) {
   return utils;
 }
 
+// Mock the fetch API.
+const originalFetch = window.fetch;
+let fetchMock: jest.SpyInstance<
+  Promise<Response>,
+  [RequestInfo, (RequestInit | undefined)?]
+>;
+
+function mockFetch() {
+  fetchMock = jest
+    .spyOn(window, "fetch")
+    .mockRejectedValue(new Error("You forgot to mock fetch"));
+}
+
+function unmockFetch() {
+  window.fetch = originalFetch;
+}
+
 export * from "@testing-library/react";
-export { renderComponent, renderView };
+export { mockFetch, unmockFetch, fetchMock, renderComponent, renderView };

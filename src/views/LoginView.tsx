@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import TextInput from "../components/TextInput";
 import { useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { useAuth } from "../contexts/auth";
+import TextInput from "../components/TextInput";
 import ButtonInput from "../components/ButtonInput";
 import FormLabel from "../components/FormLabel";
-import service from "../service";
-import { RouteComponentProps } from "react-router";
 
 interface Credentials {
   username?: string;
@@ -13,6 +13,8 @@ interface Credentials {
 }
 
 const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
+  const { login } = useAuth();
+  const [isInvalid, setInvalid] = useState<boolean>(false);
   const [{ username, password }, setCredentials] = useState<Credentials>({
     username: "",
     password: ""
@@ -29,11 +31,19 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
         onSubmit={async e => {
           e.preventDefault();
           if (username && password) {
-            await service.login({ username, password });
-            history.push("/form/action");
+            try {
+              setInvalid(false);
+              login && (await login(username, password));
+              history.push("/form/action");
+            } catch {
+              setInvalid(true);
+            }
           }
         }}
       >
+        {isInvalid && (
+          <div css={{ color: "red" }}>Username or password are invalid.</div>
+        )}
         <FormLabel htmlFor="username">Username</FormLabel>
         <TextInput
           id="username"

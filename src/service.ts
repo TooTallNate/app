@@ -1,10 +1,20 @@
+const licenseMap = new Map<string, string>([
+  ["Full License", "full"],
+  ["Limited License", "limited"]
+]);
+
+interface LoginResult {
+  fullName: string;
+  license: string;
+}
+
 async function login({
   username,
   password
 }: {
   username: string;
   password: string;
-}): Promise<boolean> {
+}): Promise<LoginResult> {
   const url = `/api/login`;
   const response = await fetch(url, {
     method: "POST",
@@ -16,13 +26,19 @@ async function login({
       password
     })
   });
-  return response.status === 204;
+  if (response.status !== 200) {
+    throw new Error("Login failed");
+  }
+  const { Full_Name, License_Type } = await response.json();
+  return {
+    license: licenseMap.get(License_Type) || "unknown",
+    fullName: Full_Name
+  };
 }
 
 async function logout() {
   const url = `/api/logout`;
-  const response = await fetch(url, { method: "POST" });
-  return response.status === 204;
+  await fetch(url, { method: "POST" });
 }
 
 async function getJobList() {
