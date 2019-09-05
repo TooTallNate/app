@@ -12,6 +12,7 @@ const navMock = require("./navMock");
 
 // Make a request to a NAV server using NTLM.
 function ntlmRequest({ url, domainUsername, password, method }) {
+  console.log(`NAV PROXY ${url}`);
   if (process.env.MOCK_NAV === "true") {
     return navMock(url, { method });
   } else {
@@ -29,7 +30,7 @@ function ntlmRequest({ url, domainUsername, password, method }) {
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     // Get the user info from NAV. If we succeed, the user is logged in.
-    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}$select=Full_Name License_Type'`;
+    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
     try {
       const { body, statusCode } = await ntlmRequest({
         url,
@@ -37,8 +38,9 @@ passport.use(
         password,
         method: "get"
       });
-      if (statusCode === 200) {
-        done(null, { ...JSON.parse(body).value[0], password });
+      const parsedBody = body ? JSON.parse(body) : {};
+      if (statusCode === 200 && parsedBody.value.length === 1) {
+        done(null, { ...parsedBody.value[0], password });
       } else {
         const error = new Error("Login failed");
         error.status = 401;
@@ -54,7 +56,7 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // Log handled URLS.
 app.use((req, res, next) => {
-  console.log(req.url);
+  console.log(`REQUEST ${req.url}`);
   next();
 });
 
