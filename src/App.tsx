@@ -9,8 +9,10 @@ const App: React.FC = () => {
   return (
     <div
       css={{
-        margin: "0 16px",
-        height: "100vh"
+        margin: "auto",
+        padding: "0 16px",
+        height: "100vh",
+        maxWidth: 800
       }}
     >
       <AuthProvider>
