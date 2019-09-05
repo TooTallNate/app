@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from "react";
 import service from "../service";
 
-interface User {
+export interface User {
   fullName: string;
   license: string;
 }
@@ -15,8 +15,15 @@ interface AuthContextValue {
 
 const AuthContext = createContext<Partial<AuthContextValue>>({});
 
-const AuthProvider: React.FC = props => {
-  const [user, setUser] = useState<User | null>(null);
+interface AuthProviderProps {
+  user?: User;
+}
+
+const AuthProvider: React.FC<AuthProviderProps> = ({
+  user: initialUser, // For unit tests only.
+  children
+}) => {
+  const [user, setUser] = useState<User | null>(initialUser || null);
 
   const login = async (username: string, password: string) => {
     const result = await service.login({
@@ -39,8 +46,9 @@ const AuthProvider: React.FC = props => {
         login,
         logout
       }}
-      {...props}
-    />
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 

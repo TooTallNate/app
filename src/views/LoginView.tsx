@@ -34,7 +34,7 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
             try {
               setInvalid(false);
               login && (await login(username, password));
-              history.push("/form/action");
+              history.replace("/form/action");
             } catch {
               setInvalid(true);
             }

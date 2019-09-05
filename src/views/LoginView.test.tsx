@@ -1,10 +1,5 @@
 import faker from "faker";
-import { renderView, fetchMock } from "../test-utils";
-import { fireEvent } from "@testing-library/react";
-
-afterEach(() => {
-  fetchMock.mockReset();
-});
+import { renderView, fetchMock, fireEvent } from "../test-utils";
 
 const mockLoginFetch = (status: number, body?: object) => {
   fetchMock.mockImplementation(url => {
@@ -33,9 +28,9 @@ test("successfuly login", async () => {
   fireEvent.change(getByLabelText(/password/i), {
     target: { value: password }
   });
-  const form =
-    (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement();
-  fireEvent.submit(form);
+  fireEvent.submit(
+    (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
+  );
   await findByText(/select action/i);
 
   expect(fetchMock).toHaveBeenCalledWith("/api/login", {

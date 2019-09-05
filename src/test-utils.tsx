@@ -1,6 +1,8 @@
 import React from "react";
+import faker from "faker";
 import { render as renderRTL } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
+import { User, AuthProvider } from "./contexts/auth";
 import App from "./App";
 
 // Useful render methods.
@@ -9,7 +11,7 @@ interface RenderComponentOptions {
   initialRoute?: string;
 }
 
-function renderComponent(
+export function renderComponent(
   ui: React.ReactElement,
   { routes = [], initialRoute = "/" }: RenderComponentOptions = {}
 ) {
@@ -23,31 +25,47 @@ function renderComponent(
   );
 }
 
-function renderView(initialRoute: string) {
+interface RenderViewOptions {
+  user?: User;
+}
+
+export function renderView(
+  initialRoute: string,
+  { user }: RenderViewOptions = {}
+) {
   const utils = renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <App />
+      <AuthProvider user={user}>
+        <App />
+      </AuthProvider>
     </MemoryRouter>
   );
   return utils;
 }
 
+// Get test user.
+export function getUser({
+  fullName = faker.name.findName(),
+  license = "full"
+}: Partial<User> = {}): User {
+  return { fullName, license };
+}
+
 // Mock the fetch API.
 const originalFetch = window.fetch;
-let fetchMock: jest.SpyInstance<
+export let fetchMock: jest.SpyInstance<
   Promise<Response>,
   [RequestInfo, (RequestInit | undefined)?]
 >;
 
-function mockFetch() {
+export function mockFetch() {
   fetchMock = jest
     .spyOn(window, "fetch")
     .mockRejectedValue(new Error("You forgot to mock fetch"));
 }
 
-function unmockFetch() {
+export function unmockFetch() {
   window.fetch = originalFetch;
 }
 
 export * from "@testing-library/react";
-export { mockFetch, unmockFetch, fetchMock, renderComponent, renderView };
