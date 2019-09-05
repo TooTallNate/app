@@ -3,6 +3,12 @@ const licenseMap = new Map<string, string>([
   ["Limited License", "limited"]
 ]);
 
+class ServiceError extends Error {
+  constructor(response: Response) {
+    super(`${response.statusText} (${response.status})`);
+  }
+}
+
 interface UserResult {
   fullName: string;
   license: string;
@@ -26,7 +32,7 @@ async function login({
     })
   });
   if (response.status !== 200) {
-    throw new Error("Login failed");
+    throw new ServiceError(response);
   }
   const { Full_Name, License_Type } = await response.json();
   return {
@@ -48,13 +54,26 @@ async function refresh(): Promise<UserResult | null> {
   }
 }
 
+interface Job {
+  number: string;
+}
+interface JobListBody {
+  value: { No: string }[];
+}
+
 async function getJobList() {
   const url = `/api/Job_List?%24filter=Status%20eq%20'Open'&%24format=json&%24select=No`;
   const response = await fetch(url, {
     method: "GET"
   });
-  const data = (await response.json()) as { value: { No: string }[] };
-  return data.value.map(job => job.No);
+  if (response.status === 200) {
+    const data = (await response.json()) as JobListBody;
+    return data.value.map(job => ({
+      number: job.No
+    }));
+  } else {
+    throw new ServiceError(response);
+  }
 }
 
 export default { login, logout, refresh, getJobList };

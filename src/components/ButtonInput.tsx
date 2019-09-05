@@ -20,7 +20,10 @@ const ButtonInput: React.FC<ButtonProps> = ({
         padding: "12px",
         border: "1px solid #9ca1b1",
         borderRadius: 8,
-        backgroundColor: "inherit"
+        backgroundColor: "inherit",
+        display: "block",
+        width: "100%",
+        boxSizing: "border-box"
       }}
     >
       {children}

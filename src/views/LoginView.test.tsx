@@ -19,7 +19,9 @@ test("successful login", async () => {
   const username = `${faker.internet.domainWord}${faker.internet.userName}`;
   const password = faker.internet.password();
   mockLoginFetch(200, { Full_Name: fullName, License_Type: license });
-  const { getByLabelText, getByText, findByText } = renderView("/login");
+  const { getByLabelText, getByText, findByText } = renderView("/login", {
+    user: null
+  });
   await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
@@ -30,7 +32,7 @@ test("successful login", async () => {
   fireEvent.submit(
     (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
   );
-  await findByText(/select action/i);
+  await findByText(/pigs/i, { selector: "h1" });
   expect(fetchMock).toHaveBeenCalledWith("/api/login", {
     method: "POST",
     headers: {
@@ -47,7 +49,9 @@ test("invalid login", async () => {
   const username = `${faker.internet.domainWord}${faker.internet.userName}`;
   const password = faker.internet.password();
   mockLoginFetch(401);
-  const { getByLabelText, getByText, findByText } = renderView("/login");
+  const { getByLabelText, getByText, findByText } = renderView("/login", {
+    user: null
+  });
   await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }

@@ -3,6 +3,7 @@ import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
 import ButtonInput from "../components/ButtonInput";
 import { useAuth } from "../contexts/auth";
+import ViewTitle from "../components/ViewTitle";
 
 const AccountView: React.FC<RouteComponentProps> = () => {
   const { logout } = useAuth();
@@ -15,7 +16,7 @@ const AccountView: React.FC<RouteComponentProps> = () => {
         height: "100%"
       }}
     >
-      <h1>Account</h1>
+      <ViewTitle>Account</ViewTitle>
       <div css={{ flexGrow: 1 }} />
       <ButtonInput css={{ marginBottom: 32 }} onClick={logout}>
         Log Out

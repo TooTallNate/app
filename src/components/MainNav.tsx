@@ -25,8 +25,8 @@ const MainNav: React.FC = () => {
       <Link css={linkStyle} to="/account">
         ACCOUNT
       </Link>
-      <Link css={linkStyle} to="/form">
-        FORM
+      <Link css={linkStyle} to="/pigs">
+        PIGS
       </Link>
     </nav>
   );

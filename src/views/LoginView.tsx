@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/auth";
 import TextInput from "../components/TextInput";
 import ButtonInput from "../components/ButtonInput";
 import FormLabel from "../components/FormLabel";
+import ViewTitle from "../components/ViewTitle";
 
 interface Credentials {
   username?: string;
@@ -22,7 +23,7 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
 
   return (
     <div css={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <h1>Login</h1>
+      <ViewTitle>Login</ViewTitle>
       <form
         css={{
           display: "flex",

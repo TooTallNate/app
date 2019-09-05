@@ -15,7 +15,10 @@ const TextInput: React.FC<TextInputProps> = ({ ...props }) => {
         fontSize: "1rem",
         padding: "12px",
         border: "1px solid #9ca1b1",
-        borderRadius: 8
+        borderRadius: 8,
+        display: "block",
+        width: "100%",
+        boxSizing: "border-box"
       }}
     />
   );

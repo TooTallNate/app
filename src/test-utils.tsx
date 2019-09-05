@@ -26,16 +26,16 @@ export function renderComponent(
 }
 
 interface RenderViewOptions {
-  user?: User;
+  user?: User | null;
 }
 
 export function renderView(
   initialRoute: string,
-  { user }: RenderViewOptions = {}
+  { user = getUser() }: RenderViewOptions = {}
 ) {
   const utils = renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <AuthProvider user={user}>
+      <AuthProvider user={user || undefined}>
         <App />
       </AuthProvider>
     </MemoryRouter>

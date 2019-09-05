@@ -50,7 +50,7 @@ passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
       const user = await getUser(username, password);
-      done(null, { ...user, password });
+      done(null, { ...user, username, password });
     } catch (error) {
       done(error);
     }
@@ -104,10 +104,11 @@ app.post("/api/logout", (req, res, next) => {
 
 // Proxy requests to the NAV server using the auth information in the session.
 app.use("/api", async (req, res, next) => {
-  const { User_Name: domainUsername, password } = req.user;
+  const { username, password } = req.user;
+  console.log(req.user);
   try {
     const { body, statusCode } = await ntlmRequest({
-      domainUsername,
+      domainUsername: username,
       password,
       url: `${process.env.NAV_BASE_URL}/${req.url}`,
       method: "get"
