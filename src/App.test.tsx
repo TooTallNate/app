@@ -1,7 +1,7 @@
 import faker from "faker";
 import { renderView, fireEvent, fetchMock, getUser } from "./test-utils";
 
-test("renders LoginView by default", async () => {
+test("when logged out, renders LoginView by default", async () => {
   fetchMock.mockImplementation(async url => {
     if (url === "/api/refresh") {
       return new Response(undefined, { status: 403 });
@@ -9,9 +9,8 @@ test("renders LoginView by default", async () => {
       return new Response(undefined, { status: 404 });
     }
   });
-  const { getByText, findByText } = renderView("/");
+  const { findByText } = renderView("/");
   await findByText(/login/i);
-  getByText("Login");
 });
 
 test("logging in redirects to PigMovementsView", async () => {
@@ -44,9 +43,36 @@ test("logging in redirects to PigMovementsView", async () => {
   await findByText(/select action/i);
 });
 
+test("when logged in, renders PigMovementsView by default", async () => {
+  fetchMock.mockImplementation(async url => {
+    if (url === "/api/refresh") {
+      return new Response(
+        JSON.stringify({
+          Full_Name: faker.name.findName(),
+          License_Type: "Full License"
+        }),
+        { status: 200 }
+      );
+    } else {
+      return new Response(undefined, { status: 404 });
+    }
+  });
+  const { findByText } = renderView("/");
+  await findByText(/select action/i);
+});
+
 test("when logged in, form button navigates to PigMovementsView", async () => {
-  const { findByText } = renderView("/", {
+  const { findByText } = renderView("/account", {
     user: getUser()
   });
+  fireEvent.click(await findByText(/form/i));
   await findByText(/select action/i);
+});
+
+test("when logged in, account button navigates to AccountView", async () => {
+  const { findByText } = renderView("/form", {
+    user: getUser()
+  });
+  fireEvent.click(await findByText(/account/i));
+  await findByText(/account/i, { selector: "h1" });
 });
