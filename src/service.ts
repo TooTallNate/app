@@ -3,7 +3,7 @@ const licenseMap = new Map<string, string>([
   ["Limited License", "limited"]
 ]);
 
-interface LoginResult {
+interface UserResult {
   fullName: string;
   license: string;
 }
@@ -14,9 +14,8 @@ async function login({
 }: {
   username: string;
   password: string;
-}): Promise<LoginResult> {
-  const url = `/api/login`;
-  const response = await fetch(url, {
+}): Promise<UserResult> {
+  const response = await fetch(`/api/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -37,8 +36,16 @@ async function login({
 }
 
 async function logout() {
-  const url = `/api/logout`;
-  await fetch(url, { method: "POST" });
+  await fetch(`/api/logout`, { method: "POST" });
+}
+
+async function refresh(): Promise<UserResult | null> {
+  const response = await fetch(`/api/refresh`, { method: "GET" });
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
 }
 
 async function getJobList() {
@@ -50,4 +57,4 @@ async function getJobList() {
   return data.value.map(job => job.No);
 }
 
-export default { login, logout, getJobList };
+export default { login, logout, refresh, getJobList };

@@ -26,26 +26,31 @@ function ntlmRequest({ url, domainUsername, password, method }) {
   }
 }
 
+async function getUser(username, password) {
+  // Get the user info from NAV. If we succeed, the user is logged in.
+  const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
+  const { body, statusCode } = await ntlmRequest({
+    url,
+    domainUsername: username,
+    password,
+    method: "get"
+  });
+  const parsedBody = body ? JSON.parse(body) : {};
+  if (statusCode === 200 && parsedBody.value.length === 1) {
+    return { ...parsedBody.value[0] };
+  } else {
+    const error = new Error("Login failed");
+    error.status = 401;
+    throw error;
+  }
+}
+
 // Configure passport to use NAV windows authentication and sessions.
 passport.use(
   new LocalStrategy(async (username, password, done) => {
-    // Get the user info from NAV. If we succeed, the user is logged in.
-    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
     try {
-      const { body, statusCode } = await ntlmRequest({
-        url,
-        domainUsername: username,
-        password,
-        method: "get"
-      });
-      const parsedBody = body ? JSON.parse(body) : {};
-      if (statusCode === 200 && parsedBody.value.length === 1) {
-        done(null, { ...parsedBody.value[0], password });
-      } else {
-        const error = new Error("Login failed");
-        error.status = 401;
-        done(error);
-      }
+      const user = await getUser(username, password);
+      done(null, { ...user, password });
     } catch (error) {
       done(error);
     }
@@ -76,6 +81,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Authentication routes.
+app.get("/api/refresh", async (req, res) => {
+  if (req.user) {
+    const { Full_Name, License_Type } = req.user;
+    res.status(200).json({ Full_Name, License_Type });
+  } else {
+    res.status(403).end();
+  }
+});
+
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   const { Full_Name, License_Type } = req.user;
   res.status(200).json({ Full_Name, License_Type });

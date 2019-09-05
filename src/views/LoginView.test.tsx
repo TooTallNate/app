@@ -2,26 +2,25 @@ import faker from "faker";
 import { renderView, fetchMock, fireEvent } from "../test-utils";
 
 const mockLoginFetch = (status: number, body?: object) => {
-  fetchMock.mockImplementation(url => {
+  fetchMock.mockImplementation(async url => {
     if (url === "/api/login") {
-      return Promise.resolve(
-        new Response(body ? JSON.stringify(body) : undefined, { status })
-      );
+      return new Response(body ? JSON.stringify(body) : undefined, { status });
+    } else if (url === "/api/refresh") {
+      return new Response(undefined, { status: 403 });
     } else {
-      return Promise.reject(new Response(undefined, { status: 404 }));
+      return new Response(undefined, { status: 404 });
     }
   });
 };
 
-test("successfuly login", async () => {
+test("successful login", async () => {
   const fullName = faker.name.findName();
   const license = "Full License";
   const username = `${faker.internet.domainWord}${faker.internet.userName}`;
   const password = faker.internet.password();
-
   mockLoginFetch(200, { Full_Name: fullName, License_Type: license });
-
   const { getByLabelText, getByText, findByText } = renderView("/login");
+  await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
   });
@@ -32,7 +31,6 @@ test("successfuly login", async () => {
     (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
   );
   await findByText(/select action/i);
-
   expect(fetchMock).toHaveBeenCalledWith("/api/login", {
     method: "POST",
     headers: {
@@ -48,18 +46,17 @@ test("successfuly login", async () => {
 test("invalid login", async () => {
   const username = `${faker.internet.domainWord}${faker.internet.userName}`;
   const password = faker.internet.password();
-
   mockLoginFetch(401);
-
   const { getByLabelText, getByText, findByText } = renderView("/login");
+  await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
   });
   fireEvent.change(getByLabelText(/password/i), {
     target: { value: password }
   });
-  const form =
-    (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement();
-  fireEvent.submit(form);
+  fireEvent.submit(
+    (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
+  );
   await findByText(/Username or password are invalid/i);
 });
