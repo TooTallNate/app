@@ -37,8 +37,8 @@
     "uuid": "^3.3.3"
   },
   "scripts": {
-    "start:web": "react-scripts start",
-    "start:api": "nodemon --watch api api/index.js ",
+    "web:start": "react-scripts start",
+    "api:start": "nodemon --watch api api/index.js ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
