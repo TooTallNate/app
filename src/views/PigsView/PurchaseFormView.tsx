@@ -56,14 +56,33 @@ const PurchaseFormView: React.FC = () => {
         }}
         onSubmit={onSubmit}
       >
-        <FormLabel>Select Animal</FormLabel>
-        <Selector
-          items={config.animals}
-          value={formState.animal}
-          onChange={animal => {
-            setFormState({ ...formState, animal });
+        <fieldset
+          css={{
+            border: "none",
+            padding: 0,
+            margin: 0
           }}
-        />
+        >
+          <legend
+            css={{
+              padding: 0,
+              fontSize: "1rem",
+              fontWeight: "bold",
+              boxSizing: "border-box",
+              height: 44,
+              lineHeight: "44px"
+            }}
+          >
+            Select Animal
+          </legend>
+          <Selector
+            items={config.animals}
+            value={formState.animal}
+            onChange={animal => {
+              setFormState({ ...formState, animal });
+            }}
+          />
+        </fieldset>
         <FormLabel>Select Group</FormLabel>
         <TypeaheadInput
           items={groups}
