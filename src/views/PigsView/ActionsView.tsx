@@ -7,8 +7,14 @@ const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <div>
       <ViewTitle>Pigs</ViewTitle>
-      <h2>Select Action</h2>
-      <Link to={`${match.url}/purchase`}>Purchase</Link>
+      <div
+        css={{
+          padding: "0 16px"
+        }}
+      >
+        <h2>Select Action</h2>
+        <Link to={`${match.url}/purchase`}>Purchase</Link>
+      </div>
     </div>
   );
 };

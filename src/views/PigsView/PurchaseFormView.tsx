@@ -52,7 +52,7 @@ const PurchaseFormView: React.FC = () => {
           overflowX: "auto",
           minHeight: 0,
           flexGrow: 1,
-          paddingBottom: "calc(100vh - 289px)"
+          padding: "0 16px calc(100vh - 289px) 16px"
         }}
         onSubmit={onSubmit}
       >

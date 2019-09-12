@@ -45,7 +45,6 @@ const App: React.FC = () => {
     <div
       css={{
         margin: "auto",
-        padding: "0 16px",
         height: "100vh",
         maxWidth: 800,
         display: "flex",

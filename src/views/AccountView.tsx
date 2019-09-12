@@ -17,10 +17,23 @@ const AccountView: React.FC<RouteComponentProps> = () => {
       }}
     >
       <ViewTitle>Account</ViewTitle>
-      <div css={{ flexGrow: 1 }} />
-      <ButtonInput css={{ marginBottom: 32 }} onClick={logout}>
-        Log Out
-      </ButtonInput>
+      <div
+        css={{
+          flexGrow: 1,
+          padding: "0 16px",
+          display: "flex",
+          flexDirection: "column-reverse"
+        }}
+      >
+        <ButtonInput
+          css={{
+            marginBottom: 32
+          }}
+          onClick={logout}
+        >
+          Log Out
+        </ButtonInput>
+      </div>
     </div>
   );
 };

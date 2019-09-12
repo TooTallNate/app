@@ -22,12 +22,19 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
   });
 
   return (
-    <div css={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <div
+      css={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
       <ViewTitle>Login</ViewTitle>
       <form
         css={{
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          padding: "0 16px"
         }}
         onSubmit={async e => {
           e.preventDefault();
