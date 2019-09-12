@@ -1,10 +1,12 @@
 import "@testing-library/jest-dom/extend-expect";
-import { mockFetch, unmockFetch } from "./test-utils";
+import fetchMock from "fetch-mock";
 
 beforeEach(() => {
-  mockFetch();
+  fetchMock.catch((url, { method }) => {
+    throw new Error(`You forgot to mock fetch for '${method} ${url}'`);
+  });
 });
 
 afterEach(() => {
-  unmockFetch();
+  fetchMock.restore();
 });

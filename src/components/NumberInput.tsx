@@ -1,16 +1,15 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-interface TextInputProps {
-  value?: string;
-  onChange?: (value: string) => void;
+interface NumberInputProps {
+  value?: number;
+  onChange?: (value: number) => void;
   readOnly?: boolean;
-  type?: string;
-  id?: string;
   className?: string;
+  id?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({
+const NumberInput: React.FC<NumberInputProps> = ({
   value,
   onChange = () => {},
   ...props
@@ -19,7 +18,8 @@ const TextInput: React.FC<TextInputProps> = ({
     <input
       {...props}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={e => onChange(parseFloat(e.target.value))}
+      type="number"
       css={{
         fontSize: "1rem",
         padding: "12px",
@@ -33,4 +33,4 @@ const TextInput: React.FC<TextInputProps> = ({
   );
 };
 
-export default TextInput;
+export default NumberInput;

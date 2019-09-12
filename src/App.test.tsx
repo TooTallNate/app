@@ -1,13 +1,9 @@
-import { renderView, fireEvent, fetchMock, getUser } from "./test-utils";
+import { renderView, fireEvent } from "./test-utils";
+import fetchMock from "fetch-mock";
 
 test("when logged out, renders LoginView by default", async () => {
-  fetchMock.mockImplementation(async url => {
-    if (url === "/api/refresh") {
-      return new Response(undefined, { status: 403 });
-    } else {
-      return new Response(undefined, { status: 404 });
-    }
-  });
+  fetchMock.get("/api/refresh", 403);
+
   const { findByText } = renderView("/", {
     user: null
   });

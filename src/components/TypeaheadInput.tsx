@@ -9,6 +9,10 @@ interface TypeaheadInputProps {
   onChange?: (value: any) => void;
 }
 
+export interface TypeaheadInputElement {
+  focus: () => void;
+}
+
 const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   className,
   items,
@@ -16,7 +20,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   onChange = () => {}
 }) => {
   const blurTimeout = useRef<number>();
-  const input = useRef<HTMLInputElement>(null);
+  const inputElement = useRef<HTMLInputElement>(null);
   const [textValue, setTextValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -95,8 +99,8 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
             }}
             onClick={() => {
               setTextValue(title || value);
-              if (input.current) {
-                input.current.focus();
+              if (inputElement.current) {
+                inputElement.current.focus();
               }
               setIsOpen(false);
               onChange(value);
@@ -119,7 +123,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
       }}
     >
       <input
-        ref={input}
+        ref={inputElement}
         css={{
           fontSize: "1rem",
           padding: "12px",

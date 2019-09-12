@@ -6,7 +6,7 @@ import { ACTIONS } from "./config";
 import { useState, useEffect } from "react";
 import TypeaheadInput from "../../components/TypeaheadInput";
 import service from "../../service";
-import TextInput from "../../components/TextInput";
+import NumberInput from "../../components/NumberInput";
 import ButtonInput from "../../components/ButtonInput";
 import ViewTitle from "../../components/ViewTitle";
 
@@ -60,37 +60,32 @@ const PurchaseFormView: React.FC = () => {
         <Selector
           items={config.animals}
           value={formState.animal}
-          onChange={animal => setFormState({ ...formState, animal })}
+          onChange={animal => {
+            setFormState({ ...formState, animal });
+          }}
         />
         <FormLabel>Select Group</FormLabel>
         <TypeaheadInput
           items={groups}
           value={formState.group}
-          onChange={group => setFormState({ ...formState, group })}
+          onChange={group => {
+            setFormState({ ...formState, group });
+          }}
         />
         <FormLabel>Quantity</FormLabel>
-        <TextInput
-          type="number"
+        <NumberInput
           value={formState.quantity}
-          onChange={e =>
-            setFormState({ ...formState, quantity: parseInt(e.target.value) })
-          }
+          onChange={value => setFormState({ ...formState, quantity: value })}
         />
         <FormLabel>Weight</FormLabel>
-        <TextInput
-          type="number"
+        <NumberInput
           value={formState.weight}
-          onChange={e =>
-            setFormState({ ...formState, weight: parseFloat(e.target.value) })
-          }
+          onChange={weight => setFormState({ ...formState, weight })}
         />
         <FormLabel>Price</FormLabel>
-        <TextInput
-          type="number"
+        <NumberInput
           value={formState.price}
-          onChange={e =>
-            setFormState({ ...formState, price: parseFloat(e.target.value) })
-          }
+          onChange={price => setFormState({ ...formState, price })}
         />
         <ButtonInput
           type="submit"

@@ -51,21 +51,4 @@ export function getUser({
   return { fullName, license };
 }
 
-// Mock the fetch API.
-const originalFetch = window.fetch;
-export let fetchMock: jest.SpyInstance<
-  Promise<Response>,
-  [RequestInfo, (RequestInit | undefined)?]
->;
-
-export function mockFetch() {
-  fetchMock = jest
-    .spyOn(window, "fetch")
-    .mockRejectedValue(new Error("You forgot to mock fetch"));
-}
-
-export function unmockFetch() {
-  window.fetch = originalFetch;
-}
-
 export * from "@testing-library/react";

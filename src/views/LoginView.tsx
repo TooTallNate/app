@@ -3,10 +3,10 @@ import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useAuth } from "../contexts/auth";
-import TextInput from "../components/TextInput";
 import ButtonInput from "../components/ButtonInput";
 import FormLabel from "../components/FormLabel";
 import ViewTitle from "../components/ViewTitle";
+import TextInput from "../components/TextInput";
 
 interface Credentials {
   username?: string;
@@ -48,10 +48,8 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormLabel htmlFor="username">Username</FormLabel>
         <TextInput
           id="username"
-          type="text"
           value={username}
-          onChange={e => {
-            const username = e.target.value;
+          onChange={username => {
             setCredentials(old => ({ ...old, username }));
           }}
         />
@@ -60,8 +58,7 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
           id="password"
           type="password"
           value={password}
-          onChange={e => {
-            const password = e.target.value;
+          onChange={password => {
             setCredentials(old => ({ ...old, password }));
           }}
         />
