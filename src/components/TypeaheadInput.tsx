@@ -159,7 +159,8 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
             borderTop: "none",
             borderRadius: "0 0 8px 8px",
             maxHeight: 44 * 4,
-            overflowX: "auto"
+            overflowX: "auto",
+            zIndex: 1
           }}
         >
           {matchedItems.map(({ value, title }, i) => (
