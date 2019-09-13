@@ -28,7 +28,7 @@ const PurchaseFormView: React.FC = () => {
     const effect = async () => {
       try {
         const jobs = await service.getJobList();
-        setGroups(jobs.map(job => ({ value: job.number })));
+        setGroups(jobs.map(job => ({ value: job.number, title: job.number })));
       } catch (error) {
         console.log(error);
       }
@@ -83,8 +83,9 @@ const PurchaseFormView: React.FC = () => {
             }}
           />
         </fieldset>
-        <FormLabel>Select Group</FormLabel>
+        <FormLabel id="group-label">Select Group</FormLabel>
         <TypeaheadInput
+          labelId="group-label"
           items={groups}
           value={formState.group}
           onChange={group => {

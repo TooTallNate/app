@@ -21,3 +21,19 @@ test("shows options after typing", () => {
   expect(queryByText("Test-Three")).toBeTruthy();
   expect(queryByText("Four")).toBeFalsy();
 });
+
+test("passes id to the input element", () => {
+  const { container } = renderComponent(
+    <TypeaheadInput id="items-input" items={[]} />
+  );
+  const input = container.firstChild;
+  expect(input).toHaveAttribute("id", "items-input");
+});
+
+test("passes classNAme to the input element", () => {
+  const { container } = renderComponent(
+    <TypeaheadInput className="items-input" items={[]} />
+  );
+  const input = container.firstChild;
+  expect(input).toHaveClass("items-input");
+});
