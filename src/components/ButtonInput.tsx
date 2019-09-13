@@ -23,7 +23,11 @@ const ButtonInput: React.FC<ButtonProps> = ({
         backgroundColor: "inherit",
         display: "block",
         width: "100%",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        "&:focus": {
+          boxShadow: "0 0 0 1px #9ca1b1",
+          outline: "none"
+        }
       }}
     >
       {children}
