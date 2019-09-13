@@ -92,18 +92,21 @@ const PurchaseFormView: React.FC = () => {
             setFormState({ ...formState, group });
           }}
         />
-        <FormLabel>Quantity</FormLabel>
+        <FormLabel htmlFor="quantity">Quantity</FormLabel>
         <NumberInput
+          id="quantity"
           value={formState.quantity}
           onChange={value => setFormState({ ...formState, quantity: value })}
         />
-        <FormLabel>Weight</FormLabel>
+        <FormLabel htmlFor="weight">Weight</FormLabel>
         <NumberInput
+          id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
         />
-        <FormLabel>Price</FormLabel>
+        <FormLabel htmlFor="price">Price</FormLabel>
         <NumberInput
+          id="price"
           value={formState.price}
           onChange={price => setFormState({ ...formState, price })}
         />
