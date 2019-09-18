@@ -6,6 +6,7 @@ import {
   EntryType,
   Animal
 } from "./entities";
+import { useState, useEffect } from "react";
 
 class ServiceError extends Error {
   constructor(response: Response) {
@@ -72,11 +73,64 @@ async function getJobList(): Promise<Job[]> {
   }
 }
 
+interface ApiStatus {
+  loading: boolean;
+  error?: Error;
+}
+
+interface JobsResponse extends ApiStatus {
+  jobs: Job[];
+}
+
+function useJobs(): JobsResponse {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [{ loading, error }, setStatus] = useState<ApiStatus>({
+    loading: true
+  });
+
+  useEffect(() => {
+    let isCancelled = false;
+    async function effect() {
+      const response = await fetch(
+        `/api/Jobs?$filter=Status eq 'Open'&$format=json&$select=No`
+      );
+
+      // Set job list if request succeeds and is not cancelled.
+      if (response.status === 200) {
+        const json = (await response.json()) as JobListBody;
+        if (!isCancelled) {
+          setJobs(
+            json.value.map(job => ({
+              number: job.No
+            }))
+          );
+          setStatus({ loading: false });
+        }
+      }
+      // Set the error if request is not cancelled.
+      else {
+        if (!isCancelled) {
+          setStatus({ loading: false, error: new ServiceError(response) });
+        }
+      }
+    }
+    effect();
+
+    // Prevent data from loading if effect is cancelled.
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  return { jobs, loading, error };
+}
+
 interface ItemEntryBody {
   Journal_Template_Name: ItemTemplate;
   Journal_Batch_Name: ItemTemplate;
   Entry_Type: EntryType;
   Item_No: Animal;
+  Job_No: string;
 }
 
 async function postItemEntry(entry: ItemEntry) {
@@ -85,7 +139,8 @@ async function postItemEntry(entry: ItemEntry) {
     Journal_Template_Name: entry.template,
     Journal_Batch_Name: entry.template,
     Entry_Type: entry.entryType,
-    Item_No: entry.animal
+    Item_No: entry.animal,
+    Job_No: entry.job
   };
   const response = await fetch(url, {
     method: "POST",
@@ -101,4 +156,5 @@ async function postItemEntry(entry: ItemEntry) {
   }
 }
 
+export { useJobs };
 export default { login, logout, refresh, getJobList, postItemEntry };

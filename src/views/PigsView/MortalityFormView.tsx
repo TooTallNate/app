@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import FormLabel from "../../components/ui/FormLabel";
-import { useState, useEffect, FormEventHandler } from "react";
-import TypeaheadInput from "../../components/ui/TypeaheadInput";
+import { useState, FormEventHandler } from "react";
 import service from "../../service";
 import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
@@ -10,43 +9,32 @@ import ViewTitle from "../../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
 import { ItemTemplate, EntryType, Animal } from "../../entities";
 import AnimalSelector from "../../components/AnimalSelector";
+import JobSelector from "../../components/JobSelector";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   animal?: Animal;
-  group?: string;
+  job?: string;
   quantity?: number;
   weight?: number;
   price?: number;
 }
 
 const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
-  const [groups, setGroups] = useState<any[]>([]);
   const [formState, setFormState] = useState<FormState>({});
-
-  useEffect(() => {
-    const effect = async () => {
-      try {
-        const jobs = await service.getJobList();
-        setGroups(jobs.map(job => ({ value: job.number, title: job.number })));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    effect();
-  }, []);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
     try {
-      if (!formState.animal) {
+      if (!formState.animal || !formState.job) {
         return;
       }
       await service.postItemEntry({
         template: ItemTemplate.Mortality,
         entryType: EntryType.Negative,
-        animal: formState.animal
+        animal: formState.animal,
+        job: formState.job
       });
       history.push("/");
     } catch (e) {
@@ -80,13 +68,11 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             setFormState({ ...formState, animal });
           }}
         />
-        <FormLabel id="group-label">Select Group</FormLabel>
-        <TypeaheadInput
-          labelId="group-label"
-          items={groups}
-          value={formState.group}
+        <JobSelector
+          title="Select Job"
+          value={formState.job}
           onChange={group => {
-            setFormState({ ...formState, group });
+            setFormState({ ...formState, job: group });
           }}
         />
         <FormLabel htmlFor="quantity">Quantity</FormLabel>

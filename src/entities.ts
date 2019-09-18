@@ -31,4 +31,5 @@ export interface ItemEntry {
   template: ItemTemplate;
   entryType: EntryType;
   animal: Animal;
+  job: string;
 }
