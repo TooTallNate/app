@@ -17,7 +17,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   return (
     <input
       {...props}
-      value={value}
+      value={value || ""}
       onChange={e => onChange(parseFloat(e.target.value))}
       type="number"
       css={{

@@ -131,6 +131,8 @@ interface ItemEntryBody {
   Entry_Type: EntryType;
   Item_No: Animal;
   Job_No: string;
+  Quantity: number;
+  Weight: number;
 }
 
 async function postItemEntry(entry: ItemEntry) {
@@ -140,7 +142,9 @@ async function postItemEntry(entry: ItemEntry) {
     Journal_Batch_Name: entry.template,
     Entry_Type: entry.entryType,
     Item_No: entry.animal,
-    Job_No: entry.job
+    Job_No: entry.job,
+    Quantity: entry.quantity,
+    Weight: entry.weight
   };
   const response = await fetch(url, {
     method: "POST",

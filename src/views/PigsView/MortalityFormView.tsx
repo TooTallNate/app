@@ -27,14 +27,21 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
     try {
-      if (!formState.animal || !formState.job) {
+      if (
+        !formState.animal ||
+        !formState.job ||
+        !formState.quantity ||
+        !formState.weight
+      ) {
         return;
       }
       await service.postItemEntry({
         template: ItemTemplate.Mortality,
         entryType: EntryType.Negative,
         animal: formState.animal,
-        job: formState.job
+        job: formState.job,
+        quantity: formState.quantity,
+        weight: formState.weight
       });
       history.push("/");
     } catch (e) {

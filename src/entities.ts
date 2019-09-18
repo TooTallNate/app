@@ -32,4 +32,6 @@ export interface ItemEntry {
   entryType: EntryType;
   animal: Animal;
   job: string;
+  quantity: number;
+  weight: number;
 }
