@@ -11,17 +11,20 @@ const FileStore = require("session-file-store")(session);
 const navMock = require("./navMock");
 
 // Make a request to a NAV server using NTLM.
-function ntlmRequest({ url, domainUsername, password, method }) {
+function ntlmRequest({ url, domainUsername, password, method, body, headers }) {
   console.log(`NAV PROXY ${url}`);
   if (process.env.MOCK_NAV === "true") {
     return navMock(url, { method });
   } else {
     const [domain, username] = domainUsername.split("\\");
     return new Promise((resolve, reject) =>
-      request[method]({ url, domain, username, password }, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
-      })
+      request[method](
+        { url, domain, username, password, body, headers },
+        (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        }
+      )
     );
   }
 }
@@ -105,13 +108,18 @@ app.post("/api/logout", (req, res, next) => {
 // Proxy requests to the NAV server using the auth information in the session.
 app.use("/api", async (req, res, next) => {
   const { username, password } = req.user;
-  console.log(req.user);
   try {
     const { body, statusCode } = await ntlmRequest({
       domainUsername: username,
       password,
       url: `${process.env.NAV_BASE_URL}/${req.url}`,
-      method: "get"
+      method: req.method.toLowerCase(),
+      ...(["POST", "PUT", "PATCH"].includes(req.method) && {
+        body: JSON.stringify(req.body),
+        headers: {
+          "content-type": "application/json"
+        }
+      })
     });
     res.status(statusCode).send(body);
   } catch (error) {
