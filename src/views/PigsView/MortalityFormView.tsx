@@ -1,26 +1,27 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import FormLabel from "../../components/ui/FormLabel";
-import Selector from "../../components/ui/Selector";
-import { ACTIONS } from "./config";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEventHandler } from "react";
 import TypeaheadInput from "../../components/ui/TypeaheadInput";
 import service from "../../service";
 import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
 import ViewTitle from "../../components/ui/ViewTitle";
+import { RouteComponentProps } from "react-router";
+import { ItemTemplate, EntryType, Animal } from "../../entities";
+import AnimalSelector from "../../components/AnimalSelector";
 
-const config = ACTIONS.MORTALITY;
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
-  animal?: string;
+  animal?: Animal;
   group?: string;
   quantity?: number;
   weight?: number;
   price?: number;
 }
 
-const MortalityFormView: React.FC = () => {
+const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [groups, setGroups] = useState<any[]>([]);
   const [formState, setFormState] = useState<FormState>({});
 
@@ -36,7 +37,22 @@ const MortalityFormView: React.FC = () => {
     effect();
   }, []);
 
-  const onSubmit = () => {};
+  const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault();
+    try {
+      if (!formState.animal) {
+        return;
+      }
+      await service.postItemEntry({
+        template: ItemTemplate.Mortality,
+        entryType: EntryType.Negative,
+        animal: formState.animal
+      });
+      history.push("/");
+    } catch (e) {
+      alert(`failed to post, ${e}`);
+    }
+  };
 
   return (
     <div
@@ -56,33 +72,14 @@ const MortalityFormView: React.FC = () => {
         }}
         onSubmit={onSubmit}
       >
-        <fieldset
-          css={{
-            border: "none",
-            padding: 0,
-            margin: 0
+        <AnimalSelector
+          title="Select Animal"
+          animals={ANIMALS}
+          value={formState.animal}
+          onChange={animal => {
+            setFormState({ ...formState, animal });
           }}
-        >
-          <legend
-            css={{
-              padding: 0,
-              fontSize: "1rem",
-              fontWeight: "bold",
-              boxSizing: "border-box",
-              height: 44,
-              lineHeight: "44px"
-            }}
-          >
-            Select Animal
-          </legend>
-          <Selector
-            items={config.animals}
-            value={formState.animal}
-            onChange={animal => {
-              setFormState({ ...formState, animal });
-            }}
-          />
-        </fieldset>
+        />
         <FormLabel id="group-label">Select Group</FormLabel>
         <TypeaheadInput
           labelId="group-label"
