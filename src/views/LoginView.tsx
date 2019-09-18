@@ -3,10 +3,10 @@ import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useAuth } from "../contexts/auth";
-import ButtonInput from "../components/ButtonInput";
-import FormLabel from "../components/FormLabel";
-import ViewTitle from "../components/ViewTitle";
-import TextInput from "../components/TextInput";
+import ButtonInput from "../components/ui/ButtonInput";
+import FormLabel from "../components/ui/FormLabel";
+import ViewTitle from "../components/ui/ViewTitle";
+import TextInput from "../components/ui/TextInput";
 
 interface Credentials {
   username?: string;

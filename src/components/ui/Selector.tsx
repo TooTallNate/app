@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { Fragment, ChangeEventHandler } from "react";
+import { Fragment } from "react";
 
 interface SelectorOptionProps {
-  value: string;
-  selected?: string;
-  title?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
+  value: any;
+  title: string;
+  selected: any;
+  onChange?: (value: any) => void;
 }
 
 const SelectorOption: React.FC<SelectorOptionProps> = ({
@@ -53,9 +53,9 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
 };
 
 interface SelectorProps {
-  items: { value: string; title: string }[];
-  value?: string;
-  onChange?: (value: string) => void;
+  items: { value: any; title: string }[];
+  value?: any;
+  onChange?: (value: any) => void;
 }
 
 const Selector: React.FC<SelectorProps> = ({

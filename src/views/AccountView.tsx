@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
-import ButtonInput from "../components/ButtonInput";
+import ButtonInput from "../components/ui/ButtonInput";
 import { useAuth } from "../contexts/auth";
-import ViewTitle from "../components/ViewTitle";
+import ViewTitle from "../components/ui/ViewTitle";
 
 const AccountView: React.FC<RouteComponentProps> = () => {
   const { logout } = useAuth();

@@ -1,14 +1,14 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../../components/FormLabel";
-import Selector from "../../components/Selector";
+import FormLabel from "../../components/ui/FormLabel";
+import Selector from "../../components/ui/Selector";
 import { ACTIONS } from "./config";
 import { useState, useEffect } from "react";
-import TypeaheadInput from "../../components/TypeaheadInput";
+import TypeaheadInput from "../../components/ui/TypeaheadInput";
 import service from "../../service";
-import NumberInput from "../../components/NumberInput";
-import ButtonInput from "../../components/ButtonInput";
-import ViewTitle from "../../components/ViewTitle";
+import NumberInput from "../../components/ui/NumberInput";
+import ButtonInput from "../../components/ui/ButtonInput";
+import ViewTitle from "../../components/ui/ViewTitle";
 
 const config = ACTIONS.MOVE;
 

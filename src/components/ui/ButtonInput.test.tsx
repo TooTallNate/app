@@ -1,5 +1,5 @@
 import React from "react";
-import { renderComponent } from "../test-utils";
+import { renderComponent } from "../../test-utils";
 import ButtonInput from "./ButtonInput";
 import { fireEvent } from "@testing-library/react";
 

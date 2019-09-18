@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, InterpolationWithTheme } from "@emotion/core";
 import { RouteComponentProps, Link } from "react-router-dom";
-import ViewTitle from "../../components/ViewTitle";
+import ViewTitle from "../../components/ui/ViewTitle";
 
 const linkStyles: InterpolationWithTheme<HTMLAnchorElement> = {
   display: "block",

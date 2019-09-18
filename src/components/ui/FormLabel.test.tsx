@@ -1,5 +1,5 @@
 import React from "react";
-import { renderComponent } from "../test-utils";
+import { renderComponent } from "../../test-utils";
 import FormLabel from "./FormLabel";
 
 test("label text is set from children", () => {
