@@ -6,7 +6,7 @@ import {
   EntryType,
   Animal
 } from "./entities";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 class ServiceError extends Error {
   constructor(response: Response) {
@@ -135,30 +135,44 @@ interface ItemEntryBody {
   Weight: number;
 }
 
-async function postItemEntry(entry: ItemEntry) {
-  const url = `/api/ItemJournal`;
-  const body: ItemEntryBody = {
-    Journal_Template_Name: entry.template,
-    Journal_Batch_Name: entry.template,
-    Entry_Type: entry.entryType,
-    Item_No: entry.animal,
-    Job_No: entry.job,
-    Quantity: entry.quantity,
-    Weight: entry.weight
-  };
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json"
-    },
-    body: JSON.stringify(body)
+function useCreateItemEntry() {
+  const [{ loading, error }, setStatus] = useState<ApiStatus>({
+    loading: false
   });
-  if (response.status === 201) {
-    return;
-  } else {
-    throw new ServiceError(response);
-  }
+
+  const createItemEntry = useCallback(async (entry: ItemEntry) => {
+    setStatus({
+      loading: true
+    });
+    const response = await fetch(`/api/ItemJournal`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        Journal_Template_Name: entry.template,
+        Journal_Batch_Name: entry.template,
+        Entry_Type: entry.entryType,
+        Item_No: entry.animal,
+        Job_No: entry.job,
+        Quantity: entry.quantity,
+        Weight: entry.weight
+      })
+    });
+    if (response.status === 201) {
+      setStatus({
+        loading: false
+      });
+    } else {
+      setStatus({
+        loading: false,
+        error: new ServiceError(response)
+      });
+    }
+  }, []);
+
+  return { createItemEntry, loading, error };
 }
 
-export { useJobs };
-export default { login, logout, refresh, getJobList, postItemEntry };
+export { useJobs, useCreateItemEntry };
+export default { login, logout, refresh, getJobList };

@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import FormLabel from "../../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
-import service from "../../service";
+import { useCreateItemEntry } from "../../service";
 import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
 import ViewTitle from "../../components/ui/ViewTitle";
@@ -23,6 +23,7 @@ interface FormState {
 
 const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
+  const { createItemEntry, loading } = useCreateItemEntry();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
@@ -35,7 +36,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       ) {
         return;
       }
-      await service.postItemEntry({
+      await createItemEntry({
         template: ItemTemplate.Mortality,
         entryType: EntryType.Negative,
         animal: formState.animal,
@@ -101,6 +102,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           css={{
             marginTop: 44
           }}
+          disabled={loading}
         >
           Submit
         </ButtonInput>
