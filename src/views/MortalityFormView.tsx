@@ -1,26 +1,27 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../../components/ui/FormLabel";
+import FormLabel from "../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
-import { useCreateItemEntry } from "../../service";
-import NumberInput from "../../components/ui/NumberInput";
-import ButtonInput from "../../components/ui/ButtonInput";
-import ViewTitle from "../../components/ui/ViewTitle";
+import { useCreateItemEntry } from "../service";
+import NumberInput from "../components/ui/NumberInput";
+import ButtonInput from "../components/ui/ButtonInput";
+import ViewTitle from "../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../../entities";
-import AnimalSelector from "../../components/AnimalSelector";
-import JobSelector from "../../components/JobSelector";
+import { ItemTemplate, EntryType, Animal, ItemBatch } from "../entities";
+import AnimalSelector from "../components/AnimalSelector";
+import JobSelector from "../components/JobSelector";
 
-const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   animal?: Animal;
   job?: string;
   quantity?: number;
   weight?: number;
+  price?: number;
 }
 
-const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -36,8 +37,8 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         return;
       }
       await createItemEntry({
-        template: ItemTemplate.GradeOff,
-        batch: ItemBatch.Default,
+        template: ItemTemplate.Mortality,
+        batch: ItemBatch.Mortality,
         entryType: EntryType.Negative,
         animal: formState.animal,
         job: formState.job,
@@ -58,7 +59,7 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Pigs - Grade Off</ViewTitle>
+      <ViewTitle>Mortality</ViewTitle>
       <form
         css={{
           overflowX: "auto",
@@ -96,6 +97,8 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
         />
+        <FormLabel>Euthanized</FormLabel>
+        <div>TODO</div>
         <ButtonInput
           type="submit"
           css={{
@@ -110,4 +113,4 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default GradeOffFormView;
+export default MortalityFormView;

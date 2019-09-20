@@ -2,11 +2,11 @@ import React from "react";
 import { renderComponent, fireEvent } from "../test-utils";
 import MainNav from "./MainNav";
 
-test("Pigs button navigates to pigs", () => {
+test("Pig Activity button navigates to pigs", () => {
   const { getByText } = renderComponent(<MainNav />, {
     routes: [{ path: "/pigs", render: () => <div>Pigs View</div> }]
   });
-  fireEvent.click(getByText(/pigs/i));
+  fireEvent.click(getByText(/pigs activity/i));
   getByText(/pigs view/i);
 });
 

@@ -1,27 +1,26 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../../components/ui/FormLabel";
+import FormLabel from "../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
-import { useCreateItemEntry } from "../../service";
-import NumberInput from "../../components/ui/NumberInput";
-import ButtonInput from "../../components/ui/ButtonInput";
-import ViewTitle from "../../components/ui/ViewTitle";
+import { useCreateItemEntry } from "../service";
+import NumberInput from "../components/ui/NumberInput";
+import ButtonInput from "../components/ui/ButtonInput";
+import ViewTitle from "../components/ui/ViewTitle";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import { ItemTemplate, EntryType, Animal, ItemBatch } from "../../entities";
-import AnimalSelector from "../../components/AnimalSelector";
-import JobSelector from "../../components/JobSelector";
+import AnimalSelector from "../components/AnimalSelector";
+import JobSelector from "../components/JobSelector";
 
-const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
 interface FormState {
   animal?: Animal;
   job?: string;
   quantity?: number;
   weight?: number;
-  price?: number;
 }
 
-const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -37,12 +36,13 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         return;
       }
       await createItemEntry({
-        template: ItemTemplate.Mortality,
-        batch: ItemBatch.Mortality,
-        entryType: EntryType.Negative,
+        template: ItemTemplate.Adjustment,
+        batch: ItemBatch.Default,
+        entryType:
+          formState.quantity >= 0 ? EntryType.Positive : EntryType.Negative,
         animal: formState.animal,
         job: formState.job,
-        quantity: formState.quantity,
+        quantity: Math.abs(formState.quantity),
         weight: formState.weight
       });
       history.push("/");
@@ -59,7 +59,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Pigs - Mortality</ViewTitle>
+      <ViewTitle>Adjustment</ViewTitle>
       <form
         css={{
           overflowX: "auto",
@@ -97,8 +97,6 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
         />
-        <FormLabel>Euthanized</FormLabel>
-        <div>TODO</div>
         <ButtonInput
           type="submit"
           css={{
@@ -113,4 +111,4 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default MortalityFormView;
+export default AdjustmentFormView;

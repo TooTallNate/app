@@ -1,15 +1,15 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../../components/ui/FormLabel";
+import FormLabel from "../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
-import { useCreateItemEntry } from "../../service";
-import NumberInput from "../../components/ui/NumberInput";
-import ButtonInput from "../../components/ui/ButtonInput";
-import ViewTitle from "../../components/ui/ViewTitle";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../../entities";
+import { useCreateItemEntry } from "../service";
+import NumberInput from "../components/ui/NumberInput";
+import ButtonInput from "../components/ui/ButtonInput";
+import ViewTitle from "../components/ui/ViewTitle";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import AnimalSelector from "../../components/AnimalSelector";
-import JobSelector from "../../components/JobSelector";
+import AnimalSelector from "../components/AnimalSelector";
+import JobSelector from "../components/JobSelector";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
@@ -59,7 +59,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Pigs - Purchase</ViewTitle>
+      <ViewTitle>Purchase</ViewTitle>
       <form
         css={{
           overflowX: "auto",

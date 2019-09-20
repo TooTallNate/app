@@ -1,15 +1,18 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps, Route } from "react-router-dom";
-import ActionsView from "./PigsView/ActionsView";
-import PurchaseFormView from "./PigsView/PurchaseFormView";
-import WeanFormView from "./PigsView/WeanFormView";
-import MortalityFormView from "./PigsView/MortalityFormView";
-import MoveFormView from "./PigsView/MoveFormView";
-import GradeOffFormView from "./PigsView/GradeOffFormView";
-import AdjustmentFormView from "./PigsView/AdjustmentFormView";
+import ActionsView from "./ActionsView";
+import PurchaseFormView from "./PurchaseFormView";
+import WeanFormView from "./WeanFormView";
+import MortalityFormView from "./MortalityFormView";
+import MoveFormView from "./MoveFormView";
+import GradeOffFormView from "./GradeOffFormView";
+import AdjustmentFormView from "./AdjustmentFormView";
 
-const PigView: React.FC<RouteComponentProps> = ({ match, location }) => {
+const PigActivityView: React.FC<RouteComponentProps> = ({
+  match,
+  location
+}) => {
   return (
     <div
       css={{
@@ -29,4 +32,4 @@ const PigView: React.FC<RouteComponentProps> = ({ match, location }) => {
   );
 };
 
-export default PigView;
+export default PigActivityView;

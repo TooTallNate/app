@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, InterpolationWithTheme } from "@emotion/core";
 import { RouteComponentProps, Link } from "react-router-dom";
-import ViewTitle from "../../components/ui/ViewTitle";
+import ViewTitle from "../components/ui/ViewTitle";
 
 const linkStyles: InterpolationWithTheme<HTMLAnchorElement> = {
   display: "block",
@@ -11,7 +11,7 @@ const linkStyles: InterpolationWithTheme<HTMLAnchorElement> = {
 const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <div>
-      <ViewTitle>Pigs</ViewTitle>
+      <ViewTitle>Pig Activity</ViewTitle>
       <div
         css={{
           padding: "0 16px"

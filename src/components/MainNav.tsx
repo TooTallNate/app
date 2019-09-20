@@ -26,7 +26,7 @@ const MainNav: React.FC = () => {
         ACCOUNT
       </Link>
       <Link css={linkStyle} to="/pigs">
-        PIGS
+        PIG ACTIVITY
       </Link>
     </nav>
   );

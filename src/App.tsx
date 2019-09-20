@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { Fragment } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
-import PigsView from "./views/PigsView";
+import PigActivityView from "./views/PigActivityView";
 import AccountView from "./views/AccountView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
@@ -29,7 +29,7 @@ const AuthenticatedApp: React.FC = () => {
         }}
       >
         <Switch>
-          <Route path="/pigs" component={PigsView} />
+          <Route path="/pigs" component={PigActivityView} />
           <Route path="/account" component={AccountView} />
           <Redirect to="/pigs" />
         </Switch>
