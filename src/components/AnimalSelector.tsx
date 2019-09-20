@@ -20,10 +20,12 @@ interface AnimalSelectorProps {
   value?: Animal;
   onChange?: (animal: Animal) => void;
   className?: string;
+  name: string;
 }
 
 const AnimalSelector: React.FC<AnimalSelectorProps> = ({
   title,
+  name,
   animals,
   value,
   onChange,
@@ -51,6 +53,7 @@ const AnimalSelector: React.FC<AnimalSelectorProps> = ({
         {title}
       </legend>
       <Selector
+        name={name}
         items={animals.map(value => ({
           value,
           title: animalTitle(value)

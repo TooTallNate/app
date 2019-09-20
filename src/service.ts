@@ -4,7 +4,8 @@ import {
   ItemEntry,
   ItemTemplate,
   EntryType,
-  Animal
+  Animal,
+  ItemBatch
 } from "./entities";
 import { useState, useEffect, useCallback } from "react";
 
@@ -127,7 +128,7 @@ function useJobs(): JobsResponse {
 
 interface ItemEntryBody {
   Journal_Template_Name: ItemTemplate;
-  Journal_Batch_Name: ItemTemplate;
+  Journal_Batch_Name: ItemBatch;
   Entry_Type: EntryType;
   Item_No: Animal;
   Job_No: string;
@@ -151,7 +152,7 @@ function useCreateItemEntry() {
       },
       body: JSON.stringify({
         Journal_Template_Name: entry.template,
-        Journal_Batch_Name: entry.template,
+        Journal_Batch_Name: entry.batch,
         Entry_Type: entry.entryType,
         Item_No: entry.animal,
         Job_No: entry.job,

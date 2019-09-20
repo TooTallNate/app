@@ -7,7 +7,7 @@ import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
 import ViewTitle from "../../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
-import { ItemTemplate, EntryType, Animal } from "../../entities";
+import { ItemTemplate, EntryType, Animal, ItemBatch } from "../../entities";
 import AnimalSelector from "../../components/AnimalSelector";
 import JobSelector from "../../components/JobSelector";
 
@@ -38,6 +38,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       }
       await createItemEntry({
         template: ItemTemplate.Mortality,
+        batch: ItemBatch.Mortality,
         entryType: EntryType.Negative,
         animal: formState.animal,
         job: formState.job,
@@ -70,6 +71,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       >
         <AnimalSelector
           title="Select Animal"
+          name="animal"
           animals={ANIMALS}
           value={formState.animal}
           onChange={animal => {
@@ -79,8 +81,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         <JobSelector
           title="Select Job"
           value={formState.job}
-          onChange={group => {
-            setFormState({ ...formState, job: group });
+          onChange={job => {
+            setFormState({ ...formState, job });
           }}
         />
         <FormLabel htmlFor="quantity">Quantity</FormLabel>

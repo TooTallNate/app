@@ -1,44 +1,68 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import FormLabel from "../../components/ui/FormLabel";
-import Selector from "../../components/ui/Selector";
-import { ACTIONS } from "./config";
-import { useState, useEffect } from "react";
-import TypeaheadInput from "../../components/ui/TypeaheadInput";
-import service from "../../service";
+import { useState, FormEventHandler } from "react";
+import { useCreateItemEntry } from "../../service";
 import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
 import ViewTitle from "../../components/ui/ViewTitle";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../../entities";
+import { RouteComponentProps } from "react-router";
+import AnimalSelector from "../../components/AnimalSelector";
+import JobSelector from "../../components/JobSelector";
 
-const config = ACTIONS.MOVE;
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
-  fromAnimal?: string;
-  toAnimal?: string;
-  fromGroup?: string;
-  toGroup?: string;
+  fromAnimal?: Animal;
+  toAnimal?: Animal;
+  fromJob?: string;
+  toJob?: string;
   quantity?: number;
   weight?: number;
   price?: number;
 }
 
-const MoveFormView: React.FC = () => {
-  const [groups, setGroups] = useState<any[]>([]);
+const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
+  const { createItemEntry, loading } = useCreateItemEntry();
 
-  useEffect(() => {
-    const effect = async () => {
-      try {
-        const jobs = await service.getJobList();
-        setGroups(jobs.map(job => ({ value: job.number, title: job.number })));
-      } catch (error) {
-        console.log(error);
+  const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault();
+    try {
+      if (
+        !formState.toAnimal ||
+        !formState.toJob ||
+        !formState.fromAnimal ||
+        !formState.fromJob ||
+        !formState.quantity ||
+        !formState.weight
+      ) {
+        return;
       }
-    };
-    effect();
-  }, []);
-
-  const onSubmit = () => {};
+      await createItemEntry({
+        template: ItemTemplate.Move,
+        batch: ItemBatch.Move,
+        entryType: EntryType.Negative,
+        animal: formState.fromAnimal,
+        job: formState.fromJob,
+        quantity: formState.quantity,
+        weight: formState.weight
+      });
+      await createItemEntry({
+        template: ItemTemplate.Move,
+        batch: ItemBatch.Move,
+        entryType: EntryType.Positive,
+        animal: formState.toAnimal,
+        job: formState.toJob,
+        quantity: formState.quantity,
+        weight: formState.weight
+      });
+      history.push("/");
+    } catch (e) {
+      alert(`failed to post, ${e}`);
+    }
+  };
 
   return (
     <div
@@ -58,77 +82,38 @@ const MoveFormView: React.FC = () => {
         }}
         onSubmit={onSubmit}
       >
-        <fieldset
-          css={{
-            border: "none",
-            padding: 0,
-            margin: 0
-          }}
-        >
-          <legend
-            css={{
-              padding: 0,
-              fontSize: "1rem",
-              fontWeight: "bold",
-              boxSizing: "border-box",
-              height: 44,
-              lineHeight: "44px"
-            }}
-          >
-            Select From Animal
-          </legend>
-          <Selector
-            items={config.animals}
-            value={formState.fromAnimal}
-            onChange={fromAnimal => {
-              setFormState({ ...formState, fromAnimal });
-            }}
-          />
-        </fieldset>
-        <fieldset
-          css={{
-            border: "none",
-            padding: 0,
-            margin: 0
-          }}
-        >
-          <legend
-            css={{
-              padding: 0,
-              fontSize: "1rem",
-              fontWeight: "bold",
-              boxSizing: "border-box",
-              height: 44,
-              lineHeight: "44px"
-            }}
-          >
-            Select To Animal
-          </legend>
-          <Selector
-            items={config.animals}
-            value={formState.toAnimal}
-            onChange={toAnimal => {
-              setFormState({ ...formState, toAnimal });
-            }}
-          />
-        </fieldset>
-        <FormLabel id="from-group-label">Select From Group</FormLabel>
-        <TypeaheadInput
-          labelId="from-group-label"
-          items={groups}
-          value={formState.fromGroup}
-          onChange={fromGroup => {
-            setFormState({ ...formState, fromGroup });
+        <AnimalSelector
+          title="Select From Animal"
+          name="fromAnimal"
+          animals={ANIMALS}
+          value={formState.fromAnimal}
+          onChange={fromAnimal => {
+            setFormState({ ...formState, fromAnimal });
           }}
         />
-        <FormLabel id="to-group-label">Select To Group</FormLabel>
-        <TypeaheadInput
-          labelId="to-group-label"
-          items={groups}
-          value={formState.toGroup}
-          onChange={toGroup => {
-            setFormState({ ...formState, toGroup });
+        <AnimalSelector
+          title="Select To Animal"
+          name="toAnimal"
+          animals={ANIMALS}
+          value={formState.toAnimal}
+          onChange={toAnimal => {
+            setFormState({ ...formState, toAnimal });
           }}
+        />
+        <JobSelector
+          title="Select From Job"
+          value={formState.fromJob}
+          onChange={fromJob => {
+            setFormState({ ...formState, fromJob });
+          }}
+        />
+        <JobSelector
+          title="Select To Job"
+          value={formState.toJob}
+          onChange={toJob => {
+            setFormState({ ...formState, toJob });
+          }}
+        />
         />
         <FormLabel htmlFor="quantity">Quantity</FormLabel>
         <NumberInput
@@ -147,6 +132,7 @@ const MoveFormView: React.FC = () => {
           css={{
             marginTop: 44
           }}
+          disabled={loading}
         >
           Submit
         </ButtonInput>

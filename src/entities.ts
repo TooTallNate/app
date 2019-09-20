@@ -5,7 +5,18 @@ export enum Animal {
 }
 
 export enum ItemTemplate {
-  Mortality = "MORTALITY"
+  Mortality = "MORTALITY",
+  Adjustment = "QTY ADJ",
+  GradeOff = "GRADE OFF",
+  Move = "MOVE",
+  Wean = "WEAN"
+}
+
+export enum ItemBatch {
+  Mortality = "MORTALITY",
+  Move = "MOVE",
+  Wean = "WEAN PIGS",
+  Default = "DEFAULT"
 }
 
 export enum EntryType {
@@ -29,6 +40,7 @@ export interface Job {
 
 export interface ItemEntry {
   template: ItemTemplate;
+  batch: ItemBatch;
   entryType: EntryType;
   animal: Animal;
   job: string;

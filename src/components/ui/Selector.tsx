@@ -6,11 +6,13 @@ interface SelectorOptionProps {
   value: any;
   title: string;
   selected: any;
+  name: string;
   onChange?: (value: any) => void;
 }
 
 const SelectorOption: React.FC<SelectorOptionProps> = ({
   value,
+  name,
   title = value,
   selected,
   onChange = () => {}
@@ -19,7 +21,8 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
     <Fragment>
       <input
         key={`${value}-input`}
-        id={value}
+        id={`${name}-${value}`}
+        name={name}
         type="radio"
         css={{
           opacity: 0,
@@ -31,7 +34,7 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
       />
       <label
         key={`${value}-label`}
-        htmlFor={value}
+        htmlFor={`${name}-${value}`}
         css={{
           fontSize: "1rem",
           fontWeight: "bold",
@@ -54,6 +57,7 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
 
 interface SelectorProps {
   items: { value: any; title: string }[];
+  name: string;
   value?: any;
   onChange?: (value: any) => void;
 }
@@ -61,6 +65,7 @@ interface SelectorProps {
 const Selector: React.FC<SelectorProps> = ({
   items,
   value,
+  name,
   onChange = () => {}
 }) => {
   return (
@@ -78,6 +83,7 @@ const Selector: React.FC<SelectorProps> = ({
     >
       {items.map(item => (
         <SelectorOption
+          name={name}
           selected={value}
           value={item.value}
           title={item.title}

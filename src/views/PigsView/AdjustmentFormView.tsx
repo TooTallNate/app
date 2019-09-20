@@ -1,41 +1,55 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import FormLabel from "../../components/ui/FormLabel";
-import Selector from "../../components/ui/Selector";
-import { ACTIONS } from "./config";
-import { useState, useEffect } from "react";
-import TypeaheadInput from "../../components/ui/TypeaheadInput";
-import service from "../../service";
+import { useState, FormEventHandler } from "react";
+import { useCreateItemEntry } from "../../service";
 import NumberInput from "../../components/ui/NumberInput";
 import ButtonInput from "../../components/ui/ButtonInput";
 import ViewTitle from "../../components/ui/ViewTitle";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../../entities";
+import { RouteComponentProps } from "react-router";
+import AnimalSelector from "../../components/AnimalSelector";
+import JobSelector from "../../components/JobSelector";
 
-const config = ACTIONS.GRADE_OFF;
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
 interface FormState {
-  animal?: string;
-  group?: string;
+  animal?: Animal;
+  job?: string;
   quantity?: number;
   weight?: number;
 }
 
-const AdjustmentFormView: React.FC = () => {
-  const [groups, setGroups] = useState<any[]>([]);
+const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
+  const { createItemEntry, loading } = useCreateItemEntry();
 
-  useEffect(() => {
-    const effect = async () => {
-      try {
-        const jobs = await service.getJobList();
-        setGroups(jobs.map(job => ({ value: job.number, title: job.number })));
-      } catch (error) {
-        console.log(error);
+  const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault();
+    try {
+      if (
+        !formState.animal ||
+        !formState.job ||
+        !formState.quantity ||
+        !formState.weight
+      ) {
+        return;
       }
-    };
-    effect();
-  }, []);
-
-  const onSubmit = () => {};
+      await createItemEntry({
+        template: ItemTemplate.Adjustment,
+        batch: ItemBatch.Default,
+        entryType:
+          formState.quantity >= 0 ? EntryType.Positive : EntryType.Negative,
+        animal: formState.animal,
+        job: formState.job,
+        quantity: Math.abs(formState.quantity),
+        weight: formState.weight
+      });
+      history.push("/");
+    } catch (e) {
+      alert(`failed to post, ${e}`);
+    }
+  };
 
   return (
     <div
@@ -55,40 +69,20 @@ const AdjustmentFormView: React.FC = () => {
         }}
         onSubmit={onSubmit}
       >
-        <fieldset
-          css={{
-            border: "none",
-            padding: 0,
-            margin: 0
+        <AnimalSelector
+          title="Select Animal"
+          name="animal"
+          animals={ANIMALS}
+          value={formState.animal}
+          onChange={animal => {
+            setFormState({ ...formState, animal });
           }}
-        >
-          <legend
-            css={{
-              padding: 0,
-              fontSize: "1rem",
-              fontWeight: "bold",
-              boxSizing: "border-box",
-              height: 44,
-              lineHeight: "44px"
-            }}
-          >
-            Select Animal
-          </legend>
-          <Selector
-            items={config.animals}
-            value={formState.animal}
-            onChange={animal => {
-              setFormState({ ...formState, animal });
-            }}
-          />
-        </fieldset>
-        <FormLabel id="group-label">Select Group</FormLabel>
-        <TypeaheadInput
-          labelId="group-label"
-          items={groups}
-          value={formState.group}
-          onChange={group => {
-            setFormState({ ...formState, group });
+        />
+        <JobSelector
+          title="Select Job"
+          value={formState.job}
+          onChange={job => {
+            setFormState({ ...formState, job });
           }}
         />
         <FormLabel htmlFor="quantity">Quantity</FormLabel>
@@ -108,6 +102,7 @@ const AdjustmentFormView: React.FC = () => {
           css={{
             marginTop: 44
           }}
+          disabled={loading}
         >
           Submit
         </ButtonInput>
