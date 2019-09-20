@@ -16,7 +16,8 @@ const FormLabel: React.FC<FormLabelProps> = ({ children, ...props }) => {
         fontWeight: "bold",
         boxSizing: "border-box",
         height: 44,
-        lineHeight: "44px"
+        lineHeight: "44px",
+        display: "block"
       }}
     >
       {children}

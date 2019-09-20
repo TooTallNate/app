@@ -12,13 +12,15 @@ import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
+import StaticValue from "../components/ui/StaticValue";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   animal?: Animal;
   job?: Job;
-  quantity?: number;
+  naturalQuantity?: number;
+  euthanizedQuantity?: number;
   weight?: number;
   price?: number;
 }
@@ -34,7 +36,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       if (
         !formState.animal ||
         !formState.job ||
-        !formState.quantity ||
+        !formState.naturalQuantity ||
+        !formState.euthanizedQuantity ||
         !formState.weight ||
         !user
       ) {
@@ -46,7 +49,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         entryType: EntryType.Negative,
         animal: formState.animal,
         job: formState.job,
-        quantity: formState.quantity,
+        quantity: formState.naturalQuantity + formState.euthanizedQuantity,
         weight: formState.weight,
         document: getDocumentNumber("MORT", user.username)
       });
@@ -90,20 +93,84 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             setFormState({ ...formState, job });
           }}
         />
-        <FormLabel htmlFor="quantity">Quantity</FormLabel>
-        <NumberInput
-          id="quantity"
-          value={formState.quantity}
-          onChange={value => setFormState({ ...formState, quantity: value })}
-        />
+        <div
+          css={{
+            display: "flex"
+          }}
+        >
+          <div
+            css={{
+              flex: "1 1 0"
+            }}
+          >
+            <FormLabel htmlFor="naturalQuantity">Natural</FormLabel>
+            <NumberInput
+              id="naturalQuantity"
+              value={formState.naturalQuantity}
+              onChange={naturalQuantity =>
+                setFormState({ ...formState, naturalQuantity })
+              }
+            />
+          </div>
+          <div
+            css={{
+              flex: "0 0 auto",
+              width: 32,
+              textAlign: "center",
+              paddingTop: 45,
+              lineHeight: "44px"
+            }}
+          >
+            +
+          </div>
+          <div
+            css={{
+              flex: "1 1 0"
+            }}
+          >
+            <FormLabel htmlFor="naturalQuantity">Euthanized</FormLabel>
+            <NumberInput
+              id="euthanizedQuantity"
+              value={formState.euthanizedQuantity}
+              onChange={euthanizedQuantity =>
+                setFormState({ ...formState, euthanizedQuantity })
+              }
+            />
+          </div>
+          <div
+            css={{
+              flex: "0 0 auto",
+              width: 32,
+              textAlign: "center",
+              paddingTop: 45,
+              lineHeight: "44px"
+            }}
+          >
+            =
+          </div>
+          <div
+            css={{
+              width: 72
+            }}
+          >
+            <FormLabel htmlFor="quantity">Quantity</FormLabel>
+            <StaticValue
+              id="quantity"
+              css={{
+                paddingLeft: 0
+              }}
+            >
+              {(formState.euthanizedQuantity || 0) +
+                (formState.naturalQuantity || 0)}
+            </StaticValue>
+          </div>
+        </div>
         <FormLabel htmlFor="weight">Weight</FormLabel>
         <NumberInput
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
         />
-        <FormLabel>Euthanized</FormLabel>
-        <div>TODO</div>
         <ButtonInput
           type="submit"
           css={{
