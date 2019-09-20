@@ -6,24 +6,27 @@ import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { Animal, ItemTemplate, ItemBatch, EntryType, Job } from "../entities";
 import { RouteComponentProps } from "react-router";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
+import { getDocumentNumber } from "../utils";
+import { useAuth } from "../contexts/auth";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   fromAnimal?: Animal;
   toAnimal?: Animal;
-  fromJob?: string;
-  toJob?: string;
+  fromJob?: Job;
+  toJob?: Job;
   quantity?: number;
   weight?: number;
   price?: number;
 }
 
 const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
+  const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -36,7 +39,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.fromAnimal ||
         !formState.fromJob ||
         !formState.quantity ||
-        !formState.weight
+        !formState.weight ||
+        !user
       ) {
         return;
       }
@@ -47,7 +51,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         animal: formState.fromAnimal,
         job: formState.fromJob,
         quantity: formState.quantity,
-        weight: formState.weight
+        weight: formState.weight,
+        document: getDocumentNumber("MOVE", user.username)
       });
       await createItemEntry({
         template: ItemTemplate.Move,
@@ -56,7 +61,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         animal: formState.toAnimal,
         job: formState.toJob,
         quantity: formState.quantity,
-        weight: formState.weight
+        weight: formState.weight,
+        document: getDocumentNumber("MOVE", user.username)
       });
       history.push("/");
     } catch (e) {

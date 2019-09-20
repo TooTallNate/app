@@ -1,14 +1,10 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import service from "../service";
-
-export interface User {
-  fullName: string;
-  license: string;
-}
+import { User } from "../entities";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
-  user: User | null;
+  user?: User;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -24,7 +20,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
   children
 }) => {
   const [refreshed, setRefreshed] = useState<boolean>(!!initialUser);
-  const [user, setUser] = useState<User | null>(initialUser || null);
+  const [user, setUser] = useState<User | undefined>(initialUser || undefined);
 
   const login = async (username: string, password: string) => {
     const result = await service.login({
@@ -36,7 +32,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
 
   const logout = async () => {
     await service.logout();
-    setUser(null);
+    setUser(undefined);
   };
 
   // Refresh the user to see if they still have a session.

@@ -4,17 +4,18 @@ import TypeaheadInput from "./ui/TypeaheadInput";
 import FormLabel from "./ui/FormLabel";
 import { Fragment, useMemo } from "react";
 import { useJobs } from "../service";
+import { Job } from "../entities";
 
 interface JobSelectorProps {
   title: string;
-  value?: string;
-  onChange?: (job: string) => void;
+  value?: Job;
+  onChange?: (job?: Job) => void;
 }
 
 const JobSelector: React.FC<JobSelectorProps> = ({
   title,
   value,
-  onChange
+  onChange = () => {}
 }) => {
   const { jobs } = useJobs();
 
@@ -29,8 +30,10 @@ const JobSelector: React.FC<JobSelectorProps> = ({
       <TypeaheadInput
         labelId="group-label"
         items={items}
-        value={value}
-        onChange={onChange}
+        value={value ? value.number : undefined}
+        onChange={jobNumber => {
+          onChange(jobs.find(job => job.number === jobNumber));
+        }}
       />
     </Fragment>
   );

@@ -32,10 +32,12 @@ export enum License {
 export interface User {
   fullName: string;
   license: License;
+  username: string;
 }
 
 export interface Job {
   number: string;
+  location: string;
 }
 
 export interface ItemEntry {
@@ -43,7 +45,8 @@ export interface ItemEntry {
   batch: ItemBatch;
   entryType: EntryType;
   animal: Animal;
-  job: string;
+  job: Job;
   quantity: number;
   weight: number;
+  document: string;
 }

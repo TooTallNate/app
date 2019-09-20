@@ -86,16 +86,16 @@ app.use(passport.session());
 // Authentication routes.
 app.get("/api/refresh", async (req, res) => {
   if (req.user) {
-    const { Full_Name, License_Type } = req.user;
-    res.status(200).json({ Full_Name, License_Type });
+    const { Full_Name, License_Type, username: Username } = req.user;
+    res.status(200).json({ Full_Name, License_Type, Username });
   } else {
     res.status(403).end();
   }
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
-  const { Full_Name, License_Type } = req.user;
-  res.status(200).json({ Full_Name, License_Type });
+  const { Full_Name, License_Type, username: Username } = req.user;
+  res.status(200).json({ Full_Name, License_Type, Username });
 });
 
 app.post("/api/logout", (req, res, next) => {

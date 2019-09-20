@@ -27,7 +27,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
 }) => {
   const id = useState(() => idCounter++);
   const el = useRef<HTMLDivElement>(null);
-  const [textValue, setTextValue] = useState("");
+  const [textValue, setTextValue] = useState<string>();
   const [matchedItems, setMatchedItems] = useState<TypeaheadItem[]>([]);
   const [matchedIndex, setMatchedIndex] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -54,8 +54,8 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
       if (selected.value !== value) {
         onChange(selected.value);
       }
-    } else if (value !== null) {
-      onChange(null);
+    } else if (value !== undefined) {
+      onChange(undefined);
     }
   }, [items, onChange, textValue, value]);
 

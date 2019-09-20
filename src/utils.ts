@@ -1,0 +1,19 @@
+export function getDocumentNumber(form: string, username: string) {
+  const name = username.split("\\")[1].slice(0, 6);
+  const date = formatDate(new Date(), "YYMMDD");
+  return `${form}-${name}-${date}`;
+}
+
+export function formatDate(date: Date, format: string) {
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString();
+  const _date = date.getDate().toString();
+  return [
+    ["YYYY", year],
+    ["YY", year.slice(-2)],
+    ["MM", month.padStart(2, "0")],
+    ["M", month],
+    ["DD", _date.padStart(2, "0")],
+    ["D", _date]
+  ].reduce((str, [key, value]) => str.replace(key, value), format);
+}

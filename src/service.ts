@@ -1,13 +1,6 @@
-import {
-  User,
-  Job,
-  ItemEntry,
-  ItemTemplate,
-  EntryType,
-  Animal,
-  ItemBatch
-} from "./entities";
+import { User, Job, ItemEntry } from "./entities";
 import { useState, useEffect, useCallback } from "react";
+import { formatDate } from "./utils";
 
 class ServiceError extends Error {
   constructor(response: Response) {
@@ -35,10 +28,11 @@ async function login({
   if (response.status !== 200) {
     throw new ServiceError(response);
   }
-  const { Full_Name, License_Type } = await response.json();
+  const { Full_Name, License_Type, Username } = await response.json();
   return {
     license: License_Type,
-    fullName: Full_Name
+    fullName: Full_Name,
+    username: Username
   };
 }
 
@@ -49,29 +43,19 @@ async function logout() {
 async function refresh(): Promise<User | null> {
   const response = await fetch(`/api/refresh`, { method: "GET" });
   if (response.status === 200) {
-    return await response.json();
+    const { Full_Name, License_Type, Username } = await response.json();
+    return {
+      license: License_Type,
+      fullName: Full_Name,
+      username: Username
+    };
   } else {
     return null;
   }
 }
 
 interface JobListBody {
-  value: { No: string }[];
-}
-
-async function getJobList(): Promise<Job[]> {
-  const url = `/api/Jobs?$filter=Status eq 'Open'&$format=json&$select=No`;
-  const response = await fetch(url, {
-    method: "GET"
-  });
-  if (response.status === 200) {
-    const data = (await response.json()) as JobListBody;
-    return data.value.map(job => ({
-      number: job.No
-    }));
-  } else {
-    throw new ServiceError(response);
-  }
+  value: { No: string; Site: string }[];
 }
 
 interface ApiStatus {
@@ -92,8 +76,16 @@ function useJobs(): JobsResponse {
   useEffect(() => {
     let isCancelled = false;
     async function effect() {
+      const filter = [
+        "Status eq 'Open'",
+        [
+          "(Job_Posting_Group eq 'MKT PIGS'",
+          "Job_Posting_Group eq 'GDU'",
+          "Job_Posting_Group eq 'SOWS')"
+        ].join(" or ")
+      ].join(" and ");
       const response = await fetch(
-        `/api/Jobs?$filter=Status eq 'Open'&$format=json&$select=No`
+        `/api/Jobs?$filter=${filter}&$format=json&$select=No,Site&$orderby=No desc`
       );
 
       // Set job list if request succeeds and is not cancelled.
@@ -102,7 +94,8 @@ function useJobs(): JobsResponse {
         if (!isCancelled) {
           setJobs(
             json.value.map(job => ({
-              number: job.No
+              number: job.No,
+              location: job.Site
             }))
           );
           setStatus({ loading: false });
@@ -126,16 +119,6 @@ function useJobs(): JobsResponse {
   return { jobs, loading, error };
 }
 
-interface ItemEntryBody {
-  Journal_Template_Name: ItemTemplate;
-  Journal_Batch_Name: ItemBatch;
-  Entry_Type: EntryType;
-  Item_No: Animal;
-  Job_No: string;
-  Quantity: number;
-  Weight: number;
-}
-
 function useCreateItemEntry() {
   const [{ loading, error }, setStatus] = useState<ApiStatus>({
     loading: false
@@ -155,9 +138,13 @@ function useCreateItemEntry() {
         Journal_Batch_Name: entry.batch,
         Entry_Type: entry.entryType,
         Item_No: entry.animal,
-        Job_No: entry.job,
+        Job_No: entry.job.number,
         Quantity: entry.quantity,
-        Weight: entry.weight
+        Weight: entry.weight,
+        Location_Code: entry.job.location,
+        Document_No: entry.document,
+        Document_Date: formatDate(new Date(), "YYYY-MM-DD"),
+        Posting_Date: formatDate(new Date(), "YYYY-MM-DD")
       })
     });
     if (response.status === 201) {
@@ -176,4 +163,4 @@ function useCreateItemEntry() {
 }
 
 export { useJobs, useCreateItemEntry };
-export default { login, logout, refresh, getJobList };
+export default { login, logout, refresh };

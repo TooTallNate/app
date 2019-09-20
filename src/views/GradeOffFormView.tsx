@@ -7,20 +7,23 @@ import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { Animal, ItemTemplate, ItemBatch, EntryType, Job } from "../entities";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
+import { useAuth } from "../contexts/auth";
+import { getDocumentNumber } from "../utils";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
 interface FormState {
   animal?: Animal;
-  job?: string;
+  job?: Job;
   quantity?: number;
   weight?: number;
 }
 
 const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
+  const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -31,7 +34,8 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.animal ||
         !formState.job ||
         !formState.quantity ||
-        !formState.weight
+        !formState.weight ||
+        !user
       ) {
         return;
       }
@@ -42,7 +46,8 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         animal: formState.animal,
         job: formState.job,
         quantity: formState.quantity,
-        weight: formState.weight
+        weight: formState.weight,
+        document: getDocumentNumber("GRDOFF", user.username)
       });
       history.push("/");
     } catch (e) {

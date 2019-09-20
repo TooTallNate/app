@@ -2,8 +2,9 @@ import React from "react";
 import faker from "faker";
 import { render as renderRTL } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
-import { User, AuthProvider } from "./contexts/auth";
+import { AuthProvider } from "./contexts/auth";
 import App from "./App";
+import { User, License } from "./entities";
 
 // Useful render methods.
 interface RenderComponentOptions {
@@ -46,9 +47,10 @@ export function renderView(
 // Get test user.
 export function getUser({
   fullName = faker.name.findName(),
-  license = "full"
+  license = License.Full,
+  username = `${faker.internet.domainName()}\\${faker.internet.userName()}`
 }: Partial<User> = {}): User {
-  return { fullName, license };
+  return { fullName, license, username };
 }
 
 export * from "@testing-library/react";

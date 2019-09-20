@@ -6,21 +6,24 @@ import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { Animal, ItemTemplate, ItemBatch, EntryType, Job } from "../entities";
 import { RouteComponentProps } from "react-router";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
+import { getDocumentNumber } from "../utils";
+import { useAuth } from "../contexts/auth";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
 interface FormState {
   animal?: Animal;
-  job?: string;
+  job?: Job;
   quantity?: number;
   weight?: number;
 }
 
 const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
+  const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -31,7 +34,8 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.animal ||
         !formState.job ||
         !formState.quantity ||
-        !formState.weight
+        !formState.weight ||
+        !user
       ) {
         return;
       }
@@ -43,7 +47,8 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         animal: formState.animal,
         job: formState.job,
         quantity: Math.abs(formState.quantity),
-        weight: formState.weight
+        weight: formState.weight,
+        document: getDocumentNumber("ADJ", user.username)
       });
       history.push("/");
     } catch (e) {

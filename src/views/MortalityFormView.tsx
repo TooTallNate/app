@@ -7,21 +7,24 @@ import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
-import { ItemTemplate, EntryType, Animal, ItemBatch } from "../entities";
+import { ItemTemplate, EntryType, Animal, ItemBatch, Job } from "../entities";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
+import { getDocumentNumber } from "../utils";
+import { useAuth } from "../contexts/auth";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   animal?: Animal;
-  job?: string;
+  job?: Job;
   quantity?: number;
   weight?: number;
   price?: number;
 }
 
 const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
+  const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const { createItemEntry, loading } = useCreateItemEntry();
 
@@ -32,7 +35,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.animal ||
         !formState.job ||
         !formState.quantity ||
-        !formState.weight
+        !formState.weight ||
+        !user
       ) {
         return;
       }
@@ -43,7 +47,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         animal: formState.animal,
         job: formState.job,
         quantity: formState.quantity,
-        weight: formState.weight
+        weight: formState.weight,
+        document: getDocumentNumber("MORT", user.username)
       });
       history.push("/");
     } catch (e) {
