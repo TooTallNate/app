@@ -1,12 +1,10 @@
 /** @jsx jsx */
-import { jsx, InterpolationWithTheme } from "@emotion/core";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { jsx } from "@emotion/core";
+import { RouteComponentProps } from "react-router-dom";
 import ViewTitle from "../components/ui/ViewTitle";
-
-const linkStyles: InterpolationWithTheme<HTMLAnchorElement> = {
-  display: "block",
-  height: 44
-};
+import StackedNavigation, {
+  StackedNavigationItem
+} from "../components/ui/StackedNavigation";
 
 const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
@@ -18,24 +16,26 @@ const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
         }}
       >
         <h2>Select Action</h2>
-        <Link css={linkStyles} to={`${match.url}/wean`}>
-          Wean
-        </Link>
-        <Link css={linkStyles} to={`${match.url}/purchase`}>
-          Purchase
-        </Link>
-        <Link css={linkStyles} to={`${match.url}/mortality`}>
-          Mortality
-        </Link>
-        <Link css={linkStyles} to={`${match.url}/move`}>
-          Move
-        </Link>
-        <Link css={linkStyles} to={`${match.url}/grade-off`}>
-          Grade Off
-        </Link>
-        <Link css={linkStyles} to={`${match.url}/adjustment`}>
-          Adjustment
-        </Link>
+        <StackedNavigation>
+          <StackedNavigationItem to={`${match.url}/wean`}>
+            Wean
+          </StackedNavigationItem>
+          <StackedNavigationItem to={`${match.url}/mortality`}>
+            Mortality
+          </StackedNavigationItem>
+          <StackedNavigationItem to={`${match.url}/move`}>
+            Move
+          </StackedNavigationItem>
+          <StackedNavigationItem to={`${match.url}/grade-off`}>
+            Grade Off
+          </StackedNavigationItem>
+          <StackedNavigationItem to={`${match.url}/adjustment`}>
+            Adjustment
+          </StackedNavigationItem>
+          <StackedNavigationItem to={`${match.url}/purchase`}>
+            Purchase
+          </StackedNavigationItem>
+        </StackedNavigation>
       </div>
     </div>
   );
