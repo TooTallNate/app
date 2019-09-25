@@ -12,6 +12,7 @@ import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { useAuth } from "../contexts/auth";
 import { getDocumentNumber } from "../utils";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
@@ -20,6 +21,7 @@ interface FormState {
   job?: Job;
   quantity?: number;
   weight?: number;
+  comments?: string;
 }
 
 const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
@@ -47,7 +49,8 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: formState.job,
         quantity: formState.quantity,
         weight: formState.weight,
-        document: getDocumentNumber("GRDOFF", user.username)
+        document: getDocumentNumber("GRDOFF", user.username),
+        comments: formState.comments
       });
       history.push("/");
     } catch (e) {
@@ -100,6 +103,16 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
+        />
+        <FormLabel htmlFor="comments">Comments</FormLabel>
+        <MultilineTextInput
+          id="comments"
+          name="comments"
+          value={formState.comments}
+          maxLength={50}
+          onChange={e =>
+            setFormState({ ...formState, comments: e.target.value })
+          }
         />
         <ButtonInput
           type="submit"

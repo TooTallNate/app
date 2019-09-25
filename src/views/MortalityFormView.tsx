@@ -13,6 +13,7 @@ import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import StaticValue from "../components/ui/StaticValue";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
@@ -23,6 +24,7 @@ interface FormState {
   euthanizedQuantity?: number;
   weight?: number;
   price?: number;
+  comments?: string;
 }
 
 const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
@@ -51,7 +53,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: formState.job,
         quantity: formState.naturalQuantity + formState.euthanizedQuantity,
         weight: formState.weight,
-        document: getDocumentNumber("MORT", user.username)
+        document: getDocumentNumber("MORT", user.username),
+        comments: formState.comments
       });
       history.push("/");
     } catch (e) {
@@ -170,6 +173,16 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
+        />
+        <FormLabel htmlFor="comments">Comments</FormLabel>
+        <MultilineTextInput
+          id="comments"
+          name="comments"
+          value={formState.comments}
+          maxLength={50}
+          onChange={e =>
+            setFormState({ ...formState, comments: e.target.value })
+          }
         />
         <ButtonInput
           type="submit"

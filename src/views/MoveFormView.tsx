@@ -12,6 +12,7 @@ import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
@@ -23,6 +24,7 @@ interface FormState {
   quantity?: number;
   weight?: number;
   price?: number;
+  comments?: string;
 }
 
 const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
@@ -52,7 +54,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: formState.fromJob,
         quantity: formState.quantity,
         weight: formState.weight,
-        document: getDocumentNumber("MOVE", user.username)
+        document: getDocumentNumber("MOVE", user.username),
+        comments: formState.comments
       });
       await createItemEntry({
         template: ItemTemplate.Move,
@@ -62,7 +65,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: formState.toJob,
         quantity: formState.quantity,
         weight: formState.weight,
-        document: getDocumentNumber("MOVE", user.username)
+        document: getDocumentNumber("MOVE", user.username),
+        comments: formState.comments
       });
       history.push("/");
     } catch (e) {
@@ -131,6 +135,16 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
+        />
+        <FormLabel htmlFor="comments">Comments</FormLabel>
+        <MultilineTextInput
+          id="comments"
+          name="comments"
+          value={formState.comments}
+          maxLength={50}
+          onChange={e =>
+            setFormState({ ...formState, comments: e.target.value })
+          }
         />
         <ButtonInput
           type="submit"

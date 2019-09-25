@@ -12,6 +12,7 @@ import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
@@ -21,6 +22,7 @@ interface FormState {
   quantity?: number;
   weight?: number;
   price?: number;
+  comments?: string;
 }
 
 const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
@@ -48,7 +50,8 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: formState.job,
         quantity: formState.quantity,
         weight: formState.weight,
-        document: getDocumentNumber("WEAN", user.username)
+        document: getDocumentNumber("WEAN", user.username),
+        comments: formState.comments
       });
       history.push("/");
     } catch (e) {
@@ -107,6 +110,16 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="price"
           value={formState.price}
           onChange={price => setFormState({ ...formState, price })}
+        />
+        <FormLabel htmlFor="comments">Comments</FormLabel>
+        <MultilineTextInput
+          id="comments"
+          name="comments"
+          value={formState.comments}
+          maxLength={50}
+          onChange={e =>
+            setFormState({ ...formState, comments: e.target.value })
+          }
         />
         <ButtonInput
           type="submit"
