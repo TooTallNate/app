@@ -1,30 +1,49 @@
-import React from "react";
+import React, { createRef } from "react";
 import { renderComponent } from "../../test-utils";
 import ButtonInput from "./ButtonInput";
 import { fireEvent } from "@testing-library/react";
 
+function render(ui: React.ReactElement) {
+  const utils = renderComponent(ui);
+  return {
+    ...utils,
+    button: utils.container.firstChild as HTMLButtonElement
+  };
+}
+
 test("type defaults to button", () => {
-  const { container } = renderComponent(<ButtonInput />);
-  const button = container.firstChild as HTMLButtonElement;
+  const { button } = render(<ButtonInput />);
   expect(button.type).toEqual("button");
 });
 
 test("type is overridable by the type prop", () => {
-  const { container } = renderComponent(<ButtonInput type="submit" />);
-  const button = container.firstChild as HTMLButtonElement;
+  const { button } = render(<ButtonInput type="submit" />);
   expect(button.type).toEqual("submit");
 });
 
-test("button text is set from children", () => {
-  const { container } = renderComponent(<ButtonInput>Text</ButtonInput>);
-  const input = container.firstChild as HTMLInputElement;
-  expect(input).toHaveTextContent("Text");
+test("passes props to element", () => {
+  const { button } = render(
+    <ButtonInput id="button-id" className="button-class" disabled={true} />
+  );
+  expect(button).toHaveAttribute("id", "button-id");
+  expect(button).toHaveClass("button-class");
+  expect(button).toBeDisabled();
 });
 
-test("the onClick event on the button triggers the onClick component event", () => {
+test("button text is set from children", () => {
+  const { button } = render(<ButtonInput>Text</ButtonInput>);
+  expect(button).toHaveTextContent("Text");
+});
+
+test("click event on the button triggers the click event on the component", () => {
   const handler = jest.fn().mockImplementation(e => e.persist());
-  const { container } = renderComponent(<ButtonInput onClick={handler} />);
-  const input = container.firstChild as HTMLInputElement;
-  fireEvent.click(input);
+  const { button } = render(<ButtonInput onClick={handler} />);
+  fireEvent.click(button);
   expect(handler).toHaveBeenCalledTimes(1);
+});
+
+test("component ref is the button element", () => {
+  const ref = createRef<HTMLButtonElement>();
+  const { button } = render(<ButtonInput ref={ref} />);
+  expect(ref.current).toBe(button);
 });
