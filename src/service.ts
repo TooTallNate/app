@@ -145,6 +145,7 @@ function useCreateItemEntry() {
         Document_No: entry.document,
         Document_Date: formatDate(new Date(), "YYYY-MM-DD"),
         Posting_Date: formatDate(new Date(), "YYYY-MM-DD"),
+        Unit_Amount: entry.price,
         Description: entry.comments
       })
     });

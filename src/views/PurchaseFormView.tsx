@@ -38,6 +38,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.job ||
         !formState.quantity ||
         !formState.weight ||
+        !formState.price ||
         !user
       ) {
         return;
@@ -51,6 +52,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
         quantity: formState.quantity,
         weight: formState.weight,
         document: getDocumentNumber("PURCH", user.username),
+        price: formState.price,
         comments: formState.comments
       });
       history.push("/");

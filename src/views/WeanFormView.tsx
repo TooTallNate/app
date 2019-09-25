@@ -38,6 +38,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.job ||
         !formState.quantity ||
         !formState.weight ||
+        !formState.price ||
         !user
       ) {
         return;
@@ -51,6 +52,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
         quantity: formState.quantity,
         weight: formState.weight,
         document: getDocumentNumber("WEAN", user.username),
+        price: formState.price,
         comments: formState.comments
       });
       history.push("/");

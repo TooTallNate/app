@@ -21,6 +21,7 @@ interface FormState {
   job?: Job;
   quantity?: number;
   weight?: number;
+  price?: number;
   comments?: string;
 }
 
@@ -37,6 +38,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.job ||
         !formState.quantity ||
         !formState.weight ||
+        !formState.price ||
         !user
       ) {
         return;
@@ -51,6 +53,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         quantity: Math.abs(formState.quantity),
         weight: formState.weight,
         document: getDocumentNumber("ADJ", user.username),
+        price: formState.price,
         comments: formState.comments
       });
       history.push("/");
@@ -104,6 +107,12 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
+        />
+        <FormLabel htmlFor="price">Price</FormLabel>
+        <NumberInput
+          id="price"
+          value={formState.price}
+          onChange={price => setFormState({ ...formState, price })}
         />
         <FormLabel htmlFor="comments">Comments</FormLabel>
         <MultilineTextInput

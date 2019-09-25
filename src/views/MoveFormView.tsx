@@ -42,6 +42,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         !formState.fromJob ||
         !formState.quantity ||
         !formState.weight ||
+        !formState.price ||
         !user
       ) {
         return;
@@ -55,6 +56,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         quantity: formState.quantity,
         weight: formState.weight,
         document: getDocumentNumber("MOVE", user.username),
+        price: formState.price,
         comments: formState.comments
       });
       await createItemEntry({
@@ -66,6 +68,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         quantity: formState.quantity,
         weight: formState.weight,
         document: getDocumentNumber("MOVE", user.username),
+        price: formState.price,
         comments: formState.comments
       });
       history.push("/");
@@ -135,6 +138,12 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
           id="weight"
           value={formState.weight}
           onChange={weight => setFormState({ ...formState, weight })}
+        />
+        <FormLabel htmlFor="price">Price</FormLabel>
+        <NumberInput
+          id="price"
+          value={formState.price}
+          onChange={price => setFormState({ ...formState, price })}
         />
         <FormLabel htmlFor="comments">Comments</FormLabel>
         <MultilineTextInput

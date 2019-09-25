@@ -49,5 +49,6 @@ export interface ItemEntry {
   quantity: number;
   weight: number;
   document: string;
+  price: number;
   comments?: string;
 }
