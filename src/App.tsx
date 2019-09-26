@@ -45,7 +45,7 @@ const App: React.FC = () => {
     <div
       css={{
         margin: "auto",
-        height: "100vh",
+        height: "100%",
         maxWidth: 800,
         display: "flex",
         flexDirection: "column"
