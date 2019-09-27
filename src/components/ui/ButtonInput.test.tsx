@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
-import { renderComponent } from "../../test-utils";
+import { renderComponent, fireEvent } from "../../test-utils";
 import ButtonInput from "./ButtonInput";
-import { fireEvent } from "@testing-library/react";
 
 function render(ui: React.ReactElement) {
   const utils = renderComponent(ui);
