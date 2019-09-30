@@ -6,9 +6,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const uuid = require("uuid/v4");
-const FileStore = require("session-file-store")(session);
+const MongoStore = require("connect-mongo")(session);
 const navMock = require("./navMock");
+const mongoose = require("mongoose");
 
 // Make a request to a NAV server using NTLM.
 function ntlmRequest({ url, domainUsername, password, method, body, headers }) {
@@ -48,6 +48,16 @@ async function getUser(username, password) {
   }
 }
 
+// Connect to database.
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useFindAndModify: true,
+  useCreateIndex: true
+});
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose connected");
+});
+
 // Configure passport to use NAV windows authentication and sessions.
 passport.use(
   new LocalStrategy(async (username, password, done) => {
@@ -73,11 +83,13 @@ app.use(bodyParser.json());
 // Initialize sessions and authentication
 app.use(
   session({
-    genid: uuid,
-    store: new FileStore(),
-    secret: "keyboard cat",
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      touchAfter: 24 * 3600
+    })
   })
 );
 app.use(passport.initialize());

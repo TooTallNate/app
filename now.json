@@ -3,7 +3,9 @@
   "version": 2,
   "alias": ["farm-entry"],
   "env": {
-    "NAV_BASE_URL": "@nav-base-url"
+    "NAV_BASE_URL": "@nav-base-url",
+    "MONGO_URI": "@farm-activity-mongo-uri",
+    "SESSION_SECRET": "@farm-activity-session-secret"
   },
   "routes": [
      {
