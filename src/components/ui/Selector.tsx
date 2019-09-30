@@ -55,21 +55,35 @@ const SelectorOption: React.FC<SelectorOptionProps> = ({
   );
 };
 
-interface SelectorProps {
+interface SelectorProps
+  extends React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
   items: { value: any; title: string }[];
-  name: string;
+  name?: string;
   value?: any;
   onChange?: (value: any) => void;
 }
+
+let nameCounter = 0;
 
 const Selector: React.FC<SelectorProps> = ({
   items,
   value,
   name,
-  onChange = () => {}
+  onChange = () => {},
+  "aria-labelledby": ariaLabelledBy,
+  className,
+  id,
+  ...props
 }) => {
+  const _name = name || `selector-${nameCounter++}`;
+
   return (
     <div
+      {...{ className, id }}
+      aria-labelledby={ariaLabelledBy}
       css={{
         display: "flex",
         flexDirection: "column",
@@ -80,10 +94,12 @@ const Selector: React.FC<SelectorProps> = ({
           boxShadow: "0 0 0 1px #9ca1b1"
         }
       }}
+      role="group"
     >
       {items.map(item => (
         <SelectorOption
-          name={name}
+          {...props}
+          name={_name}
           selected={value}
           value={item.value}
           title={item.title}

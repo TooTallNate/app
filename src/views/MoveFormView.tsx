@@ -114,14 +114,12 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
           }}
         />
         <JobSelector
-          title="Select From Job"
           value={formState.fromJob}
           onChange={fromJob => {
             setFormState({ ...formState, fromJob });
           }}
         />
         <JobSelector
-          title="Select To Job"
           value={formState.toJob}
           onChange={toJob => {
             setFormState({ ...formState, toJob });

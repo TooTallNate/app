@@ -14,6 +14,7 @@ import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import StaticValue from "../components/ui/StaticValue";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
+import FormField from "../components/ui/FormField";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
@@ -82,22 +83,24 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <AnimalSelector
-          title="Select Animal"
-          name="animal"
-          animals={ANIMALS}
-          value={formState.animal}
-          onChange={animal => {
-            setFormState({ ...formState, animal });
-          }}
-        />
-        <JobSelector
-          title="Select Job"
-          value={formState.job}
-          onChange={job => {
-            setFormState({ ...formState, job });
-          }}
-        />
+        <FormField label="Animal" name="animal">
+          <AnimalSelector
+            name="animal"
+            animals={ANIMALS}
+            value={formState.animal}
+            onChange={animal => {
+              setFormState({ ...formState, animal });
+            }}
+          />
+        </FormField>
+        <FormField label="Job" name="job">
+          <JobSelector
+            value={formState.job}
+            onChange={job => {
+              setFormState({ ...formState, job });
+            }}
+          />
+        </FormField>
         <div
           css={{
             display: "flex"
@@ -108,14 +111,14 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               flex: "1 1 0"
             }}
           >
-            <FormLabel htmlFor="naturalQuantity">Natural</FormLabel>
-            <NumberInput
-              id="naturalQuantity"
-              value={formState.naturalQuantity}
-              onChange={naturalQuantity =>
-                setFormState({ ...formState, naturalQuantity })
-              }
-            />
+            <FormField name="natural-quantity" label="Natrual">
+              <NumberInput
+                value={formState.naturalQuantity}
+                onChange={naturalQuantity =>
+                  setFormState({ ...formState, naturalQuantity })
+                }
+              />
+            </FormField>
           </div>
           <div
             css={{
@@ -133,14 +136,14 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               flex: "1 1 0"
             }}
           >
-            <FormLabel htmlFor="naturalQuantity">Euthanized</FormLabel>
-            <NumberInput
-              id="euthanizedQuantity"
-              value={formState.euthanizedQuantity}
-              onChange={euthanizedQuantity =>
-                setFormState({ ...formState, euthanizedQuantity })
-              }
-            />
+            <FormField name="euthanized-quantity" label="Euthanized">
+              <NumberInput
+                value={formState.euthanizedQuantity}
+                onChange={euthanizedQuantity =>
+                  setFormState({ ...formState, euthanizedQuantity })
+                }
+              />
+            </FormField>
           </div>
           <div
             css={{
@@ -158,40 +161,40 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               width: 72
             }}
           >
-            <FormLabel htmlFor="quantity">Quantity</FormLabel>
-            <StaticValue
-              id="quantity"
-              css={{
-                paddingLeft: 0
-              }}
-            >
-              {(formState.euthanizedQuantity || 0) +
-                (formState.naturalQuantity || 0)}
-            </StaticValue>
+            <FormField name="quantity" label="Quantity">
+              <StaticValue
+                id="quantity"
+                css={{
+                  paddingLeft: 0
+                }}
+              >
+                {(formState.euthanizedQuantity || 0) +
+                  (formState.naturalQuantity || 0)}
+              </StaticValue>
+            </FormField>
           </div>
         </div>
-        <FormLabel htmlFor="weight">Weight</FormLabel>
-        <NumberInput
-          id="weight"
-          value={formState.weight}
-          onChange={weight => setFormState({ ...formState, weight })}
-        />
-        <FormLabel htmlFor="price">Price</FormLabel>
-        <NumberInput
-          id="price"
-          value={formState.price}
-          onChange={price => setFormState({ ...formState, price })}
-        />
-        <FormLabel htmlFor="comments">Comments</FormLabel>
-        <MultilineTextInput
-          id="comments"
-          name="comments"
-          value={formState.comments}
-          maxLength={50}
-          onChange={e =>
-            setFormState({ ...formState, comments: e.target.value })
-          }
-        />
+        <FormField name="weight" label="Weight">
+          <NumberInput
+            value={formState.weight}
+            onChange={weight => setFormState({ ...formState, weight })}
+          />
+        </FormField>
+        <FormField name="price" label="Price">
+          <NumberInput
+            value={formState.price}
+            onChange={price => setFormState({ ...formState, price })}
+          />
+        </FormField>
+        <FormField name="comments" label="Comments">
+          <MultilineTextInput
+            value={formState.comments}
+            maxLength={50}
+            onChange={e =>
+              setFormState({ ...formState, comments: e.target.value })
+            }
+          />
+        </FormField>
         <ButtonInput
           type="submit"
           css={{

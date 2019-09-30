@@ -7,13 +7,14 @@ interface TypeaheadItem {
   value: any;
 }
 
-interface TypeaheadInputProps {
+interface TypeaheadInputProps
+  extends React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
   items: TypeaheadItem[];
-  labelId: string;
-  value?: string;
+  value?: any;
   onChange?: (value: any) => void;
-  className?: string;
-  id?: string;
 }
 
 let idCounter = 0;
@@ -21,8 +22,12 @@ let idCounter = 0;
 const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   items,
   value,
-  labelId,
   onChange = () => {},
+  onFocus = () => {},
+  onBlur = () => {},
+  onKeyDown = () => {},
+  className,
+  "aria-labelledby": ariaLabelledBy,
   ...props
 }) => {
   const id = useState(() => idCounter++);
@@ -60,7 +65,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   }, [items, onChange, textValue, value]);
 
   // Cycle through the autocomplete options using the arrow keys.
-  const onKeyDown: KeyboardEventHandler = e => {
+  const _onKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
     switch (e.key) {
       case "ArrowUp": {
         e.preventDefault();
@@ -94,15 +99,16 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
         }
       }
     }
+    onKeyDown(e);
   };
 
   return (
     <div
       ref={el}
-      {...props}
       css={{
         position: "relative"
       }}
+      className={className}
       role="combobox"
       aria-haspopup="listbox"
       aria-owns={`items-${id}`}
@@ -110,6 +116,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
       aria-expanded={isOpen}
     >
       <input
+        {...props}
         autoComplete="off"
         css={{
           fontSize: "1rem",
@@ -128,13 +135,17 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
           setTextValue(e.target.value);
           setIsOpen(true);
         }}
-        onFocus={() => setIsOpen(true)}
+        onFocus={e => {
+          setIsOpen(true);
+          onFocus(e);
+        }}
         onBlur={e => {
           setIsOpen(false);
           setMatchedIndex(0);
+          onBlur(e);
         }}
-        onKeyDown={onKeyDown}
-        aria-labelledby={labelId}
+        onKeyDown={_onKeyDown}
+        aria-labelledby={ariaLabelledBy}
         aria-autocomplete="list"
         aria-controls="items"
         aria-activedescendant={
@@ -147,7 +158,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
         <ul
           id={`items-${id}`}
           role="listbox"
-          aria-labelledby={labelId}
+          aria-labelledby={ariaLabelledBy}
           css={{
             display: isOpen ? "block" : "none",
             position: "absolute",

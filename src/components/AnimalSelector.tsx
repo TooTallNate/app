@@ -14,54 +14,31 @@ function animalTitle(animal: Animal) {
   }
 }
 
-interface AnimalSelectorProps {
-  title: string;
+interface AnimalSelectorProps
+  extends Omit<
+    React.DetailedHTMLProps<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      HTMLInputElement
+    >,
+    "value" | "onChange"
+  > {
   animals: Animal[];
   value?: Animal;
   onChange?: (animal: Animal) => void;
-  className?: string;
-  name: string;
 }
 
 const AnimalSelector: React.FC<AnimalSelectorProps> = ({
-  title,
-  name,
   animals,
-  value,
-  onChange,
-  className
+  ...props
 }) => {
   return (
-    <fieldset
-      className={className}
-      css={{
-        border: "none",
-        padding: 0,
-        margin: 0
-      }}
-    >
-      <legend
-        css={{
-          padding: 0,
-          fontSize: "1rem",
-          fontWeight: "bold",
-          boxSizing: "border-box",
-          height: 44,
-          lineHeight: "44px"
-        }}
-      >
-        {title}
-      </legend>
-      <Selector
-        name={name}
-        items={animals.map(value => ({
-          value,
-          title: animalTitle(value)
-        }))}
-        value={value}
-        onChange={onChange}
-      />
-    </fieldset>
+    <Selector
+      {...props}
+      items={animals.map(value => ({
+        value,
+        title: animalTitle(value)
+      }))}
+    />
   );
 };
 

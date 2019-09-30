@@ -89,7 +89,6 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
           }}
         />
         <JobSelector
-          title="Select Job"
           value={formState.job}
           onChange={job => {
             setFormState({ ...formState, job });
