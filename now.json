@@ -24,6 +24,14 @@
         "dest": "/favicon.ico"
      },
      {
+        "src": "/logo192.png",
+        "dest": "/logo102.png"
+     },
+     {
+        "src": "/logo512.png",
+        "dest": "/logo512.png"
+     },
+     {
         "src": "/asset-manifest.json",
         "dest": "/asset-manifest.json"
      },
