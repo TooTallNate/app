@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
 import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";

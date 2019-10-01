@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "../components/ui/FormLabel";
 import { useState, FormEventHandler } from "react";
 import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";
@@ -13,6 +12,7 @@ import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
+import FormField from "../components/ui/FormField";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
@@ -95,64 +95,105 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <AnimalSelector
-          title="Select From Animal"
-          name="fromAnimal"
-          animals={ANIMALS}
-          value={formState.fromAnimal}
-          onChange={fromAnimal => {
-            setFormState({ ...formState, fromAnimal });
+        <div
+          css={{
+            display: "flex"
           }}
-        />
-        <AnimalSelector
-          title="Select To Animal"
-          name="toAnimal"
-          animals={ANIMALS}
-          value={formState.toAnimal}
-          onChange={toAnimal => {
-            setFormState({ ...formState, toAnimal });
+        >
+          <FormField
+            label="From Animal"
+            name="from-animal"
+            css={{
+              width: "100%",
+              margin: "0 16px 0 0"
+            }}
+          >
+            <AnimalSelector
+              animals={ANIMALS}
+              value={formState.fromAnimal}
+              onChange={fromAnimal => {
+                setFormState({ ...formState, fromAnimal });
+              }}
+            />
+          </FormField>
+          <FormField
+            label="To Animal"
+            name="to-animal"
+            css={{
+              width: "100%"
+            }}
+          >
+            <AnimalSelector
+              animals={ANIMALS}
+              value={formState.toAnimal}
+              onChange={toAnimal => {
+                setFormState({ ...formState, toAnimal });
+              }}
+            />
+          </FormField>
+        </div>
+        <div
+          css={{
+            display: "flex"
           }}
-        />
-        <JobSelector
-          value={formState.fromJob}
-          onChange={fromJob => {
-            setFormState({ ...formState, fromJob });
-          }}
-        />
-        <JobSelector
-          value={formState.toJob}
-          onChange={toJob => {
-            setFormState({ ...formState, toJob });
-          }}
-        />
-        <FormLabel htmlFor="quantity">Quantity</FormLabel>
-        <NumberInput
-          id="quantity"
-          value={formState.quantity}
-          onChange={value => setFormState({ ...formState, quantity: value })}
-        />
-        <FormLabel htmlFor="weight">Weight</FormLabel>
-        <NumberInput
-          id="weight"
-          value={formState.weight}
-          onChange={weight => setFormState({ ...formState, weight })}
-        />
-        <FormLabel htmlFor="price">Price</FormLabel>
-        <NumberInput
-          id="price"
-          value={formState.price}
-          onChange={price => setFormState({ ...formState, price })}
-        />
-        <FormLabel htmlFor="comments">Comments</FormLabel>
-        <MultilineTextInput
-          id="comments"
-          name="comments"
-          value={formState.comments}
-          maxLength={50}
-          onChange={e =>
-            setFormState({ ...formState, comments: e.target.value })
-          }
-        />
+        >
+          <FormField
+            label="From Job"
+            name="from-job"
+            css={{
+              width: "100%",
+              margin: "0 16px 0 0"
+            }}
+          >
+            <JobSelector
+              value={formState.fromJob}
+              onChange={fromJob => {
+                setFormState({ ...formState, fromJob });
+              }}
+            />
+          </FormField>
+          <FormField
+            label="To Job"
+            name="to-job"
+            css={{
+              width: "100%"
+            }}
+          >
+            <JobSelector
+              value={formState.toJob}
+              onChange={toJob => {
+                setFormState({ ...formState, toJob });
+              }}
+            />
+          </FormField>
+        </div>
+        <FormField label="Quantity" name="quantity">
+          <NumberInput
+            value={formState.quantity}
+            onChange={value => setFormState({ ...formState, quantity: value })}
+          />
+        </FormField>
+        <FormField label="Weight" name="weight">
+          <NumberInput
+            value={formState.weight}
+            onChange={weight => setFormState({ ...formState, weight })}
+          />
+        </FormField>
+        <FormField label="Price" name="price">
+          <NumberInput
+            value={formState.price}
+            onChange={price => setFormState({ ...formState, price })}
+          />
+        </FormField>
+        <FormField label="Comments" name="comments">
+          <MultilineTextInput
+            value={formState.comments}
+            maxLength={50}
+            onChange={e =>
+              setFormState({ ...formState, comments: e.target.value })
+            }
+          />
+        </FormField>
         <ButtonInput
           type="submit"
           css={{
