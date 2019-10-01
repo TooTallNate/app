@@ -11,10 +11,9 @@ test("successful login", async () => {
     status: 200,
     body: { Full_Name: fullName, License_Type: license }
   });
-  const { getByLabelText, getByText, findByText } = renderView("/login", {
+  const { getByLabelText, getByText, findByText } = await renderView("/login", {
     user: null
   });
-  await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
   });
@@ -38,10 +37,9 @@ test("invalid login", async () => {
   const username = `${faker.internet.domainWord()}\\${faker.internet.userName()}`;
   const password = faker.internet.password();
   fetchMock.post("/api/login", 401);
-  const { getByLabelText, getByText, findByText } = renderView("/login", {
+  const { getByLabelText, getByText, findByText } = await renderView("/login", {
     user: null
   });
-  await findByText(/login/i);
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
   });

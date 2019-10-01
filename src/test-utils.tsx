@@ -1,6 +1,6 @@
 import React from "react";
 import faker from "faker";
-import { render as renderRTL } from "@testing-library/react";
+import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth";
 import App from "./App";
@@ -31,7 +31,7 @@ interface RenderViewOptions {
   user?: User | null;
 }
 
-export function renderView(
+export async function renderView(
   initialRoute: string,
   { user = getUser() }: RenderViewOptions = {}
 ) {
@@ -44,13 +44,16 @@ export function renderView(
         }
       : { status: 403 }
   );
-  return renderRTL(
+  const utils = renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
       <AuthProvider>
         <App />
       </AuthProvider>
     </MemoryRouter>
   );
+  // Wait for auth provider to settle.
+  await waitForDomChange();
+  return utils;
 }
 
 // Get test user.
