@@ -14,7 +14,8 @@ import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
 
-const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
+const FROM_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
+const TO_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
 
 interface FormState {
   fromAnimal?: Animal;
@@ -109,7 +110,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           >
             <AnimalSelector
-              animals={ANIMALS}
+              animals={FROM_ANIMALS}
               value={formState.fromAnimal}
               onChange={fromAnimal => {
                 setFormState({ ...formState, fromAnimal });
@@ -124,7 +125,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           >
             <AnimalSelector
-              animals={ANIMALS}
+              animals={TO_ANIMALS}
               value={formState.toAnimal}
               onChange={toAnimal => {
                 setFormState({ ...formState, toAnimal });

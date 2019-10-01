@@ -14,7 +14,7 @@ import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
 
-const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
+const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
 interface FormState {
   animal?: Animal;
