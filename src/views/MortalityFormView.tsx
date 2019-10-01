@@ -46,18 +46,34 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       ) {
         return;
       }
-      await createItemEntry({
-        template: ItemTemplate.Mortality,
-        batch: ItemBatch.Mortality,
-        entryType: EntryType.Negative,
-        animal: formState.animal,
-        job: formState.job,
-        quantity: formState.naturalQuantity + formState.euthanizedQuantity,
-        weight: formState.weight,
-        document: getDocumentNumber("MORT", user.username),
-        price: formState.price,
-        comments: formState.comments
-      });
+      if (formState.naturalQuantity > 0) {
+        await createItemEntry({
+          template: ItemTemplate.Mortality,
+          batch: ItemBatch.Mortality,
+          entryType: EntryType.Negative,
+          animal: formState.animal,
+          job: formState.job,
+          quantity: formState.naturalQuantity,
+          weight: formState.weight,
+          document: getDocumentNumber("MORT", user.username),
+          price: formState.price,
+          comments: formState.comments
+        });
+      }
+      if (formState.euthanizedQuantity > 0) {
+        await createItemEntry({
+          template: ItemTemplate.Mortality,
+          batch: ItemBatch.Mortality,
+          entryType: EntryType.Negative,
+          animal: formState.animal,
+          job: formState.job,
+          quantity: formState.euthanizedQuantity,
+          weight: formState.weight,
+          document: getDocumentNumber("MORT", user.username),
+          price: formState.price,
+          comments: formState.comments
+        });
+      }
       history.push("/");
     } catch (e) {
       alert(`failed to post, ${e}`);
