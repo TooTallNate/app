@@ -5,6 +5,7 @@ import { MemoryRouter, Route, RouteProps } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth";
 import App from "./App";
 import { User, License } from "./entities";
+import fetchMock from "fetch-mock";
 
 // Useful render methods.
 interface RenderComponentOptions {
@@ -34,14 +35,22 @@ export function renderView(
   initialRoute: string,
   { user = getUser() }: RenderViewOptions = {}
 ) {
-  const utils = renderRTL(
+  fetchMock.get(
+    "/api/refresh",
+    user
+      ? {
+          status: 200,
+          body: JSON.stringify(user)
+        }
+      : { status: 403 }
+  );
+  return renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <AuthProvider user={user || undefined}>
+      <AuthProvider>
         <App />
       </AuthProvider>
     </MemoryRouter>
   );
-  return utils;
 }
 
 // Get test user.

@@ -2,10 +2,6 @@ import faker from "faker";
 import { renderView, fireEvent } from "../test-utils";
 import fetchMock from "fetch-mock";
 
-beforeEach(() => {
-  fetchMock.get("/api/refresh", 403);
-});
-
 test("successful login", async () => {
   const fullName = faker.name.findName();
   const license = "Full License";
@@ -28,7 +24,7 @@ test("successful login", async () => {
   fireEvent.submit(
     (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
   );
-  await findByText(/pigs/i, { selector: "h1" });
+  await findByText(/pig activity/i, { selector: "h1" });
   expect(
     fetchMock.lastOptions("/api/login", {
       method: "POST"

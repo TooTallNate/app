@@ -6,7 +6,7 @@ test("Pig Activity button navigates to pigs", () => {
   const { getByText } = renderComponent(<MainNav />, {
     routes: [{ path: "/pigs", render: () => <div>Pigs View</div> }]
   });
-  fireEvent.click(getByText(/pigs activity/i));
+  fireEvent.click(getByText(/pig activity/i));
   getByText(/pigs view/i);
 });
 
