@@ -60,27 +60,9 @@
     ]
   },
   "jest": {
-    "projects": [
-      {
-        "displayName": "api",
-        "testMatch": [
-          "<rootDir>/api/**/*.test.{js,jsx,ts,tsx}"
-        ],
-        "collectCoverageFrom": [
-          "<rootDir>/api/**/*.{js,jsx,ts,tsx}",
-          "!<rootDir>/node_modules/"
-        ]
-      },
-      {
-        "displayName": "web",
-        "testMatch": [
-          "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"
-        ],
-        "collectCoverageFrom": [
-          "<rootDir>/src/**/*.{js,jsx,ts,tsx}",
-          "!<rootDir>/node_modules/"
-        ]
-      }
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/"
     ]
   },
   "devDependencies": {
