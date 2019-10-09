@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin");
 const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
 const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
@@ -15,14 +15,13 @@ const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const safePostCssParser = require("postcss-safe-parser");
 
-const babelConfig = require("./babel.config");
-
 const paths = {
-  index: path.resolve(__dirname, "../src/index.tsx"),
-  src: path.resolve(__dirname, "../src"),
-  dist: path.resolve(__dirname, "../dist"),
-  html: path.resolve(__dirname, "../public/index.html"),
-  nodeModules: path.resolve(__dirname, "../../node_modules"),
+  index: path.resolve(__dirname, "src/index.tsx"),
+  src: path.resolve(__dirname, "src"),
+  dist: path.resolve(__dirname, "dist"),
+  html: path.resolve(__dirname, "public/index.html"),
+  nodeModules: path.resolve(__dirname, "../node_modules"),
+  tsConfig: path.resolve(__dirname, "tsconfig.json"),
   public: "/"
 };
 
@@ -47,7 +46,7 @@ module.exports = {
     production: "production",
     development: "development"
   }),
-  context: path.resolve(__dirname, '../'),
+  context: path.resolve(__dirname, "../"),
   bail: ifProd(() => true),
   devtool: selectEnv({
     production: "source-map",
@@ -76,10 +75,10 @@ module.exports = {
     globalObject: "this"
   },
   devServer: {
-    contentBase: path.resolve(__dirname, '../public'),
+    contentBase: path.resolve(__dirname, "public"),
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:3001'
+      "/api": "http://localhost:3001"
     }
   },
   resolve: {
@@ -88,12 +87,21 @@ module.exports = {
   module: {
     rules: [
       {
+        enforce: "pre",
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "babel-loader",
-            options: babelConfig
+            loader: "eslint-loader"
+          }
+        ]
+      },
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader"
           }
         ]
       },
@@ -102,9 +110,25 @@ module.exports = {
         use: [
           selectEnv({
             development: "style-loader",
-            production: MiniCssExtractPlugin.loader,
+            production: MiniCssExtractPlugin.loader
           }),
-          "css-loader"
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: () => [
+                require("postcss-flexbugs-fixes"),
+                require("postcss-preset-env")({
+                  autoprefixer: {
+                    flexbox: "no-2009"
+                  },
+                  stage: 3
+                }),
+                require("postcss-normalize")()
+              ]
+            }
+          }
         ]
       }
     ]
@@ -221,12 +245,12 @@ module.exports = {
     // Check typescript types.
     new ForkTsCheckerWebpackPlugin({
       typescript: resolve.sync("typescript", {
-        basedir: paths.appNodeModules
+        basedir: paths.nodeModules
       }),
       async: ifDev(() => true),
       useTypescriptIncrementalApi: true,
       checkSyntacticErrors: true,
-      tsconfig: paths.appTsConfig,
+      tsconfig: paths.tsConfig,
       reportFiles: [
         "**",
         "!**/__tests__/**",
@@ -238,8 +262,15 @@ module.exports = {
       // The formatter is invoked directly in WebpackDevServerUtils during development
       formatter: ifProd(() => typescriptFormatter)
     }),
-    ifProd(() => new CopyWebpackPlugin([
-      { from: path.resolve(__dirname, '../public'), to: paths.dist, ignore: ['index.html'] }
-    ]))
+    ifProd(
+      () =>
+        new CopyWebpackPlugin([
+          {
+            from: path.resolve(__dirname, "public"),
+            to: paths.dist,
+            ignore: ["index.html"]
+          }
+        ])
+    )
   ].filter(Boolean)
 };
