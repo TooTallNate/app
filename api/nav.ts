@@ -1,6 +1,6 @@
 import request from "httpntlm";
 
-interface NTLMRequest {
+interface Request {
   url: string;
   domainUsername: string;
   password: string;
@@ -13,7 +13,7 @@ interface NTLMRequest {
   };
 }
 
-interface NTLMResponse {
+interface Response {
   statusCode: number;
   body?: {
     [key: string]: any;
@@ -28,7 +28,7 @@ export function ntlmRequest({
   method,
   body,
   headers
-}: NTLMRequest): Promise<NTLMResponse> {
+}: Request): Promise<Response> {
   console.log(`NAV PROXY ${url}`);
   const [domain, username] = domainUsername.split("\\");
   return new Promise((resolve, reject) =>
@@ -55,26 +55,32 @@ export function ntlmRequest({
   );
 }
 
-export class HttpError extends Error {
-  status: number;
-  constructor(status: number, message: string) {
-    super(message);
-    this.status = status;
-  }
+export interface NavCredentials {
+  username: string;
+  password: string;
 }
 
-export async function getUser(username: string, password: string) {
-  // Get the user info from NAV. If we succeed, the user is logged in.
-  const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
-  const { body, statusCode } = await ntlmRequest({
-    url,
-    domainUsername: username,
-    password,
-    method: "get"
-  });
-  if (statusCode === 200 && body && body.value.length === 1) {
-    return { ...body.value[0] };
-  } else {
-    throw new HttpError(401, "Login failed");
-  }
+export interface NavUser {
+  License_Type: string;
+  Full_Name: string;
 }
+
+export default {
+  async getUser(
+    username: string,
+    { username: domainUsername, password }: NavCredentials
+  ): Promise<NavUser | null> {
+    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
+    const { body, statusCode } = await ntlmRequest({
+      url,
+      domainUsername,
+      password,
+      method: "get"
+    });
+    if (statusCode === 200 && body && body.value.length === 1) {
+      return body.value[0];
+    } else {
+      return null;
+    }
+  }
+};

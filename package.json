@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production webpack --config ./web/webpack.config.js",
     "test": "jest --watch",
     "test:coverage": "jest --coverage",
-    "e2e": "cypress open"
+    "e2e": "cypress open",
+    "generate": "graphql-codegen"
   },
   "browserslist": {
     "production": [
@@ -70,8 +71,8 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.16.0",
     "eslint-plugin-react-hooks": "1.7.0",
-    "express": "^4.17.1",
     "express-session": "^1.16.2",
+    "graphql-yoga": "1.18.3",
     "html-webpack-plugin": "4.0.0-beta.5",
     "httpntlm": "^1.7.6",
     "interpolate-html-plugin": "3.0.0",
@@ -80,7 +81,6 @@
     "normalize.css": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
     "postcss": "7.0.18",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
@@ -101,6 +101,11 @@
     "webpack-manifest-plugin": "2.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.8.1",
+    "@graphql-codegen/typescript": "1.8.1",
+    "@graphql-codegen/typescript-operations": "1.8.1",
+    "@graphql-codegen/typescript-react-apollo": "1.8.1",
+    "@graphql-codegen/typescript-resolvers": "1.8.1",
     "@testing-library/cypress": "4.1.0",
     "@testing-library/jest-dom": "4.0.0",
     "@testing-library/react": "9.1.1",

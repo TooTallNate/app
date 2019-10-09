@@ -1,0 +1,31 @@
+overwrite: true
+schema: "api/schema.graphql"
+# documents: "web/**/*.graphql"
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
+generates:
+  api/resolvers/types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-resolvers"
+    config:
+      useIndexSignature: true
+      scalars:
+        Date: Date
+      contextType: "../context#GraphqlContext"
+      mappers:
+        User: ../nav#NavUser
+  web/graphql/types.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+      scalars:
+        Date: string
+
