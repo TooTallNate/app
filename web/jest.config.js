@@ -1,7 +1,8 @@
 const path = require("path");
 
 module.exports = {
-  collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
+  displayName: "web",
+  collectCoverageFrom: ["src/**/*!(.test).{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
   setupFiles: ["react-app-polyfill/jsdom"],
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   testMatch: ["<rootDir>/src/**/?(*.)(test).{js,jsx,ts,tsx}"],
