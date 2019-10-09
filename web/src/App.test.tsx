@@ -1,4 +1,4 @@
-import { renderView, fireEvent } from "./test-utils";
+import { renderView, fireEvent } from "../test/utils";
 
 test("when logged out, renders LoginView by default", async () => {
   const { getByText } = await renderView("/", { user: null });

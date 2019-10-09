@@ -1,5 +1,5 @@
 import React from "react";
-import { renderComponent, fireEvent } from "../../test-utils";
+import { renderComponent, fireEvent } from "../../../test/utils";
 import FormField from "./FormField";
 
 test("only renders first child", () => {

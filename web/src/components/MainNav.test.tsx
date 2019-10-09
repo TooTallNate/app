@@ -1,5 +1,5 @@
 import React from "react";
-import { renderComponent, fireEvent } from "../test-utils";
+import { renderComponent, fireEvent } from "../../test/utils";
 import MainNav from "./MainNav";
 
 test("Pig Activity button navigates to pigs", () => {

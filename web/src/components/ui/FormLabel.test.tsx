@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { renderComponent } from "../../test-utils";
+import { renderComponent } from "../../../test/utils";
 import FormLabel from "./FormLabel";
 
 function render(ui: React.ReactElement) {

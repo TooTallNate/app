@@ -2,9 +2,9 @@ import React from "react";
 import faker from "faker";
 import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
-import { AuthProvider } from "./contexts/auth";
-import App from "./App";
-import { User, License } from "./entities";
+import { AuthProvider } from "../src/contexts/auth";
+import App from "../src/App";
+import { User, License } from "../src/entities";
 import fetchMock from "fetch-mock";
 
 // Useful render methods.

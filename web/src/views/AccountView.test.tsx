@@ -1,4 +1,4 @@
-import { renderView, getUser, fireEvent } from "../test-utils";
+import { renderView, getUser, fireEvent } from "../../test/utils";
 import fetchMock from "fetch-mock";
 
 test("logout button logs user out and redirect to login", async () => {

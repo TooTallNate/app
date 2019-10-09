@@ -1,5 +1,5 @@
 import faker from "faker";
-import { renderView, fireEvent } from "../test-utils";
+import { renderView, fireEvent } from "../../test/utils";
 import fetchMock from "fetch-mock";
 
 test("successful login", async () => {

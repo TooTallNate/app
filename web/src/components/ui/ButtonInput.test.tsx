@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { renderComponent, fireEvent } from "../../test-utils";
+import { renderComponent, fireEvent } from "../../../test/utils";
 import ButtonInput from "./ButtonInput";
 
 function render(ui: React.ReactElement) {

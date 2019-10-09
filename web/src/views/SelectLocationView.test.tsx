@@ -1,4 +1,4 @@
-import { renderView, fireEvent } from "../test-utils";
+import { renderView, fireEvent } from "../../test/utils";
 
 test("renders route", async () => {
   const { getByText } = await renderView("/location");

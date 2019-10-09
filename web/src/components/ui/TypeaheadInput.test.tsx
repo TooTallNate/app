@@ -1,5 +1,5 @@
 import React from "react";
-import { renderComponent, fireEvent } from "../../test-utils";
+import { renderComponent, fireEvent } from "../../../test/utils";
 import TypeaheadInput from "./TypeaheadInput";
 
 function render(ui: React.ReactElement) {
