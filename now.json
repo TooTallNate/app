@@ -7,10 +7,14 @@
     "MONGO_URI": "@farm-activity-mongo-uri",
     "SESSION_SECRET": "@farm-activity-session-secret"
   },
+  "builds": [
+    { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "web/dist" } },
+    { "src": "api/index.ts", "use": "@now/node" }
+  ],
   "routes": [
      {
         "src": "/api/(.*)",
-        "dest": "/api/index.js"
+        "dest": "/api/index.ts"
      },
      {
         "src": "/static/(.*)",
