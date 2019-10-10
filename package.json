@@ -106,6 +106,7 @@
     "@graphql-codegen/typescript-operations": "1.8.1",
     "@graphql-codegen/typescript-react-apollo": "1.8.1",
     "@graphql-codegen/typescript-resolvers": "1.8.1",
+    "@shelf/jest-mongodb": "1.1.1",
     "@testing-library/cypress": "4.1.0",
     "@testing-library/jest-dom": "4.0.0",
     "@testing-library/react": "9.1.1",
@@ -125,6 +126,7 @@
     "cypress": "3.4.1",
     "faker": "4.1.0",
     "fetch-mock": "7.3.9",
+    "graphql-request": "1.8.2",
     "husky": "3.0.3",
     "jest": "24.9.0",
     "jest-watch-select-projects": "1.0.0",
@@ -132,6 +134,7 @@
     "lint-staged": "9.2.1",
     "node-fetch": "2.6.0",
     "nodemon": "^1.19.1",
+    "ts-jest": "24.1.0",
     "ts-node": "8.4.1",
     "webpack-dev-server": "3.8.2"
   }
