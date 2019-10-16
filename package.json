@@ -125,6 +125,7 @@
     "@types/react-dom": "16.8.5",
     "@types/react-router-dom": "4.3.4",
     "cypress": "3.4.1",
+    "factory.ts": "0.5.0",
     "faker": "4.1.0",
     "fetch-cookie": "0.7.3",
     "fetch-mock": "7.3.9",

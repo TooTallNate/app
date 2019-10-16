@@ -65,6 +65,18 @@ export interface NavUser {
   Full_Name: string;
 }
 
+export interface NavJobSearch {
+  Status?: string[];
+  Job_Posting_Group?: string[];
+}
+
+export interface NavJob {
+  No: string;
+  Site: string;
+  Status: string;
+  Job_Posting_Group: string;
+}
+
 export default {
   async getUser(
     username: string,
@@ -79,6 +91,37 @@ export default {
     });
     if (statusCode === 200 && body && body.value.length === 1) {
       return body.value[0];
+    } else {
+      return null;
+    }
+  },
+  async getJobs(
+    { Status = [], Job_Posting_Group = [] }: NavJobSearch,
+    { username: domainUsername, password }: NavCredentials
+  ): Promise<NavJob[] | null> {
+    let statusFilter = Status.map(status => `Status eq '${status}'`).join(
+      " or "
+    );
+    let postingGroupFilter = Job_Posting_Group.map(
+      posting => `Job_Posting_Group eq '${posting}'`
+    ).join(" or ");
+    let filter = [
+      statusFilter ? `(${statusFilter})` : false,
+      postingGroupFilter ? `(${postingGroupFilter})` : false
+    ]
+      .filter(Boolean)
+      .join(" and ");
+    const url = `${process.env.NAV_BASE_URL}/Jobs?&$format=json${
+      filter ? `&$filter=${filter}` : ""
+    }`;
+    const { body, statusCode } = await ntlmRequest({
+      url,
+      domainUsername,
+      password,
+      method: "get"
+    });
+    if (statusCode === 200 && body && Array.isArray(body.value)) {
+      return body.value;
     } else {
       return null;
     }

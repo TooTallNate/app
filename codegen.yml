@@ -17,6 +17,7 @@ generates:
       contextType: "../context#GraphqlContext"
       mappers:
         User: ../nav#NavUser
+        Job: ../nav#NavJob
   web/graphql/types.tsx:
     plugins:
       - "typescript"

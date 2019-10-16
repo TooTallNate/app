@@ -1,11 +1,14 @@
 import { User, UserQuery, UserMutation } from "./user";
+import { Job, JobQuery } from "./job";
 
 export default {
   Query: {
-    ...UserQuery
+    ...UserQuery,
+    ...JobQuery
   },
   Mutation: {
     ...UserMutation
   },
-  User
+  User,
+  Job
 };

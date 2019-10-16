@@ -2,8 +2,8 @@ import { MutationResolvers, UserResolvers, QueryResolvers } from "./types";
 import nav from "../nav";
 
 export const UserQuery: QueryResolvers = {
-  async user(_, __, { user: { username, password } }) {
-    return await nav.getUser(username, { username, password });
+  async user(_, __, { user }) {
+    return await nav.getUser(user.username, user);
   }
 };
 

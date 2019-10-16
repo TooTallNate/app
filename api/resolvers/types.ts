@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser } from "../nav";
+import { NavUser, NavJob } from "../nav";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
@@ -13,6 +13,17 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+};
+
+export type Job = {
+  __typename?: "Job";
+  number: Scalars["String"];
+  site: Scalars["String"];
+};
+
+export type JobSearchInput = {
+  status?: Maybe<Array<Scalars["String"]>>;
+  postingGroup?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type LoginInput = {
@@ -33,6 +44,11 @@ export type MutationLoginArgs = {
 export type Query = {
   __typename?: "Query";
   user: User;
+  jobs: Array<Job>;
+};
+
+export type QueryJobsArgs = {
+  input?: Maybe<JobSearchInput>;
 };
 
 export type User = {
@@ -150,6 +166,8 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<NavUser>;
   String: ResolverTypeWrapper<Scalars["String"]>;
+  JobSearchInput: JobSearchInput;
+  Job: ResolverTypeWrapper<NavJob>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
@@ -160,9 +178,19 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: NavUser;
   String: Scalars["String"];
+  JobSearchInput: JobSearchInput;
+  Job: NavJob;
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
+}>;
+
+export type JobResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Job"] = ResolversParentTypes["Job"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  site?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<
@@ -183,6 +211,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  jobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    QueryJobsArgs
+  >;
 }>;
 
 export type UserResolvers<
@@ -194,6 +228,7 @@ export type UserResolvers<
 }>;
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
+  Job?: JobResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

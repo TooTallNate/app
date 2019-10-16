@@ -1,5 +1,10 @@
 import { gql } from "./utils";
-import { User, MutationLoginArgs } from "../resolvers/types";
+import {
+  User,
+  Job,
+  MutationLoginArgs,
+  QueryJobsArgs
+} from "../resolvers/types";
 
 export const userQuery = gql<{ user: User }>(
   `query User {
@@ -22,5 +27,14 @@ export const loginMutation = gql<{ login: User }, MutationLoginArgs>(
 export const logoutMutation = gql<{ logout: Boolean }>(
   `mutation Logout {
     logout
+  }`
+);
+
+export const jobsQuery = gql<{ jobs: Job }, QueryJobsArgs>(
+  `query Jobs($input: JobSearchInput) {
+    jobs(input: $input) {
+      number
+      site
+    }
   }`
 );

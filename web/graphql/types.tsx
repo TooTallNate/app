@@ -9,6 +9,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type Job = {
+  __typename?: "Job";
+  number: Scalars["String"];
+  site: Scalars["String"];
+};
+
+export type JobSearchInput = {
+  status?: Maybe<Array<Scalars["String"]>>;
+  postingGroup?: Maybe<Array<Scalars["String"]>>;
+};
+
 export type LoginInput = {
   username: Scalars["String"];
   password: Scalars["String"];
@@ -27,6 +38,11 @@ export type MutationLoginArgs = {
 export type Query = {
   __typename?: "Query";
   user: User;
+  jobs: Array<Job>;
+};
+
+export type QueryJobsArgs = {
+  input?: Maybe<JobSearchInput>;
 };
 
 export type User = {

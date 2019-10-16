@@ -3,13 +3,24 @@ type User {
   name: String!
 }
 
+type Job {
+  number: String!
+  site: String!
+}
+
 input LoginInput {
   username: String!
   password: String!
 }
 
+input JobSearchInput {
+  status: [String!]
+  postingGroup: [String!]
+}
+
 type Query {
   user: User!
+  jobs(input: JobSearchInput): [Job!]!
 }
 
 type Mutation {
