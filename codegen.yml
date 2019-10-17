@@ -12,8 +12,6 @@ generates:
       - "typescript-resolvers"
     config:
       useIndexSignature: true
-      scalars:
-        Date: Date
       contextType: "../context#GraphqlContext"
       mappers:
         User: ../nav#NavUser

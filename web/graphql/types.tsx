@@ -7,6 +7,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: string;
 };
 
 export type Job = {
@@ -29,10 +30,30 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
+  postItemEntry: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationPostItemEntryArgs = {
+  input: PostItemEntryInput;
+};
+
+export type PostItemEntryInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  entryType: Scalars["String"];
+  document: Scalars["String"];
+  item: Scalars["String"];
+  description: Scalars["String"];
+  location: Scalars["String"];
+  quantity: Scalars["Float"];
+  amount: Scalars["Float"];
+  weight: Scalars["Float"];
+  job: Scalars["String"];
 };
 
 export type Query = {

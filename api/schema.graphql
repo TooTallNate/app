@@ -1,3 +1,5 @@
+scalar Date
+
 type User {
   license: String!
   name: String!
@@ -18,6 +20,21 @@ input JobSearchInput {
   postingGroup: [String!]
 }
 
+input PostItemEntryInput {
+  template: String!
+  batch: String!
+  date: Date!
+  entryType: String!
+  document: String!
+  item: String!
+  description: String!
+  location: String!
+  quantity: Float!
+  amount: Float!
+  weight: Float!
+  job: String!
+}
+
 type Query {
   user: User!
   jobs(input: JobSearchInput): [Job!]!
@@ -26,4 +43,5 @@ type Query {
 type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
+  postItemEntry(input: PostItemEntryInput!): Boolean!
 }

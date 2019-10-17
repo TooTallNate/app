@@ -1,4 +1,8 @@
-import { GraphQLResolveInfo } from "graphql";
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig
+} from "graphql";
 import { NavUser, NavJob } from "../nav";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
@@ -13,6 +17,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
 };
 
 export type Job = {
@@ -35,10 +40,30 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
+  postItemEntry: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationPostItemEntryArgs = {
+  input: PostItemEntryInput;
+};
+
+export type PostItemEntryInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  entryType: Scalars["String"];
+  document: Scalars["String"];
+  item: Scalars["String"];
+  description: Scalars["String"];
+  location: Scalars["String"];
+  quantity: Scalars["Float"];
+  amount: Scalars["Float"];
+  weight: Scalars["Float"];
+  job: Scalars["String"];
 };
 
 export type Query = {
@@ -171,6 +196,9 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
+  PostItemEntryInput: PostItemEntryInput;
+  Date: ResolverTypeWrapper<Scalars["Date"]>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -183,7 +211,15 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
+  PostItemEntryInput: PostItemEntryInput;
+  Date: Scalars["Date"];
+  Float: Scalars["Float"];
 }>;
+
+export interface DateScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Date"], any> {
+  name: "Date";
+}
 
 export type JobResolvers<
   ContextType = GraphqlContext,
@@ -204,6 +240,12 @@ export type MutationResolvers<
     RequireFields<MutationLoginArgs, "input">
   >;
   logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  postItemEntry?: Resolver<
+    ResolversTypes["Boolean"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostItemEntryArgs, "input">
+  >;
 }>;
 
 export type QueryResolvers<
@@ -228,6 +270,7 @@ export type UserResolvers<
 }>;
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
+  Date?: GraphQLScalarType;
   Job?: JobResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

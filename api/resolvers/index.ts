@@ -1,5 +1,6 @@
 import { User, UserQuery, UserMutation } from "./user";
 import { Job, JobQuery } from "./job";
+import { ItemJournalMutation } from "./item-journal";
 
 export default {
   Query: {
@@ -7,7 +8,8 @@ export default {
     ...JobQuery
   },
   Mutation: {
-    ...UserMutation
+    ...UserMutation,
+    ...ItemJournalMutation
   },
   User,
   Job
