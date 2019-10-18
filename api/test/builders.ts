@@ -1,6 +1,6 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
-import { NavJob, NavUser } from "../nav";
+import { NavJob, NavUser } from "../nav/types";
 
 const JOB_POSTING_GROUPS = ["MKT PIGS", "GDU", "SOWS", "CATTLE", "FARROW-BE"];
 const JOB_STATUSES = ["Planning", "Open", "Complete"];

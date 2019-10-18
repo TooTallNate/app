@@ -1,6 +1,5 @@
 import { navMock, login, expectUnauthorized } from "../test/utils";
 import { loginMutation, logoutMutation, userQuery } from "../test/gql";
-import nav from "../nav";
 
 describe("user query", () => {
   test("returns error if not logged in", () => expectUnauthorized(userQuery));

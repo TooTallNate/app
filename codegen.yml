@@ -14,8 +14,8 @@ generates:
       useIndexSignature: true
       contextType: "../context#GraphqlContext"
       mappers:
-        User: ../nav#NavUser
-        Job: ../nav#NavJob
+        User: ../nav/types#NavUser
+        Job: ../nav/types#NavJob
   web/graphql/types.tsx:
     plugins:
       - "typescript"

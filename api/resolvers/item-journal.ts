@@ -2,7 +2,7 @@ import { MutationResolvers } from "./types";
 import nav from "../nav";
 
 export const ItemJournalMutation: MutationResolvers = {
-  async postItemEntry(_, { input }, { user }) {
+  async postItem(_, { input }, { user }) {
     const date = new Date(input.date);
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date
@@ -10,7 +10,7 @@ export const ItemJournalMutation: MutationResolvers = {
       .toString()
       .padStart(2, "0");
     const dateString = `${date.getFullYear()}-${month}-${day}`;
-    const item = await nav.postItemEntry(
+    const item = await nav.postItem(
       {
         Journal_Template_Name: input.template,
         Journal_Batch_Name: input.batch,

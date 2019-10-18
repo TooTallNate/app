@@ -3,7 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig
 } from "graphql";
-import { NavUser, NavJob } from "../nav";
+import { NavUser, NavJob } from "../nav/types";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
@@ -40,18 +40,18 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
-  postItemEntry: Scalars["Boolean"];
+  postItem: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-export type MutationPostItemEntryArgs = {
-  input: PostItemEntryInput;
+export type MutationPostItemArgs = {
+  input: PostItemInput;
 };
 
-export type PostItemEntryInput = {
+export type PostItemInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];
@@ -196,7 +196,7 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
-  PostItemEntryInput: PostItemEntryInput;
+  PostItemInput: PostItemInput;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
 }>;
@@ -211,7 +211,7 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
-  PostItemEntryInput: PostItemEntryInput;
+  PostItemInput: PostItemInput;
   Date: Scalars["Date"];
   Float: Scalars["Float"];
 }>;
@@ -240,11 +240,11 @@ export type MutationResolvers<
     RequireFields<MutationLoginArgs, "input">
   >;
   logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  postItemEntry?: Resolver<
+  postItem?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
     ContextType,
-    RequireFields<MutationPostItemEntryArgs, "input">
+    RequireFields<MutationPostItemArgs, "input">
   >;
 }>;
 

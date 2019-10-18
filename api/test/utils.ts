@@ -1,7 +1,8 @@
 import { GraphQLClient, ClientError } from "graphql-request";
 import { GraphQLError } from "graphql-request/dist/src/types";
 import { User, MutationLoginArgs } from "../resolvers/types";
-import nav, { NavJob, NavUser } from "../nav";
+import nav from "../nav";
+import { NavMock } from "../nav/__mocks__/index";
 
 const port = process.env.PORT;
 
@@ -18,14 +19,7 @@ global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
 
 const client = new GraphQLClient(`http://localhost:${port}`);
 
-export const navMock = nav as jest.Mocked<typeof nav> & {
-  credentials: {
-    username: string;
-    password: string;
-  };
-  user: NavUser;
-  jobs: NavJob[];
-};
+export const navMock = (nav as any) as NavMock;
 
 interface GQLResponse<T> {
   data?: T;

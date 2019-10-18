@@ -30,18 +30,18 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
-  postItemEntry: Scalars["Boolean"];
+  postItem: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-export type MutationPostItemEntryArgs = {
-  input: PostItemEntryInput;
+export type MutationPostItemArgs = {
+  input: PostItemInput;
 };
 
-export type PostItemEntryInput = {
+export type PostItemInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];

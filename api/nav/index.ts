@@ -57,7 +57,7 @@ export default {
       return null;
     }
   },
-  async postItemEntry(
+  async postItem(
     entry: NewNavItemEntry,
     { username: domainUsername, password }: NavCredentials
   ): Promise<NavItemEntry | null> {

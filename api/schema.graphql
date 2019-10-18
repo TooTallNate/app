@@ -20,7 +20,7 @@ input JobSearchInput {
   postingGroup: [String!]
 }
 
-input PostItemEntryInput {
+input PostItemInput {
   template: String!
   batch: String!
   date: Date!
@@ -43,5 +43,5 @@ type Query {
 type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
-  postItemEntry(input: PostItemEntryInput!): Boolean!
+  postItem(input: PostItemInput!): Boolean!
 }

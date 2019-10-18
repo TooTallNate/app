@@ -3,7 +3,8 @@ import {
   User,
   Job,
   MutationLoginArgs,
-  QueryJobsArgs
+  QueryJobsArgs,
+  MutationPostItemArgs
 } from "../resolvers/types";
 
 export const userQuery = gql<{ user: User }>(
@@ -36,5 +37,14 @@ export const jobsQuery = gql<{ jobs: Job }, QueryJobsArgs>(
       number
       site
     }
+  }`
+);
+
+export const postItemMutation = gql<
+  { postItemEntry: Boolean },
+  MutationPostItemArgs
+>(
+  `mutation PostItem($input: PostItemInput!) {
+    postItem(input: $input)
   }`
 );

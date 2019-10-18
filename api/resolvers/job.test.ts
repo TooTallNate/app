@@ -1,13 +1,6 @@
 import { login, expectUnauthorized, navMock } from "../test/utils";
 import { jobsQuery } from "../test/gql";
 
-beforeEach(() => {
-  navMock.getUser.mockResolvedValueOnce({
-    Full_Name: "Test User",
-    License_Type: "Full User"
-  });
-});
-
 describe("jobs query", () => {
   test("returns error if not logged in", () => expectUnauthorized(jobsQuery));
 
