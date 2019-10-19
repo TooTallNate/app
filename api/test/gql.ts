@@ -10,6 +10,7 @@ import {
 export const userQuery = gql<{ user: User }>(
   `query User {
     user {
+      id
       name
       license
     }
@@ -19,6 +20,7 @@ export const userQuery = gql<{ user: User }>(
 export const loginMutation = gql<{ login: User }, MutationLoginArgs>(
   `mutation Login($input: LoginInput!) {
     login(input: $input) {
+      id
       name
       license
     }

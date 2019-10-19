@@ -11,10 +11,7 @@ export default () => {
   initMongoose();
   initPassport();
 
-  const typeDefs = fs.readFileSync(
-    path.join(__dirname, "schema.graphql"),
-    "utf8"
-  );
+  const typeDefs = fs.readFileSync(path.join(__dirname, "schema.gql"), "utf8");
 
   // Allow only the login mutation to requests without a session.
   const authMiddleware: IMiddlewareFunction<any, GraphqlContext, any> = (
@@ -24,7 +21,7 @@ export default () => {
     context,
     info
   ) => {
-    if (info.fieldName !== "login" && !context.user) {
+    if (!["login", "user"].includes(info.fieldName) && !context.user) {
       throw new Error("Unauthorized");
     } else {
       return resolve(root, args, context, info);
@@ -45,6 +42,11 @@ export default () => {
 
   const app = server.express;
   app.use(sessions());
+
+  app.post("/api", (req, res, next) => {
+    req.url = "/";
+    next();
+  });
 
   const port = process.env.PORT || 3001;
   return server.start(

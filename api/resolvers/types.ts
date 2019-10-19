@@ -68,7 +68,7 @@ export type PostItemInput = {
 
 export type Query = {
   __typename?: "Query";
-  user: User;
+  user?: Maybe<User>;
   jobs: Array<Job>;
 };
 
@@ -78,8 +78,30 @@ export type QueryJobsArgs = {
 
 export type User = {
   __typename?: "User";
+  id: Scalars["ID"];
   license: Scalars["String"];
   name: Scalars["String"];
+};
+
+export type LoginMutationVariables = {
+  input: LoginInput;
+};
+
+export type LoginMutation = { __typename?: "Mutation" } & {
+  login: { __typename?: "User" } & Pick<User, "id" | "name" | "license">;
+};
+
+export type LogoutMutationVariables = {};
+
+export type LogoutMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "logout"
+>;
+
+export type UserQueryVariables = {};
+
+export type UserQuery = { __typename?: "Query" } & {
+  user: Maybe<{ __typename?: "User" } & Pick<User, "id" | "name" | "license">>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -190,6 +212,7 @@ export type DirectiveResolverFn<
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<NavUser>;
+  ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
   JobSearchInput: JobSearchInput;
   Job: ResolverTypeWrapper<NavJob>;
@@ -205,6 +228,7 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: NavUser;
+  ID: Scalars["ID"];
   String: Scalars["String"];
   JobSearchInput: JobSearchInput;
   Job: NavJob;
@@ -252,7 +276,7 @@ export type QueryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
-  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   jobs?: Resolver<
     Array<ResolversTypes["Job"]>,
     ParentType,
@@ -265,6 +289,7 @@ export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   license?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 }>;

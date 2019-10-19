@@ -13,7 +13,7 @@ export default {
     username: string,
     { username: domainUsername, password }: NavCredentials
   ): Promise<NavUser | null> {
-    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'&$select=Full_Name,License_Type`;
+    const url = `${process.env.NAV_BASE_URL}/User?$filter=User_Name eq '${username}'`;
     const { body, statusCode } = await request({
       url,
       domainUsername,

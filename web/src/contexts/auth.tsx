@@ -1,6 +1,13 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import service from "../service";
-import { User } from "../entities";
+import React, { createContext, useContext } from "react";
+import {
+  useUserQuery,
+  User,
+  useLoginMutation,
+  useLogoutMutation,
+  UserDocument,
+  UserQuery,
+  UserQueryVariables
+} from "../graphql";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
@@ -12,47 +19,57 @@ interface AuthContextValue {
 const AuthContext = createContext<Partial<AuthContextValue>>({});
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [refreshed, setRefreshed] = useState<boolean>(false);
-  const [user, setUser] = useState<User>();
+  const { data, loading } = useUserQuery();
+  const [loginMutation] = useLoginMutation({
+    update(cache, { data }) {
+      if (data) {
+        cache.writeQuery<UserQuery, UserQueryVariables>({
+          query: UserDocument,
+          data: {
+            user: data.login
+          }
+        });
+      }
+    }
+  });
+  const [logoutMutation] = useLogoutMutation({
+    update(cache, { data }) {
+      cache.writeQuery<UserQuery, UserQueryVariables>({
+        query: UserDocument,
+        data: {
+          user: null
+        }
+      });
+    }
+  });
 
   const login = async (username: string, password: string) => {
-    const result = await service.login({
-      username,
-      password
+    await loginMutation({
+      variables: {
+        input: {
+          username,
+          password
+        }
+      }
     });
-    setUser(result);
   };
 
   const logout = async () => {
-    await service.logout();
-    setUser(undefined);
+    await logoutMutation();
   };
 
-  // Refresh the user to see if they still have a session.
-  useEffect(() => {
-    const effect = async () => {
-      // Don't refresh user in tests.
-      const refreshedUser = await service.refresh();
-      if (refreshedUser) {
-        setUser(refreshedUser);
-      }
-      setRefreshed(true);
-    };
-    effect();
-  }, []);
-
-  return refreshed ? (
+  return loading ? null : (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!user,
-        user,
+        isAuthenticated: !!data && !!data.user,
+        user: data ? data.user : undefined,
         login,
         logout
       }}
     >
       {children}
     </AuthContext.Provider>
-  ) : null;
+  );
 };
 
 const useAuth = () => useContext(AuthContext);

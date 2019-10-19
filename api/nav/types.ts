@@ -4,6 +4,7 @@ export interface NavCredentials {
 }
 
 export interface NavUser {
+  User_Security_ID: string;
   License_Type: string;
   Full_Name: string;
 }

@@ -3,7 +3,11 @@ import nav from "../nav";
 
 export const UserQuery: QueryResolvers = {
   async user(_, __, { user }) {
-    return await nav.getUser(user.username, user);
+    if (user) {
+      return await nav.getUser(user.username, user);
+    } else {
+      return null;
+    }
   }
 };
 
@@ -36,6 +40,7 @@ export const UserMutation: MutationResolvers = {
 };
 
 export const User: UserResolvers = {
+  id: user => user.User_Security_ID,
   license: user => user.License_Type,
   name: user => user.Full_Name
 };

@@ -1,6 +1,7 @@
 scalar Date
 
 type User {
+  id: ID!
   license: String!
   name: String!
 }
@@ -36,7 +37,7 @@ input PostItemInput {
 }
 
 type Query {
-  user: User!
+  user: User
   jobs(input: JobSearchInput): [Job!]!
 }
 

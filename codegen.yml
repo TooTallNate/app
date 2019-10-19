@@ -1,6 +1,6 @@
 overwrite: true
-schema: "api/schema.graphql"
-# documents: "web/**/*.graphql"
+schema: "api/schema.gql"
+documents: "web/**/*.gql"
 hooks:
   afterAllFileWrite:
     - eslint --fix
@@ -16,7 +16,7 @@ generates:
       mappers:
         User: ../nav/types#NavUser
         Job: ../nav/types#NavJob
-  web/graphql/types.tsx:
+  web/src/graphql/index.tsx:
     plugins:
       - "typescript"
       - "typescript-operations"

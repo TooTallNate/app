@@ -1,8 +1,20 @@
 import { navMock, login, expectUnauthorized } from "../test/utils";
-import { loginMutation, logoutMutation, userQuery } from "../test/gql";
+import {
+  loginMutation,
+  logoutMutation,
+  userQuery,
+  jobsQuery
+} from "../test/gql";
 
 describe("user query", () => {
-  test("returns error if not logged in", () => expectUnauthorized(userQuery));
+  test("returns null if not logged in", async () => {
+    const { data, errors } = await userQuery();
+    expect(errors).toBeFalsy();
+    expect(data).toEqual({
+      user: null
+    });
+    expect(navMock.getUser).not.toHaveBeenCalled();
+  });
 
   test("returns user if logged in", async () => {
     await login();
@@ -10,6 +22,7 @@ describe("user query", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       user: {
+        id: navMock.user.User_Security_ID,
         name: navMock.user.Full_Name,
         license: navMock.user.License_Type
       }
@@ -30,6 +43,7 @@ describe("login mutation", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       login: {
+        id: navMock.user.User_Security_ID,
         name: navMock.user.Full_Name,
         license: navMock.user.License_Type
       }
@@ -74,6 +88,6 @@ describe("logout mutation", () => {
     const { data, errors } = await logoutMutation();
     expect(errors).toBeFalsy();
     expect(data).toEqual({ logout: true });
-    await expectUnauthorized(userQuery);
+    await expectUnauthorized(jobsQuery);
   });
 });

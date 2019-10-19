@@ -5,12 +5,15 @@ import "normalize.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth";
+import { GraphqlProvider } from "./contexts/graphql";
 
 ReactDOM.render(
   <Router>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <GraphqlProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </GraphqlProvider>
   </Router>,
   document.getElementById("root")
 );
