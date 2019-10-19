@@ -1,0 +1,3 @@
+mutation PostItem($input: PostItemInput!) {
+  postItem(input: $input)
+}

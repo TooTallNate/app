@@ -1,11 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler } from "react";
-import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
-import { Animal, ItemTemplate, ItemBatch, EntryType, Job } from "../entities";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
@@ -13,6 +12,7 @@ import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
+import { usePostItemMutation, Job } from "../graphql";
 
 const FROM_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 const TO_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
@@ -31,7 +31,7 @@ interface FormState {
 const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
-  const { createItemEntry, loading } = useCreateItemEntry();
+  const [postItem, { loading }] = usePostItemMutation();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
@@ -48,29 +48,41 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
       ) {
         return;
       }
-      await createItemEntry({
-        template: ItemTemplate.Move,
-        batch: ItemBatch.Move,
-        entryType: EntryType.Negative,
-        animal: formState.fromAnimal,
-        job: formState.fromJob,
-        quantity: formState.quantity,
-        weight: formState.weight,
-        document: getDocumentNumber("MOVE", user.username),
-        price: formState.price,
-        comments: formState.comments
+      await postItem({
+        variables: {
+          input: {
+            template: ItemTemplate.Move,
+            batch: ItemBatch.Move,
+            entryType: EntryType.Negative,
+            item: formState.fromAnimal,
+            job: formState.fromJob.number,
+            quantity: formState.quantity,
+            weight: formState.weight,
+            document: getDocumentNumber("MOVE", user.username),
+            amount: formState.price,
+            description: formState.comments,
+            date: new Date(),
+            location: formState.fromJob.site
+          }
+        }
       });
-      await createItemEntry({
-        template: ItemTemplate.Move,
-        batch: ItemBatch.Move,
-        entryType: EntryType.Positive,
-        animal: formState.toAnimal,
-        job: formState.toJob,
-        quantity: formState.quantity,
-        weight: formState.weight,
-        document: getDocumentNumber("MOVE", user.username),
-        price: formState.price,
-        comments: formState.comments
+      await postItem({
+        variables: {
+          input: {
+            template: ItemTemplate.Move,
+            batch: ItemBatch.Move,
+            entryType: EntryType.Positive,
+            item: formState.toAnimal,
+            job: formState.toJob.number,
+            quantity: formState.quantity,
+            weight: formState.weight,
+            document: getDocumentNumber("MOVE", user.username),
+            amount: formState.price,
+            description: formState.comments,
+            date: new Date(),
+            location: formState.toJob.site
+          }
+        }
       });
       history.push("/");
     } catch (e) {

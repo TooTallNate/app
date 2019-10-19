@@ -23,32 +23,3 @@ export enum EntryType {
   Positive = "Positive Adjmt.",
   Negative = "Negative Adjmt."
 }
-
-export enum License {
-  Full = "Full License",
-  Limited = "Limited License"
-}
-
-export interface User {
-  fullName: string;
-  license: License;
-  username: string;
-}
-
-export interface Job {
-  number: string;
-  location: string;
-}
-
-export interface ItemEntry {
-  template: ItemTemplate;
-  batch: ItemBatch;
-  entryType: EntryType;
-  animal: Animal;
-  job: Job;
-  quantity: number;
-  weight: number;
-  document: string;
-  price: number;
-  comments?: string;
-}

@@ -1,5 +1,5 @@
 export function getDocumentNumber(form: string, username: string) {
-  const name = username.split("\\")[1].slice(0, 6);
+  const name = username.slice(0, 6);
   const date = formatDate(new Date(), "YYMMDD");
   return `${form}-${name}-${date}`;
 }

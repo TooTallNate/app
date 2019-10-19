@@ -1,18 +1,18 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler } from "react";
-import { useCreateItemEntry } from "../service";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
 import { RouteComponentProps } from "react-router";
-import { Animal, ItemTemplate, ItemBatch, EntryType, Job } from "../entities";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { useAuth } from "../contexts/auth";
 import { getDocumentNumber } from "../utils";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
+import { usePostItemMutation, Job } from "../graphql";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
@@ -28,7 +28,7 @@ interface FormState {
 const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
-  const { createItemEntry, loading } = useCreateItemEntry();
+  const [postItem, { loading }] = usePostItemMutation();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
@@ -43,17 +43,23 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
       ) {
         return;
       }
-      await createItemEntry({
-        template: ItemTemplate.GradeOff,
-        batch: ItemBatch.Default,
-        entryType: EntryType.Negative,
-        animal: formState.animal,
-        job: formState.job,
-        quantity: formState.quantity,
-        weight: formState.weight,
-        document: getDocumentNumber("GRDOFF", user.username),
-        price: formState.price,
-        comments: formState.comments
+      await postItem({
+        variables: {
+          input: {
+            template: ItemTemplate.GradeOff,
+            batch: ItemBatch.Default,
+            entryType: EntryType.Negative,
+            item: formState.animal,
+            job: formState.job.number,
+            quantity: formState.quantity,
+            weight: formState.weight,
+            document: getDocumentNumber("GRDOFF", user.username),
+            amount: formState.price,
+            description: formState.comments,
+            date: new Date(),
+            location: formState.job.site
+          }
+        }
       });
       history.push("/");
     } catch (e) {

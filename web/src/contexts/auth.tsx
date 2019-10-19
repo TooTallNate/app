@@ -9,9 +9,11 @@ import {
   UserQueryVariables
 } from "../graphql";
 
+type AuthUser = Pick<User, "id" | "name" | "username">;
+
 interface AuthContextValue {
   isAuthenticated: boolean;
-  user?: User;
+  user: AuthUser | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -33,7 +35,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   });
   const [logoutMutation] = useLogoutMutation({
-    update(cache, { data }) {
+    update(cache) {
       cache.writeQuery<UserQuery, UserQueryVariables>({
         query: UserDocument,
         data: {
@@ -62,7 +64,7 @@ const AuthProvider: React.FC = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated: !!data && !!data.user,
-        user: data ? data.user : undefined,
+        user: data ? data.user : null,
         login,
         logout
       }}

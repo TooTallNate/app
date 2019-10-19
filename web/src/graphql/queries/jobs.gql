@@ -1,0 +1,6 @@
+query Jobs($input: JobSearchInput) {
+  jobs(input: $input) {
+    number
+    site
+  }
+}

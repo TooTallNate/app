@@ -2,6 +2,8 @@ scalar Date
 
 type User {
   id: ID!
+  username: String!
+  domain: String!
   license: String!
   name: String!
 }
@@ -28,7 +30,7 @@ input PostItemInput {
   entryType: String!
   document: String!
   item: String!
-  description: String!
+  description: String
   location: String!
   quantity: Float!
   amount: Float!

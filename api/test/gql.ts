@@ -11,6 +11,8 @@ export const userQuery = gql<{ user: User }>(
   `query User {
     user {
       id
+      username
+      domain
       name
       license
     }
@@ -21,6 +23,8 @@ export const loginMutation = gql<{ login: User }, MutationLoginArgs>(
   `mutation Login($input: LoginInput!) {
     login(input: $input) {
       id
+      username
+      domain
       name
       license
     }

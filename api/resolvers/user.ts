@@ -42,5 +42,7 @@ export const UserMutation: MutationResolvers = {
 export const User: UserResolvers = {
   id: user => user.User_Security_ID,
   license: user => user.License_Type,
-  name: user => user.Full_Name
+  name: user => user.Full_Name,
+  username: (_, __, { user }) => user.username.split("\\")[1],
+  domain: (_, __, { user }) => user.username.split("\\")[0]
 };

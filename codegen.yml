@@ -26,5 +26,5 @@ generates:
       withHooks: true
       withComponent: false
       scalars:
-        Date: string
+        Date: Date
 

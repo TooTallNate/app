@@ -23,6 +23,8 @@ describe("user query", () => {
     expect(data).toEqual({
       user: {
         id: navMock.user.User_Security_ID,
+        username: navMock.credentials.username.split("\\")[1],
+        domain: navMock.credentials.username.split("\\")[0],
         name: navMock.user.Full_Name,
         license: navMock.user.License_Type
       }
@@ -44,6 +46,8 @@ describe("login mutation", () => {
     expect(data).toEqual({
       login: {
         id: navMock.user.User_Security_ID,
+        username: navMock.credentials.username.split("\\")[1],
+        domain: navMock.credentials.username.split("\\")[0],
         name: navMock.user.Full_Name,
         license: navMock.user.License_Type
       }

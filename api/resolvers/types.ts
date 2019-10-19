@@ -58,7 +58,7 @@ export type PostItemInput = {
   entryType: Scalars["String"];
   document: Scalars["String"];
   item: Scalars["String"];
-  description: Scalars["String"];
+  description?: Maybe<Scalars["String"]>;
   location: Scalars["String"];
   quantity: Scalars["Float"];
   amount: Scalars["Float"];
@@ -79,6 +79,8 @@ export type QueryJobsArgs = {
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
+  username: Scalars["String"];
+  domain: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
 };
@@ -88,7 +90,7 @@ export type LoginMutationVariables = {
 };
 
 export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "User" } & Pick<User, "id" | "name" | "license">;
+  login: { __typename?: "User" } & Pick<User, "id" | "username" | "name">;
 };
 
 export type LogoutMutationVariables = {};
@@ -98,10 +100,27 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
   "logout"
 >;
 
+export type PostItemMutationVariables = {
+  input: PostItemInput;
+};
+
+export type PostItemMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postItem"
+>;
+
+export type JobsQueryVariables = {
+  input?: Maybe<JobSearchInput>;
+};
+
+export type JobsQuery = { __typename?: "Query" } & {
+  jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "site">>;
+};
+
 export type UserQueryVariables = {};
 
 export type UserQuery = { __typename?: "Query" } & {
-  user: Maybe<{ __typename?: "User" } & Pick<User, "id" | "name" | "license">>;
+  user: Maybe<{ __typename?: "User" } & Pick<User, "id" | "username" | "name">>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -290,6 +309,8 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  domain?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   license?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 }>;

@@ -29,7 +29,7 @@ export interface NewNavItemEntry {
   Entry_Type: string;
   Document_No: string;
   Item_No: string;
-  Description: string;
+  Description?: string;
   Location_Code: string;
   Quantity: number;
   Unit_Amount: number;
