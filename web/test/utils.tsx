@@ -4,8 +4,8 @@ import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps } from "react-router-dom";
 import { AuthProvider } from "../src/contexts/auth";
 import App from "../src/App";
-import { User, License } from "../src/entities";
 import fetchMock from "fetch-mock";
+import { User } from "../src/graphql";
 
 // Useful render methods.
 interface RenderComponentOptions {
@@ -58,11 +58,13 @@ export async function renderView(
 
 // Get test user.
 export function getUser({
-  fullName = faker.name.findName(),
-  license = License.Full,
-  username = `${faker.internet.domainName()}\\${faker.internet.userName()}`
+  id = faker.random.uuid(),
+  name = faker.name.findName(),
+  domain = faker.internet.domainWord(),
+  license = "Full License",
+  username = `${domain}\\${faker.internet.userName()}`
 }: Partial<User> = {}): User {
-  return { fullName, license, username };
+  return { id, domain, name, license, username };
 }
 
 export * from "@testing-library/react";
