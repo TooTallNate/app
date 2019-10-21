@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, FormEventHandler } from "react";
+import { useState, FormEventHandler, useEffect } from "react";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
@@ -13,6 +13,7 @@ import { getDocumentNumber } from "../utils";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
 import { usePostItemMutation, Job } from "../graphql";
+import useJobs from "../contexts/jobs";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
@@ -28,7 +29,19 @@ interface FormState {
 const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
+  const { default: defaultJob, setDefault } = useJobs();
   const [postItem, { loading }] = usePostItemMutation();
+
+  // Set job with default only if not already set.
+  useEffect(() => {
+    if (!formState.job && defaultJob) {
+      setFormState(formState => ({
+        ...formState,
+        job: defaultJob
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultJob]);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
@@ -61,6 +74,9 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
           }
         }
       });
+      if (formState.job !== defaultJob) {
+        await setDefault(formState.job);
+      }
       history.push("/");
     } catch (e) {
       alert(`failed to post, ${e}`);

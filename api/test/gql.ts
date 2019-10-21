@@ -2,6 +2,8 @@ import { gql } from "./utils";
 import {
   User,
   Job,
+  Defaults,
+  MutationUpdateDefaultsArgs,
   MutationLoginArgs,
   QueryJobsArgs,
   MutationPostItemArgs
@@ -52,5 +54,24 @@ export const postItemMutation = gql<
 >(
   `mutation PostItem($input: PostItemInput!) {
     postItem(input: $input)
+  }`
+);
+
+export const defaultsQuery = gql<{ defaults: Defaults }>(
+  `query Defaults {
+    defaults {
+      job
+    }
+  }`
+);
+
+export const updateDefaultsMutation = gql<
+  { updateDefaults: Defaults },
+  MutationUpdateDefaultsArgs
+>(
+  `mutation UpdateDefaults($input: DefaultsInput!) {
+    updateDefaults(input: $input) {
+      job
+    }
   }`
 );

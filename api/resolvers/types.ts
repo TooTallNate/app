@@ -4,6 +4,7 @@ import {
   GraphQLScalarTypeConfig
 } from "graphql";
 import { NavUser, NavJob } from "../nav/types";
+import { UserSettingsDocument } from "../models/user-settings";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
@@ -18,6 +19,15 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: any;
+};
+
+export type Defaults = {
+  __typename?: "Defaults";
+  job?: Maybe<Scalars["String"]>;
+};
+
+export type DefaultsInput = {
+  job?: Maybe<Scalars["String"]>;
 };
 
 export type Job = {
@@ -40,11 +50,16 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
+  updateDefaults: Defaults;
   postItem: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationUpdateDefaultsArgs = {
+  input: DefaultsInput;
 };
 
 export type MutationPostItemArgs = {
@@ -69,6 +84,7 @@ export type PostItemInput = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  defaults: Defaults;
   jobs: Array<Job>;
 };
 
@@ -108,6 +124,20 @@ export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "postItem"
 >;
+
+export type UpdateDefaultsMutationVariables = {
+  input: DefaultsInput;
+};
+
+export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
+  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+};
+
+export type DefaultsQueryVariables = {};
+
+export type DefaultsQuery = { __typename?: "Query" } & {
+  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+};
 
 export type JobsQueryVariables = {
   input?: Maybe<JobSearchInput>;
@@ -233,11 +263,13 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<NavUser>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
+  Defaults: ResolverTypeWrapper<UserSettingsDocument>;
   JobSearchInput: JobSearchInput;
   Job: ResolverTypeWrapper<NavJob>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
+  DefaultsInput: DefaultsInput;
   PostItemInput: PostItemInput;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
@@ -249,11 +281,13 @@ export type ResolversParentTypes = ResolversObject<{
   User: NavUser;
   ID: Scalars["ID"];
   String: Scalars["String"];
+  Defaults: UserSettingsDocument;
   JobSearchInput: JobSearchInput;
   Job: NavJob;
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
+  DefaultsInput: DefaultsInput;
   PostItemInput: PostItemInput;
   Date: Scalars["Date"];
   Float: Scalars["Float"];
@@ -263,6 +297,13 @@ export interface DateScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Date"], any> {
   name: "Date";
 }
+
+export type DefaultsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Defaults"] = ResolversParentTypes["Defaults"]
+> = ResolversObject<{
+  job?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+}>;
 
 export type JobResolvers<
   ContextType = GraphqlContext,
@@ -283,6 +324,12 @@ export type MutationResolvers<
     RequireFields<MutationLoginArgs, "input">
   >;
   logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  updateDefaults?: Resolver<
+    ResolversTypes["Defaults"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateDefaultsArgs, "input">
+  >;
   postItem?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
@@ -296,6 +343,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  defaults?: Resolver<ResolversTypes["Defaults"], ParentType, ContextType>;
   jobs?: Resolver<
     Array<ResolversTypes["Job"]>,
     ParentType,
@@ -317,6 +365,7 @@ export type UserResolvers<
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Date?: GraphQLScalarType;
+  Defaults?: DefaultsResolvers<ContextType>;
   Job?: JobResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

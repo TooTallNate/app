@@ -8,6 +8,10 @@ type User {
   name: String!
 }
 
+type Defaults {
+  job: String
+}
+
 type Job {
   number: String!
   site: String!
@@ -16,6 +20,10 @@ type Job {
 input LoginInput {
   username: String!
   password: String!
+}
+
+input DefaultsInput {
+  job: String
 }
 
 input JobSearchInput {
@@ -40,11 +48,13 @@ input PostItemInput {
 
 type Query {
   user: User
+  defaults: Defaults!
   jobs(input: JobSearchInput): [Job!]!
 }
 
 type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
+  updateDefaults(input: DefaultsInput!): Defaults!
   postItem(input: PostItemInput!): Boolean!
 }

@@ -16,6 +16,7 @@ generates:
       mappers:
         User: ../nav/types#NavUser
         Job: ../nav/types#NavJob
+        Defaults: ../models/user-settings#UserSettingsDocument
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"

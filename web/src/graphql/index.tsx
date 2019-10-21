@@ -12,6 +12,15 @@ export type Scalars = {
   Date: Date;
 };
 
+export type Defaults = {
+  __typename?: "Defaults";
+  job?: Maybe<Scalars["String"]>;
+};
+
+export type DefaultsInput = {
+  job?: Maybe<Scalars["String"]>;
+};
+
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
@@ -32,11 +41,16 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
+  updateDefaults: Defaults;
   postItem: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationUpdateDefaultsArgs = {
+  input: DefaultsInput;
 };
 
 export type MutationPostItemArgs = {
@@ -61,6 +75,7 @@ export type PostItemInput = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  defaults: Defaults;
   jobs: Array<Job>;
 };
 
@@ -100,6 +115,20 @@ export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "postItem"
 >;
+
+export type UpdateDefaultsMutationVariables = {
+  input: DefaultsInput;
+};
+
+export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
+  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+};
+
+export type DefaultsQueryVariables = {};
+
+export type DefaultsQuery = { __typename?: "Query" } & {
+  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+};
 
 export type JobsQueryVariables = {
   input?: Maybe<JobSearchInput>;
@@ -255,6 +284,109 @@ export type PostItemMutationResult = ApolloReactCommon.MutationResult<
 export type PostItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PostItemMutation,
   PostItemMutationVariables
+>;
+export const UpdateDefaultsDocument = gql`
+  mutation UpdateDefaults($input: DefaultsInput!) {
+    updateDefaults(input: $input) {
+      job
+    }
+  }
+`;
+export type UpdateDefaultsMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateDefaultsMutation,
+  UpdateDefaultsMutationVariables
+>;
+
+/**
+ * __useUpdateDefaultsMutation__
+ *
+ * To run a mutation, you first call `useUpdateDefaultsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDefaultsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDefaultsMutation, { data, loading, error }] = useUpdateDefaultsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateDefaultsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateDefaultsMutation,
+    UpdateDefaultsMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateDefaultsMutation,
+    UpdateDefaultsMutationVariables
+  >(UpdateDefaultsDocument, baseOptions);
+}
+export type UpdateDefaultsMutationHookResult = ReturnType<
+  typeof useUpdateDefaultsMutation
+>;
+export type UpdateDefaultsMutationResult = ApolloReactCommon.MutationResult<
+  UpdateDefaultsMutation
+>;
+export type UpdateDefaultsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateDefaultsMutation,
+  UpdateDefaultsMutationVariables
+>;
+export const DefaultsDocument = gql`
+  query Defaults {
+    defaults {
+      job
+    }
+  }
+`;
+
+/**
+ * __useDefaultsQuery__
+ *
+ * To run a query within a React component, call `useDefaultsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDefaultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDefaultsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDefaultsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    DefaultsQuery,
+    DefaultsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<DefaultsQuery, DefaultsQueryVariables>(
+    DefaultsDocument,
+    baseOptions
+  );
+}
+export function useDefaultsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    DefaultsQuery,
+    DefaultsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<DefaultsQuery, DefaultsQueryVariables>(
+    DefaultsDocument,
+    baseOptions
+  );
+}
+export type DefaultsQueryHookResult = ReturnType<typeof useDefaultsQuery>;
+export type DefaultsLazyQueryHookResult = ReturnType<
+  typeof useDefaultsLazyQuery
+>;
+export type DefaultsQueryResult = ApolloReactCommon.QueryResult<
+  DefaultsQuery,
+  DefaultsQueryVariables
 >;
 export const JobsDocument = gql`
   query Jobs($input: JobSearchInput) {

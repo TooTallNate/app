@@ -1,0 +1,5 @@
+mutation UpdateDefaults($input: DefaultsInput!) {
+  updateDefaults(input: $input) {
+    job
+  }
+}

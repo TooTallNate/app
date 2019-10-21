@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import TypeaheadInput from "./ui/TypeaheadInput";
-import { useJobsQuery, Job } from "../graphql";
+import { Job } from "../graphql";
+import useJobs from "../contexts/jobs";
 
 interface JobSelectorProps
   extends Omit<
@@ -20,14 +21,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({
   onChange = () => {},
   ...props
 }) => {
-  const { data: { jobs = [] } = {} } = useJobsQuery({
-    variables: {
-      input: {
-        status: ["Open"],
-        postingGroup: ["MKT PIGS", "SOW", "GDU"]
-      }
-    }
-  });
+  const { jobs } = useJobs();
 
   return (
     <TypeaheadInput
