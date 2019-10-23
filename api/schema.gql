@@ -10,6 +10,7 @@ type User {
 
 type Defaults {
   job: String
+  price: Float
 }
 
 type Job {
@@ -24,6 +25,7 @@ input LoginInput {
 
 input DefaultsInput {
   job: String
+  price: Float
 }
 
 input JobSearchInput {

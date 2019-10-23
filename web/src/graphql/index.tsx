@@ -15,10 +15,12 @@ export type Scalars = {
 export type Defaults = {
   __typename?: "Defaults";
   job?: Maybe<Scalars["String"]>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
   job?: Maybe<Scalars["String"]>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type Job = {
@@ -121,13 +123,13 @@ export type UpdateDefaultsMutationVariables = {
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
 };
 
 export type JobsQueryVariables = {
@@ -289,6 +291,7 @@ export const UpdateDefaultsDocument = gql`
   mutation UpdateDefaults($input: DefaultsInput!) {
     updateDefaults(input: $input) {
       job
+      price
     }
   }
 `;
@@ -339,6 +342,7 @@ export const DefaultsDocument = gql`
   query Defaults {
     defaults {
       job
+      price
     }
   }
 `;

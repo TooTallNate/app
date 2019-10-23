@@ -1,5 +1,6 @@
 query Defaults {
   defaults {
     job
+    price
   }
 }

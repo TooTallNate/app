@@ -61,6 +61,7 @@ export const defaultsQuery = gql<{ defaults: Defaults }>(
   `query Defaults {
     defaults {
       job
+      price
     }
   }`
 );
@@ -72,6 +73,7 @@ export const updateDefaultsMutation = gql<
   `mutation UpdateDefaults($input: DefaultsInput!) {
     updateDefaults(input: $input) {
       job
+      price
     }
   }`
 );

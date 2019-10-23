@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, FormEventHandler } from "react";
+import { useState, FormEventHandler, useEffect } from "react";
 import NumberInput from "../components/ui/NumberInput";
 import ButtonInput from "../components/ui/ButtonInput";
 import ViewTitle from "../components/ui/ViewTitle";
@@ -13,6 +13,7 @@ import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
 import { usePostItemMutation, Job } from "../graphql";
+import useDefaults from "../contexts/defaults";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
 
@@ -28,7 +29,21 @@ interface FormState {
 const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
+  const [{ price: defaultPrice }, setDefaults] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
+
+  // Set price with default only if not already set.
+  useEffect(() => {
+    if (
+      typeof formState.price === "undefined" &&
+      typeof defaultPrice === "number"
+    ) {
+      setFormState(formState => ({
+        ...formState,
+        price: defaultPrice
+      }));
+    }
+  }, [defaultPrice, formState.price]);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
@@ -61,6 +76,9 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
           }
         }
       });
+      if (formState.price !== defaultPrice) {
+        await setDefaults({ price: formState.price });
+      }
       history.push("/");
     } catch (e) {
       alert(`failed to post, ${e}`);

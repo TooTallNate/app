@@ -24,10 +24,12 @@ export type Scalars = {
 export type Defaults = {
   __typename?: "Defaults";
   job?: Maybe<Scalars["String"]>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
   job?: Maybe<Scalars["String"]>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type Job = {
@@ -130,13 +132,13 @@ export type UpdateDefaultsMutationVariables = {
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job">;
+  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
 };
 
 export type JobsQueryVariables = {
@@ -264,6 +266,7 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
   Defaults: ResolverTypeWrapper<UserSettingsDocument>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   JobSearchInput: JobSearchInput;
   Job: ResolverTypeWrapper<NavJob>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -272,7 +275,6 @@ export type ResolversTypes = ResolversObject<{
   DefaultsInput: DefaultsInput;
   PostItemInput: PostItemInput;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -282,6 +284,7 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars["ID"];
   String: Scalars["String"];
   Defaults: UserSettingsDocument;
+  Float: Scalars["Float"];
   JobSearchInput: JobSearchInput;
   Job: NavJob;
   Mutation: {};
@@ -290,7 +293,6 @@ export type ResolversParentTypes = ResolversObject<{
   DefaultsInput: DefaultsInput;
   PostItemInput: PostItemInput;
   Date: Scalars["Date"];
-  Float: Scalars["Float"];
 }>;
 
 export interface DateScalarConfig
@@ -303,6 +305,7 @@ export type DefaultsResolvers<
   ParentType extends ResolversParentTypes["Defaults"] = ResolversParentTypes["Defaults"]
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
 }>;
 
 export type JobResolvers<

@@ -1,3 +1,4 @@
+import faker from "faker";
 import { expectUnauthorized, login, navMock } from "../test/utils";
 import { defaultsQuery, updateDefaultsMutation } from "../test/gql";
 import UserSettingsModel from "../models/user-settings";
@@ -12,7 +13,8 @@ describe("defaults query", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       defaults: {
-        job: null
+        job: null,
+        price: null
       }
     });
   });
@@ -20,12 +22,13 @@ describe("defaults query", () => {
   test("defaults are returned from the database when defined", async () => {
     const username = navMock.credentials.username;
     const job = navMock.jobs[0].No;
-    await UserSettingsModel.create({ username, job });
+    const price = faker.random.number();
+    await UserSettingsModel.create({ username, job, price });
     await login();
     const { errors, data } = await defaultsQuery();
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      defaults: { job }
+      defaults: { job, price }
     });
   });
 });
@@ -40,7 +43,8 @@ describe("update defaults mutation", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       updateDefaults: {
-        job: null
+        job: null,
+        price: null
       }
     });
     const updatedSettings = await UserSettingsModel.findOne({
@@ -52,12 +56,13 @@ describe("update defaults mutation", () => {
   test("makes no changes by default", async () => {
     const username = navMock.credentials.username;
     const job = navMock.jobs[0].No;
-    const settings = await UserSettingsModel.create({ username, job });
+    const price = faker.random.number();
+    const settings = await UserSettingsModel.create({ username, job, price });
     await login();
     const { errors, data } = await updateDefaultsMutation({ input: {} });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job }
+      updateDefaults: { job, price }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
     expect(updatedSettings).toMatchObject({ username, job });
@@ -66,17 +71,18 @@ describe("update defaults mutation", () => {
   test("resets defaults", async () => {
     const username = navMock.credentials.username;
     const job = navMock.jobs[0].No;
-    const settings = await UserSettingsModel.create({ username, job });
+    const price = faker.random.number();
+    const settings = await UserSettingsModel.create({ username, job, price });
     await login();
     const { errors, data } = await updateDefaultsMutation({
-      input: { job: null }
+      input: { job: null, price: null }
     });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job: null }
+      updateDefaults: { job: null, price: null }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
-    expect(updatedSettings).toMatchObject({ username, job: null });
+    expect(updatedSettings).toMatchObject({ username, job: null, price: null });
   });
 
   test("updates default job", async () => {
@@ -90,9 +96,26 @@ describe("update defaults mutation", () => {
     const { errors, data } = await updateDefaultsMutation({ input: { job } });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job }
+      updateDefaults: { job, price: null }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
     expect(updatedSettings).toMatchObject({ username, job });
+  });
+
+  test("updates default price", async () => {
+    const username = navMock.credentials.username;
+    const settings = await UserSettingsModel.create({
+      username,
+      price: faker.random.number()
+    });
+    await login();
+    const price = faker.random.number();
+    const { errors, data } = await updateDefaultsMutation({ input: { price } });
+    expect(errors).toBeFalsy();
+    expect(data).toEqual({
+      updateDefaults: { price, job: null }
+    });
+    const updatedSettings = await UserSettingsModel.findById(settings._id);
+    expect(updatedSettings).toMatchObject({ username, price });
   });
 });

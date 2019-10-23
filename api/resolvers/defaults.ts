@@ -21,6 +21,9 @@ export const DefaultsMutation: MutationResolvers = {
     if (input.hasOwnProperty("job")) {
       settings.job = input.job;
     }
+    if (input.hasOwnProperty("price")) {
+      settings.price = input.price;
+    }
     await settings.save();
     return settings;
   }
