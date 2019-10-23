@@ -1,4 +1,9 @@
-import React, { createContext, useContext } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useCallback
+} from "react";
 import {
   useUserQuery,
   User,
@@ -39,6 +44,7 @@ const AuthProvider: React.FC = ({ children }) => {
       }
     }
   });
+
   const [logoutMutation] = useLogoutMutation({
     update(cache) {
       cache.writeQuery<UserQuery, UserQueryVariables>({
@@ -50,20 +56,23 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   });
 
-  const login = async (username: string, password: string) => {
-    await loginMutation({
-      variables: {
-        input: {
-          username,
-          password
+  const login = useCallback(
+    async (username: string, password: string) => {
+      await loginMutation({
+        variables: {
+          input: {
+            username,
+            password
+          }
         }
-      }
-    });
-  };
+      });
+    },
+    [loginMutation]
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await logoutMutation();
-  };
+  }, [logoutMutation]);
 
   return loading ? (
     <div>Loading...</div>

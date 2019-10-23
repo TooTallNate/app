@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useImperativeHandle, forwardRef, createRef } from "react";
 import faker from "faker";
 import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
@@ -8,8 +8,11 @@ import fetchMock from "fetch-mock";
 import { User } from "../src/graphql";
 import { MockedResponse, MockedProvider } from "@apollo/react-testing";
 
+export * from "@testing-library/react";
+
 // Useful render methods.
 interface RenderComponentOptions {
+  wrapper?: React.ReactType;
   router?: {
     routes?: RouteProps[];
     initialRoute?: string;
@@ -23,6 +26,7 @@ interface RenderComponentOptions {
 export function renderComponent(
   ui: React.ReactElement,
   {
+    wrapper: Wrapper = React.Fragment,
     router: { routes = [], initialRoute = "/" } = {},
     apollo = {}
   }: RenderComponentOptions = {}
@@ -30,16 +34,35 @@ export function renderComponent(
   return renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
       <MockedProvider {...apollo}>
-        <Switch>
-          <Route exact path={initialRoute} render={() => ui} />
-          {routes.map((route, i) => (
-            <Route key={i} {...route} />
-          ))}
-          <Route path="*" render={() => "Route not defined"} />
-        </Switch>
+        <Wrapper>
+          <Switch>
+            <Route exact path={initialRoute} render={() => ui} />
+            {routes.map((route, i) => (
+              <Route key={i} {...route} />
+            ))}
+            <Route path="*" render={() => "Route not defined"} />
+          </Switch>
+        </Wrapper>
       </MockedProvider>
     </MemoryRouter>
   );
+}
+
+export function renderHook<T>(
+  useHook: () => T,
+  options: RenderComponentOptions
+) {
+  const TestComponent = forwardRef<T>((props, ref) => {
+    const hook = useHook();
+    useImperativeHandle(ref, () => hook, [hook]);
+    return <div>Child</div>;
+  });
+  const ref = createRef<T>();
+  const utils = renderComponent(<TestComponent ref={ref} />, options);
+  return {
+    ...utils,
+    getHook: () => ref.current
+  };
 }
 
 interface RenderViewOptions {
@@ -81,5 +104,3 @@ export function getUser({
 }: Partial<User> = {}): User {
   return { id, domain, name, license, username };
 }
-
-export * from "@testing-library/react";
