@@ -1,28 +1,43 @@
 import React from "react";
 import faker from "faker";
 import { render as renderRTL, waitForDomChange } from "@testing-library/react";
-import { MemoryRouter, Route, RouteProps } from "react-router-dom";
+import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
 import { AuthProvider } from "../src/contexts/auth";
 import App from "../src/App";
 import fetchMock from "fetch-mock";
 import { User } from "../src/graphql";
+import { MockedResponse, MockedProvider } from "@apollo/react-testing";
 
 // Useful render methods.
 interface RenderComponentOptions {
-  routes?: RouteProps[];
-  initialRoute?: string;
+  router?: {
+    routes?: RouteProps[];
+    initialRoute?: string;
+  };
+  apollo?: {
+    mocks?: ReadonlyArray<MockedResponse>;
+    addTypename?: boolean;
+  };
 }
 
 export function renderComponent(
   ui: React.ReactElement,
-  { routes = [], initialRoute = "/" }: RenderComponentOptions = {}
+  {
+    router: { routes = [], initialRoute = "/" } = {},
+    apollo = {}
+  }: RenderComponentOptions = {}
 ) {
   return renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <Route exact path={initialRoute} render={() => ui} />
-      {routes.map((route, i) => (
-        <Route key={i} {...route} />
-      ))}
+      <MockedProvider {...apollo}>
+        <Switch>
+          <Route exact path={initialRoute} render={() => ui} />
+          {routes.map((route, i) => (
+            <Route key={i} {...route} />
+          ))}
+          <Route path="*" render={() => "Route not defined"} />
+        </Switch>
+      </MockedProvider>
     </MemoryRouter>
   );
 }

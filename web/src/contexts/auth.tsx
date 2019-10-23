@@ -11,14 +11,19 @@ import {
 
 type AuthUser = Pick<User, "id" | "name" | "username">;
 
-interface AuthContextValue {
+export interface AuthContextValue {
   isAuthenticated: boolean;
   user: AuthUser | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<Partial<AuthContextValue>>({});
+const AuthContext = createContext<AuthContextValue>({
+  isAuthenticated: false,
+  user: null,
+  async login() {},
+  async logout() {}
+});
 
 const AuthProvider: React.FC = ({ children }) => {
   const { data, loading } = useUserQuery();
@@ -60,7 +65,9 @@ const AuthProvider: React.FC = ({ children }) => {
     await logoutMutation();
   };
 
-  return loading ? null : (
+  return loading ? (
+    <div>Loading...</div>
+  ) : (
     <AuthContext.Provider
       value={{
         isAuthenticated: !!data && !!data.user,
