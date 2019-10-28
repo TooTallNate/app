@@ -1,19 +1,29 @@
 import {
   useDefaultsQuery,
   useUpdateDefaultsMutation,
-  DefaultsInput,
-  Defaults,
   DefaultsDocument,
-  DefaultsQuery
+  DefaultsQuery,
+  Job
 } from "../graphql";
+import { useCallback } from "react";
+import useJobs from "./jobs";
+
+export interface DefaultValues {
+  job?: Job | null;
+  price?: number | null;
+}
 
 export type UseDefaultsResult = [
-  Defaults,
-  (input: DefaultsInput) => Promise<void>
+  { defaults: DefaultValues; loading: boolean },
+  (input: DefaultValues) => Promise<void>
 ];
 
 export default function useDefaults(): UseDefaultsResult {
-  const { data: { defaults = {} } = {} } = useDefaultsQuery();
+  const { data: { jobs = [] } = {}, loading: loadingJobs } = useJobs();
+  const {
+    data: { defaults = {} } = {},
+    loading: loadingDefaults
+  } = useDefaultsQuery();
   const [_update] = useUpdateDefaultsMutation({
     update(cache, { data }) {
       if (data) {
@@ -27,9 +37,28 @@ export default function useDefaults(): UseDefaultsResult {
     }
   });
 
-  async function update(input: DefaultsInput) {
-    await _update({ variables: { input } });
-  }
+  const update = useCallback(
+    async ({ price, job }: DefaultValues) => {
+      await _update({
+        variables: {
+          input: {
+            ...(price && { price }),
+            ...(job && { job: job.number })
+          }
+        }
+      });
+    },
+    [_update]
+  );
 
-  return [defaults, update];
+  return [
+    {
+      defaults: {
+        job: jobs.find(job => job.number === defaults.job),
+        price: defaults.price
+      },
+      loading: loadingJobs || loadingDefaults
+    },
+    update
+  ];
 }

@@ -8,6 +8,7 @@ import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
 import SelectLocationView from "./views/SelectLocationView";
+import useDefaults from "./contexts/defaults";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -21,7 +22,10 @@ const UnauthenticatedApp: React.FC = () => {
 };
 
 const AuthenticatedApp: React.FC = () => {
-  return (
+  const [{ loading }] = useDefaults();
+  return loading ? (
+    <div>Loading...</div>
+  ) : (
     <Fragment>
       <div
         css={{

@@ -21,7 +21,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({
   onChange = () => {},
   ...props
 }) => {
-  const { jobs } = useJobs();
+  const { data: { jobs = [] } = {} } = useJobs();
 
   return (
     <TypeaheadInput

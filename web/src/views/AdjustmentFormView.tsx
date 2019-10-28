@@ -13,7 +13,6 @@ import { useAuth } from "../contexts/auth";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import FormField from "../components/ui/FormField";
 import { usePostItemMutation, Job } from "../graphql";
-import useJobs from "../contexts/jobs";
 import useDefaults from "../contexts/defaults";
 
 const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
@@ -30,8 +29,12 @@ interface FormState {
 const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
-  const [{ price: defaultPrice }, setDefaults] = useDefaults();
-  const { default: defaultJob, setDefault } = useJobs();
+  const [
+    {
+      defaults: { price: defaultPrice, job: defaultJob }
+    },
+    setDefaults
+  ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
 
   // Set job with default only if not already set.
@@ -42,8 +45,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         job: defaultJob
       }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultJob]);
+  }, [defaultJob, formState.job]);
 
   // Set price with default only if not already set.
   useEffect(() => {
@@ -91,7 +93,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }
       });
       if (formState.job !== defaultJob) {
-        await setDefault(formState.job);
+        await setDefaults({ job: formState.job });
       }
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });

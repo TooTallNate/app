@@ -29,7 +29,12 @@ interface FormState {
 const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
-  const [{ price: defaultPrice }, setDefaults] = useDefaults();
+  const [
+    {
+      defaults: { price: defaultPrice }
+    },
+    setDefaults
+  ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
 
   // Set price with default only if not already set.

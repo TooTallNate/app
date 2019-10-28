@@ -1,11 +1,7 @@
-import { useJobsQuery, Job } from "../graphql";
-import useDefaults from "./defaults";
-import { useState, useEffect, useCallback } from "react";
+import { useJobsQuery } from "../graphql";
 
 export default function useJobs() {
-  const [defaultJob, setDefaultJob] = useState<Job>();
-  const [defaults, setDefaults] = useDefaults();
-  const { data: { jobs = [] } = {} } = useJobsQuery({
+  return useJobsQuery({
     variables: {
       input: {
         status: ["Open"],
@@ -13,15 +9,4 @@ export default function useJobs() {
       }
     }
   });
-
-  useEffect(() => {
-    setDefaultJob(jobs.find(j => j.number === defaults.job));
-  }, [defaults.job, jobs]);
-
-  const setDefault = useCallback(
-    (job: Job) => setDefaults({ job: job.number }),
-    [setDefaults]
-  );
-
-  return { jobs, default: defaultJob, setDefault };
 }
