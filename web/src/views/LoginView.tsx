@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { useAuth } from "../contexts/auth";
 import ButtonInput from "../components/ui/ButtonInput";
 import FormLabel from "../components/ui/FormLabel";
@@ -13,7 +12,7 @@ interface Credentials {
   password?: string;
 }
 
-const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
+const LoginView: React.FC = () => {
   const { login } = useAuth();
   const [isInvalid, setInvalid] = useState<boolean>(false);
   const [{ username, password }, setCredentials] = useState<Credentials>({
@@ -42,7 +41,6 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
             try {
               setInvalid(false);
               login && (await login(username, password));
-              history.replace("/form/action");
             } catch {
               setInvalid(true);
             }

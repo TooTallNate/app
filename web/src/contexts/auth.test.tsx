@@ -15,9 +15,9 @@ function render(mocks: MockedResponse[]) {
   });
 }
 
-test("renders loading", async () => {
+test("renders loading ui", async () => {
   const { findByText } = render([]);
-  await findByText(/Loading/i);
+  await findByText(/Loggin In.../i);
 });
 
 test("returns unauthenticated if user query returns null", async () => {

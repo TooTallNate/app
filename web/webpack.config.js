@@ -79,7 +79,8 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api": "http://localhost:3001"
-    }
+    },
+    host: "0.0.0.0"
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"]

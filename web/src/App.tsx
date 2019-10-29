@@ -9,24 +9,38 @@ import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
 import SelectLocationView from "./views/SelectLocationView";
 import useDefaults from "./contexts/defaults";
+import FullPageSpinner from "./components/FullPageSpinner";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
-    <Fragment>
-      <Switch>
-        <Route path="/login" component={LoginView} />
-        <Redirect to="/login" />
-      </Switch>
-    </Fragment>
+    <div
+      css={{
+        margin: "auto",
+        height: "100%",
+        maxWidth: 800,
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <LoginView />
+    </div>
   );
 };
 
 const AuthenticatedApp: React.FC = () => {
   const [{ loading }] = useDefaults();
   return loading ? (
-    <div>Loading...</div>
+    <FullPageSpinner>Loading Settings...</FullPageSpinner>
   ) : (
-    <Fragment>
+    <div
+      css={{
+        margin: "auto",
+        height: "100%",
+        maxWidth: 800,
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
       <div
         css={{
           minHeight: 0,
@@ -41,25 +55,13 @@ const AuthenticatedApp: React.FC = () => {
         </Switch>
       </div>
       <MainNav />
-    </Fragment>
+    </div>
   );
 };
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  return (
-    <div
-      css={{
-        margin: "auto",
-        height: "100%",
-        maxWidth: 800,
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
-      {isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-    </div>
-  );
+  return isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 };
 
 export default App;

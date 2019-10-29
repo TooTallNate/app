@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useCallback
-} from "react";
+import React, { createContext, useContext, useCallback } from "react";
 import {
   useUserQuery,
   User,
@@ -13,6 +8,7 @@ import {
   UserQuery,
   UserQueryVariables
 } from "../graphql";
+import FullPageSpinner from "../components/FullPageSpinner";
 
 type AuthUser = Pick<User, "id" | "name" | "username">;
 
@@ -75,7 +71,7 @@ const AuthProvider: React.FC = ({ children }) => {
   }, [logoutMutation]);
 
   return loading ? (
-    <div>Loading...</div>
+    <FullPageSpinner>Loggin In...</FullPageSpinner>
   ) : (
     <AuthContext.Provider
       value={{
