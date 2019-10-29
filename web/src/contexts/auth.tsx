@@ -71,7 +71,7 @@ const AuthProvider: React.FC = ({ children }) => {
   }, [logoutMutation]);
 
   return loading ? (
-    <FullPageSpinner>Loggin In...</FullPageSpinner>
+    <FullPageSpinner>Logging In...</FullPageSpinner>
   ) : (
     <AuthContext.Provider
       value={{
