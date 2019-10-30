@@ -35,6 +35,9 @@ export interface NewNavItemEntry {
   Unit_Amount: number;
   Weight: number;
   Job_No: string;
+  Gen_Prod_Posting_Group?: string;
+  Shortcut_Dimension_1_Code?: string;
+  Shortcut_Dimension_2_Code?: string;
 }
 
 export interface NavItemEntry extends NewNavItemEntry {

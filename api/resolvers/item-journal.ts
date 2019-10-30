@@ -24,7 +24,10 @@ export const ItemJournalMutation: MutationResolvers = {
         Quantity: input.quantity,
         Unit_Amount: input.amount,
         Weight: input.weight,
-        Job_No: input.job
+        Job_No: input.job,
+        Gen_Prod_Posting_Group: input.prodPostingGroup,
+        Shortcut_Dimension_1_Code: input.entityType,
+        Shortcut_Dimension_2_Code: input.costCenterCode
       },
       user
     );

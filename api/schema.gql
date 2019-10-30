@@ -46,6 +46,9 @@ input PostItemInput {
   amount: Float!
   weight: Float!
   job: String!
+  prodPostingGroup: String
+  costCenterCode: String
+  entityType: String
 }
 
 type Query {

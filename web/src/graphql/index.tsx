@@ -72,6 +72,9 @@ export type PostItemInput = {
   amount: Scalars["Float"];
   weight: Scalars["Float"];
   job: Scalars["String"];
+  prodPostingGroup?: Maybe<Scalars["String"]>;
+  costCenterCode?: Maybe<Scalars["String"]>;
+  entityType?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {

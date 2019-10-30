@@ -17,7 +17,10 @@ describe("post item mutation", () => {
           quantity: 0,
           amount: 0,
           weight: 0,
-          job: ""
+          job: "",
+          prodPostingGroup: "MARKET HOGS",
+          entityType: "2",
+          costCenterCode: "211"
         }
       })
     ));
@@ -37,7 +40,10 @@ describe("post item mutation", () => {
         quantity: 2,
         amount: 45.5,
         weight: 90,
-        job: "1901F"
+        job: "1901F",
+        prodPostingGroup: "MARKET HOGS",
+        entityType: "2",
+        costCenterCode: "211"
       }
     });
     expect(errors).toBeFalsy();
@@ -58,7 +64,10 @@ describe("post item mutation", () => {
         Quantity: 2,
         Unit_Amount: 45.5,
         Weight: 90,
-        Job_No: "1901F"
+        Job_No: "1901F",
+        Gen_Prod_Posting_Group: "MARKET HOGS",
+        Shortcut_Dimension_1_Code: "2",
+        Shortcut_Dimension_2_Code: "211"
       },
       expect.objectContaining(navMock.credentials)
     );
@@ -80,7 +89,10 @@ describe("post item mutation", () => {
         quantity: 2,
         amount: 45.5,
         weight: 90,
-        job: "1901F"
+        job: "1901F",
+        prodPostingGroup: "MARKET HOGS",
+        entityType: "2",
+        costCenterCode: "211"
       }
     });
     expect(errors).toEqual([

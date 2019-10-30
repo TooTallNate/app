@@ -77,7 +77,10 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
-            location: formState.job.site
+            location: formState.job.site,
+            prodPostingGroup: "WEAN PIGS",
+            costCenterCode: "213",
+            entityType: "2"
           }
         }
       });
