@@ -1,5 +1,5 @@
 import { User, UserQuery, UserMutation } from "./user";
-import { Job, JobQuery } from "./job";
+import { Job, JobDimensions, JobQuery } from "./job";
 import { ItemJournalMutation } from "./item-journal";
 import { Defaults, DefaultsQuery, DefaultsMutation } from "./defaults";
 
@@ -16,5 +16,6 @@ export default {
   },
   User,
   Job,
+  JobDimensions,
   Defaults
 };

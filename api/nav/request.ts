@@ -1,8 +1,13 @@
 import request from "httpntlm";
 
+export interface Filter {
+  [prop: string]: any[] | any;
+}
+
 export interface NavRequest {
-  url: string;
-  domainUsername: string;
+  resource: string;
+  filter?: Filter;
+  username: string;
   password: string;
   method: string;
   body?: {
@@ -20,16 +25,41 @@ export interface NavResponse {
   };
 }
 
+function buildFilter(filters: Filter): string {
+  const filter = Object.keys(filters)
+    .map(prop => {
+      const joined = (Array.isArray(filters[prop])
+        ? filters[prop]
+        : [filters[prop]]
+      )
+        .map((value: any) => {
+          const stringified =
+            typeof value === "string" ? `'${value}'` : `${value}`;
+          return `${prop} eq ${stringified}`;
+        })
+        .join(" or ");
+      return joined ? `(${joined})` : "";
+    })
+    .filter(f => f.length > 0)
+    .join(" and ");
+  return filter ? `$filter=${filter}` : "";
+}
+
 export default function ntlmRequest({
-  url,
-  domainUsername,
+  resource,
+  filter,
+  username: domainUsername,
   password,
   method,
   body,
   headers
 }: NavRequest): Promise<NavResponse> {
-  console.log(`NAV PROXY ${url}`);
   const [domain, username] = domainUsername.split("\\");
+  const query = ["$format=json", buildFilter(filter)]
+    .filter(x => x && x.length > 0)
+    .join("&");
+  const url = `${process.env.NAV_BASE_URL}/${resource}?${query}`;
+  console.log(`NAV PROXY ${url}`);
   return new Promise((resolve, reject) =>
     request.method(
       method,

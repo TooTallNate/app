@@ -3,15 +3,24 @@ export interface NavCredentials {
   password: string;
 }
 
+export interface NavSearch {
+  [prop: string]: any[];
+}
+
 export interface NavUser {
   User_Security_ID: string;
   License_Type: string;
   Full_Name: string;
 }
 
-export interface NavJobSearch {
+export interface NavJobSearch extends NavSearch {
   Status?: string[];
   Job_Posting_Group?: string[];
+}
+
+export interface NavDimensionSearch extends NavSearch {
+  Table_ID?: number[];
+  No?: string[];
 }
 
 export interface NavJob {
@@ -20,6 +29,16 @@ export interface NavJob {
   Status: string;
   Job_Posting_Group: string;
 }
+
+export interface NavDimension {
+  Table_ID: number;
+  No: string;
+  Dimension_Code: string;
+  Dimension_Value_Code: string;
+  Value_Posting: string;
+}
+
+export type NavDimensions = NavDimension[];
 
 export interface NewNavItemEntry {
   Journal_Template_Name: string;

@@ -3,7 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig
 } from "graphql";
-import { NavUser, NavJob } from "../nav/types";
+import { NavUser, NavJob, NavDimensions } from "../nav/types";
 import { UserSettingsDocument } from "../models/user-settings";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
@@ -36,6 +36,13 @@ export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
   site: Scalars["String"];
+  dimensions: JobDimensions;
+};
+
+export type JobDimensions = {
+  __typename?: "JobDimensions";
+  costCenter?: Maybe<Scalars["String"]>;
+  entity?: Maybe<Scalars["String"]>;
 };
 
 export type JobSearchInput = {
@@ -272,6 +279,7 @@ export type ResolversTypes = ResolversObject<{
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   JobSearchInput: JobSearchInput;
   Job: ResolverTypeWrapper<NavJob>;
+  JobDimensions: ResolverTypeWrapper<NavDimensions>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
@@ -290,6 +298,7 @@ export type ResolversParentTypes = ResolversObject<{
   Float: Scalars["Float"];
   JobSearchInput: JobSearchInput;
   Job: NavJob;
+  JobDimensions: NavDimensions;
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
@@ -317,6 +326,23 @@ export type JobResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   site?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  dimensions?: Resolver<
+    ResolversTypes["JobDimensions"],
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type JobDimensionsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["JobDimensions"] = ResolversParentTypes["JobDimensions"]
+> = ResolversObject<{
+  costCenter?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  entity?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<
@@ -373,6 +399,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Date?: GraphQLScalarType;
   Defaults?: DefaultsResolvers<ContextType>;
   Job?: JobResolvers<ContextType>;
+  JobDimensions?: JobDimensionsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

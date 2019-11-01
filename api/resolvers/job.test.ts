@@ -9,12 +9,25 @@ describe("jobs query", () => {
     const { data, errors } = await jobsQuery();
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      jobs: navMock.jobs.map(j => ({ number: j.No, site: j.Site }))
+      jobs: navMock.jobs.map(j => ({
+        number: j.No,
+        site: j.Site,
+        dimensions: {
+          costCenter: navMock.dimensions.find(
+            dim =>
+              dim.Table_ID === 167 &&
+              dim.No === j.No &&
+              dim.Dimension_Code === "COST CENTER"
+          ).Dimension_Value_Code,
+          entity: navMock.dimensions.find(
+            dim =>
+              dim.Table_ID === 167 &&
+              dim.No === j.No &&
+              dim.Dimension_Code === "ENTITY"
+          ).Dimension_Value_Code
+        }
+      }))
     });
-    expect(navMock.getJobs).toHaveBeenCalledWith(
-      { Status: undefined, Job_Posting_Group: undefined },
-      expect.objectContaining(navMock.credentials)
-    );
   });
 
   test("can filter results", async () => {
@@ -31,11 +44,24 @@ describe("jobs query", () => {
         .filter(
           job => job.Job_Posting_Group === "SOWS" && job.Status === "Open"
         )
-        .map(j => ({ number: j.No, site: j.Site }))
+        .map(j => ({
+          number: j.No,
+          site: j.Site,
+          dimensions: {
+            costCenter: navMock.dimensions.find(
+              dim =>
+                dim.Table_ID === 167 &&
+                dim.No === j.No &&
+                dim.Dimension_Code === "COST CENTER"
+            ).Dimension_Value_Code,
+            entity: navMock.dimensions.find(
+              dim =>
+                dim.Table_ID === 167 &&
+                dim.No === j.No &&
+                dim.Dimension_Code === "ENTITY"
+            ).Dimension_Value_Code
+          }
+        }))
     });
-    expect(navMock.getJobs).toHaveBeenCalledWith(
-      { Status: ["Open"], Job_Posting_Group: ["SOWS"] },
-      expect.objectContaining(navMock.credentials)
-    );
   });
 });

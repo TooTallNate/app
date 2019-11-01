@@ -44,6 +44,10 @@ export const jobsQuery = gql<{ jobs: Job }, QueryJobsArgs>(
     jobs(input: $input) {
       number
       site
+      dimensions {
+        costCenter
+        entity
+      }
     }
   }`
 );

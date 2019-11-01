@@ -27,6 +27,13 @@ export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
   site: Scalars["String"];
+  dimensions: JobDimensions;
+};
+
+export type JobDimensions = {
+  __typename?: "JobDimensions";
+  costCenter?: Maybe<Scalars["String"]>;
+  entity?: Maybe<Scalars["String"]>;
 };
 
 export type JobSearchInput = {

@@ -16,6 +16,12 @@ type Defaults {
 type Job {
   number: String!
   site: String!
+  dimensions: JobDimensions!
+}
+
+type JobDimensions {
+  costCenter: String
+  entity: String
 }
 
 input LoginInput {
