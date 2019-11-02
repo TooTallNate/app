@@ -98,7 +98,7 @@ export function ntlmRequest<Req, Res>(
 ): Promise<NavResponse<Res>> {
   const {
     resource,
-    filter,
+    filter = {},
     username: domainUsername,
     password,
     method,

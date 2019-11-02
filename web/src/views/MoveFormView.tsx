@@ -92,7 +92,9 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
-            location: formState.fromJob.site
+            location: formState.fromJob.site,
+            costCenterCode: formState.fromJob.dimensions.costCenter,
+            entityType: formState.fromJob.dimensions.entity
           }
         }
       });
@@ -110,7 +112,9 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
-            location: formState.toJob.site
+            location: formState.toJob.site,
+            costCenterCode: formState.toJob.dimensions.costCenter,
+            entityType: formState.toJob.dimensions.entity
           }
         }
       });

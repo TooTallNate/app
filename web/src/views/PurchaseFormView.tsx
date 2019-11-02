@@ -77,7 +77,9 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
-            location: formState.job.site
+            location: formState.job.site,
+            costCenterCode: formState.job.dimensions.costCenter,
+            entityType: formState.job.dimensions.entity
           }
         }
       });

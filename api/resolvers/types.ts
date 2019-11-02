@@ -156,7 +156,14 @@ export type JobsQueryVariables = {
 };
 
 export type JobsQuery = { __typename?: "Query" } & {
-  jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "site">>;
+  jobs: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "site"> & {
+        dimensions: { __typename?: "JobDimensions" } & Pick<
+          JobDimensions,
+          "costCenter" | "entity"
+        >;
+      }
+  >;
 };
 
 export type UserQueryVariables = {};

@@ -2,5 +2,9 @@ query Jobs($input: JobSearchInput) {
   jobs(input: $input) {
     number
     site
+    dimensions {
+      costCenter
+      entity
+    }
   }
 }
