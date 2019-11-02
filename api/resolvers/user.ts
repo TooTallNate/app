@@ -1,10 +1,10 @@
 import { MutationResolvers, UserResolvers, QueryResolvers } from "./types";
-import nav from "../nav";
+import createNavClient from "../nav";
 
 export const UserQuery: QueryResolvers = {
-  async user(_, __, { user }) {
-    if (user) {
-      return await nav.getUser(user.username, user);
+  async user(_, __, { navClient }) {
+    if (navClient) {
+      return await navClient.getUser();
     } else {
       return null;
     }
@@ -12,14 +12,15 @@ export const UserQuery: QueryResolvers = {
 };
 
 export const UserMutation: MutationResolvers = {
-  async login(_, { input: { username, password } }, context) {
-    const user = await nav.getUser(username, { username, password });
+  async login(_, { input }, context) {
+    const navClient = createNavClient(input);
+    const user = await navClient.getUser();
     if (user) {
       const sessionUser = {
         license: user.License_Type,
         name: user.Full_Name,
-        username,
-        password
+        username: input.username,
+        password: input.password
       };
       context.session.user = sessionUser;
       context.user = sessionUser;

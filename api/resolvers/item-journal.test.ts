@@ -50,31 +50,28 @@ describe("post item mutation", () => {
     expect(data).toEqual({
       postItem: true
     });
-    expect(navMock.postItem).toHaveBeenCalledWith(
-      {
-        Journal_Template_Name: "QTY ADJ",
-        Journal_Batch_Name: "DEFAULT",
-        Posting_Date: "2019-10-17",
-        Document_Date: "2019-10-17",
-        Entry_Type: "Positive Adjmt.",
-        Document_No: "DOC-1234",
-        Item_No: "01",
-        Description: "comments from operator",
-        Location_Code: "45",
-        Quantity: 2,
-        Unit_Amount: 45.5,
-        Weight: 90,
-        Job_No: "1901F",
-        Gen_Prod_Posting_Group: "MARKET HOGS",
-        Shortcut_Dimension_1_Code: "2",
-        Shortcut_Dimension_2_Code: "211"
-      },
-      expect.objectContaining(navMock.credentials)
-    );
+    expect(navMock.postItem).toHaveBeenCalledWith({
+      Journal_Template_Name: "QTY ADJ",
+      Journal_Batch_Name: "DEFAULT",
+      Posting_Date: "2019-10-17",
+      Document_Date: "2019-10-17",
+      Entry_Type: "Positive Adjmt.",
+      Document_No: "DOC-1234",
+      Item_No: "01",
+      Description: "comments from operator",
+      Location_Code: "45",
+      Quantity: 2,
+      Unit_Amount: 45.5,
+      Weight: 90,
+      Job_No: "1901F",
+      Gen_Prod_Posting_Group: "MARKET HOGS",
+      Shortcut_Dimension_1_Code: "2",
+      Shortcut_Dimension_2_Code: "211"
+    });
   });
 
   test("returns error if posting fails", async () => {
-    navMock.postItem.mockResolvedValue(null);
+    navMock.postItem.mockRejectedValue(new Error("error message"));
     await login();
     const { errors } = await postItemMutation({
       input: {
@@ -97,7 +94,7 @@ describe("post item mutation", () => {
     });
     expect(errors).toEqual([
       expect.objectContaining({
-        message: "Failed to post item."
+        message: "error message"
       })
     ]);
   });

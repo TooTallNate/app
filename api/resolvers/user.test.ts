@@ -13,7 +13,6 @@ describe("user query", () => {
     expect(data).toEqual({
       user: null
     });
-    expect(navMock.getUser).not.toHaveBeenCalled();
   });
 
   test("returns user if logged in", async () => {
@@ -29,11 +28,6 @@ describe("user query", () => {
         license: navMock.user.License_Type
       }
     });
-    expect(navMock.getUser).toHaveBeenCalledWith(
-      navMock.credentials.username,
-      expect.objectContaining(navMock.credentials)
-    );
-    expect(navMock.getUser).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -52,10 +46,6 @@ describe("login mutation", () => {
         license: navMock.user.License_Type
       }
     });
-    expect(navMock.getUser).toHaveBeenCalledWith(
-      navMock.credentials.username,
-      expect.objectContaining(navMock.credentials)
-    );
   });
 
   test("returns error if credentials are invalid", async () => {
@@ -69,10 +59,6 @@ describe("login mutation", () => {
         message: "Login failed"
       })
     ]);
-    expect(navMock.getUser).toHaveBeenCalledWith(username, {
-      username,
-      password
-    });
   });
 });
 

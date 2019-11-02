@@ -1,22 +1,13 @@
 import { JobResolvers, QueryResolvers, JobDimensionsResolvers } from "./types";
-import nav from "../nav";
 
 const TABLE_ID = 167;
 
 export const JobQuery: QueryResolvers = {
-  async jobs(_, { input: { status, postingGroup } = {} }, { user }) {
-    const jobs = await nav.getJobs(
-      {
-        Status: status,
-        Job_Posting_Group: postingGroup
-      },
-      user
-    );
-    if (jobs) {
-      return jobs;
-    } else {
-      throw new Error("Failed to fetch jobs.");
-    }
+  async jobs(_, { input: { status, postingGroup } = {} }, { navClient }) {
+    return navClient.getJobs({
+      Status: status,
+      Job_Posting_Group: postingGroup
+    });
   }
 };
 
@@ -42,13 +33,10 @@ export const JobDimensions: JobDimensionsResolvers = {
 export const Job: JobResolvers = {
   number: job => job.No,
   site: job => job.Site,
-  async dimensions(job, _, { user }) {
-    return nav.getDimensions(
-      {
-        Table_ID: [TABLE_ID],
-        No: [job.No]
-      },
-      user
-    );
+  async dimensions(job, _, { navClient }) {
+    return navClient.getDimensions({
+      Table_ID: [TABLE_ID],
+      No: [job.No]
+    });
   }
 };

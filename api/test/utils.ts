@@ -1,8 +1,8 @@
 import { GraphQLClient, ClientError } from "graphql-request";
 import { GraphQLError } from "graphql-request/dist/src/types";
 import { User, MutationLoginArgs } from "../resolvers/types";
-import nav from "../nav";
-import { NavMock } from "../nav/__mocks__/index";
+import { mock } from "../nav";
+import { NavMock } from "../nav/__mocks__";
 
 const port = process.env.PORT;
 
@@ -19,7 +19,8 @@ global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
 
 const client = new GraphQLClient(`http://localhost:${port}`);
 
-export const navMock = (nav as any) as NavMock;
+const navMock = mock as NavMock;
+export { navMock };
 
 interface GQLResponse<T> {
   data?: T;

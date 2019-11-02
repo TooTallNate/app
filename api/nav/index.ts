@@ -3,81 +3,55 @@ import {
   NavUser,
   NavJobSearch,
   NavJob,
-  NavItemEntry,
   NewNavItemEntry,
   NavDimensionSearch,
-  NavDimension
+  NavDimension,
+  NavItemEntry
 } from "./types";
 import request from "./request";
 
-export default {
-  async getUser(
-    username: string,
-    creds: NavCredentials
-  ): Promise<NavUser | null> {
-    const { body, statusCode } = await request({
-      ...creds,
-      resource: "User",
-      filter: {
-        User_Name: username
-      },
-      method: "get"
-    });
-    console.log({ body, statusCode });
-    if (statusCode === 200 && body && body.value.length === 1) {
-      return body.value[0];
-    } else {
-      return null;
-    }
-  },
-  async getJobs(
-    filter: NavJobSearch,
-    creds: NavCredentials
-  ): Promise<NavJob[] | null> {
-    const { body, statusCode } = await request({
-      ...creds,
-      resource: "Jobs",
-      filter,
-      method: "get"
-    });
-    if (statusCode === 200 && body && Array.isArray(body.value)) {
+export interface NavClient {
+  getUser(): Promise<NavUser>;
+  getJobs(filter: NavJobSearch): Promise<NavJob[]>;
+  getDimensions(filter: NavDimensionSearch): Promise<NavDimension[]>;
+  postItem(entry: NewNavItemEntry): Promise<NavItemEntry>;
+}
+
+export default function createNavClient(creds: NavCredentials): NavClient {
+  return {
+    async getUser() {
+      const { body } = await request.get<NavUser>({
+        ...creds,
+        resource: "User",
+        filter: {
+          User_Name: creds.username
+        }
+      });
+      return body.value.length > 0 ? body.value[0] : null;
+    },
+    async getJobs(filter) {
+      const { body } = await request.get<NavJob>({
+        ...creds,
+        resource: "Jobs",
+        filter
+      });
       return body.value;
-    } else {
-      return null;
-    }
-  },
-  async getDimensions(
-    filter: NavDimensionSearch,
-    creds: NavCredentials
-  ): Promise<NavDimension[]> {
-    const { body, statusCode } = await request({
-      ...creds,
-      resource: "Dimensions",
-      filter,
-      method: "get"
-    });
-    if (statusCode === 200 && body && Array.isArray(body.value)) {
+    },
+    async getDimensions(filter) {
+      const { body } = await request.get<NavDimension>({
+        ...creds,
+        resource: "Dimensions",
+        filter
+      });
       return body.value;
-    } else {
-      return null;
+    },
+    async postItem(entry) {
+      const { body } = await request.post<NavItemEntry, NewNavItemEntry>({
+        ...creds,
+        resource: "ItemJournal",
+        body: entry
+      });
+      return body;
     }
-  },
-  async postItem(
-    entry: NewNavItemEntry,
-    creds: NavCredentials
-  ): Promise<NavItemEntry | null> {
-    const { body, statusCode } = await request({
-      ...creds,
-      resource: "ItemJournal",
-      method: "post",
-      body: entry
-    });
-    console.log(statusCode);
-    console.log(body);
-    if (statusCode === 201 && body) {
-      return body as any;
-    } else {
-      return null;
-    }
-  }
-};
+  };
+}

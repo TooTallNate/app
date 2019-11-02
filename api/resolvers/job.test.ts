@@ -4,7 +4,7 @@ import { jobsQuery } from "../test/gql";
 describe("jobs query", () => {
   test("returns error if not logged in", () => expectUnauthorized(jobsQuery));
 
-  test("returns job info for each job", async () => {
+  test.only("returns job info for each job", async () => {
     await login();
     const { data, errors } = await jobsQuery();
     expect(errors).toBeFalsy();
