@@ -3,14 +3,10 @@ import { jsx } from "@emotion/core";
 import { Label, FieldGroup } from "../styled";
 import React from "react";
 
-interface FieldProps
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  > {
+type FieldProps = React.ComponentProps<typeof FieldGroup> & {
   label: string;
   name: string;
-}
+};
 
 const Field: React.FC<FieldProps> = ({ label, name, children, ...props }) => {
   const labelId = `${name}-label`;

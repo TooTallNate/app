@@ -10,6 +10,9 @@
     },
     "development": {
       "plugins": [["emotion", { "sourceMap": true }]]
+    },
+    "test": {
+      "plugins": ["emotion"]
     }
   }
 }
