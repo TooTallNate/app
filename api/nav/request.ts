@@ -62,12 +62,9 @@ export class HttpError<Req> extends Error {
   request: NavRequest<Req>;
   response: NavErrorResponse;
 
-  constructor(
-    message: string,
-    request: NavRequest<Req>,
-    response: NavErrorResponse
-  ) {
-    super(message);
+  constructor(request: NavRequest<Req>, response: NavErrorResponse) {
+    super(`${request.resource} ${response.statusCode}`);
+    this.name = "HttpError";
     this.request = request;
     this.response = response;
   }
@@ -133,14 +130,14 @@ export function ntlmRequest<Req, Res>(
             try {
               body = result.body ? JSON.parse(result.body) : undefined;
             } catch {
-              throw new HttpError("", options, result);
+              throw new HttpError(options, result);
             }
             resolve({
               ...result,
               body
             });
           } else {
-            throw new HttpError("", options, result);
+            throw new HttpError(options, result);
           }
         }
       }
