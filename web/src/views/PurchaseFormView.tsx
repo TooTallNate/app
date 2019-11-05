@@ -1,16 +1,14 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
-import NumberInput from "../components/ui/NumberInput";
-import { Button } from "../components/styled";
-import { Title } from "../components/styled";
+import { Button, Title } from "../components/styled";
+import { NumberInput, Textarea } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
-import { Textarea } from "../components/styled";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
@@ -128,19 +126,19 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           />
         </Field>
-        <Field label="Quantity" name="quantity">
+        <Field name="quantity" label="Quantity">
           <NumberInput
             value={formState.quantity}
-            onChange={value => setFormState({ ...formState, quantity: value })}
+            onChange={quantity => setFormState({ ...formState, quantity })}
           />
         </Field>
-        <Field label="Weight" name="weight">
+        <Field name="weight" label="Weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
         </Field>
-        <Field label="Price" name="price">
+        <Field name="price" label="Price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
@@ -150,9 +148,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
           <Textarea
             value={formState.comments}
             maxLength={50}
-            onChange={e =>
-              setFormState({ ...formState, comments: e.target.value })
-            }
+            onChange={comments => setFormState({ ...formState, comments })}
           />
         </Field>
         <Button

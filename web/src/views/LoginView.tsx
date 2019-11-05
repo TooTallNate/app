@@ -2,13 +2,8 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import {
-  Button,
-  Label,
-  Title,
-  TextInput,
-  FormGroup
-} from "../components/styled";
+import { Button, Title, FormGroup } from "../components/styled";
+import { TextInput } from "../components/ui/text-inputs";
 import Field from "../components/ui/Field";
 
 interface Credentials {
@@ -59,18 +54,14 @@ const LoginView: React.FC = () => {
         <Field name="username" label="Username">
           <TextInput
             value={username}
-            onChange={e => {
-              setCredentials(old => ({ ...old, username: e.target.value }));
-            }}
+            onChange={username => setCredentials(old => ({ ...old, username }))}
           />
         </Field>
         <Field name="password" label="Password">
           <TextInput
             type="password"
             value={password}
-            onChange={e => {
-              setCredentials(old => ({ ...old, password: e.target.value }));
-            }}
+            onChange={password => setCredentials(old => ({ ...old, password }))}
           />
         </Field>
         <FormGroup>

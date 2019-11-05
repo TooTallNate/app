@@ -43,7 +43,7 @@ export const Output = styled.output`
   box-sizing: border-box;
 `;
 
-export const Textarea = styled.textarea`
+export const BaseTextInput = styled.input`
   font-size: 1rem;
   padding: 12px;
   border: 1px solid #9ca1b1;
@@ -51,20 +51,12 @@ export const Textarea = styled.textarea`
   display: block;
   width: 100%;
   box-sizing: border-box;
-  resize: vertical;
-  min-height: 88px;
   ${inputFocus}
 `;
 
-export const TextInput = styled.input`
-  font-size: 1rem;
-  padding: 12px;
-  border: 1px solid #9ca1b1;
-  border-radius: 8px;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  ${inputFocus}
+export const BaseTextarea = styled(BaseTextInput.withComponent("textarea"))`
+  resize: vertical;
+  min-height: 88px;
 `;
 
 export const Title = styled.h1`
@@ -76,4 +68,10 @@ export const Title = styled.h1`
 export const FormGroup = styled.div`
   margin: 16px 0 0 0;
   padding: 0;
+`;
+
+export const FieldGroup = styled(FormGroup)`
+  ${FormGroup} & {
+    margin-top: 0;
+  }
 `;

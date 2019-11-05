@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { Fragment } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import PigActivityView from "./views/PigActivityView";
 import AccountView from "./views/AccountView";

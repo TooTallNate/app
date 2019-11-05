@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, useRef, useEffect, KeyboardEventHandler } from "react";
-import { TextInput } from "../styled";
+import { TextInput } from "./text-inputs";
 
 interface TypeaheadItem {
   title: string;
