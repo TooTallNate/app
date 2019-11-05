@@ -11,7 +11,7 @@ import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import { Textarea } from "../components/styled";
-import FormField from "../components/ui/FormField";
+import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 
@@ -153,7 +153,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
             display: "flex"
           }}
         >
-          <FormField
+          <Field
             label="From Animal"
             name="from-animal"
             css={{
@@ -168,8 +168,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 setFormState({ ...formState, fromAnimal });
               }}
             />
-          </FormField>
-          <FormField
+          </Field>
+          <Field
             label="To Animal"
             name="to-animal"
             css={{
@@ -183,14 +183,14 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 setFormState({ ...formState, toAnimal });
               }}
             />
-          </FormField>
+          </Field>
         </div>
         <div
           css={{
             display: "flex"
           }}
         >
-          <FormField
+          <Field
             label="From Job"
             name="from-job"
             css={{
@@ -204,8 +204,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 setFormState({ ...formState, fromJob });
               }}
             />
-          </FormField>
-          <FormField
+          </Field>
+          <Field
             label="To Job"
             name="to-job"
             css={{
@@ -218,27 +218,27 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 setFormState({ ...formState, toJob });
               }}
             />
-          </FormField>
+          </Field>
         </div>
-        <FormField label="Quantity" name="quantity">
+        <Field label="Quantity" name="quantity">
           <NumberInput
             value={formState.quantity}
             onChange={value => setFormState({ ...formState, quantity: value })}
           />
-        </FormField>
-        <FormField label="Weight" name="weight">
+        </Field>
+        <Field label="Weight" name="weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
-        </FormField>
-        <FormField label="Price" name="price">
+        </Field>
+        <Field label="Price" name="price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
           />
-        </FormField>
-        <FormField label="Comments" name="comments">
+        </Field>
+        <Field label="Comments" name="comments">
           <Textarea
             value={formState.comments}
             maxLength={50}
@@ -246,7 +246,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, comments: e.target.value })
             }
           />
-        </FormField>
+        </Field>
         <Button
           type="submit"
           css={{

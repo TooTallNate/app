@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { Title } from "../components/styled";
 import Selector from "../components/ui/Selector";
-import FormField from "../components/ui/FormField";
+import Field from "../components/ui/Field";
 
 const LOCATIONS = [
   { title: "None", value: "none" },
@@ -19,9 +19,9 @@ const SelectLocationView: React.FC = () => {
           padding: "0 16px"
         }}
       >
-        <FormField label="Default Location" name="default-location">
+        <Field label="Default Location" name="default-location">
           <Selector items={LOCATIONS}></Selector>
-        </FormField>
+        </Field>
       </form>
     </div>
   );

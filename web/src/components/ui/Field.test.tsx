@@ -1,10 +1,10 @@
 import React from "react";
 import { renderComponent, fireEvent } from "../../../test/utils";
-import FormField from "./FormField";
+import Field from "./Field";
 
 test("only renders first child", () => {
   const { queryByText } = renderComponent(
-    <FormField
+    <Field
       id="test-field-id"
       className="test-field-class"
       name="test"
@@ -12,7 +12,7 @@ test("only renders first child", () => {
     >
       <div>One</div>
       <div>Two</div>
-    </FormField>
+    </Field>
   );
   expect(queryByText("One")).toBeTruthy();
   expect(queryByText("Two")).toBeFalsy();
@@ -20,14 +20,14 @@ test("only renders first child", () => {
 
 test("associates label with input", () => {
   const { getByLabelText } = renderComponent(
-    <FormField
+    <Field
       id="test-field-id"
       className="test-field-class"
       name="test"
       label="Test"
     >
       <input />
-    </FormField>
+    </Field>
   );
   const input = getByLabelText("Test");
   expect(input).toHaveAttribute("aria-labelledby", `test-label`);
@@ -37,7 +37,7 @@ test("associates label with input", () => {
 test("passes other props to the wrapper div", () => {
   const onClickMock = jest.fn();
   const { container } = renderComponent(
-    <FormField
+    <Field
       id="test-field-id"
       className="test-field-class"
       onClick={onClickMock}
@@ -45,7 +45,7 @@ test("passes other props to the wrapper div", () => {
       label="Test"
     >
       <input />}
-    </FormField>
+    </Field>
   );
   const wrapper = container.firstChild as HTMLDivElement;
   expect(wrapper).toHaveClass("test-field-class");

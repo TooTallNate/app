@@ -72,3 +72,8 @@ export const Title = styled.h1`
   padding: 0 16px 16px 16px;
   margin: 16px 0 0 0;
 `;
+
+export const FormGroup = styled.div`
+  margin: 16px 0 0 0;
+  padding: 0;
+`;

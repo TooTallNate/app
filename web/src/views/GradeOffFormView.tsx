@@ -11,7 +11,7 @@ import JobSelector from "../components/JobSelector";
 import { useAuth } from "../contexts/auth";
 import { getDocumentNumber } from "../utils";
 import { Textarea } from "../components/styled";
-import FormField from "../components/ui/FormField";
+import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 
@@ -123,7 +123,7 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <FormField label="Animal" name="animal">
+        <Field label="Animal" name="animal">
           <AnimalSelector
             name="animal"
             animals={ANIMALS}
@@ -132,34 +132,34 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, animal });
             }}
           />
-        </FormField>
-        <FormField label="Job" name="job">
+        </Field>
+        <Field label="Job" name="job">
           <JobSelector
             value={formState.job}
             onChange={job => {
               setFormState({ ...formState, job });
             }}
           />
-        </FormField>
-        <FormField name="quantity" label="Quantity">
+        </Field>
+        <Field name="quantity" label="Quantity">
           <NumberInput
             value={formState.quantity}
             onChange={value => setFormState({ ...formState, quantity: value })}
           />
-        </FormField>
-        <FormField name="weight" label="Weight">
+        </Field>
+        <Field name="weight" label="Weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
-        </FormField>
-        <FormField name="price" label="Price">
+        </Field>
+        <Field name="price" label="Price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
           />
-        </FormField>
-        <FormField name="comments" label="Comments">
+        </Field>
+        <Field name="comments" label="Comments">
           <Textarea
             value={formState.comments}
             maxLength={50}
@@ -167,7 +167,7 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, comments: e.target.value })
             }
           />
-        </FormField>
+        </Field>
         <Button
           type="submit"
           css={{

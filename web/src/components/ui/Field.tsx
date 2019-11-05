@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { Label } from "../styled";
+import { Label, FormGroup } from "../styled";
 import React from "react";
 
-interface FormFieldProps
+interface FieldProps
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
@@ -12,18 +12,11 @@ interface FormFieldProps
   name: string;
 }
 
-const FormField: React.FC<FormFieldProps> = ({
-  label,
-  name,
-  children,
-  ...props
-}) => {
+const Field: React.FC<FieldProps> = ({ label, name, children, ...props }) => {
   const labelId = `${name}-label`;
-
   const firstChild = React.Children.toArray(children)[0];
-
   return (
-    <div {...props}>
+    <FormGroup {...props}>
       <Label id={labelId}>{label}</Label>
       {firstChild &&
         React.isValidElement(firstChild) &&
@@ -31,8 +24,8 @@ const FormField: React.FC<FormFieldProps> = ({
           "aria-labelledby": labelId,
           name
         })}
-    </div>
+    </FormGroup>
   );
 };
 
-export default FormField;
+export default Field;

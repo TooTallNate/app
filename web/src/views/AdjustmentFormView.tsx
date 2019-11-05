@@ -11,7 +11,7 @@ import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import { Textarea } from "../components/styled";
-import FormField from "../components/ui/FormField";
+import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 
@@ -124,7 +124,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <FormField label="Animal" name="animal">
+        <Field label="Animal" name="animal">
           <AnimalSelector
             name="animal"
             animals={ANIMALS}
@@ -133,34 +133,34 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, animal });
             }}
           />
-        </FormField>
-        <FormField label="Job" name="job">
+        </Field>
+        <Field label="Job" name="job">
           <JobSelector
             value={formState.job}
             onChange={job => {
               setFormState({ ...formState, job });
             }}
           />
-        </FormField>
-        <FormField label="Quantity" name="quantity">
+        </Field>
+        <Field label="Quantity" name="quantity">
           <NumberInput
             value={formState.quantity}
             onChange={value => setFormState({ ...formState, quantity: value })}
           />
-        </FormField>
-        <FormField label="Weight" name="weight">
+        </Field>
+        <Field label="Weight" name="weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
-        </FormField>
-        <FormField label="Price" name="price">
+        </Field>
+        <Field label="Price" name="price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
           />
-        </FormField>
-        <FormField label="Comments" name="comments">
+        </Field>
+        <Field label="Comments" name="comments">
           <Textarea
             value={formState.comments}
             maxLength={50}
@@ -168,7 +168,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, comments: e.target.value })
             }
           />
-        </FormField>
+        </Field>
         <Button
           type="submit"
           css={{

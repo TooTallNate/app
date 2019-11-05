@@ -12,7 +12,7 @@ import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import { Output } from "../components/styled";
 import { Textarea } from "../components/styled";
-import FormField from "../components/ui/FormField";
+import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 
@@ -150,7 +150,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <FormField label="Animal" name="animal">
+        <Field label="Animal" name="animal">
           <AnimalSelector
             name="animal"
             animals={ANIMALS}
@@ -159,15 +159,15 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, animal });
             }}
           />
-        </FormField>
-        <FormField label="Job" name="job">
+        </Field>
+        <Field label="Job" name="job">
           <JobSelector
             value={formState.job}
             onChange={job => {
               setFormState({ ...formState, job });
             }}
           />
-        </FormField>
+        </Field>
         <div
           css={{
             display: "flex"
@@ -178,14 +178,14 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               flex: "1 1 0"
             }}
           >
-            <FormField name="natural-quantity" label="Natrual">
+            <Field name="natural-quantity" label="Natrual">
               <NumberInput
                 value={formState.naturalQuantity}
                 onChange={naturalQuantity =>
                   setFormState({ ...formState, naturalQuantity })
                 }
               />
-            </FormField>
+            </Field>
           </div>
           <div
             css={{
@@ -203,14 +203,14 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               flex: "1 1 0"
             }}
           >
-            <FormField name="euthanized-quantity" label="Euthanized">
+            <Field name="euthanized-quantity" label="Euthanized">
               <NumberInput
                 value={formState.euthanizedQuantity}
                 onChange={euthanizedQuantity =>
                   setFormState({ ...formState, euthanizedQuantity })
                 }
               />
-            </FormField>
+            </Field>
           </div>
           <div
             css={{
@@ -228,7 +228,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               width: 72
             }}
           >
-            <FormField name="quantity" label="Quantity">
+            <Field name="quantity" label="Quantity">
               <Output
                 id="quantity"
                 css={{
@@ -238,22 +238,22 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 {(formState.euthanizedQuantity || 0) +
                   (formState.naturalQuantity || 0)}
               </Output>
-            </FormField>
+            </Field>
           </div>
         </div>
-        <FormField name="weight" label="Weight">
+        <Field name="weight" label="Weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
-        </FormField>
-        <FormField name="price" label="Price">
+        </Field>
+        <Field name="price" label="Price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
           />
-        </FormField>
-        <FormField name="comments" label="Comments">
+        </Field>
+        <Field name="comments" label="Comments">
           <Textarea
             value={formState.comments}
             maxLength={50}
@@ -261,7 +261,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               setFormState({ ...formState, comments: e.target.value })
             }
           />
-        </FormField>
+        </Field>
         <Button
           type="submit"
           css={{

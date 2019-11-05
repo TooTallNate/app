@@ -2,7 +2,14 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Button, Label, Title, TextInput } from "../components/styled";
+import {
+  Button,
+  Label,
+  Title,
+  TextInput,
+  FormGroup
+} from "../components/styled";
+import Field from "../components/ui/Field";
 
 interface Credentials {
   username?: string;
@@ -45,28 +52,30 @@ const LoginView: React.FC = () => {
         }}
       >
         {isInvalid && (
-          <div css={{ color: "red" }}>Username or password are invalid.</div>
+          <FormGroup>
+            <div css={{ color: "red" }}>Username or password are invalid.</div>
+          </FormGroup>
         )}
-        <Label htmlFor="username">Username</Label>
-        <TextInput
-          id="username"
-          value={username}
-          onChange={e => {
-            setCredentials(old => ({ ...old, username: e.target.value }));
-          }}
-        />
-        <Label htmlFor="password">Password</Label>
-        <TextInput
-          id="password"
-          type="password"
-          value={password}
-          onChange={e => {
-            setCredentials(old => ({ ...old, password: e.target.value }));
-          }}
-        />
-        <Button css={{ marginTop: 32 }} type="submit">
-          Log In
-        </Button>
+        <Field name="username" label="Username">
+          <TextInput
+            value={username}
+            onChange={e => {
+              setCredentials(old => ({ ...old, username: e.target.value }));
+            }}
+          />
+        </Field>
+        <Field name="password" label="Password">
+          <TextInput
+            type="password"
+            value={password}
+            onChange={e => {
+              setCredentials(old => ({ ...old, password: e.target.value }));
+            }}
+          />
+        </Field>
+        <FormGroup>
+          <Button type="submit">Log In</Button>
+        </FormGroup>
       </form>
     </div>
   );
