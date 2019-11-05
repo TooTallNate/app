@@ -6,7 +6,6 @@ import AccountView from "./views/AccountView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
-import SelectLocationView from "./views/SelectLocationView";
 import useDefaults from "./contexts/defaults";
 import FullPageSpinner from "./components/FullPageSpinner";
 
@@ -47,7 +46,6 @@ const AuthenticatedApp: React.FC = () => {
         }}
       >
         <Switch>
-          <Route path="/location" component={SelectLocationView} />
           <Route path="/pigs" component={PigActivityView} />
           <Route path="/account" component={AccountView} />
           <Redirect to="/pigs" />

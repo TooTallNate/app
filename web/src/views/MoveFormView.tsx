@@ -5,16 +5,15 @@ import { Button, Title, FormGroup } from "../components/styled";
 import { NumberInput, Textarea } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
-
-const FROM_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
-const TO_ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS, Animal.SOWS];
+import StackedButtonInput, {
+  StackedButton
+} from "../components/ui/StackedButtonInput";
 
 interface FormState {
   fromAnimal?: Animal;
@@ -159,13 +158,17 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
               marginRight: 16
             }}
           >
-            <AnimalSelector
-              animals={FROM_ANIMALS}
+            <StackedButtonInput
               value={formState.fromAnimal}
-              onChange={fromAnimal => {
-                setFormState({ ...formState, fromAnimal });
-              }}
-            />
+              onChange={fromAnimal =>
+                setFormState({ ...formState, fromAnimal })
+              }
+            >
+              <StackedButton value={Animal.MARKET_PIGS}>
+                Market Pigs
+              </StackedButton>
+              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+            </StackedButtonInput>
           </Field>
           <Field
             label="To Animal"
@@ -174,13 +177,16 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
               width: "100%"
             }}
           >
-            <AnimalSelector
-              animals={TO_ANIMALS}
+            <StackedButtonInput
               value={formState.toAnimal}
-              onChange={toAnimal => {
-                setFormState({ ...formState, toAnimal });
-              }}
-            />
+              onChange={toAnimal => setFormState({ ...formState, toAnimal })}
+            >
+              <StackedButton value={Animal.MARKET_PIGS}>
+                Market Pigs
+              </StackedButton>
+              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+              <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+            </StackedButtonInput>
           </Field>
         </FormGroup>
         <FormGroup

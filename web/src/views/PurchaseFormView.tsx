@@ -5,15 +5,15 @@ import { Button, Title } from "../components/styled";
 import { NumberInput, Textarea } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
-
-const ANIMALS = [Animal.MARKET_PIGS, Animal.GDU_PIGS];
+import StackedButtonInput, {
+  StackedButton
+} from "../components/ui/StackedButtonInput";
 
 interface FormState {
   animal?: Animal;
@@ -109,14 +109,15 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
         onSubmit={onSubmit}
       >
         <Field label="Animal" name="animal">
-          <AnimalSelector
-            name="animal"
-            animals={ANIMALS}
+          <StackedButtonInput
             value={formState.animal}
-            onChange={animal => {
-              setFormState({ ...formState, animal });
-            }}
-          />
+            onChange={animal => setFormState({ ...formState, animal })}
+          >
+            <StackedButton value={Animal.MARKET_PIGS}>
+              Market Pigs
+            </StackedButton>
+            <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+          </StackedButtonInput>
         </Field>
         <Field label="Job" name="job">
           <JobSelector

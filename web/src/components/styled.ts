@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const inputFocus = `
-  &:focus {
-    box-shadow: 0 0 2px 1px #9ca1b1;
-    outline: none;
-  }
+  box-shadow: 0 0 2px 1px #9ca1b1;
+  outline: none;
 `;
 
 export const Button = styled.button`
@@ -18,7 +17,9 @@ export const Button = styled.button`
   display: block;
   width: 100%;
   box-sizing: border-box;
-  ${inputFocus}
+  &:focus {
+    ${inputFocus}
+  }
   &:active {
     background-color: white;
     border-color: #9ca1b1;
@@ -51,7 +52,9 @@ export const BaseTextInput = styled.input`
   display: block;
   width: 100%;
   box-sizing: border-box;
-  ${inputFocus}
+  &:focus {
+    ${inputFocus}
+  }
 `;
 
 export const BaseTextarea = styled(BaseTextInput.withComponent("textarea"))`
@@ -74,4 +77,33 @@ export const FieldGroup = styled(FormGroup)`
   ${FormGroup} & {
     margin-top: 0;
   }
+`;
+
+export const StackedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid #9ca1b1;
+  overflow: hidden;
+  &:focus-within {
+    ${inputFocus}
+  }
+`;
+
+export const StackedItem = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 12px;
+  border: solid #9ca1b1;
+  border-width: 0 0 1px 0;
+  &:last-of-type {
+    border-bottom-width: 0;
+  }
+`;
+
+export const StackedNav = StackedContainer.withComponent("nav");
+
+export const StackedNavLink = styled(StackedItem.withComponent(Link))`
+  color: inherit;
+  text-decoration: none;
 `;
