@@ -58,13 +58,13 @@ export interface NavErrorResponse {
   };
 }
 
-export class HttpError<Req> extends Error {
+export class NavError<Req> extends Error {
   request: NavRequest<Req>;
   response: NavErrorResponse;
 
   constructor(request: NavRequest<Req>, response: NavErrorResponse) {
-    super(`${request.resource} ${response.statusCode}`);
-    this.name = "HttpError";
+    super(`Bad response from nav: ${request.resource} ${response.statusCode}`);
+    this.name = "NavError";
     this.request = request;
     this.response = response;
   }
@@ -130,14 +130,14 @@ export function ntlmRequest<Req, Res>(
             try {
               body = result.body ? JSON.parse(result.body) : undefined;
             } catch {
-              throw new HttpError(options, result);
+              reject(new NavError(options, result));
             }
             resolve({
               ...result,
               body
             });
           } else {
-            throw new HttpError(options, result);
+            reject(new NavError(options, result));
           }
         }
       }
