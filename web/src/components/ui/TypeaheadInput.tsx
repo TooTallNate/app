@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, useRef, useEffect, KeyboardEventHandler } from "react";
+import { TextInput } from "../styled";
 
 interface TypeaheadItem {
   title: string;
@@ -115,21 +116,9 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
       aria-controls={`items-${id}`}
       aria-expanded={isOpen}
     >
-      <input
+      <TextInput
         {...props}
         autoComplete="off"
-        css={{
-          fontSize: "1rem",
-          padding: "12px",
-          border: "1px solid #9ca1b1",
-          borderRadius: 8,
-          width: "100%",
-          boxSizing: "border-box",
-          "&:focus": {
-            boxShadow: "0 0 0 1px #9ca1b1",
-            outline: "none"
-          }
-        }}
         value={textValue}
         onChange={e => {
           setTextValue(e.target.value);

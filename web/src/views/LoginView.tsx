@@ -2,10 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import ButtonInput from "../components/ui/ButtonInput";
-import FormLabel from "../components/ui/FormLabel";
-import ViewTitle from "../components/ui/ViewTitle";
-import TextInput from "../components/ui/TextInput";
+import { Button, Label, Title, TextInput } from "../components/styled";
 
 interface Credentials {
   username?: string;
@@ -28,7 +25,7 @@ const LoginView: React.FC = () => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Login</ViewTitle>
+      <Title>Login</Title>
       <form
         css={{
           display: "flex",
@@ -50,26 +47,26 @@ const LoginView: React.FC = () => {
         {isInvalid && (
           <div css={{ color: "red" }}>Username or password are invalid.</div>
         )}
-        <FormLabel htmlFor="username">Username</FormLabel>
+        <Label htmlFor="username">Username</Label>
         <TextInput
           id="username"
           value={username}
-          onChange={username => {
-            setCredentials(old => ({ ...old, username }));
+          onChange={e => {
+            setCredentials(old => ({ ...old, username: e.target.value }));
           }}
         />
-        <FormLabel htmlFor="password">Password</FormLabel>
+        <Label htmlFor="password">Password</Label>
         <TextInput
           id="password"
           type="password"
           value={password}
-          onChange={password => {
-            setCredentials(old => ({ ...old, password }));
+          onChange={e => {
+            setCredentials(old => ({ ...old, password: e.target.value }));
           }}
         />
-        <ButtonInput css={{ marginTop: 32 }} type="submit">
+        <Button css={{ marginTop: 32 }} type="submit">
           Log In
-        </ButtonInput>
+        </Button>
       </form>
     </div>
   );

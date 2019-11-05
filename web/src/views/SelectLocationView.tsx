@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import ViewTitle from "../components/ui/ViewTitle";
+import { Title } from "../components/styled";
 import Selector from "../components/ui/Selector";
 import FormField from "../components/ui/FormField";
 
@@ -13,7 +13,7 @@ const LOCATIONS = [
 const SelectLocationView: React.FC = () => {
   return (
     <div>
-      <ViewTitle>Location</ViewTitle>
+      <Title>Location</Title>
       <form
         css={{
           padding: "0 16px"

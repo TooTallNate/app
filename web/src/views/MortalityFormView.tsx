@@ -2,16 +2,16 @@
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import NumberInput from "../components/ui/NumberInput";
-import ButtonInput from "../components/ui/ButtonInput";
-import ViewTitle from "../components/ui/ViewTitle";
+import { Button } from "../components/styled";
+import { Title } from "../components/styled";
 import { RouteComponentProps } from "react-router";
 import { ItemTemplate, EntryType, Animal, ItemBatch } from "../entities";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
-import StaticValue from "../components/ui/StaticValue";
-import MultilineTextInput from "../components/ui/MultilineTextInput";
+import { Output } from "../components/styled";
+import { Textarea } from "../components/styled";
 import FormField from "../components/ui/FormField";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
@@ -140,7 +140,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Mortality</ViewTitle>
+      <Title>Mortality</Title>
       <form
         css={{
           overflowX: "auto",
@@ -229,7 +229,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           >
             <FormField name="quantity" label="Quantity">
-              <StaticValue
+              <Output
                 id="quantity"
                 css={{
                   paddingLeft: 0
@@ -237,7 +237,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               >
                 {(formState.euthanizedQuantity || 0) +
                   (formState.naturalQuantity || 0)}
-              </StaticValue>
+              </Output>
             </FormField>
           </div>
         </div>
@@ -254,7 +254,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </FormField>
         <FormField name="comments" label="Comments">
-          <MultilineTextInput
+          <Textarea
             value={formState.comments}
             maxLength={50}
             onChange={e =>
@@ -262,7 +262,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }
           />
         </FormField>
-        <ButtonInput
+        <Button
           type="submit"
           css={{
             marginTop: 44
@@ -270,7 +270,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           disabled={loading}
         >
           Submit
-        </ButtonInput>
+        </Button>
       </form>
     </div>
   );

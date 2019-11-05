@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import FormLabel from "./FormLabel";
+import { Label } from "../styled";
 import React from "react";
 
 interface FormFieldProps
@@ -24,7 +24,7 @@ const FormField: React.FC<FormFieldProps> = ({
 
   return (
     <div {...props}>
-      <FormLabel id={labelId}>{label}</FormLabel>
+      <Label id={labelId}>{label}</Label>
       {firstChild &&
         React.isValidElement(firstChild) &&
         React.cloneElement(firstChild, {

@@ -2,15 +2,15 @@
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import NumberInput from "../components/ui/NumberInput";
-import ButtonInput from "../components/ui/ButtonInput";
-import ViewTitle from "../components/ui/ViewTitle";
+import { Button } from "../components/styled";
+import { Title } from "../components/styled";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import AnimalSelector from "../components/AnimalSelector";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
-import MultilineTextInput from "../components/ui/MultilineTextInput";
+import { Textarea } from "../components/styled";
 import FormField from "../components/ui/FormField";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
@@ -101,7 +101,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
         flexDirection: "column"
       }}
     >
-      <ViewTitle>Wean</ViewTitle>
+      <Title>Wean</Title>
       <form
         css={{
           overflowX: "auto",
@@ -148,7 +148,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </FormField>
         <FormField label="Comments" name="comments">
-          <MultilineTextInput
+          <Textarea
             value={formState.comments}
             maxLength={50}
             onChange={e =>
@@ -156,7 +156,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }
           />
         </FormField>
-        <ButtonInput
+        <Button
           type="submit"
           css={{
             marginTop: 44
@@ -164,7 +164,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
           disabled={loading}
         >
           Submit
-        </ButtonInput>
+        </Button>
       </form>
     </div>
   );

@@ -1,5 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
+import { TextInput } from "../styled";
 
 interface NumberInputProps {
   value?: number;
@@ -15,24 +15,11 @@ const NumberInput: React.FC<NumberInputProps> = ({
   ...props
 }) => {
   return (
-    <input
+    <TextInput
       {...props}
       value={value || ""}
       onChange={e => onChange(parseFloat(e.target.value))}
       type="number"
-      css={{
-        fontSize: "1rem",
-        padding: "12px",
-        border: "1px solid #9ca1b1",
-        borderRadius: 8,
-        display: "block",
-        width: "100%",
-        boxSizing: "border-box",
-        "&:focus": {
-          boxShadow: "0 0 0 1px #9ca1b1",
-          outline: "none"
-        }
-      }}
     />
   );
 };

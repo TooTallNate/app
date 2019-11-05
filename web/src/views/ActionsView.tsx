@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import ViewTitle from "../components/ui/ViewTitle";
+import { Title } from "../components/styled";
 import StackedNavigation, {
   StackedNavigationItem
 } from "../components/ui/StackedNavigation";
@@ -9,7 +9,7 @@ import StackedNavigation, {
 const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <div>
-      <ViewTitle>Pig Activity</ViewTitle>
+      <Title>Pig Activity</Title>
       <div
         css={{
           padding: "0 16px"

@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
-import ButtonInput from "../components/ui/ButtonInput";
+import { Button } from "../components/styled";
 import { useAuth } from "../contexts/auth";
-import ViewTitle from "../components/ui/ViewTitle";
+import { Title } from "../components/styled";
 
 const AccountView: React.FC<RouteComponentProps> = () => {
   const { logout } = useAuth();
@@ -16,7 +16,7 @@ const AccountView: React.FC<RouteComponentProps> = () => {
         height: "100%"
       }}
     >
-      <ViewTitle>Account</ViewTitle>
+      <Title>Account</Title>
       <div
         css={{
           flexGrow: 1,
@@ -25,14 +25,14 @@ const AccountView: React.FC<RouteComponentProps> = () => {
           flexDirection: "column-reverse"
         }}
       >
-        <ButtonInput
+        <Button
           css={{
             marginBottom: 32
           }}
           onClick={logout}
         >
           Log Out
-        </ButtonInput>
+        </Button>
       </div>
     </div>
   );
