@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
+import tw from "tailwind.macro";
 import { Route, Redirect, Switch } from "react-router-dom";
 import PigActivityView from "./views/PigActivityView";
 import AccountView from "./views/AccountView";
@@ -11,15 +12,7 @@ import FullPageSpinner from "./components/FullPageSpinner";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
-    <div
-      css={{
-        margin: "auto",
-        height: "100%",
-        maxWidth: 800,
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
+    <div className="max-w-3xl h-full mx-auto flex flex-col">
       <LoginView />
     </div>
   );
@@ -30,21 +23,8 @@ const AuthenticatedApp: React.FC = () => {
   return loading ? (
     <FullPageSpinner>Loading Settings...</FullPageSpinner>
   ) : (
-    <div
-      css={{
-        margin: "auto",
-        height: "100%",
-        maxWidth: 800,
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
-      <div
-        css={{
-          minHeight: 0,
-          flexGrow: 1
-        }}
-      >
+    <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
+      <div className="min-h-0 flex-grow">
         <Switch>
           <Route path="/pigs" component={PigActivityView} />
           <Route path="/account" component={AccountView} />

@@ -1,101 +1,36 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import tw from "tailwind.macro";
 
-const inputFocus = `
-  box-shadow: 0 0 2px 1px #9ca1b1;
-  outline: none;
+export const FocusTarget = tw.div`focus:shadow-outline focus:outline-none`;
+export const FocusInTarget = tw.div`focus-within:shadow-outline focus-within:outline-none`;
+
+export const Button = tw.styled(FocusTarget.withComponent("button"))`
+  py-2 px-4 h-10 w-full block
+  text-base font-bold text-white leading-none active:text-black 
+  bg-black active:bg-white
+  border border-black rounded-lg active:border-gray-500
 `;
 
-export const Button = styled.button`
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  background-color: black;
-  padding: 12px;
-  border: 1px solid black;
-  border-radius: 8px;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  &:focus {
-    ${inputFocus}
-  }
-  &:active {
-    background-color: white;
-    border-color: #9ca1b1;
-    color: black;
-  }
-`;
+export const Label = tw.label`h-10 py-3 leading-none block text-base font-bold`;
 
-export const Label = styled.label`
-  font-size: 1rem;
-  font-weight: bold;
-  box-sizing: border-box;
-  height: 44px;
-  line-height: 44px;
-  display: block;
-`;
+export const Output = tw.output`py-2 px-4 h-10 text-base block`;
 
-export const Output = styled.output`
-  font-size: 1rem;
-  padding: 13px;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-`;
+export const Title = tw.h1`p-4 font-bold text-3xl border-b border-gray-500`;
 
-export const BaseTextInput = styled.input`
-  font-size: 1rem;
-  padding: 12px;
-  border: 1px solid #9ca1b1;
-  border-radius: 8px;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  &:focus {
-    ${inputFocus}
-  }
-`;
+export const Group = tw.div`p-0 m-0 mt-4`;
 
-export const BaseTextarea = styled(BaseTextInput.withComponent("textarea"))`
-  resize: vertical;
-  min-height: 88px;
-`;
-
-export const Title = styled.h1`
-  border-bottom: 1px solid #9ca1b1;
-  padding: 0 16px 16px 16px;
-  margin: 16px 0 0 0;
-`;
-
-export const FormGroup = styled.div`
-  margin: 16px 0 0 0;
-  padding: 0;
-`;
-
-export const FieldGroup = styled(FormGroup)`
-  ${FormGroup} & {
-    margin-top: 0;
-  }
-`;
-
-export const StackedContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
-  border: 1px solid #9ca1b1;
-  overflow: hidden;
-  &:focus-within {
-    ${inputFocus}
-  }
-`;
+export const StackedContainer = tw.styled(
+  FocusInTarget
+)`flex flex-col rounded-lg border border-gray-500 overflow-hidden`;
 
 export const StackedItem = styled.div`
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 12px;
-  border: solid #9ca1b1;
-  border-width: 0 0 1px 0;
+  ${tw`
+    py-2 px-4 h-10
+    text-base font-bold
+    border-b border-gray-500
+    focus:outline-none focus:bg-blue-200
+  `}
   &:last-of-type {
     border-bottom-width: 0;
   }
@@ -103,7 +38,6 @@ export const StackedItem = styled.div`
 
 export const StackedNav = StackedContainer.withComponent("nav");
 
-export const StackedNavLink = styled(StackedItem.withComponent(Link))`
-  color: inherit;
-  text-decoration: none;
+export const StackedNavLink = tw.styled(StackedItem.withComponent(Link))`
+  text-black no-underline
 `;

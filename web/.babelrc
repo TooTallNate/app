@@ -1,6 +1,7 @@
 {
   "presets": [["react-app", { "flow": false, "typescript": true }]],
   "plugins": [
+    "macros",
     "@babel/proposal-class-properties",
     "@babel/proposal-object-rest-spread"
   ],
@@ -9,10 +10,10 @@
       "plugins": ["emotion"]
     },
     "development": {
-      "plugins": [["emotion", { "sourceMap": true }]]
+      "plugins": [["emotion", { "sourceMap": true }], "@babel/plugin-transform-modules-commonjs"]
     },
     "test": {
-      "plugins": ["emotion"]
+      "plugins": ["emotion", "@babel/plugin-transform-modules-commonjs"]
     }
   }
 }

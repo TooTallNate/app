@@ -1,18 +1,9 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
 import Spinner from "./ui/Spinner";
 
 const FullPageSpinner: React.FC = ({ children }) => {
   return (
-    <div
-      css={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column"
-      }}
-    >
+    <div className="h-full flex flex-col items-center justify-center">
       <Spinner />
       <div
         css={{

@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
 import TypeaheadInput from "./ui/TypeaheadInput";
 import { Job } from "../graphql";
 import useJobs from "../contexts/jobs";

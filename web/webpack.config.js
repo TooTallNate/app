@@ -118,26 +118,31 @@ module.exports = {
             loader: "postcss-loader",
             options: {
               ident: "postcss",
-              plugins: () => [
-                require("tailwindcss"),
-                require("postcss-flexbugs-fixes"),
-                require("postcss-preset-env")({
-                  autoprefixer: {
-                    flexbox: "no-2009"
-                  },
-                  stage: 3
-                }),
-                require("@fullhuman/postcss-purgecss")({
-                  content: [
-                    "public/**/*.html",
-                    "src/**/*.html",
-                    "src/**/*.ts",
-                    "src/**/*.tsx"
-                  ].map(p => path.resolve(__dirname, p)),
-                  defaultExtractor: content =>
-                    content.match(/[\w-/:]+(?<!:)/g) || []
-                })
-              ]
+              plugins: () =>
+                [
+                  require("tailwindcss")(
+                    path.resolve(__dirname, "tailwind.config.js")
+                  ),
+                  require("postcss-flexbugs-fixes"),
+                  require("postcss-preset-env")({
+                    autoprefixer: {
+                      flexbox: "no-2009"
+                    },
+                    stage: 3
+                  }),
+                  ifProd(() =>
+                    require("@fullhuman/postcss-purgecss")({
+                      content: [
+                        "public/**/*.html",
+                        "src/**/*.html",
+                        "src/**/*.ts",
+                        "src/**/*.tsx"
+                      ].map(p => path.resolve(__dirname, p)),
+                      defaultExtractor: content =>
+                        content.match(/[\w-/:]+(?<!:)/g) || []
+                    })
+                  )
+                ].filter(Boolean)
             }
           }
         ]

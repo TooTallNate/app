@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import { Button, Title } from "../components/styled";
-import { NumberInput, Textarea } from "../components/ui/text-inputs";
+import { NumberInput, TextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import JobSelector from "../components/JobSelector";
@@ -146,7 +146,8 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Comments" name="comments">
-          <Textarea
+          <TextInput
+            multiline
             value={formState.comments}
             maxLength={50}
             onChange={comments => setFormState({ ...formState, comments })}

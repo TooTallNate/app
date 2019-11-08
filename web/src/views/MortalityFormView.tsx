@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, FormGroup } from "../components/styled";
-import { NumberInput, Textarea } from "../components/ui/text-inputs";
+import { Button, Title, Group } from "../components/styled";
+import { NumberInput, TextInput } from "../components/ui/text-inputs";
 import { RouteComponentProps } from "react-router";
 import { ItemTemplate, EntryType, Animal, ItemBatch } from "../entities";
 import JobSelector from "../components/JobSelector";
@@ -15,6 +15,7 @@ import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
+import tw from "tailwind.macro";
 
 interface FormState {
   animal?: Animal;
@@ -168,16 +169,12 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           />
         </Field>
-        <FormGroup
+        <Group
           css={{
             display: "flex"
           }}
         >
-          <Field
-            css={{ flex: "1 1 0" }}
-            name="natural-quantity"
-            label="Natrual"
-          >
+          <Field css={tw`flex-1`} name="natural-quantity" label="Natrual">
             <NumberInput
               value={formState.naturalQuantity}
               onChange={naturalQuantity =>
@@ -186,21 +183,11 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={{
-              flex: "0 0 auto",
-              width: 32,
-              textAlign: "center",
-              paddingTop: 45,
-              lineHeight: "40px"
-            }}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
           >
             +
           </div>
-          <Field
-            css={{ flex: "1 1 0" }}
-            name="euthanized-quantity"
-            label="Euthanized"
-          >
+          <Field css={tw`flex-1`} name="euthanized-quantity" label="Euthanized">
             <NumberInput
               value={formState.euthanizedQuantity}
               onChange={euthanizedQuantity =>
@@ -209,13 +196,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={{
-              flex: "0 0 auto",
-              width: 32,
-              textAlign: "center",
-              paddingTop: 45,
-              lineHeight: "40px"
-            }}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
           >
             =
           </div>
@@ -230,7 +211,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
                 (formState.naturalQuantity || 0)}
             </Output>
           </Field>
-        </FormGroup>
+        </Group>
         <Field name="weight" label="Weight">
           <NumberInput
             value={formState.weight}
@@ -244,7 +225,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field name="comments" label="Comments">
-          <Textarea
+          <TextInput
+            multiline
             value={formState.comments}
             maxLength={50}
             onChange={comments => setFormState({ ...formState, comments })}

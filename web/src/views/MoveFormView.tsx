@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, FormGroup } from "../components/styled";
-import { NumberInput, Textarea } from "../components/ui/text-inputs";
+import { Button, Title, Group } from "../components/styled";
+import { NumberInput, TextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import JobSelector from "../components/JobSelector";
@@ -145,8 +145,9 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <FormGroup
+        <Group
           css={{
+            marginTop: 0,
             display: "flex"
           }}
         >
@@ -188,9 +189,10 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
               <StackedButton value={Animal.SOWS}>Sows</StackedButton>
             </StackedButtonInput>
           </Field>
-        </FormGroup>
-        <FormGroup
+        </Group>
+        <Group
           css={{
+            marginTop: 0,
             display: "flex"
           }}
         >
@@ -223,7 +225,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
               }}
             />
           </Field>
-        </FormGroup>
+        </Group>
         <Field name="quantity" label="Quantity">
           <NumberInput
             value={formState.quantity}
@@ -243,7 +245,8 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field name="comments" label="Comments">
-          <Textarea
+          <TextInput
+            multiline
             value={formState.comments}
             maxLength={50}
             onChange={comments => setFormState({ ...formState, comments })}

@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Button, Title, FormGroup } from "../components/styled";
+import { Button, Title, Group } from "../components/styled";
 import { TextInput } from "../components/ui/text-inputs";
 import Field from "../components/ui/Field";
 
@@ -47,9 +47,9 @@ const LoginView: React.FC = () => {
         }}
       >
         {isInvalid && (
-          <FormGroup>
+          <Group>
             <div css={{ color: "red" }}>Username or password are invalid.</div>
-          </FormGroup>
+          </Group>
         )}
         <Field name="username" label="Username">
           <TextInput
@@ -64,9 +64,9 @@ const LoginView: React.FC = () => {
             onChange={password => setCredentials(old => ({ ...old, password }))}
           />
         </Field>
-        <FormGroup>
+        <Group>
           <Button type="submit">Log In</Button>
-        </FormGroup>
+        </Group>
       </form>
     </div>
   );

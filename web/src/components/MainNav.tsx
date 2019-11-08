@@ -1,33 +1,20 @@
-/** @jsx jsx */
-import { jsx, InterpolationWithTheme } from "@emotion/core";
+import React from "react";
 import { Link } from "react-router-dom";
 
-const linkStyle: InterpolationWithTheme<any> = {
-  textDecoration: "none",
-  color: "black",
-  padding: 8,
-  lineHeight: "28px",
-  textAlign: "center",
-  fontSize: 14,
-  fontWeight: "bold"
-};
+const MainNavLink: React.FC<React.ComponentProps<typeof Link>> = props => (
+  <Link
+    {...props}
+    className={
+      "h-12 px-2 py-3 text-black text-center text-sm font-bold no-underline "
+    }
+  />
+);
 
 const MainNav: React.FC = () => {
   return (
-    <nav
-      css={{
-        height: 44,
-        borderTop: "1px solid #9ca1b1",
-        display: "flex",
-        justifyContent: "center"
-      }}
-    >
-      <Link css={linkStyle} to="/account">
-        ACCOUNT
-      </Link>
-      <Link css={linkStyle} to="/pigs">
-        PIG ACTIVITY
-      </Link>
+    <nav className="h-12 flex justify-center border-t border-gray-500">
+      <MainNavLink to="/account">ACCOUNT</MainNavLink>
+      <MainNavLink to="/pigs">PIG ACTIVITY</MainNavLink>
     </nav>
   );
 };

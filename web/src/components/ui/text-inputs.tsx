@@ -1,23 +1,38 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { BaseTextInput, BaseTextarea } from "../styled";
+import { FocusTarget } from "../styled";
 import { ComponentProps } from "react";
+import tw from "tailwind.macro";
 
-type TextInputProps = Omit<
-  ComponentProps<typeof BaseTextInput>,
-  "value" | "onChange"
-> & {
+const BaseTextInput = tw.styled(FocusTarget.withComponent("input"))`
+  py-2 px-4 h-10 w-full block
+  text-base text-black leading-none 
+  border border-gray-500 rounded-lg
+`;
+
+const BaseTextarea = tw.styled(BaseTextInput.withComponent("textarea"))`
+  resize-y h-24
+`;
+
+type TextInputProps = Omit<ComponentProps<"input">, "value" | "onChange"> & {
   value?: string;
   onChange(value?: string): void;
+  multiline?: boolean;
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
   onChange = () => {},
+  multiline = false,
   ...props
-}) => <BaseTextInput {...props} onChange={e => onChange(e.target.value)} />;
+}) =>
+  multiline ? (
+    <BaseTextarea {...props} onChange={e => onChange(e.target.value)} />
+  ) : (
+    <BaseTextInput {...props} onChange={e => onChange(e.target.value)} />
+  );
 
 type NumberInputProps = Omit<
-  ComponentProps<typeof BaseTextInput>,
+  ComponentProps<"input">,
   "value" | "onChange" | "type"
 > & {
   value?: number;
@@ -37,16 +52,3 @@ export const NumberInput: React.FC<NumberInputProps> = ({
     }}
   />
 );
-
-type TextareaProps = Omit<
-  ComponentProps<typeof BaseTextarea>,
-  "value" | "onChange"
-> & {
-  value?: string;
-  onChange(value?: string): void;
-};
-
-export const Textarea: React.FC<TextareaProps> = ({
-  onChange = () => {},
-  ...props
-}) => <BaseTextarea {...props} onChange={e => onChange(e.target.value)} />;

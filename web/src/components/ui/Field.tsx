@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { Label, FieldGroup } from "../styled";
 import React from "react";
+import { Label, Group } from "../styled";
 
-type FieldProps = React.ComponentProps<typeof FieldGroup> & {
+type FieldProps = React.ComponentProps<typeof Group> & {
   label: string;
   name: string;
 };
@@ -12,7 +10,7 @@ const Field: React.FC<FieldProps> = ({ label, name, children, ...props }) => {
   const labelId = `${name}-label`;
   const firstChild = React.Children.toArray(children)[0];
   return (
-    <FieldGroup {...props}>
+    <Group {...props}>
       <Label id={labelId}>{label}</Label>
       {firstChild &&
         React.isValidElement(firstChild) &&
@@ -20,7 +18,7 @@ const Field: React.FC<FieldProps> = ({ label, name, children, ...props }) => {
           "aria-labelledby": labelId,
           name
         })}
-    </FieldGroup>
+    </Group>
   );
 };
 

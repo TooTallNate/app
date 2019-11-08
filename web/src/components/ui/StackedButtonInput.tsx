@@ -1,7 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
 import React from "react";
+import styled from "@emotion/styled";
 import { StackedContainer, StackedItem } from "../styled";
 
 interface StackedLabelProps {
@@ -38,11 +36,8 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
   return (
     <StackedLabel selected={selected === value}>
       <input
+        className="absolute opacity-0"
         type="radio"
-        css={{
-          opacity: 0,
-          position: "absolute"
-        }}
         value={value}
         checked={selected}
         onChange={() => onChange(value)}
