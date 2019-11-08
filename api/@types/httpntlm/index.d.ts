@@ -23,5 +23,5 @@ declare module "httpntlm" {
     method: string,
     options: NTLMRequest,
     callback: NTLMCallback
-  );
+  ): Promise<NTLMResponse>;
 }
