@@ -1,13 +1,24 @@
-import { renderView, getUser, fireEvent } from "../../test/utils";
+import { renderView, fireEvent } from "../../test/utils";
 import fetchMock from "fetch-mock";
+import { LogoutDocument } from "../graphql";
 
 test("logout button logs user out and redirect to login", async () => {
   fetchMock.post("/api/logout", 204);
 
-  const { getByText, findByText } = await renderView("/account", {
-    user: getUser()
+  const { findByText } = await renderView("/account", {
+    dataMocks: [
+      {
+        request: {
+          query: LogoutDocument
+        },
+        result: {
+          data: {
+            logout: true
+          }
+        }
+      }
+    ]
   });
-  fireEvent.click(getByText(/log out/i));
+  fireEvent.click(await findByText(/log out/i));
   await findByText(/login/i);
-  expect(fetchMock.called("/api/logout", { method: "POST" })).toBe(true);
 });

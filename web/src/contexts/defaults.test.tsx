@@ -28,7 +28,11 @@ function initTestData(): {
 } {
   const jobs = Array.from({ length: 5 }, () => ({
     number: faker.random.alphaNumeric(8),
-    site: faker.random.alphaNumeric(2)
+    site: faker.random.alphaNumeric(2),
+    dimensions: {
+      costCenter: faker.random.number({ min: 100, max: 999 }).toString(),
+      entity: faker.random.number({ min: 1, max: 3 }).toString()
+    }
   }));
 
   const defaultJob = jobs[0];

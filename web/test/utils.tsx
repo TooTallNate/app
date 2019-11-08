@@ -5,7 +5,7 @@ import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
 import { AuthProvider } from "../src/contexts/auth";
 import App from "../src/App";
 import fetchMock from "fetch-mock";
-import { User } from "../src/graphql";
+import { User, UserDocument } from "../src/graphql";
 import { MockedResponse, MockedProvider } from "@apollo/react-testing";
 
 export * from "@testing-library/react";
@@ -67,11 +67,12 @@ export function renderHook<T>(
 
 interface RenderViewOptions {
   user?: User | null;
+  dataMocks?: MockedResponse[];
 }
 
 export async function renderView(
   initialRoute: string,
-  { user = getUser() }: RenderViewOptions = {}
+  { user = getUser(), dataMocks = [] }: RenderViewOptions = {}
 ) {
   fetchMock.get(
     "/api/refresh",
@@ -84,9 +85,26 @@ export async function renderView(
   );
   const utils = renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: UserDocument
+            },
+            result: {
+              data: {
+                user
+              }
+            }
+          },
+          ...dataMocks
+        ]}
+        addTypename={false}
+      >
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MockedProvider>
     </MemoryRouter>
   );
   // Wait for auth provider to settle.

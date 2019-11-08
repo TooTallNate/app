@@ -120,8 +120,8 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
         {...props}
         autoComplete="off"
         value={textValue}
-        onChange={e => {
-          setTextValue(e.target.value);
+        onChange={value => {
+          setTextValue(value);
           setIsOpen(true);
         }}
         onFocus={e => {

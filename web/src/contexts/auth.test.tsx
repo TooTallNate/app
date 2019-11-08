@@ -1,7 +1,7 @@
 import React from "react";
 import faker from "faker";
 import { MockedResponse } from "@apollo/react-testing";
-import { renderHook, act, wait } from "../../test/utils";
+import { renderHook, act } from "../../test/utils";
 import { AuthProvider, useAuth } from "./auth";
 import { UserDocument, LoginDocument, LogoutDocument } from "../graphql";
 
@@ -17,7 +17,7 @@ function render(mocks: MockedResponse[]) {
 
 test("renders loading ui", async () => {
   const { findByText } = render([]);
-  await findByText(/Loggin In.../i);
+  await findByText(/Logging In.../i);
 });
 
 test("returns unauthenticated if user query returns null", async () => {

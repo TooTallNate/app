@@ -1,21 +1,30 @@
 import faker from "faker";
-import { renderView, fireEvent } from "../../test/utils";
-import fetchMock from "fetch-mock";
+import { renderView, fireEvent, getUser } from "../../test/utils";
+import { LoginDocument } from "../graphql";
 
 test("successful login", async () => {
-  const fullName = faker.name.findName();
-  const license = "Full License";
-  const username = `${faker.internet.domainWord()}\\${faker.internet.userName()}`;
+  const user = getUser();
   const password = faker.internet.password();
-  fetchMock.post("/api/login", {
-    status: 200,
-    body: { Full_Name: fullName, License_Type: license }
-  });
   const { getByLabelText, getByText, findByText } = await renderView("/login", {
-    user: null
+    user: null,
+    dataMocks: [
+      {
+        request: {
+          query: LoginDocument,
+          variables: {
+            input: { username: user.username, password }
+          }
+        },
+        result: {
+          data: {
+            login: user
+          }
+        }
+      }
+    ]
   });
   fireEvent.change(getByLabelText(/username/i), {
-    target: { value: username }
+    target: { value: user.username }
   });
   fireEvent.change(getByLabelText(/password/i), {
     target: { value: password }
@@ -24,21 +33,24 @@ test("successful login", async () => {
     (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
   );
   await findByText(/pig activity/i, { selector: "h1" });
-  expect(
-    fetchMock.lastOptions("/api/login", {
-      method: "POST"
-    })
-  ).toMatchObject({
-    body: JSON.stringify({ username, password })
-  });
 });
 
 test("invalid login", async () => {
   const username = `${faker.internet.domainWord()}\\${faker.internet.userName()}`;
   const password = faker.internet.password();
-  fetchMock.post("/api/login", 401);
   const { getByLabelText, getByText, findByText } = await renderView("/login", {
-    user: null
+    user: null,
+    dataMocks: [
+      {
+        request: {
+          query: LoginDocument,
+          variables: {
+            input: { username: username, password }
+          }
+        },
+        error: new Error("Invalid credentials")
+      }
+    ]
   });
   fireEvent.change(getByLabelText(/username/i), {
     target: { value: username }
