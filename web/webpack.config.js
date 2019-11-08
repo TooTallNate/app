@@ -107,7 +107,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.css$/,
+        test: /\.p?css$/,
         use: [
           selectEnv({
             development: "style-loader",
@@ -119,6 +119,7 @@ module.exports = {
             options: {
               ident: "postcss",
               plugins: () => [
+                require("tailwindcss"),
                 require("postcss-flexbugs-fixes"),
                 require("postcss-preset-env")({
                   autoprefixer: {
@@ -126,7 +127,16 @@ module.exports = {
                   },
                   stage: 3
                 }),
-                require("postcss-normalize")()
+                require("@fullhuman/postcss-purgecss")({
+                  content: [
+                    "public/**/*.html",
+                    "src/**/*.html",
+                    "src/**/*.ts",
+                    "src/**/*.tsx"
+                  ].map(p => path.resolve(__dirname, p)),
+                  defaultExtractor: content =>
+                    content.match(/[\w-/:]+(?<!:)/g) || []
+                })
               ]
             }
           }
