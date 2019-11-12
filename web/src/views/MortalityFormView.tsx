@@ -216,7 +216,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             onChange={weight => setFormState({ ...formState, weight })}
           />
         </Field>
-        <Field name="price" label="Price">
+        <Field name="price" label="Price/pig">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
