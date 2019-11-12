@@ -9,10 +9,7 @@ import MoveFormView from "./MoveFormView";
 import GradeOffFormView from "./GradeOffFormView";
 import AdjustmentFormView from "./AdjustmentFormView";
 
-const PigActivityView: React.FC<RouteComponentProps> = ({
-  match,
-  location
-}) => {
+const PigActivityView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <div
       css={{

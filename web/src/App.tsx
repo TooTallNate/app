@@ -8,7 +8,6 @@ import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
 import useDefaults from "./contexts/defaults";
-import FullPageSpinner from "./components/FullPageSpinner";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -19,10 +18,9 @@ const UnauthenticatedApp: React.FC = () => {
 };
 
 const AuthenticatedApp: React.FC = () => {
-  const [{ loading }] = useDefaults();
-  return loading ? (
-    <FullPageSpinner>Loading Settings...</FullPageSpinner>
-  ) : (
+  useDefaults(); // Load defaults into the cache.
+
+  return (
     <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
       <div className="min-h-0 flex-grow">
         <Switch>

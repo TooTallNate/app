@@ -16,6 +16,7 @@ import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
 import tw from "tailwind.macro";
+import FullPageSpinner from "../components/FullPageSpinner";
 
 interface FormState {
   animal?: Animal;
@@ -32,7 +33,8 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice, job: defaultJob }
+      defaults: { price: defaultPrice, job: defaultJob },
+      loading: loadingDefaults
     },
     setDefaults
   ] = useDefaults();
@@ -131,7 +133,9 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return (
+  return loadingDefaults ? (
+    <FullPageSpinner>Loading Defaults...</FullPageSpinner>
+  ) : (
     <div
       css={{
         height: "100%",

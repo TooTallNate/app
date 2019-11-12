@@ -14,6 +14,7 @@ import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
+import FullPageSpinner from "../components/FullPageSpinner";
 
 interface FormState {
   animal?: Animal;
@@ -29,7 +30,8 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice }
+      defaults: { price: defaultPrice },
+      loading: loadingDefaults
     },
     setDefaults
   ] = useDefaults();
@@ -90,7 +92,9 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return (
+  return loadingDefaults ? (
+    <FullPageSpinner>Loading Defaults...</FullPageSpinner>
+  ) : (
     <div
       css={{
         height: "100%",
