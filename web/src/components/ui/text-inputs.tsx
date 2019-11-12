@@ -14,7 +14,10 @@ const BaseTextarea = tw.styled(BaseTextInput.withComponent("textarea"))`
   resize-y h-24
 `;
 
-type TextInputProps = Omit<ComponentProps<"input">, "value" | "onChange"> & {
+type TextInputProps = Omit<
+  ComponentProps<typeof BaseTextInput> & ComponentProps<typeof BaseTextarea>,
+  "value" | "onChange"
+> & {
   value?: string;
   onChange(value?: string): void;
   multiline?: boolean;
@@ -32,7 +35,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   );
 
 type NumberInputProps = Omit<
-  ComponentProps<"input">,
+  ComponentProps<typeof BaseTextInput>,
   "value" | "onChange" | "type"
 > & {
   value?: number;
