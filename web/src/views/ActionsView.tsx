@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { Title, StackedNav, StackedNavLink } from "../components/styled";
+import { Title, StackedNav, StackedNavLink, View } from "../components/styled";
 import Field from "../components/ui/Field";
 
 const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
-    <div>
+    <View>
       <Title>Pig Activity</Title>
       <div
         css={{
@@ -32,7 +32,7 @@ const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
           </StackedNav>
         </Field>
       </div>
-    </div>
+    </View>
   );
 };
 

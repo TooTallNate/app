@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
-import { Button } from "../components/styled";
+import { Button, View } from "../components/styled";
 import { useAuth } from "../contexts/auth";
 import { Title } from "../components/styled";
 
@@ -9,13 +9,7 @@ const AccountView: React.FC<RouteComponentProps> = () => {
   const { logout } = useAuth();
 
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%"
-      }}
-    >
+    <View>
       <Title>Account</Title>
       <div
         css={{
@@ -34,7 +28,7 @@ const AccountView: React.FC<RouteComponentProps> = () => {
           Log Out
         </Button>
       </div>
-    </div>
+    </View>
   );
 };
 

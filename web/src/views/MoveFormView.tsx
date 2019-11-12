@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, Group } from "../components/styled";
+import { Button, Title, Group, View } from "../components/styled";
 import { NumberInput, TextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
@@ -132,20 +132,14 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
   return loadingDefaults ? (
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
-    <div
-      css={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
+    <View>
       <Title>Move</Title>
       <form
         css={{
           overflowX: "auto",
           minHeight: 0,
           flexGrow: 1,
-          padding: "0 16px calc(100vh - 289px) 16px"
+          padding: "0 16px 16px 16px"
         }}
         onSubmit={onSubmit}
       >
@@ -266,7 +260,7 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
           Submit
         </Button>
       </form>
-    </div>
+    </View>
   );
 };
 

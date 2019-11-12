@@ -5,6 +5,8 @@ import tw from "tailwind.macro";
 export const FocusTarget = tw.div`focus:shadow-outline focus:outline-none`;
 export const FocusInTarget = tw.div`focus-within:shadow-outline focus-within:outline-none`;
 
+export const View = tw.div`flex flex-col h-full`;
+
 export const Button = tw.styled(FocusTarget.withComponent("button"))`
   py-2 px-4 h-10 w-full block
   text-base font-bold text-white leading-none active:text-black 

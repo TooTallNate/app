@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Button, Title, Group } from "../components/styled";
+import { Button, Title, Group, View } from "../components/styled";
 import { TextInput } from "../components/ui/text-inputs";
 import Field from "../components/ui/Field";
 
@@ -20,13 +20,7 @@ const LoginView: React.FC = () => {
   });
 
   return (
-    <div
-      css={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
+    <View>
       <Title>Login</Title>
       <form
         css={{
@@ -68,7 +62,7 @@ const LoginView: React.FC = () => {
           <Button type="submit">Log In</Button>
         </Group>
       </form>
-    </div>
+    </View>
   );
 };
 
