@@ -1,27 +1,35 @@
 declare module "httpntlm" {
-  interface NTLMRequest {
+  interface NtlmRequest {
     url: string;
     domain: string;
     username: string;
-    password: string;
+    lm_password: Buffer;
+    nt_password: Buffer;
     body?: string;
     headers?: {
       [header: string]: string;
     };
   }
 
-  interface NTLMResponse {
+  interface NtlmResponse {
     statusCode: number;
     body?: string;
   }
 
-  interface NTLMCallback {
-    (err: Error, res: NTLMResponse): void;
+  interface NtlmCallback {
+    (err: Error, res: NtlmResponse): void;
+  }
+
+  interface Ntlm {
+    create_LM_hashed_password(password: string): Buffer;
+    create_NT_hashed_password(password: string): Buffer;
   }
 
   export function method(
     method: string,
-    options: NTLMRequest,
-    callback: NTLMCallback
-  ): Promise<NTLMResponse>;
+    options: NtlmRequest,
+    callback: NtlmCallback
+  ): Promise<NtlmResponse>;
+
+  export const ntlm: Ntlm;
 }

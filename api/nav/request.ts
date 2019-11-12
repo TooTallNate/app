@@ -8,7 +8,8 @@ export interface NavRequest<T = string> {
   resource: string;
   filter?: Filter;
   username: string;
-  password: string;
+  ntPassword: Buffer;
+  lmPassword: Buffer;
   method: string;
   body?: T;
   headers?: {
@@ -20,7 +21,8 @@ export interface NavGetRequest {
   resource: string;
   filter?: Filter;
   username: string;
-  password: string;
+  ntPassword: Buffer;
+  lmPassword: Buffer;
   headers?: {
     [header: string]: string;
   };
@@ -30,7 +32,8 @@ export interface NavPostRequest<T = string> {
   resource: string;
   filter?: Filter;
   username: string;
-  password: string;
+  ntPassword: Buffer;
+  lmPassword: Buffer;
   body?: T;
   headers?: {
     [header: string]: string;
@@ -97,7 +100,8 @@ export function ntlmRequest<Req, Res>(
     resource,
     filter = {},
     username: domainUsername,
-    password,
+    ntPassword,
+    lmPassword,
     method,
     body,
     headers
@@ -115,7 +119,8 @@ export function ntlmRequest<Req, Res>(
         url,
         domain,
         username,
-        password,
+        nt_password: ntPassword,
+        lm_password: lmPassword,
         body: body ? JSON.stringify(body) : undefined,
         headers: {
           "content-type": "application/json",

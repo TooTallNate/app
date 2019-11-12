@@ -33,8 +33,9 @@ describe("user query", () => {
 
 describe("login mutation", () => {
   test("returns user info", async () => {
+    const { ntPassword, lmPassword, ...creds } = navMock.credentials;
     const { data, errors } = await loginMutation({
-      input: navMock.credentials
+      input: creds
     });
     expect(errors).toBeFalsy();
     expect(data).toEqual({

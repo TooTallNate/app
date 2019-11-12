@@ -9,13 +9,20 @@ import {
   NavDimensionSearch
 } from "../types";
 import { NavClient } from "..";
+const { hashPassword } = jest.requireActual("../index");
+
+export { hashPassword };
+
+interface PasswordMock extends NavCredentials {
+  password: string;
+}
 
 export class NavMock {
-  private creds: NavCredentials;
+  private creds: Omit<PasswordMock, "password">;
   jobs: NavJob[];
   dimensions: NavDimension[];
   user: NavUser;
-  credentials: NavCredentials;
+  credentials: PasswordMock;
   getUser: jest.Mock<any, any>;
   getJobs: jest.Mock<any, any>;
   getDimensions: jest.Mock<any, any>;
@@ -28,7 +35,7 @@ export class NavMock {
     this.postItem = jest.fn();
   }
 
-  createNavClient(creds: NavCredentials) {
+  createNavClient(creds: Omit<PasswordMock, "password">) {
     this.creds = creds;
     return this;
   }
@@ -36,7 +43,8 @@ export class NavMock {
   validCredentials(): boolean {
     return (
       this.credentials.username === this.creds.username &&
-      this.credentials.password === this.creds.password
+      this.credentials.ntPassword.equals(this.creds.ntPassword) &&
+      this.credentials.lmPassword.equals(this.creds.lmPassword)
     );
   }
 
@@ -58,9 +66,13 @@ export class NavMock {
       );
       return arr;
     }, []);
+    const password = faker.internet.password();
+    const [ntPassword, lmPassword] = hashPassword(password);
     this.credentials = {
       username: `${faker.internet.domainName()}\\${faker.internet.userName()}`,
-      password: faker.internet.password()
+      password,
+      ntPassword,
+      lmPassword
     };
   }
 

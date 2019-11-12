@@ -4,7 +4,8 @@ export interface SessionUser {
   name: string;
   license: string;
   username: string;
-  password: string;
+  ntPassword: number[];
+  lmPassword: number[];
 }
 
 export type Session = Express.Session & { user?: SessionUser };
@@ -28,7 +29,11 @@ export function createContext({
     session: request.session,
     user: request.session.user as SessionUser,
     navClient: request.session.user
-      ? createNavClient(request.session.user)
+      ? createNavClient({
+          ...request.session.user,
+          ntPassword: Buffer.from(request.session.user.ntPassword),
+          lmPassword: Buffer.from(request.session.user.lmPassword)
+        })
       : null
   };
 }

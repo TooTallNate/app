@@ -45,6 +45,7 @@ export function gql<T, V = void>(
 }
 
 export async function login() {
+  const { ntPassword, lmPassword, ...creds } = navMock.credentials;
   const { errors } = await gql<{ login: User }, MutationLoginArgs>(
     `mutation Login($input: LoginInput!) {
       login(input: $input) {
@@ -52,7 +53,7 @@ export async function login() {
         license
       }
     }`
-  )({ input: navMock.credentials });
+  )({ input: creds });
   expect(errors).toBeFalsy();
 }
 

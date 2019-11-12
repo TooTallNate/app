@@ -1,6 +1,7 @@
 export interface NavCredentials {
   username: string;
-  password: string;
+  lmPassword: Buffer;
+  ntPassword: Buffer;
 }
 
 export interface NavSearch {

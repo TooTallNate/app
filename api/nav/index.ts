@@ -9,12 +9,20 @@ import {
   NavItemEntry
 } from "./types";
 import request from "./request";
+import { ntlm } from "httpntlm";
 
 export interface NavClient {
   getUser(): Promise<NavUser>;
   getJobs(filter: NavJobSearch): Promise<NavJob[]>;
   getDimensions(filter: NavDimensionSearch): Promise<NavDimension[]>;
   postItem(entry: NewNavItemEntry): Promise<NavItemEntry>;
+}
+
+export function hashPassword(password: string): [Buffer, Buffer] {
+  return [
+    ntlm.create_NT_hashed_password(password),
+    ntlm.create_LM_hashed_password(password)
+  ];
 }
 
 export default function createNavClient(creds: NavCredentials): NavClient {

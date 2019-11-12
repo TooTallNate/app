@@ -1,5 +1,5 @@
 import { MutationResolvers, UserResolvers, QueryResolvers } from "./types";
-import createNavClient from "../nav";
+import createNavClient, { hashPassword } from "../nav";
 
 export const UserQuery: QueryResolvers = {
   async user(_, __, { navClient }) {
@@ -13,14 +13,20 @@ export const UserQuery: QueryResolvers = {
 
 export const UserMutation: MutationResolvers = {
   async login(_, { input }, context) {
-    const navClient = createNavClient(input);
+    const [ntPassword, lmPassword] = hashPassword(input.password);
+    const navClient = createNavClient({
+      username: input.username,
+      ntPassword,
+      lmPassword
+    });
     const user = await navClient.getUser();
     if (user) {
       const sessionUser = {
         license: user.License_Type,
         name: user.Full_Name,
         username: input.username,
-        password: input.password
+        ntPassword: Array.from(ntPassword),
+        lmPassword: Array.from(lmPassword)
       };
       context.session.user = sessionUser;
       context.user = sessionUser;
