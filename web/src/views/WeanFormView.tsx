@@ -132,7 +132,7 @@ const WeanFormView: React.FC<RouteComponentProps> = ({ history }) => {
             onChange={quantity => setFormState({ ...formState, quantity })}
           />
         </Field>
-        <Field name="weight" label="Weight">
+        <Field name="weight" label="Total Weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}

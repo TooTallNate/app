@@ -145,7 +145,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
             onChange={quantity => setFormState({ ...formState, quantity })}
           />
         </Field>
-        <Field label="Weight" name="weight">
+        <Field label="Total Weight" name="weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
