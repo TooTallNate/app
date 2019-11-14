@@ -25,27 +25,17 @@ interface FormState {
   comments?: string;
 }
 
-const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice, job: defaultJob },
+      defaults: { price: defaultPrice },
       loading: loadingDefaults
     },
     setDefaults
   ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
-
-  // Set job with default only if not already set.
-  useEffect(() => {
-    if (!formState.job && defaultJob) {
-      setFormState(formState => ({
-        ...formState,
-        job: defaultJob
-      }));
-    }
-  }, [defaultJob, formState.job]);
 
   // Set price with default only if not already set.
   useEffect(() => {
@@ -76,27 +66,24 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
       await postItem({
         variables: {
           input: {
-            template: ItemTemplate.Adjustment,
-            batch: ItemBatch.Default,
-            entryType:
-              formState.quantity >= 0 ? EntryType.Positive : EntryType.Negative,
+            template: ItemTemplate.Wean,
+            batch: ItemBatch.Wean,
+            entryType: EntryType.Positive,
             item: formState.animal,
             job: formState.job.number,
-            quantity: Math.abs(formState.quantity),
+            quantity: formState.quantity,
             weight: formState.weight,
-            document: getDocumentNumber("ADJ", user.username),
+            document: getDocumentNumber("WEAN", user.username),
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
             location: formState.job.site,
-            costCenterCode: formState.job.dimensions.costCenter,
-            entityType: formState.job.dimensions.entity
+            prodPostingGroup: "WEAN PIGS",
+            costCenterCode: "213",
+            entityType: "2"
           }
         }
       });
-      if (formState.job !== defaultJob) {
-        await setDefaults({ job: formState.job });
-      }
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
       }
@@ -110,7 +97,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Adjustment</Title>
+      <Title>Wean</Title>
       <form
         css={{
           overflowX: "auto",
@@ -139,19 +126,19 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           />
         </Field>
-        <Field label="Quantity" name="quantity">
+        <Field name="quantity" label="Quantity">
           <NumberInput
             value={formState.quantity}
             onChange={quantity => setFormState({ ...formState, quantity })}
           />
         </Field>
-        <Field label="Total Weight" name="weight">
+        <Field name="weight" label="Total Weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
         </Field>
-        <Field label="Price/pig" name="price">
+        <Field name="price" label="Price/pig">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
@@ -178,4 +165,4 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default AdjustmentFormView;
+export default ActivityWeanView;

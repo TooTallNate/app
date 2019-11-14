@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import tw from "tailwind.macro";
 import { Route, Redirect, Switch } from "react-router-dom";
-import PigActivityView from "./views/PigActivityView";
+import ActivityView from "./views/ActivityView";
 import AccountView from "./views/AccountView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
@@ -24,7 +24,7 @@ const AuthenticatedApp: React.FC = () => {
     <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
       <div className="min-h-0 flex-grow">
         <Switch>
-          <Route path="/pigs" component={PigActivityView} />
+          <Route path="/pigs" component={ActivityView} />
           <Route path="/account" component={AccountView} />
           <Redirect to="/pigs" />
         </Switch>

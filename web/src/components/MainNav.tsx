@@ -14,7 +14,7 @@ const MainNav: React.FC = () => {
   return (
     <nav className="h-12 flex justify-center border-t border-gray-500">
       <MainNavLink to="/account">ACCOUNT</MainNavLink>
-      <MainNavLink to="/pigs">PIG ACTIVITY</MainNavLink>
+      <MainNavLink to="/pigs">ACTIVITY</MainNavLink>
     </nav>
   );
 };

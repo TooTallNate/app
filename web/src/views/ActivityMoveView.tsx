@@ -27,7 +27,7 @@ interface FormState {
   comments?: string;
 }
 
-const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const [
@@ -263,4 +263,4 @@ const MoveFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default MoveFormView;
+export default ActivityMoveView;

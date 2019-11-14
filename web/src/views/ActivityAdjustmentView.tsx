@@ -1,34 +1,31 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, Group, View } from "../components/styled";
+import { Button, Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import { ItemTemplate, EntryType, Animal, ItemBatch } from "../entities";
 import JobSelector from "../components/JobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
-import { Output } from "../components/styled";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
-import tw from "tailwind.macro";
 import FullPageSpinner from "../components/FullPageSpinner";
 
 interface FormState {
   animal?: Animal;
   job?: Job;
-  naturalQuantity?: number;
-  euthanizedQuantity?: number;
+  quantity?: number;
   weight?: number;
   price?: number;
   comments?: string;
 }
 
-const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const ActivityAdjustmentView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const [
@@ -69,58 +66,34 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
       if (
         !formState.animal ||
         !formState.job ||
-        !formState.naturalQuantity ||
-        !formState.euthanizedQuantity ||
+        !formState.quantity ||
         !formState.weight ||
         !formState.price ||
         !user
       ) {
         return;
       }
-      if (formState.naturalQuantity > 0) {
-        await postItem({
-          variables: {
-            input: {
-              template: ItemTemplate.Mortality,
-              batch: ItemBatch.Mortality,
-              entryType: EntryType.Negative,
-              item: formState.animal,
-              job: formState.job.number,
-              quantity: formState.naturalQuantity,
-              weight: formState.weight,
-              document: getDocumentNumber("MORT", user.username),
-              amount: formState.price,
-              description: formState.comments,
-              date: new Date(),
-              location: formState.job.site,
-              costCenterCode: formState.job.dimensions.costCenter,
-              entityType: formState.job.dimensions.entity
-            }
+      await postItem({
+        variables: {
+          input: {
+            template: ItemTemplate.Adjustment,
+            batch: ItemBatch.Default,
+            entryType:
+              formState.quantity >= 0 ? EntryType.Positive : EntryType.Negative,
+            item: formState.animal,
+            job: formState.job.number,
+            quantity: Math.abs(formState.quantity),
+            weight: formState.weight,
+            document: getDocumentNumber("ADJ", user.username),
+            amount: formState.price,
+            description: formState.comments,
+            date: new Date(),
+            location: formState.job.site,
+            costCenterCode: formState.job.dimensions.costCenter,
+            entityType: formState.job.dimensions.entity
           }
-        });
-      }
-      if (formState.euthanizedQuantity > 0) {
-        await postItem({
-          variables: {
-            input: {
-              template: ItemTemplate.Mortality,
-              batch: ItemBatch.Mortality,
-              entryType: EntryType.Negative,
-              item: formState.animal,
-              job: formState.job.number,
-              quantity: formState.euthanizedQuantity,
-              weight: formState.weight,
-              document: getDocumentNumber("MORT", user.username),
-              amount: formState.price,
-              description: formState.comments,
-              date: new Date(),
-              location: formState.job.site,
-              costCenterCode: formState.job.dimensions.costCenter,
-              entityType: formState.job.dimensions.entity
-            }
-          }
-        });
-      }
+        }
+      });
       if (formState.job !== defaultJob) {
         await setDefaults({ job: formState.job });
       }
@@ -137,7 +110,7 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Mortality</Title>
+      <Title>Adjustment</Title>
       <form
         css={{
           overflowX: "auto",
@@ -156,7 +129,6 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
               Market Pigs
             </StackedButton>
             <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-            <StackedButton value={Animal.SOWS}>Sows</StackedButton>
           </StackedButtonInput>
         </Field>
         <Field label="Job" name="job">
@@ -167,62 +139,25 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
             }}
           />
         </Field>
-        <Group
-          css={{
-            display: "flex"
-          }}
-        >
-          <Field css={tw`flex-1`} name="natural-quantity" label="Natrual">
-            <NumberInput
-              value={formState.naturalQuantity}
-              onChange={naturalQuantity =>
-                setFormState({ ...formState, naturalQuantity })
-              }
-            />
-          </Field>
-          <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
-          >
-            +
-          </div>
-          <Field css={tw`flex-1`} name="euthanized-quantity" label="Euthanized">
-            <NumberInput
-              value={formState.euthanizedQuantity}
-              onChange={euthanizedQuantity =>
-                setFormState({ ...formState, euthanizedQuantity })
-              }
-            />
-          </Field>
-          <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
-          >
-            =
-          </div>
-          <Field css={{ width: 72 }} name="quantity" label="Quantity">
-            <Output
-              id="quantity"
-              css={{
-                paddingLeft: 0
-              }}
-            >
-              {(formState.euthanizedQuantity || 0) +
-                (formState.naturalQuantity || 0)}
-            </Output>
-          </Field>
-        </Group>
-        <Field name="weight" label="Total Weight">
+        <Field label="Quantity" name="quantity">
+          <NumberInput
+            value={formState.quantity}
+            onChange={quantity => setFormState({ ...formState, quantity })}
+          />
+        </Field>
+        <Field label="Total Weight" name="weight">
           <NumberInput
             value={formState.weight}
             onChange={weight => setFormState({ ...formState, weight })}
           />
         </Field>
-        <Field name="price" label="Price/pig">
+        <Field label="Price/pig" name="price">
           <NumberInput
             value={formState.price}
             onChange={price => setFormState({ ...formState, price })}
           />
         </Field>
-        <Field name="comments" label="Comments">
+        <Field label="Comments" name="comments">
           <MultilineTextInput
             value={formState.comments}
             maxLength={50}
@@ -243,4 +178,4 @@ const MortalityFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default MortalityFormView;
+export default ActivityAdjustmentView;

@@ -4,16 +4,16 @@ import { RouteComponentProps } from "react-router-dom";
 import { Title, StackedNav, StackedNavLink, View } from "../components/styled";
 import Field from "../components/ui/Field";
 
-const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
+const ActivitySelectionView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <View>
-      <Title>Pig Activity</Title>
+      <Title>Activity</Title>
       <div
         css={{
           padding: "0 16px"
         }}
       >
-        <Field label="Select Action" name="action">
+        <Field label="Select Activity" name="action">
           <StackedNav>
             <StackedNavLink to={`${match.url}/wean`}>Wean</StackedNavLink>
             <StackedNavLink to={`${match.url}/mortality`}>
@@ -36,4 +36,4 @@ const ActionsView: React.FC<RouteComponentProps> = ({ match }) => {
   );
 };
 
-export default ActionsView;
+export default ActivitySelectionView;

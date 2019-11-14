@@ -3,11 +3,11 @@ import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import { Button, Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
+import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import JobSelector from "../components/JobSelector";
-import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
+import { getDocumentNumber } from "../utils";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
@@ -25,17 +25,27 @@ interface FormState {
   comments?: string;
 }
 
-const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
+const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice },
+      defaults: { price: defaultPrice, job: defaultJob },
       loading: loadingDefaults
     },
     setDefaults
   ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
+
+  // Set job with default only if not already set.
+  useEffect(() => {
+    if (!formState.job && defaultJob) {
+      setFormState(formState => ({
+        ...formState,
+        job: defaultJob
+      }));
+    }
+  }, [defaultJob, formState.job]);
 
   // Set price with default only if not already set.
   useEffect(() => {
@@ -66,14 +76,14 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
       await postItem({
         variables: {
           input: {
-            template: ItemTemplate.Wean,
-            batch: ItemBatch.Wean,
-            entryType: EntryType.Positive,
+            template: ItemTemplate.GradeOff,
+            batch: ItemBatch.Default,
+            entryType: EntryType.Negative,
             item: formState.animal,
             job: formState.job.number,
             quantity: formState.quantity,
             weight: formState.weight,
-            document: getDocumentNumber("PURCH", user.username),
+            document: getDocumentNumber("GRDOFF", user.username),
             amount: formState.price,
             description: formState.comments,
             date: new Date(),
@@ -83,6 +93,9 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
           }
         }
       });
+      if (formState.job !== defaultJob) {
+        await setDefaults({ job: formState.job });
+      }
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
       }
@@ -96,7 +109,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Purchase</Title>
+      <Title>Grade Off</Title>
       <form
         css={{
           overflowX: "auto",
@@ -143,7 +156,7 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
             onChange={price => setFormState({ ...formState, price })}
           />
         </Field>
-        <Field label="Comments" name="comments">
+        <Field name="comments" label="Comments">
           <MultilineTextInput
             value={formState.comments}
             maxLength={50}
@@ -164,4 +177,4 @@ const PurchaseFormView: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default PurchaseFormView;
+export default ActivityGradeOffView;
