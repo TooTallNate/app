@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import { Button, Title, View } from "../components/styled";
-import { NumberInput, TextInput } from "../components/ui/text-inputs";
+import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import JobSelector from "../components/JobSelector";
@@ -158,8 +158,7 @@ const AdjustmentFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Comments" name="comments">
-          <TextInput
-            multiline
+          <MultilineTextInput
             value={formState.comments}
             maxLength={50}
             onChange={comments => setFormState({ ...formState, comments })}

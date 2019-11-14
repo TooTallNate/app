@@ -9,10 +9,7 @@ interface TypeaheadItem {
 }
 
 interface TypeaheadInputProps
-  extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {
+  extends Omit<React.ComponentProps<typeof TextInput>, "value" | "onChange"> {
   items: TypeaheadItem[];
   value?: any;
   onChange?: (value: any) => void;

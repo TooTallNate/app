@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState, FormEventHandler, useEffect } from "react";
 import { Button, Title, View } from "../components/styled";
-import { NumberInput, TextInput } from "../components/ui/text-inputs";
+import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { RouteComponentProps } from "react-router";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import JobSelector from "../components/JobSelector";
@@ -157,8 +157,7 @@ const GradeOffFormView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field name="comments" label="Comments">
-          <TextInput
-            multiline
+          <MultilineTextInput
             value={formState.comments}
             maxLength={50}
             onChange={comments => setFormState({ ...formState, comments })}

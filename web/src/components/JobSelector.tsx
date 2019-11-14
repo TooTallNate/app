@@ -5,11 +5,8 @@ import useJobs from "../contexts/jobs";
 
 interface JobSelectorProps
   extends Omit<
-    React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
-    >,
-    "value" | "onChange"
+    React.ComponentProps<typeof TypeaheadInput>,
+    "value" | "onChange" | "items"
   > {
   value?: Job;
   onChange?: (job?: Job) => void;
