@@ -1,18 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.pcss";
+import "./icons";
 import App from "./App";
-import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "./contexts/auth";
-import { GraphqlProvider } from "./contexts/graphql";
+import Providers from "./Providers";
 
 ReactDOM.render(
-  <Router>
-    <GraphqlProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </GraphqlProvider>
-  </Router>,
+  <Providers>
+    <App />
+  </Providers>,
   document.getElementById("root")
 );
