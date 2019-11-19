@@ -68,7 +68,9 @@ const Flash: React.FC<FlashProps> = ({ messages, onClose }) => {
               "info-circle"
             }
           />
-          <div css={tw`ml-2 mr-4 flex-1`}>{text}</div>
+          <div css={tw`ml-2 mr-4 flex-1`} role="alert">
+            {text || ""}
+          </div>
           <button
             aria-label="Close Flash Message"
             onClick={() => setIsOpen(false)}
