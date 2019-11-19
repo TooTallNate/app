@@ -132,6 +132,7 @@ module.exports = {
                   }),
                   ifProd(() =>
                     require("@fullhuman/postcss-purgecss")({
+                      whitelistPatterns: [/flash-.*/],
                       content: [
                         "public/**/*.html",
                         "src/**/*.html",
