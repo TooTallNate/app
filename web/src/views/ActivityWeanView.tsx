@@ -15,6 +15,7 @@ import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
 import FullPageSpinner from "../components/FullPageSpinner";
+import { useFlash } from "../contexts/flash";
 
 interface FormState {
   animal?: Animal;
@@ -36,6 +37,7 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
     setDefaults
   ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
+  const { setMessage } = useFlash();
 
   // Set price with default only if not already set.
   useEffect(() => {
@@ -87,9 +89,17 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
       }
+      setMessage({
+        message: "Entry recorded successfully.",
+        level: "success",
+        timeout: 2000
+      });
       history.push("/");
     } catch (e) {
-      alert(`failed to post, ${e}`);
+      setMessage({
+        message: e.toString(),
+        level: "error"
+      });
     }
   };
 

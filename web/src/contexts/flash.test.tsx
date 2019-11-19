@@ -132,3 +132,21 @@ test("flash message with timeout auto closes", async () => {
   getByTestId("flash-message");
   await waitForElementToBeRemoved(() => getByTestId("flash-message"));
 });
+
+test("replaces existing flash messages", () => {
+  const message = faker.lorem.sentence();
+  const { getByTestId, getHook } = render();
+  act(() =>
+    getHook().addMessage({
+      message: faker.lorem.sentence(),
+      level: "info"
+    })
+  );
+  act(() =>
+    getHook().setMessage({
+      message,
+      level: "info"
+    })
+  );
+  expect(getByTestId("flash-message")).toContainHTML(message);
+});

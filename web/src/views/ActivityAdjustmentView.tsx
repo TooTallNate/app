@@ -37,7 +37,7 @@ const ActivityAdjustmentView: React.FC<RouteComponentProps> = ({ history }) => {
     setDefaults
   ] = useDefaults();
   const [postItem, { loading }] = usePostItemMutation();
-  const { addMessage } = useFlash();
+  const { setMessage } = useFlash();
 
   // Set job with default only if not already set.
   useEffect(() => {
@@ -102,14 +102,17 @@ const ActivityAdjustmentView: React.FC<RouteComponentProps> = ({ history }) => {
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
       }
-      addMessage({
+      setMessage({
         message: "Entry recorded successfully.",
         level: "success",
         timeout: 2000
       });
       history.push("/");
     } catch (e) {
-      alert(`failed to post, ${e}`);
+      setMessage({
+        message: e.toString(),
+        level: "error"
+      });
     }
   };
 
