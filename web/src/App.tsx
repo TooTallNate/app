@@ -7,7 +7,7 @@ import AccountView from "./views/AccountView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
-import useDefaults from "./contexts/defaults";
+import useDefaults from "./hooks/defaults";
 
 const UnauthenticatedApp: React.FC = () => {
   return (

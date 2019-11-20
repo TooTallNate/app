@@ -6,7 +6,7 @@ import {
   Job
 } from "../graphql";
 import { useCallback } from "react";
-import useJobs from "./jobs";
+import useJobs from "../contexts/jobs";
 
 export interface DefaultValues {
   job?: Job | null;

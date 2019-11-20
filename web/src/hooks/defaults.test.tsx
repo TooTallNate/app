@@ -11,7 +11,7 @@ import {
 } from "../graphql";
 
 function render(mocks: MockedResponse[]) {
-  const wrapper: React.FC = ({ children }) => (
+  const wrapper = ({ children }) => (
     <MockedProvider mocks={mocks} addTypename={false}>
       {children}
     </MockedProvider>
