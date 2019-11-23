@@ -48,8 +48,8 @@ test("passes other props to input element", () => {
   expect(onClickMock.mock.calls[0][0].target).toBe(input);
 });
 
-test("shows options after typing", () => {
-  const { input, queryByText } = render(
+test("shows options after typing", async () => {
+  const { input, getByText, queryByText } = render(
     <TypeaheadInput
       items={[
         { title: "Test-One", value: 1 },
@@ -59,6 +59,12 @@ test("shows options after typing", () => {
       ]}
     />
   );
+  getByText("Test-One");
+  getByText("Test-Two");
+  getByText("Test-Three");
+  getByText("Four");
+
+  fireEvent.focus(input);
   fireEvent.change(input, { target: { value: "Test" } });
   expect(queryByText("Test-One")).toBeTruthy();
   expect(queryByText("Test-Two")).toBeTruthy();

@@ -20,13 +20,13 @@ const BaseTextarea = tw.styled(FocusInTarget.withComponent("textarea"))`
 interface TextInputProps
   extends Omit<ComponentProps<typeof BaseTextInput>, "value" | "onChange"> {
   value?: string;
-  onChange(value?: string): void;
+  onChange?(value?: string): void;
 }
 
 interface MultilineTextInputProps
   extends Omit<ComponentProps<typeof BaseTextarea>, "value" | "onChange"> {
   value?: string;
-  onChange(value?: string): void;
+  onChange?(value?: string): void;
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -44,7 +44,7 @@ type NumberInputProps = Omit<
   "value" | "onChange" | "type"
 > & {
   value?: number;
-  onChange(value?: number): void;
+  onChange?(value?: number): void;
 };
 
 export const NumberInput: React.FC<NumberInputProps> = ({
