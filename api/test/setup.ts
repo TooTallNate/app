@@ -8,6 +8,15 @@ import { mock as navMock } from "../nav";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env.test") });
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface Global {
+      __MONGO_URI__: string;
+    }
+  }
+}
+
 jest.setTimeout(10000);
 jest.mock("../nav");
 
