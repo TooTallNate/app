@@ -27,12 +27,14 @@ export class NavMock {
   getJobs: jest.Mock<any, any>;
   getDimensions: jest.Mock<any, any>;
   postItem: jest.Mock<any, any>;
+  postJob: jest.Mock<any, any>;
 
   constructor() {
     this.getUser = jest.fn();
     this.getJobs = jest.fn();
     this.getDimensions = jest.fn();
     this.postItem = jest.fn();
+    this.postJob = jest.fn();
   }
 
   createNavClient(creds: Omit<PasswordMock, "password">) {
@@ -122,6 +124,14 @@ export class NavMock {
 
     this.postItem.mockReset();
     this.postItem.mockImplementation((item: any) => {
+      if (!this.validCredentials()) {
+        return Promise.resolve(null);
+      }
+      return Promise.resolve({ ...item });
+    });
+
+    this.postJob.mockReset();
+    this.postJob.mockImplementation((item: any) => {
       if (!this.validCredentials()) {
         return Promise.resolve(null);
       }

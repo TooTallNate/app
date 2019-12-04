@@ -51,7 +51,8 @@ export type Mutation = {
   login: User;
   logout: Scalars["Boolean"];
   updateDefaults: Defaults;
-  postItem: Scalars["Boolean"];
+  postItemJournal: Scalars["Boolean"];
+  postJobJournal: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
@@ -62,11 +63,15 @@ export type MutationUpdateDefaultsArgs = {
   input: DefaultsInput;
 };
 
-export type MutationPostItemArgs = {
-  input: PostItemInput;
+export type MutationPostItemJournalArgs = {
+  input: PostItemJournalInput;
 };
 
-export type PostItemInput = {
+export type MutationPostJobJournalArgs = {
+  input: PostJobJournalInput;
+};
+
+export type PostItemJournalInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];
@@ -82,6 +87,18 @@ export type PostItemInput = {
   prodPostingGroup?: Maybe<Scalars["String"]>;
   costCenterCode?: Maybe<Scalars["String"]>;
   entityType?: Maybe<Scalars["String"]>;
+};
+
+export type PostJobJournalInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  document: Scalars["String"];
+  description?: Maybe<Scalars["String"]>;
+  location: Scalars["String"];
+  quantity: Scalars["Float"];
+  amount: Scalars["Float"];
+  job: Scalars["String"];
 };
 
 export type Query = {
@@ -120,12 +137,12 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type PostItemMutationVariables = {
-  input: PostItemInput;
+  input: PostItemJournalInput;
 };
 
 export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
-  "postItem"
+  "postItemJournal"
 >;
 
 export type UpdateDefaultsMutationVariables = {
@@ -259,8 +276,8 @@ export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LogoutMutationVariables
 >;
 export const PostItemDocument = gql`
-  mutation PostItem($input: PostItemInput!) {
-    postItem(input: $input)
+  mutation PostItem($input: PostItemJournalInput!) {
+    postItemJournal(input: $input)
   }
 `;
 export type PostItemMutationFn = ApolloReactCommon.MutationFunction<

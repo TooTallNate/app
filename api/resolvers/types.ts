@@ -60,7 +60,8 @@ export type Mutation = {
   login: User;
   logout: Scalars["Boolean"];
   updateDefaults: Defaults;
-  postItem: Scalars["Boolean"];
+  postItemJournal: Scalars["Boolean"];
+  postJobJournal: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
@@ -71,11 +72,15 @@ export type MutationUpdateDefaultsArgs = {
   input: DefaultsInput;
 };
 
-export type MutationPostItemArgs = {
-  input: PostItemInput;
+export type MutationPostItemJournalArgs = {
+  input: PostItemJournalInput;
 };
 
-export type PostItemInput = {
+export type MutationPostJobJournalArgs = {
+  input: PostJobJournalInput;
+};
+
+export type PostItemJournalInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];
@@ -91,6 +96,18 @@ export type PostItemInput = {
   prodPostingGroup?: Maybe<Scalars["String"]>;
   costCenterCode?: Maybe<Scalars["String"]>;
   entityType?: Maybe<Scalars["String"]>;
+};
+
+export type PostJobJournalInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  document: Scalars["String"];
+  description?: Maybe<Scalars["String"]>;
+  location: Scalars["String"];
+  quantity: Scalars["Float"];
+  amount: Scalars["Float"];
+  job: Scalars["String"];
 };
 
 export type Query = {
@@ -129,12 +146,12 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type PostItemMutationVariables = {
-  input: PostItemInput;
+  input: PostItemJournalInput;
 };
 
 export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
-  "postItem"
+  "postItemJournal"
 >;
 
 export type UpdateDefaultsMutationVariables = {
@@ -291,8 +308,9 @@ export type ResolversTypes = ResolversObject<{
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   DefaultsInput: DefaultsInput;
-  PostItemInput: PostItemInput;
+  PostItemJournalInput: PostItemJournalInput;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
+  PostJobJournalInput: PostJobJournalInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -310,8 +328,9 @@ export type ResolversParentTypes = ResolversObject<{
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
   DefaultsInput: DefaultsInput;
-  PostItemInput: PostItemInput;
+  PostItemJournalInput: PostItemJournalInput;
   Date: Scalars["Date"];
+  PostJobJournalInput: PostJobJournalInput;
 }>;
 
 export interface DateScalarConfig
@@ -369,11 +388,17 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateDefaultsArgs, "input">
   >;
-  postItem?: Resolver<
+  postItemJournal?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
     ContextType,
-    RequireFields<MutationPostItemArgs, "input">
+    RequireFields<MutationPostItemJournalArgs, "input">
+  >;
+  postJobJournal?: Resolver<
+    ResolversTypes["Boolean"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostJobJournalArgs, "input">
   >;
 }>;
 

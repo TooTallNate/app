@@ -66,3 +66,22 @@ export interface NavItemEntry extends NewNavItemEntry {
   Unit_Cost: number;
   Reason_Code: string;
 }
+
+export interface NewNavJobEntry {
+  Journal_Template_Name: string;
+  Journal_Batch_Name: string;
+  Posting_Date: string;
+  Document_Date: string;
+  Document_No: string;
+  Description?: string;
+  Location_Code: string;
+  Quantity: number;
+  Unit_Amount: number;
+  Job_No: string;
+}
+
+export interface NavJobEntry extends NewNavJobEntry {
+  Line_No: number;
+  Amount: number;
+  Unit_Cost: number;
+}
