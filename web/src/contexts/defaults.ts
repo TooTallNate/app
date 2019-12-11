@@ -6,10 +6,11 @@ import {
   Job
 } from "../graphql";
 import { useCallback } from "react";
-import useJobs from "../contexts/jobs";
+import { usePigJobs, useScorecardJobs } from "./jobs";
 
 export interface DefaultValues {
-  job?: Job | null;
+  pigJob?: Job | null;
+  scorecardJob?: Job | null;
   price?: number | null;
 }
 
@@ -19,7 +20,14 @@ export type UseDefaultsResult = [
 ];
 
 export default function useDefaults(): UseDefaultsResult {
-  const { data: { jobs = [] } = {}, loading: loadingJobs } = useJobs();
+  const {
+    data: { jobs: pigJobs = [] } = {},
+    loading: loadingPigJobs
+  } = usePigJobs();
+  const {
+    data: { jobs: scorecardJobs = [] } = {},
+    loading: loadingScorecardJobs
+  } = useScorecardJobs();
   const {
     data: { defaults = {} } = {},
     loading: loadingDefaults
@@ -38,12 +46,13 @@ export default function useDefaults(): UseDefaultsResult {
   });
 
   const update = useCallback(
-    async ({ price, job }: DefaultValues) => {
+    async ({ price, pigJob, scorecardJob }: DefaultValues) => {
       await _update({
         variables: {
           input: {
             ...(price && { price }),
-            ...(job && { job: job.number })
+            ...(pigJob && { pigJob: pigJob.number }),
+            ...(scorecardJob && { scorecardJob: scorecardJob.number })
           }
         }
       });
@@ -54,10 +63,13 @@ export default function useDefaults(): UseDefaultsResult {
   return [
     {
       defaults: {
-        job: jobs.find(job => job.number === defaults.job),
+        pigJob: pigJobs.find(job => job.number === defaults.pigJob),
+        scorecardJob: scorecardJobs.find(
+          job => job.number === defaults.scorecardJob
+        ),
         price: defaults.price
       },
-      loading: loadingJobs || loadingDefaults
+      loading: loadingPigJobs || loadingScorecardJobs || loadingDefaults
     },
     update
   ];

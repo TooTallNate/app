@@ -27,7 +27,7 @@ export function renderComponent(
   ui: React.ReactElement,
   {
     wrapper: Wrapper = React.Fragment,
-    router: { routes = [], initialRoute = "/" } = {},
+    router: { routes = [], initialRoute = "/_test/start" } = {},
     apollo = {}
   }: RenderComponentOptions = {}
 ) {

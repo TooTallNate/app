@@ -14,12 +14,14 @@ export type Scalars = {
 
 export type Defaults = {
   __typename?: "Defaults";
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -94,11 +96,14 @@ export type PostJobJournalInput = {
   batch: Scalars["String"];
   date: Scalars["Date"];
   document: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  location: Scalars["String"];
-  quantity: Scalars["Float"];
-  amount: Scalars["Float"];
   job: Scalars["String"];
+  location: Scalars["String"];
+  task: Scalars["String"];
+  number: Scalars["String"];
+  workType: Scalars["String"];
+  quantity: Scalars["Float"];
+  unitPrice: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
@@ -145,18 +150,33 @@ export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   "postItemJournal"
 >;
 
+export type PostJobMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
+>;
+
 export type UpdateDefaultsMutationVariables = {
   input: DefaultsInput;
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  defaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type JobsQueryVariables = {
@@ -321,10 +341,57 @@ export type PostItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PostItemMutation,
   PostItemMutationVariables
 >;
+export const PostJobDocument = gql`
+  mutation PostJob($input: PostJobJournalInput!) {
+    postJobJournal(input: $input)
+  }
+`;
+export type PostJobMutationFn = ApolloReactCommon.MutationFunction<
+  PostJobMutation,
+  PostJobMutationVariables
+>;
+
+/**
+ * __usePostJobMutation__
+ *
+ * To run a mutation, you first call `usePostJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postJobMutation, { data, loading, error }] = usePostJobMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostJobMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostJobMutation,
+    PostJobMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostJobMutation,
+    PostJobMutationVariables
+  >(PostJobDocument, baseOptions);
+}
+export type PostJobMutationHookResult = ReturnType<typeof usePostJobMutation>;
+export type PostJobMutationResult = ApolloReactCommon.MutationResult<
+  PostJobMutation
+>;
+export type PostJobMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostJobMutation,
+  PostJobMutationVariables
+>;
 export const UpdateDefaultsDocument = gql`
   mutation UpdateDefaults($input: DefaultsInput!) {
     updateDefaults(input: $input) {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }
@@ -375,7 +442,8 @@ export type UpdateDefaultsMutationOptions = ApolloReactCommon.BaseMutationOption
 export const DefaultsDocument = gql`
   query Defaults {
     defaults {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }

@@ -33,7 +33,7 @@ const LoginView: React.FC = () => {
           if (username && password) {
             try {
               setInvalid(false);
-              login && (await login(username, password));
+              await login(username, password);
             } catch {
               setInvalid(true);
             }

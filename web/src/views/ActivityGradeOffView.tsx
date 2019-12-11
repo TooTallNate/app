@@ -5,12 +5,12 @@ import { Button, Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { RouteComponentProps } from "react-router";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
-import JobSelector from "../components/JobSelector";
+import PigJobSelector from "../components/PigJobSelector";
 import { useAuth } from "../contexts/auth";
 import { getDocumentNumber } from "../utils";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
-import useDefaults from "../hooks/defaults";
+import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
@@ -31,7 +31,7 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice, job: defaultJob },
+      defaults: { price: defaultPrice, pigJob: defaultJob },
       loading: loadingDefaults
     },
     setDefaults
@@ -96,7 +96,7 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
         }
       });
       if (formState.job !== defaultJob) {
-        await setDefaults({ job: formState.job });
+        await setDefaults({ pigJob: formState.job });
       }
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
@@ -141,7 +141,7 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
           </StackedButtonInput>
         </Field>
         <Field label="Job" name="job">
-          <JobSelector
+          <PigJobSelector
             value={formState.job}
             onChange={job => {
               setFormState({ ...formState, job });

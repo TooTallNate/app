@@ -1,9 +1,9 @@
 import React from "react";
 import TypeaheadInput from "./ui/TypeaheadInput";
 import { Job } from "../graphql";
-import useJobs from "../contexts/jobs";
+import { usePigJobs } from "../contexts/jobs";
 
-interface JobSelectorProps
+interface PigJobSelectorProps
   extends Omit<
     React.ComponentProps<typeof TypeaheadInput>,
     "value" | "onChange" | "items"
@@ -12,12 +12,12 @@ interface JobSelectorProps
   onChange?: (job?: Job) => void;
 }
 
-const JobSelector: React.FC<JobSelectorProps> = ({
+const PigJobSelector: React.FC<PigJobSelectorProps> = ({
   value,
   onChange = () => {},
   ...props
 }) => {
-  const { data: { jobs = [] } = {} } = useJobs();
+  const { data: { jobs = [] } = {} } = usePigJobs();
 
   return (
     <TypeaheadInput
@@ -31,4 +31,4 @@ const JobSelector: React.FC<JobSelectorProps> = ({
   );
 };
 
-export default JobSelector;
+export default PigJobSelector;

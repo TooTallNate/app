@@ -1,6 +1,7 @@
 mutation UpdateDefaults($input: DefaultsInput!) {
   updateDefaults(input: $input) {
-    job
+    pigJob
+    scorecardJob
     price
   }
 }
