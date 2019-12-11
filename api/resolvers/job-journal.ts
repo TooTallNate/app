@@ -15,11 +15,14 @@ export const JobJournalMutation: MutationResolvers = {
       Posting_Date: dateString,
       Document_Date: dateString,
       Document_No: input.document,
-      Description: input.description,
+      Job_No: input.job,
       Location_Code: input.location,
+      Job_Task_No: input.task,
+      No: input.number,
+      Work_Type_Code: input.workType,
       Quantity: input.quantity,
-      Unit_Amount: input.amount,
-      Job_No: input.job
+      Unit_Price: input.unitPrice,
+      Description: input.description
     });
     return true;
   }

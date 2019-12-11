@@ -6,7 +6,6 @@ import {
   MutationUpdateDefaultsArgs,
   MutationLoginArgs,
   QueryJobsArgs,
-  MutationPostItemArgs,
   MutationPostJobJournalArgs,
   MutationPostItemJournalArgs
 } from "../resolvers/types";
@@ -75,7 +74,8 @@ export const postJobMutation = gql<
 export const defaultsQuery = gql<{ defaults: Defaults }>(
   `query Defaults {
     defaults {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }`
@@ -87,7 +87,8 @@ export const updateDefaultsMutation = gql<
 >(
   `mutation UpdateDefaults($input: DefaultsInput!) {
     updateDefaults(input: $input) {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }`

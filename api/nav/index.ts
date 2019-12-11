@@ -3,12 +3,10 @@ import {
   NavUser,
   NavJobSearch,
   NavJob,
-  NewNavItemEntry,
-  NavDimensionSearch,
+  NavDimensionsSeach,
   NavDimension,
-  NavItemEntry,
-  NewNavJobEntry,
-  NavJobEntry
+  NavItemJournalEntry,
+  NavJobJournalEntry
 } from "./types";
 import request from "./request";
 import { ntlm } from "httpntlm";
@@ -16,9 +14,9 @@ import { ntlm } from "httpntlm";
 export interface NavClient {
   getUser(): Promise<NavUser>;
   getJobs(filter: NavJobSearch): Promise<NavJob[]>;
-  getDimensions(filter: NavDimensionSearch): Promise<NavDimension[]>;
-  postItem(entry: NewNavItemEntry): Promise<NavItemEntry>;
-  postJob(entry: NewNavJobEntry): Promise<NavJobEntry>;
+  getDimensions(filter: NavDimensionsSeach): Promise<NavDimension[]>;
+  postItem(entry: NavItemJournalEntry): Promise<NavItemJournalEntry>;
+  postJob(entry: NavJobJournalEntry): Promise<NavJobJournalEntry>;
 }
 
 export function hashPassword(password: string): [Buffer, Buffer] {
@@ -57,7 +55,7 @@ export default function createNavClient(creds: NavCredentials): NavClient {
       return body.value;
     },
     async postItem(entry) {
-      const { body } = await request.post<NavItemEntry, NewNavItemEntry>({
+      const { body } = await request.post<NavItemJournalEntry>({
         ...creds,
         resource: "ItemJournal",
         body: entry
@@ -65,7 +63,7 @@ export default function createNavClient(creds: NavCredentials): NavClient {
       return body;
     },
     async postJob(entry) {
-      const { body } = await request.post<NavJobEntry, NewNavJobEntry>({
+      const { body } = await request.post<NavJobJournalEntry>({
         ...creds,
         resource: "JobJournal",
         body: entry

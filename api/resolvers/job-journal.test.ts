@@ -1,54 +1,52 @@
 import { expectUnauthorized, login, navMock } from "../test/utils";
 import { postJobMutation } from "../test/gql";
 
+const validInput = {
+  template: "JOB",
+  batch: "FARROW-BE",
+  date: new Date(2019, 9, 17),
+  document: "DOC-1234",
+  location: "45",
+  job: "1901F",
+  task: "SOW CARE",
+  number: "QUAD 3 - 9",
+  workType: "FARROW-BE",
+  quantity: 2,
+  unitPrice: 1.667,
+  description: "operator comments"
+};
+
 describe("post job journal mutation", () => {
   test("returns error if not logged in", () =>
     expectUnauthorized(() =>
       postJobMutation({
-        input: {
-          template: "",
-          batch: "",
-          date: new Date(),
-          document: "",
-          description: "",
-          location: "",
-          quantity: 0,
-          amount: 0,
-          job: ""
-        }
+        input: validInput
       })
     ));
 
   test("return `true` if posting succeeds", async () => {
     await login();
     const { errors, data } = await postJobMutation({
-      input: {
-        template: "QTY ADJ",
-        batch: "DEFAULT",
-        date: new Date(2019, 9, 17),
-        document: "DOC-1234",
-        description: "comments from operator",
-        location: "45",
-        quantity: 2,
-        amount: 45.5,
-        job: "1901F"
-      }
+      input: validInput
     });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       postJobJournal: true
     });
     expect(navMock.postJob).toHaveBeenCalledWith({
-      Journal_Template_Name: "QTY ADJ",
-      Journal_Batch_Name: "DEFAULT",
+      Journal_Batch_Name: "FARROW-BE",
+      Journal_Template_Name: "JOB",
       Posting_Date: "2019-10-17",
       Document_Date: "2019-10-17",
       Document_No: "DOC-1234",
-      Description: "comments from operator",
+      Job_No: "1901F",
       Location_Code: "45",
+      Job_Task_No: "SOW CARE",
+      No: "QUAD 3 - 9",
+      Work_Type_Code: "FARROW-BE",
       Quantity: 2,
-      Unit_Amount: 45.5,
-      Job_No: "1901F"
+      Unit_Price: 1.667,
+      Description: "operator comments"
     });
   });
 
@@ -56,17 +54,7 @@ describe("post job journal mutation", () => {
     navMock.postJob.mockRejectedValue(new Error("error message"));
     await login();
     const { errors } = await postJobMutation({
-      input: {
-        template: "QTY ADJ",
-        batch: "DEFAULT",
-        date: new Date(2019, 9, 17),
-        document: "DOC-1234",
-        description: "comments from operator",
-        location: "45",
-        quantity: 2,
-        amount: 45.5,
-        job: "1901F"
-      }
+      input: validInput
     });
     expect(errors).toEqual([
       expect.objectContaining({

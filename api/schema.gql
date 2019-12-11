@@ -9,7 +9,8 @@ type User {
 }
 
 type Defaults {
-  job: String
+  pigJob: String
+  scorecardJob: String
   price: Float
 }
 
@@ -30,7 +31,8 @@ input LoginInput {
 }
 
 input DefaultsInput {
-  job: String
+  pigJob: String
+  scorecardJob: String
   price: Float
 }
 
@@ -62,11 +64,14 @@ input PostJobJournalInput {
   batch: String!
   date: Date!
   document: String!
-  description: String
-  location: String!
-  quantity: Float!
-  amount: Float!
   job: String!
+  location: String!
+  task: String!
+  number: String!
+  workType: String!
+  quantity: Float!
+  unitPrice: Float!
+  description: String
 }
 
 type Query {

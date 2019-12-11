@@ -6,7 +6,7 @@ import {
   NavJob,
   NavUser,
   NavDimension,
-  NavDimensionSearch
+  NavDimensionsSeach
 } from "../types";
 import { NavClient } from "..";
 const { hashPassword } = jest.requireActual("../index");
@@ -108,7 +108,7 @@ export class NavMock {
     });
 
     this.getDimensions.mockReset();
-    this.getDimensions.mockImplementation((search: NavDimensionSearch) => {
+    this.getDimensions.mockImplementation((search: NavDimensionsSeach) => {
       if (!this.validCredentials()) {
         return Promise.resolve(null);
       }

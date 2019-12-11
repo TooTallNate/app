@@ -23,12 +23,14 @@ export type Scalars = {
 
 export type Defaults = {
   __typename?: "Defaults";
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -103,11 +105,14 @@ export type PostJobJournalInput = {
   batch: Scalars["String"];
   date: Scalars["Date"];
   document: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  location: Scalars["String"];
-  quantity: Scalars["Float"];
-  amount: Scalars["Float"];
   job: Scalars["String"];
+  location: Scalars["String"];
+  task: Scalars["String"];
+  number: Scalars["String"];
+  workType: Scalars["String"];
+  quantity: Scalars["Float"];
+  unitPrice: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
@@ -154,18 +159,33 @@ export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   "postItemJournal"
 >;
 
+export type PostJobMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
+>;
+
 export type UpdateDefaultsMutationVariables = {
   input: DefaultsInput;
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  defaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type JobsQueryVariables = {
@@ -342,7 +362,12 @@ export type DefaultsResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Defaults"] = ResolversParentTypes["Defaults"]
 > = ResolversObject<{
-  job?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  pigJob?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  scorecardJob?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
 }>;
 

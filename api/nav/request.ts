@@ -154,7 +154,7 @@ export default {
   get<Res = string>(options: NavGetRequest): Promise<NavGetResponse<Res>> {
     return ntlmRequest({ ...options, method: "get" });
   },
-  post<Res = string, Req = string>(
+  post<Res = string, Req = Res>(
     options: NavPostRequest<Req>
   ): Promise<NavPostResponse<Res>> {
     return ntlmRequest({ ...options, method: "post" });
