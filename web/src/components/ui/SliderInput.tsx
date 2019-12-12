@@ -64,44 +64,35 @@ const SliderInput: React.FC<SliderInputProps> = ({
     <div className={className} css={tw`flex items-center`}>
       <output css={tw`w-8 mr-2`}>{value.toFixed(outputPrecision)}</output>
       <div css={tw`relative flex-1 h-14`}>
+        {/* Slider Progress */}
+        <div css={[tw`absolute inset-0 h-10 my-2 mx-6`]} aria-hidden>
+          <div
+            css={[
+              tw`absolute bg-blue-300 top-0 bottom-0 left-0`,
+              {
+                width: `${100 * progress}%`,
+                "&::before": [
+                  { content: '" "' },
+                  tw`w-8 -ml-6 rounded-l-lg bg-blue-300 absolute left-0 top-0 bottom-0`
+                ]
+              }
+            ]}
+          />
+        </div>
+
         {/* Slider Labels */}
         <div
           css={[
-            tw`absolute inset-0 h-10 my-2`,
+            tw`absolute inset-0 h-10 my-2 flex items-center`,
             { marginLeft: trackMargin, marginRight: trackMargin }
           ]}
           aria-hidden
         >
           {Array.from({ length: labelCount }, (_, i) => (
-            <span
-              key={i}
-              css={[
-                tw`absolute h-full py-2 text-center text-sm`,
-                {
-                  width: `${labelWidth}px`,
-                  left: `${(100 * i) / labelCount}%`
-                }
-              ]}
-            >
+            <span key={i} css={tw`text-center text-sm flex-1`}>
               {(min + labelStep * i).toFixed(labelPrecision)}
             </span>
           ))}
-        </div>
-
-        {/* Slider Progress */}
-        <div css={[tw`absolute inset-0 h-10 my-2 mx-6`]} aria-hidden>
-          <div
-            css={[
-              tw`absolute bg-blue-500 opacity-50 top-0 bottom-0 left-0`,
-              {
-                width: `${100 * progress}%`,
-                "&::before": [
-                  { content: '" "' },
-                  tw`w-8 -ml-6 rounded-l-lg bg-blue-500 absolute left-0 top-0 bottom-0`
-                ]
-              }
-            ]}
-          />
         </div>
 
         {/* Styled Range Input */}

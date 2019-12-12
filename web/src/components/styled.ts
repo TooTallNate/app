@@ -31,7 +31,7 @@ export const StackedItem = styled.div`
     py-2 px-4 h-10
     text-base font-bold
     border-b border-gray-500
-    focus:outline-none focus:bg-blue-200
+    focus:outline-none focus:bg-blue-300
   `}
   &:last-of-type {
     border-bottom-width: 0;
