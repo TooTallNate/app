@@ -17,3 +17,7 @@ export function formatDate(date: Date, format: string) {
     ["D", _date]
   ].reduce((str, [key, value]) => str.replace(key, value), format);
 }
+
+export function remToPx(n: number): number {
+  return n * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}
