@@ -150,6 +150,15 @@ export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   "postItemJournal"
 >;
 
+export type PostJobJournalMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobJournalMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
+>;
+
 export type PostJobMutationVariables = {
   input: PostJobJournalInput;
 };
@@ -340,6 +349,54 @@ export type PostItemMutationResult = ApolloReactCommon.MutationResult<
 export type PostItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PostItemMutation,
   PostItemMutationVariables
+>;
+export const PostJobJournalDocument = gql`
+  mutation PostJobJournal($input: PostJobJournalInput!) {
+    postJobJournal(input: $input)
+  }
+`;
+export type PostJobJournalMutationFn = ApolloReactCommon.MutationFunction<
+  PostJobJournalMutation,
+  PostJobJournalMutationVariables
+>;
+
+/**
+ * __usePostJobJournalMutation__
+ *
+ * To run a mutation, you first call `usePostJobJournalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostJobJournalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postJobJournalMutation, { data, loading, error }] = usePostJobJournalMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostJobJournalMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostJobJournalMutation,
+    PostJobJournalMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostJobJournalMutation,
+    PostJobJournalMutationVariables
+  >(PostJobJournalDocument, baseOptions);
+}
+export type PostJobJournalMutationHookResult = ReturnType<
+  typeof usePostJobJournalMutation
+>;
+export type PostJobJournalMutationResult = ApolloReactCommon.MutationResult<
+  PostJobJournalMutation
+>;
+export type PostJobJournalMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostJobJournalMutation,
+  PostJobJournalMutationVariables
 >;
 export const PostJobDocument = gql`
   mutation PostJob($input: PostJobJournalInput!) {

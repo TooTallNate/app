@@ -1,0 +1,3 @@
+mutation PostJobJournal($input: PostJobJournalInput!) {
+  postJobJournal(input: $input)
+}
