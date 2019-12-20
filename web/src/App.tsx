@@ -24,7 +24,7 @@ const AuthenticatedApp: React.FC = () => {
 
   return (
     <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
-      <div className="min-h-0 flex-grow">
+      <div className="min-h-0 flex-1">
         <Switch>
           <Route exact path="/" component={HomeView} />
           <Route path="/pigs" component={ActivityView} />
