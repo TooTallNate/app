@@ -41,7 +41,7 @@ export const MultilineTextInput: React.FC<MultilineTextInputProps> = ({
 
 type NumberInputProps = Omit<
   ComponentProps<typeof BaseTextInput>,
-  "value" | "onChange" | "type"
+  "value" | "onChange" | "type" | "ref"
 > & {
   value?: number;
   onChange?(value?: number): void;
@@ -53,6 +53,16 @@ export const NumberInput: React.FC<NumberInputProps> = ({
 }) => (
   <BaseTextInput
     {...props}
+    css={{
+      "&::-webkit-inner-spin-button": {
+        WebkitAppearance: "none",
+        margin: 0
+      },
+      "&::-webkit-outer-spin-button": {
+        WebkitAppearance: "none",
+        margin: 0
+      }
+    }}
     type="number"
     onChange={e => {
       const value = e.target.valueAsNumber;

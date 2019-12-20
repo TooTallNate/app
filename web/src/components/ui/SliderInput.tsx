@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import tw from "tailwind.macro";
-import { useRef, useState, useLayoutEffect } from "react";
+import { useRef, useState, useLayoutEffect, useEffect } from "react";
 import { remToPx } from "../../utils";
+import { NumberInput } from "./text-inputs";
 
 const trackStyles = tw`w-full h-10 cursor-pointer border border-solid border-gray-500 rounded-lg bg-transparent`;
 const thumbStyles = [
@@ -28,7 +29,6 @@ interface SliderInputProps
 
 const SliderInput: React.FC<SliderInputProps> = ({
   className,
-  value,
   onChange,
   min = 0,
   max = 100,
@@ -38,6 +38,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
   labelStep = step,
   ...props
 }) => {
+  const [value, setValue] = useState(props.value);
   const inputElement = useRef<HTMLInputElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const thumbRadius = remToPx(thumbRadiusRem);
@@ -46,6 +47,16 @@ const SliderInput: React.FC<SliderInputProps> = ({
   const labelCount = Math.floor(1 + range / labelStep);
   const labelWidth = (trackWidth - 2 * thumbRadius) / (labelCount - 1);
   const trackMargin = `${-(labelWidth / 2 - thumbRadius - 1.5)}px`;
+
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
+  useEffect(() => {
+    if (value !== props.value) {
+      onChange && onChange(value);
+    }
+  }, [onChange, props.value, value]);
 
   useLayoutEffect(() => {
     function handler() {
@@ -62,7 +73,11 @@ const SliderInput: React.FC<SliderInputProps> = ({
 
   return (
     <div className={className} css={tw`flex items-center`}>
-      <output css={tw`w-8 mr-2`}>{value.toFixed(outputPrecision)}</output>
+      <NumberInput
+        {...{ value, ...props }}
+        css={tw`w-16 mr-2`}
+        onChange={value => setValue(value || min)}
+      />
       <div css={tw`relative flex-1 h-14`}>
         {/* Slider Progress */}
         <div css={[tw`absolute inset-0 h-10 my-2 mx-6`]} aria-hidden>
@@ -99,7 +114,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
         <input
           {...{ value, min, max, step, ...props }}
           ref={inputElement}
-          onChange={e => onChange && onChange(e.target.valueAsNumber)}
+          onChange={e => setValue(e.target.valueAsNumber)}
           type="range"
           css={[
             tw`relative w-full my-2 mx-0 h-10 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,
