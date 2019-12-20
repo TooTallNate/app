@@ -40,6 +40,12 @@ function useForm() {
   );
 }
 
+const ScorecardSliderInput: React.FC<
+  React.ComponentProps<typeof SliderInput>
+> = props => (
+  <SliderInput {...props} min={0} max={10} step={0.5} labelStep={1} />
+);
+
 const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   const { user } = useAuth();
   const [state, setState] = useForm();
@@ -143,11 +149,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Sow Care" name="sow-care">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.sowCare}
             onChange={sowCare => setState({ sowCare })}
           />
@@ -159,11 +161,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Piglet Care" name="piglet-care">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.pigletCare}
             onChange={pigletCare => setState({ pigletCare })}
           />
@@ -175,11 +173,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Feed" name="feed">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.feed}
             onChange={feed => setState({ feed })}
           />
@@ -191,11 +185,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Water" name="water">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.water}
             onChange={water => setState({ water })}
           />
@@ -207,11 +197,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="Crate" name="crate">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.crate}
             onChange={crate => setState({ crate })}
           />
@@ -223,11 +209,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           />
         </Field>
         <Field label="General Room" name="gen-room">
-          <SliderInput
-            min={0}
-            max={10}
-            step={0.2}
-            labelStep={1}
+          <ScorecardSliderInput
             value={state.generalRoom}
             onChange={generalRoom => setState({ generalRoom })}
           />

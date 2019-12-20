@@ -24,7 +24,6 @@ interface SliderInputProps
   max?: number;
   step?: number;
   labelPrecision?: number;
-  outputPrecision?: number;
 }
 
 const SliderInput: React.FC<SliderInputProps> = ({
@@ -34,7 +33,6 @@ const SliderInput: React.FC<SliderInputProps> = ({
   max = 100,
   step = 1,
   labelPrecision = 0,
-  outputPrecision = 1,
   labelStep = step,
   ...props
 }) => {
