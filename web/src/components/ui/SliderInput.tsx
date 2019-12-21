@@ -74,7 +74,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
       <NumberInput
         {...{ value, ...props }}
         css={tw`w-16 mr-2`}
-        onChange={value => setValue(value || min)}
+        onChange={value => setValue(Math.max(Math.min(value || min, max), min))}
       />
       <div css={tw`relative flex-1 h-10`}>
         {/* Slider Progress */}
