@@ -23,3 +23,11 @@ export enum EntryType {
   Positive = "Positive Adjmt.",
   Negative = "Negative Adjmt."
 }
+
+export enum JobJournalTemplate {
+  Job = "JOB"
+}
+
+export enum JobJournalBatch {
+  FarrowBE = "FARROW-BE"
+}

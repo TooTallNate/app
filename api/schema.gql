@@ -9,7 +9,8 @@ type User {
 }
 
 type Defaults {
-  job: String
+  pigJob: String
+  scorecardJob: String
   price: Float
 }
 
@@ -30,7 +31,8 @@ input LoginInput {
 }
 
 input DefaultsInput {
-  job: String
+  pigJob: String
+  scorecardJob: String
   price: Float
 }
 
@@ -39,7 +41,7 @@ input JobSearchInput {
   postingGroup: [String!]
 }
 
-input PostItemInput {
+input PostItemJournalInput {
   template: String!
   batch: String!
   date: Date!
@@ -57,6 +59,21 @@ input PostItemInput {
   entityType: String
 }
 
+input PostJobJournalInput {
+  template: String!
+  batch: String!
+  date: Date!
+  document: String!
+  job: String!
+  location: String!
+  task: String!
+  number: String!
+  workType: String!
+  quantity: Float!
+  unitPrice: Float!
+  description: String
+}
+
 type Query {
   user: User
   defaults: Defaults!
@@ -67,5 +84,6 @@ type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
   updateDefaults(input: DefaultsInput!): Defaults!
-  postItem(input: PostItemInput!): Boolean!
+  postItemJournal(input: PostItemJournalInput!): Boolean!
+  postJobJournal(input: PostJobJournalInput!): Boolean!
 }

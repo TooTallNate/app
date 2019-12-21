@@ -48,7 +48,7 @@ describe("post item mutation", () => {
     });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      postItem: true
+      postItemJournal: true
     });
     expect(navMock.postItem).toHaveBeenCalledWith({
       Journal_Template_Name: "QTY ADJ",

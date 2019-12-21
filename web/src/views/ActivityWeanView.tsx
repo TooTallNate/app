@@ -5,12 +5,12 @@ import { Button, Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import JobSelector from "../components/JobSelector";
+import PigJobSelector from "../components/PigJobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
-import useDefaults from "../hooks/defaults";
+import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
@@ -129,7 +129,7 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
           </StackedButtonInput>
         </Field>
         <Field label="Job" name="job">
-          <JobSelector
+          <PigJobSelector
             value={formState.job}
             onChange={job => {
               setFormState({ ...formState, job });

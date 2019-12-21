@@ -13,7 +13,8 @@ describe("defaults query", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       defaults: {
-        job: null,
+        pigJob: null,
+        scorecardJob: null,
         price: null
       }
     });
@@ -21,14 +22,15 @@ describe("defaults query", () => {
 
   test("defaults are returned from the database when defined", async () => {
     const username = navMock.credentials.username;
-    const job = navMock.jobs[0].No;
+    const pigJob = navMock.jobs[0].No;
+    const scorecardJob = navMock.jobs[1].No;
     const price = faker.random.number();
-    await UserSettingsModel.create({ username, job, price });
+    await UserSettingsModel.create({ username, pigJob, scorecardJob, price });
     await login();
     const { errors, data } = await defaultsQuery();
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      defaults: { job, price }
+      defaults: { pigJob, scorecardJob, price }
     });
   });
 });
@@ -43,7 +45,8 @@ describe("update defaults mutation", () => {
     expect(errors).toBeFalsy();
     expect(data).toEqual({
       updateDefaults: {
-        job: null,
+        pigJob: null,
+        scorecardJob: null,
         price: null
       }
     });
@@ -55,51 +58,94 @@ describe("update defaults mutation", () => {
 
   test("makes no changes by default", async () => {
     const username = navMock.credentials.username;
-    const job = navMock.jobs[0].No;
+    const pigJob = navMock.jobs[0].No;
+    const scorecardJob = navMock.jobs[1].No;
     const price = faker.random.number();
-    const settings = await UserSettingsModel.create({ username, job, price });
+    const settings = await UserSettingsModel.create({
+      username,
+      pigJob,
+      scorecardJob,
+      price
+    });
     await login();
     const { errors, data } = await updateDefaultsMutation({ input: {} });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job, price }
+      updateDefaults: { pigJob, scorecardJob, price }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
-    expect(updatedSettings).toMatchObject({ username, job });
+    expect(updatedSettings).toMatchObject({
+      username,
+      pigJob,
+      scorecardJob,
+      price
+    });
   });
 
   test("resets defaults", async () => {
     const username = navMock.credentials.username;
-    const job = navMock.jobs[0].No;
+    const pigJob = navMock.jobs[0].No;
+    const scorecardJob = navMock.jobs[1].No;
     const price = faker.random.number();
-    const settings = await UserSettingsModel.create({ username, job, price });
+    const settings = await UserSettingsModel.create({
+      username,
+      pigJob,
+      scorecardJob,
+      price
+    });
     await login();
     const { errors, data } = await updateDefaultsMutation({
-      input: { job: null, price: null }
+      input: { pigJob: null, scorecardJob: null, price: null }
     });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job: null, price: null }
+      updateDefaults: { pigJob: null, scorecardJob: null, price: null }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
-    expect(updatedSettings).toMatchObject({ username, job: null, price: null });
+    expect(updatedSettings).toMatchObject({
+      username,
+      pigJob: null,
+      scorecardJob: null,
+      price: null
+    });
   });
 
-  test("updates default job", async () => {
+  test("updates default pig job", async () => {
     const username = navMock.credentials.username;
     const settings = await UserSettingsModel.create({
       username,
-      job: navMock.jobs[0].No
+      pigJob: navMock.jobs[0].No
     });
     await login();
-    const job = navMock.jobs[1].No;
-    const { errors, data } = await updateDefaultsMutation({ input: { job } });
+    const pigJob = navMock.jobs[1].No;
+    const { errors, data } = await updateDefaultsMutation({
+      input: { pigJob }
+    });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { job, price: null }
+      updateDefaults: { pigJob, price: null, scorecardJob: null }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
-    expect(updatedSettings).toMatchObject({ username, job });
+    expect(updatedSettings).toMatchObject({ username, pigJob });
+  });
+
+  test("updates default scorecard job", async () => {
+    const username = navMock.credentials.username;
+    const settings = await UserSettingsModel.create({
+      username,
+      scorecardJob: navMock.jobs[0].No
+    });
+    await login();
+    const scorecardJob = navMock.jobs[1].No;
+    const { errors, data } = await updateDefaultsMutation({
+      input: { scorecardJob }
+    });
+    expect(errors).toBeFalsy();
+    expect(data).toEqual({
+      updateDefaults: { scorecardJob, price: null, pigJob: null }
+    });
+    const updatedSettings = await UserSettingsModel.findById(settings._id);
+    expect(updatedSettings).toMatchObject({ username, scorecardJob });
   });
 
   test("updates default price", async () => {
@@ -113,7 +159,7 @@ describe("update defaults mutation", () => {
     const { errors, data } = await updateDefaultsMutation({ input: { price } });
     expect(errors).toBeFalsy();
     expect(data).toEqual({
-      updateDefaults: { price, job: null }
+      updateDefaults: { price, pigJob: null, scorecardJob: null }
     });
     const updatedSettings = await UserSettingsModel.findById(settings._id);
     expect(updatedSettings).toMatchObject({ username, price });

@@ -19,7 +19,7 @@ export interface NavJobSearch extends NavSearch {
   Job_Posting_Group?: string[];
 }
 
-export interface NavDimensionSearch extends NavSearch {
+export interface NavDimensionsSeach extends NavSearch {
   Table_ID?: number[];
   No?: string[];
 }
@@ -41,28 +41,78 @@ export interface NavDimension {
 
 export type NavDimensions = NavDimension[];
 
-export interface NewNavItemEntry {
-  Journal_Template_Name: string;
-  Journal_Batch_Name: string;
-  Posting_Date: string;
-  Document_Date: string;
-  Entry_Type: string;
-  Document_No: string;
-  Item_No: string;
+export interface NavJournalEntry {
+  Journal_Template_Name?: string;
+  Journal_Batch_Name?: string;
+  Line_No?: number;
+  Posting_Date?: string;
+  Document_Date?: string;
+  Document_No?: string;
+  External_Document_No?: string;
   Description?: string;
-  Location_Code: string;
-  Quantity: number;
-  Unit_Amount: number;
-  Weight: number;
-  Job_No: string;
+  Job_No?: string;
+  Gen_Bus_Posting_Group?: string;
   Gen_Prod_Posting_Group?: string;
   Shortcut_Dimension_1_Code?: string;
   Shortcut_Dimension_2_Code?: string;
+  ShortcutDimCode_x005B_3_x005D_?: string;
+  ShortcutDimCode_x005B_4_x005D_?: string;
+  ShortcutDimCode_x005B_5_x005D_?: string;
+  ShortcutDimCode_x005B_6_x005D_?: string;
+  ShortcutDimCode_x005B_7_x005D_?: string;
+  ShortcutDimCode_x005B_8_x005D_?: string;
+  Location_Code?: string;
+  Bin_Code?: string;
+  Quantity?: number;
+  Unit_of_Measure_Code?: string;
+  Applies_to_Entry?: number;
+  Applies_from_Entry?: number;
+  Reason_Code?: string;
+  Country_Region_Code?: string;
+  Transaction_Type?: string;
+  Transport_Method?: string;
+  Unit_Cost?: number;
 }
 
-export interface NavItemEntry extends NewNavItemEntry {
-  Line_No: number;
-  Amount: number;
-  Unit_Cost: number;
-  Reason_Code: string;
+export interface NavItemJournalEntry extends NavJournalEntry {
+  Entry_Type?: string;
+  Item_No?: string;
+  Variant_Code?: string;
+  Salespers_Purch_Code?: string;
+  Unit_Amount?: number;
+  Amount?: number;
+  Discount_Amount?: number;
+  Indirect_Cost_Percent?: number;
+  Weight?: number;
+  Acres?: number;
+  ItemDescription?: string;
+}
+
+export interface NavJobJournalEntry extends NavJournalEntry {
+  Line_Type?: string;
+  Job_Task_No?: string;
+  Type?: string;
+  No?: string;
+  Job_Planning_Line_No?: number;
+  Variant_Code?: string;
+  Work_Type_Code?: string;
+  Currency_Code?: string;
+  Remaining_Qty?: number;
+  Direct_Unit_Cost_LCY?: number;
+  Unit_Cost_LCY?: number;
+  Total_Cost?: number;
+  Total_Cost_LCY?: number;
+  Unit_Price?: number;
+  Unit_Price_LCY?: number;
+  Line_Amount?: number;
+  Line_Amount_LCY?: number;
+  Line_Discount_Amount?: number;
+  Line_Discount_Percent?: number;
+  Total_Price?: number;
+  Total_Price_LCY?: number;
+  Time_Sheet_No?: string;
+  Time_Sheet_Line_No?: number;
+  Time_Sheet_Date?: string;
+  JobDescription?: string;
+  AccName?: string;
 }

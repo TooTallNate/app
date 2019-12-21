@@ -22,11 +22,20 @@ function render(mocks: MockedResponse[]) {
 }
 
 function initTestData(): {
-  jobs: Job[];
+  pigJobs: Job[];
+  scorecardJobs: Job[];
   defaults: DefaultValues;
   mocks: MockedResponse[];
 } {
-  const jobs = Array.from({ length: 5 }, () => ({
+  const pigJobs = Array.from({ length: 5 }, () => ({
+    number: faker.random.alphaNumeric(8),
+    site: faker.random.alphaNumeric(2),
+    dimensions: {
+      costCenter: faker.random.number({ min: 100, max: 999 }).toString(),
+      entity: faker.random.number({ min: 1, max: 3 }).toString()
+    }
+  }));
+  const scorecardJobs = Array.from({ length: 5 }, () => ({
     number: faker.random.alphaNumeric(8),
     site: faker.random.alphaNumeric(2),
     dimensions: {
@@ -35,7 +44,8 @@ function initTestData(): {
     }
   }));
 
-  const defaultJob = jobs[0];
+  const defaultPigJob = pigJobs[0];
+  const defaultScorecardJob = scorecardJobs[0];
   const defaultPrice = faker.random.number({ min: 1, max: 100 });
 
   const mocks = [
@@ -44,7 +54,8 @@ function initTestData(): {
       result: {
         data: {
           defaults: {
-            job: defaultJob.number,
+            pigJob: defaultPigJob.number,
+            scorecardJob: defaultScorecardJob.number,
             price: defaultPrice
           }
         }
@@ -62,13 +73,38 @@ function initTestData(): {
       },
       result: {
         data: {
-          jobs
+          jobs: pigJobs
+        }
+      }
+    },
+    {
+      request: {
+        query: JobsDocument,
+        variables: {
+          input: {
+            status: ["Open"],
+            postingGroup: ["FARROW-BE"]
+          }
+        }
+      },
+      result: {
+        data: {
+          jobs: scorecardJobs
         }
       }
     }
   ];
 
-  return { jobs, defaults: { job: defaultJob, price: defaultPrice }, mocks };
+  return {
+    pigJobs,
+    scorecardJobs,
+    defaults: {
+      pigJob: defaultPigJob,
+      scorecardJob: defaultScorecardJob,
+      price: defaultPrice
+    },
+    mocks
+  };
 }
 
 test("returns defaults", async () => {
@@ -81,41 +117,47 @@ test("returns defaults", async () => {
   ]);
 });
 
-test("updates only the default job", async () => {
-  const { jobs, defaults, mocks } = initTestData();
-  const newJob = jobs[1];
+test("updates defaults", async () => {
+  const { pigJobs, scorecardJobs, mocks } = initTestData();
+  const input = {
+    pigJob: pigJobs[1],
+    scorecardJob: scorecardJobs[1],
+    price: faker.random.number({ min: 1, max: 100 })
+  };
   mocks.push({
     request: {
       query: UpdateDefaultsDocument,
       variables: {
-        input: { job: newJob.number }
+        input: {
+          pigJob: input.pigJob.number,
+          scorecardJob: input.scorecardJob.number,
+          price: input.price
+        }
       }
     },
     result: {
       data: {
         updateDefaults: {
-          ...defaults,
-          job: newJob.number
+          pigJob: input.pigJob.number,
+          scorecardJob: input.scorecardJob.number,
+          price: input.price
         }
       }
     }
   });
   const { result, waitForNextUpdate } = render(mocks);
   await waitForNextUpdate();
-  await act(() => result.current[1]({ job: newJob }));
+  await act(() => result.current[1](input));
   expect(result.current).toEqual([
     {
-      defaults: {
-        job: newJob,
-        price: defaults.price
-      },
+      defaults: input,
       loading: false
     },
     expect.any(Function)
   ]);
 });
 
-test("updates only the default price", async () => {
+test("update reference is preserved", async () => {
   const { defaults, mocks } = initTestData();
   const newPrice = faker.random.number({ min: 1, max: 100 });
   mocks.push({
@@ -128,7 +170,7 @@ test("updates only the default price", async () => {
     result: {
       data: {
         updateDefaults: {
-          job: defaults.job ? defaults.job.number : null,
+          ...defaults,
           price: newPrice
         }
       }
@@ -136,42 +178,8 @@ test("updates only the default price", async () => {
   });
   const { result, waitForNextUpdate } = render(mocks);
   await waitForNextUpdate();
-  await act(() => result.current[1]({ price: newPrice }));
-  expect(result.current).toEqual([
-    {
-      defaults: {
-        ...defaults,
-        price: newPrice
-      },
-      loading: false
-    },
-    expect.any(Function)
-  ]);
-});
-
-test("update reference is preserved", async () => {
-  const { jobs, defaults, mocks } = initTestData();
-  const newJob = jobs[1];
-  mocks.push({
-    request: {
-      query: UpdateDefaultsDocument,
-      variables: {
-        input: { job: newJob.number }
-      }
-    },
-    result: {
-      data: {
-        updateDefaults: {
-          ...defaults,
-          job: newJob.number
-        }
-      }
-    }
-  });
-  const { result, waitForNextUpdate } = render(mocks);
-  await waitForNextUpdate();
   const [, update1] = result.current;
-  await act(() => update1({ job: newJob }));
+  await act(() => update1({ price: newPrice }));
   const [, update2] = result.current;
   expect(update1).toBe(update2);
 });
@@ -181,7 +189,8 @@ test("returns loading state", async () => {
   expect(result.current).toEqual([
     {
       defaults: {
-        job: undefined,
+        pigJob: undefined,
+        scorecardJob: undefined,
         price: undefined
       },
       loading: true
@@ -192,7 +201,8 @@ test("returns loading state", async () => {
   expect(result.current).toEqual([
     {
       defaults: {
-        job: undefined,
+        pigJob: undefined,
+        scorecardJob: undefined,
         price: undefined
       },
       loading: false

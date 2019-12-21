@@ -1,13 +1,15 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import tw from "tailwind.macro";
-import { Route, Redirect, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import ActivityView from "./views/ActivityView";
 import AccountView from "./views/AccountView";
+import ScorecardView from "./views/ScorecardView";
+import HomeView from "./views/HomeView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
-import useDefaults from "./hooks/defaults";
+import useDefaults from "./contexts/defaults";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -22,11 +24,13 @@ const AuthenticatedApp: React.FC = () => {
 
   return (
     <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
-      <div className="min-h-0 flex-grow">
+      <div className="min-h-0 flex-1">
         <Switch>
+          <Route exact path="/" component={HomeView} />
           <Route path="/pigs" component={ActivityView} />
+          <Route path="/scorecard" component={ScorecardView} />
           <Route path="/account" component={AccountView} />
-          <Redirect to="/pigs" />
+          <Redirect to="/" />
         </Switch>
       </div>
       <MainNav />

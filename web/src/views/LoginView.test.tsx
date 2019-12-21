@@ -32,7 +32,7 @@ test("successful login", async () => {
   fireEvent.submit(
     (getByText(/log in/i) as HTMLButtonElement).form || new HTMLFormElement()
   );
-  await findByText(/activity/i, { selector: "h1" });
+  await findByText(/home/i, { selector: "h1" });
 });
 
 test("invalid login", async () => {

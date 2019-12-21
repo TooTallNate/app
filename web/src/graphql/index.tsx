@@ -14,12 +14,14 @@ export type Scalars = {
 
 export type Defaults = {
   __typename?: "Defaults";
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -51,7 +53,8 @@ export type Mutation = {
   login: User;
   logout: Scalars["Boolean"];
   updateDefaults: Defaults;
-  postItem: Scalars["Boolean"];
+  postItemJournal: Scalars["Boolean"];
+  postJobJournal: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
@@ -62,11 +65,15 @@ export type MutationUpdateDefaultsArgs = {
   input: DefaultsInput;
 };
 
-export type MutationPostItemArgs = {
-  input: PostItemInput;
+export type MutationPostItemJournalArgs = {
+  input: PostItemJournalInput;
 };
 
-export type PostItemInput = {
+export type MutationPostJobJournalArgs = {
+  input: PostJobJournalInput;
+};
+
+export type PostItemJournalInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];
@@ -82,6 +89,21 @@ export type PostItemInput = {
   prodPostingGroup?: Maybe<Scalars["String"]>;
   costCenterCode?: Maybe<Scalars["String"]>;
   entityType?: Maybe<Scalars["String"]>;
+};
+
+export type PostJobJournalInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  document: Scalars["String"];
+  job: Scalars["String"];
+  location: Scalars["String"];
+  task: Scalars["String"];
+  number: Scalars["String"];
+  workType: Scalars["String"];
+  quantity: Scalars["Float"];
+  unitPrice: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
@@ -120,12 +142,30 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type PostItemMutationVariables = {
-  input: PostItemInput;
+  input: PostItemJournalInput;
 };
 
 export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
-  "postItem"
+  "postItemJournal"
+>;
+
+export type PostJobJournalMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobJournalMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
+>;
+
+export type PostJobMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
 >;
 
 export type UpdateDefaultsMutationVariables = {
@@ -133,13 +173,19 @@ export type UpdateDefaultsMutationVariables = {
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  defaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type JobsQueryVariables = {
@@ -259,8 +305,8 @@ export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LogoutMutationVariables
 >;
 export const PostItemDocument = gql`
-  mutation PostItem($input: PostItemInput!) {
-    postItem(input: $input)
+  mutation PostItem($input: PostItemJournalInput!) {
+    postItemJournal(input: $input)
   }
 `;
 export type PostItemMutationFn = ApolloReactCommon.MutationFunction<
@@ -304,10 +350,105 @@ export type PostItemMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PostItemMutation,
   PostItemMutationVariables
 >;
+export const PostJobJournalDocument = gql`
+  mutation PostJobJournal($input: PostJobJournalInput!) {
+    postJobJournal(input: $input)
+  }
+`;
+export type PostJobJournalMutationFn = ApolloReactCommon.MutationFunction<
+  PostJobJournalMutation,
+  PostJobJournalMutationVariables
+>;
+
+/**
+ * __usePostJobJournalMutation__
+ *
+ * To run a mutation, you first call `usePostJobJournalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostJobJournalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postJobJournalMutation, { data, loading, error }] = usePostJobJournalMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostJobJournalMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostJobJournalMutation,
+    PostJobJournalMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostJobJournalMutation,
+    PostJobJournalMutationVariables
+  >(PostJobJournalDocument, baseOptions);
+}
+export type PostJobJournalMutationHookResult = ReturnType<
+  typeof usePostJobJournalMutation
+>;
+export type PostJobJournalMutationResult = ApolloReactCommon.MutationResult<
+  PostJobJournalMutation
+>;
+export type PostJobJournalMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostJobJournalMutation,
+  PostJobJournalMutationVariables
+>;
+export const PostJobDocument = gql`
+  mutation PostJob($input: PostJobJournalInput!) {
+    postJobJournal(input: $input)
+  }
+`;
+export type PostJobMutationFn = ApolloReactCommon.MutationFunction<
+  PostJobMutation,
+  PostJobMutationVariables
+>;
+
+/**
+ * __usePostJobMutation__
+ *
+ * To run a mutation, you first call `usePostJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postJobMutation, { data, loading, error }] = usePostJobMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostJobMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostJobMutation,
+    PostJobMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostJobMutation,
+    PostJobMutationVariables
+  >(PostJobDocument, baseOptions);
+}
+export type PostJobMutationHookResult = ReturnType<typeof usePostJobMutation>;
+export type PostJobMutationResult = ApolloReactCommon.MutationResult<
+  PostJobMutation
+>;
+export type PostJobMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostJobMutation,
+  PostJobMutationVariables
+>;
 export const UpdateDefaultsDocument = gql`
   mutation UpdateDefaults($input: DefaultsInput!) {
     updateDefaults(input: $input) {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }
@@ -358,7 +499,8 @@ export type UpdateDefaultsMutationOptions = ApolloReactCommon.BaseMutationOption
 export const DefaultsDocument = gql`
   query Defaults {
     defaults {
-      job
+      pigJob
+      scorecardJob
       price
     }
   }

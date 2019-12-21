@@ -14,13 +14,18 @@ export const Button = tw.styled(FocusTarget.withComponent("button"))`
 
 export const View = tw.div`flex flex-col h-full`;
 
-export const Label = tw.label`h-10 py-3 leading-none block text-base font-bold`;
+export const Label = tw.label`h-6 pt-2 mb-3 leading-none block text-base font-bold`;
 
-export const Output = tw.output`py-2 px-4 h-10 text-base block`;
+export const Output = tw.output`px-4 h-6 text-base block`;
 
-export const Title = tw.h1`p-4 font-bold text-3xl border-b border-gray-500`;
+export const Title = tw.h1`p-4 font-bold text-xl`;
 
-export const Group = tw.div`p-0 m-0 mt-4`;
+export const Group = styled.div([
+  tw`p-0 m-0 mt-4`,
+  {
+    "&:first-of-type": tw`mt-0`
+  }
+]);
 
 export const StackedContainer = tw.styled(
   FocusInTarget
@@ -31,7 +36,7 @@ export const StackedItem = styled.div`
     py-2 px-4 h-10
     text-base font-bold
     border-b border-gray-500
-    focus:outline-none focus:bg-blue-200
+    focus:outline-none focus:bg-blue-300
   `}
   &:last-of-type {
     border-bottom-width: 0;

@@ -1,6 +1,7 @@
 query Defaults {
   defaults {
-    job
+    pigJob
+    scorecardJob
     price
   }
 }

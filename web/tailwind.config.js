@@ -4,10 +4,11 @@ module.exports = {
   separator: ":",
   theme: {
     screens: {
+      xs: "340px",
       sm: "640px",
       md: "768px",
-      lg: "1024px",
-      xl: "1280px"
+      lg: "1024px"
+      // xl: "1280px"
     },
     colors: {
       transparent: "transparent",
@@ -137,7 +138,9 @@ module.exports = {
       "6": "1.5rem",
       "8": "2rem",
       "10": "2.5rem",
+      "11": "2.75rem",
       "12": "3rem",
+      "14": "3.5rem",
       "16": "4rem",
       "20": "5rem",
       "24": "6rem",
@@ -193,7 +196,7 @@ module.exports = {
         "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
       "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
       inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
-      outline: "0 0 0 3px rgba(66, 153, 225, 0.5)",
+      outline: "0 0 0 2px #a0aec0",
       none: "none"
     },
     container: {},

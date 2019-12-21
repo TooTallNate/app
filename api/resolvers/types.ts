@@ -23,12 +23,14 @@ export type Scalars = {
 
 export type Defaults = {
   __typename?: "Defaults";
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
 export type DefaultsInput = {
-  job?: Maybe<Scalars["String"]>;
+  pigJob?: Maybe<Scalars["String"]>;
+  scorecardJob?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -60,7 +62,8 @@ export type Mutation = {
   login: User;
   logout: Scalars["Boolean"];
   updateDefaults: Defaults;
-  postItem: Scalars["Boolean"];
+  postItemJournal: Scalars["Boolean"];
+  postJobJournal: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
@@ -71,11 +74,15 @@ export type MutationUpdateDefaultsArgs = {
   input: DefaultsInput;
 };
 
-export type MutationPostItemArgs = {
-  input: PostItemInput;
+export type MutationPostItemJournalArgs = {
+  input: PostItemJournalInput;
 };
 
-export type PostItemInput = {
+export type MutationPostJobJournalArgs = {
+  input: PostJobJournalInput;
+};
+
+export type PostItemJournalInput = {
   template: Scalars["String"];
   batch: Scalars["String"];
   date: Scalars["Date"];
@@ -91,6 +98,21 @@ export type PostItemInput = {
   prodPostingGroup?: Maybe<Scalars["String"]>;
   costCenterCode?: Maybe<Scalars["String"]>;
   entityType?: Maybe<Scalars["String"]>;
+};
+
+export type PostJobJournalInput = {
+  template: Scalars["String"];
+  batch: Scalars["String"];
+  date: Scalars["Date"];
+  document: Scalars["String"];
+  job: Scalars["String"];
+  location: Scalars["String"];
+  task: Scalars["String"];
+  number: Scalars["String"];
+  workType: Scalars["String"];
+  quantity: Scalars["Float"];
+  unitPrice: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
@@ -129,12 +151,21 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type PostItemMutationVariables = {
-  input: PostItemInput;
+  input: PostItemJournalInput;
 };
 
 export type PostItemMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
-  "postItem"
+  "postItemJournal"
+>;
+
+export type PostJobMutationVariables = {
+  input: PostJobJournalInput;
+};
+
+export type PostJobMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postJobJournal"
 >;
 
 export type UpdateDefaultsMutationVariables = {
@@ -142,13 +173,19 @@ export type UpdateDefaultsMutationVariables = {
 };
 
 export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  updateDefaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type DefaultsQueryVariables = {};
 
 export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<Defaults, "job" | "price">;
+  defaults: { __typename?: "Defaults" } & Pick<
+    Defaults,
+    "pigJob" | "scorecardJob" | "price"
+  >;
 };
 
 export type JobsQueryVariables = {
@@ -291,8 +328,9 @@ export type ResolversTypes = ResolversObject<{
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   DefaultsInput: DefaultsInput;
-  PostItemInput: PostItemInput;
+  PostItemJournalInput: PostItemJournalInput;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
+  PostJobJournalInput: PostJobJournalInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -310,8 +348,9 @@ export type ResolversParentTypes = ResolversObject<{
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
   DefaultsInput: DefaultsInput;
-  PostItemInput: PostItemInput;
+  PostItemJournalInput: PostItemJournalInput;
   Date: Scalars["Date"];
+  PostJobJournalInput: PostJobJournalInput;
 }>;
 
 export interface DateScalarConfig
@@ -323,7 +362,12 @@ export type DefaultsResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Defaults"] = ResolversParentTypes["Defaults"]
 > = ResolversObject<{
-  job?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  pigJob?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  scorecardJob?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
 }>;
 
@@ -369,11 +413,17 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateDefaultsArgs, "input">
   >;
-  postItem?: Resolver<
+  postItemJournal?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
     ContextType,
-    RequireFields<MutationPostItemArgs, "input">
+    RequireFields<MutationPostItemJournalArgs, "input">
+  >;
+  postJobJournal?: Resolver<
+    ResolversTypes["Boolean"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostJobJournalArgs, "input">
   >;
 }>;
 

@@ -5,17 +5,18 @@ import { Button, Title, Group, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
-import JobSelector from "../components/JobSelector";
+import PigJobSelector from "../components/PigJobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
 import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
-import useDefaults from "../hooks/defaults";
+import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
 import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
+import tw from "tailwind.macro";
 
 interface FormState {
   fromAnimal?: Animal;
@@ -33,7 +34,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
   const [formState, setFormState] = useState<FormState>({});
   const [
     {
-      defaults: { price: defaultPrice, job: defaultJob },
+      defaults: { price: defaultPrice, pigJob: defaultJob },
       loading: loadingDefaults
     },
     setDefaults
@@ -120,7 +121,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
         }
       });
       if (formState.fromJob !== defaultJob) {
-        await setDefaults({ job: formState.fromJob });
+        await setDefaults({ pigJob: formState.fromJob });
       }
       if (formState.price !== defaultPrice) {
         await setDefaults({ price: formState.price });
@@ -162,10 +163,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           <Field
             label="From Animal"
             name="from-animal"
-            css={{
-              width: "100%",
-              marginRight: 16
-            }}
+            css={tw`w-full mr-4 mt-0`}
           >
             <StackedButtonInput
               value={formState.fromAnimal}
@@ -179,13 +177,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
               <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
             </StackedButtonInput>
           </Field>
-          <Field
-            label="To Animal"
-            name="to-animal"
-            css={{
-              width: "100%"
-            }}
-          >
+          <Field label="To Animal" name="to-animal" css={tw`w-full mt-0`}>
             <StackedButtonInput
               value={formState.toAnimal}
               onChange={toAnimal => setFormState({ ...formState, toAnimal })}
@@ -204,29 +196,16 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             display: "flex"
           }}
         >
-          <Field
-            label="From Job"
-            name="from-job"
-            css={{
-              width: "100%",
-              marginRight: 16
-            }}
-          >
-            <JobSelector
+          <Field label="From Job" name="from-job" css={tw`w-full mr-4 mt-0`}>
+            <PigJobSelector
               value={formState.fromJob}
               onChange={fromJob => {
                 setFormState({ ...formState, fromJob });
               }}
             />
           </Field>
-          <Field
-            label="To Job"
-            name="to-job"
-            css={{
-              width: "100%"
-            }}
-          >
-            <JobSelector
+          <Field label="To Job" name="to-job" css={tw`w-full mt-0`}>
+            <PigJobSelector
               value={formState.toJob}
               onChange={toJob => {
                 setFormState({ ...formState, toJob });

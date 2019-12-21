@@ -2,20 +2,24 @@ import React from "react";
 import { renderComponent, fireEvent } from "../../test/utils";
 import MainNav from "./MainNav";
 
-test("Activity button navigates to pigs", () => {
-  const { getByText } = renderComponent(<MainNav />, {
-    router: { routes: [{ path: "/pigs", render: () => <div>Pigs View</div> }] }
+const render = () =>
+  renderComponent(<MainNav />, {
+    router: {
+      routes: [
+        { exact: true, path: "/", render: () => <div>Home View</div> },
+        { path: "/account", render: () => <div>Account View</div> }
+      ]
+    }
   });
-  fireEvent.click(getByText(/activity/i));
-  getByText(/pigs view/i);
+
+test("Home button navigates to pigs", () => {
+  const { getByText } = render();
+  fireEvent.click(getByText(/home/i));
+  getByText(/home view/i);
 });
 
 test("Account button navigates to form", () => {
-  const { getByText } = renderComponent(<MainNav />, {
-    router: {
-      routes: [{ path: "/account", render: () => <div>Account View</div> }]
-    }
-  });
+  const { getByText } = render();
   fireEvent.click(getByText(/account/i));
   getByText(/account view/i);
 });

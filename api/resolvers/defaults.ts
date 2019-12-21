@@ -18,8 +18,11 @@ export const DefaultsMutation: MutationResolvers = {
     if (!settings) {
       settings = new UserSettingsModel({ username: user.username });
     }
-    if (input.hasOwnProperty("job")) {
-      settings.job = input.job;
+    if (input.hasOwnProperty("pigJob")) {
+      settings.pigJob = input.pigJob;
+    }
+    if (input.hasOwnProperty("scorecardJob")) {
+      settings.scorecardJob = input.scorecardJob;
     }
     if (input.hasOwnProperty("price")) {
       settings.price = input.price;
