@@ -15,6 +15,7 @@ import FullPageSpinner from "../components/FullPageSpinner";
 import { JobJournalTemplate, JobJournalBatch } from "../entities";
 import { getDocumentNumber } from "../utils";
 import ScorecardAreaSelector from "../components/ScorecardAreaSelector";
+import tw from "tailwind.macro";
 
 interface FormState {
   operator?: Job;
@@ -135,7 +136,16 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Farrowing Scorecard</Title>
+      <Title>
+        Farrowing Scorecard
+        <span
+          css={tw`text-base font-normal float-right pt-1`}
+          aria-label="Total Score"
+        >
+          {totalScore}/60{" "}
+          <span css={tw`hidden xs:inline`}>{scorePercent}%</span>
+        </span>
+      </Title>
       <form
         css={{
           overflowX: "auto",
@@ -145,11 +155,6 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
-        <Field label="Total Score" name="total-score">
-          <Output>
-            {totalScore} / 60 ({scorePercent}%)
-          </Output>
-        </Field>
         <Field label="Operator" name="operator">
           <ScorecardJobSelector
             value={state.operator}

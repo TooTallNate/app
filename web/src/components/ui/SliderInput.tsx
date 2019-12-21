@@ -76,9 +76,9 @@ const SliderInput: React.FC<SliderInputProps> = ({
         css={tw`w-16 mr-2`}
         onChange={value => setValue(value || min)}
       />
-      <div css={tw`relative flex-1 h-14`}>
+      <div css={tw`relative flex-1 h-10`}>
         {/* Slider Progress */}
-        <div css={[tw`absolute inset-0 h-10 my-2 mx-6`]} aria-hidden>
+        <div css={[tw`absolute inset-0 h-10 mx-6`]} aria-hidden>
           <div
             css={[
               tw`absolute bg-blue-300 top-0 bottom-0 left-0`,
@@ -96,7 +96,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
         {/* Slider Labels */}
         <div
           css={[
-            tw`absolute inset-0 h-10 my-2 flex items-center`,
+            tw`absolute inset-0 h-10 flex items-center`,
             { marginLeft: trackMargin, marginRight: trackMargin }
           ]}
           aria-hidden
@@ -115,7 +115,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           onChange={e => setValue(e.target.valueAsNumber)}
           type="range"
           css={[
-            tw`relative w-full my-2 mx-0 h-10 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,
+            tw`relative w-full mx-0 h-10 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,
             {
               WebkitAppearance: "none",
               "&::-webkit-slider-runnable-track": trackStyles,
