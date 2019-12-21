@@ -23,3 +23,15 @@ export function remToPx(n: number): number {
     n * parseFloat(getComputedStyle(document.documentElement).fontSize || "0")
   );
 }
+
+export function setRef<T>(
+  source: T | null,
+  ref: ((instance: T | null) => void) | React.RefObject<T | null> | null
+): void {
+  if (typeof ref === "function") {
+    ref(source);
+  } else if (ref) {
+    // @ts-ignore since current is readonly for some reason.
+    ref.current = source;
+  }
+}

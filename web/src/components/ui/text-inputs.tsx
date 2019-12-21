@@ -1,8 +1,11 @@
 /** @jsx jsx */
+import React, { useImperativeHandle, useRef } from "react";
 import { jsx } from "@emotion/core";
 import { FocusTarget, FocusInTarget } from "../styled";
 import { ComponentProps } from "react";
 import tw from "tailwind.macro";
+import { useField } from "./Field";
+import { setRef } from "../../utils";
 
 const BaseTextInput = tw.styled(FocusTarget.withComponent("input"))`
   py-2 px-4 h-10 w-full block
@@ -39,34 +42,38 @@ export const MultilineTextInput: React.FC<MultilineTextInputProps> = ({
   ...props
 }) => <BaseTextarea {...props} onChange={e => onChange(e.target.value)} />;
 
-type NumberInputProps = Omit<
-  ComponentProps<typeof BaseTextInput>,
-  "value" | "onChange" | "type" | "ref"
-> & {
+type NumberInputProps = Omit<ComponentProps<"input">, "value" | "type"> & {
   value?: number;
-  onChange?(value?: number): void;
 };
 
-export const NumberInput: React.FC<NumberInputProps> = ({
-  onChange = () => {},
-  ...props
-}) => (
-  <BaseTextInput
-    {...props}
-    css={{
-      "&::-webkit-inner-spin-button": {
-        WebkitAppearance: "none",
-        margin: 0
-      },
-      "&::-webkit-outer-spin-button": {
-        WebkitAppearance: "none",
-        margin: 0
-      }
-    }}
-    type="number"
-    onChange={e => {
-      const value = e.target.valueAsNumber;
-      onChange(Number.isNaN(value) ? undefined : value);
-    }}
-  />
-);
+export const NumberInput = React.forwardRef<
+  HTMLInputElement | null,
+  NumberInputProps
+>(function NumberInput({ className, ...props }, ref) {
+  const fieldConfig = useField();
+
+  const labelId =
+    props["aria-labelledby"] || (fieldConfig && fieldConfig.labelId);
+  const name = props.name || (fieldConfig && fieldConfig.name);
+  const register = fieldConfig && fieldConfig.register;
+
+  return (
+    <input
+      {...props}
+      aria-labelledby={labelId}
+      name={name}
+      className={`
+          py-2 px-4 h-10 w-full block no-spinner
+          text-base text-black leading-none 
+          border border-gray-500 rounded-lg
+          focus:shadow-outline focus:outline-none
+          ${className}
+        `}
+      type="number"
+      ref={e => {
+        register && register(e);
+        setRef<HTMLInputElement>(e, ref);
+      }}
+    />
+  );
+});
