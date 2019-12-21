@@ -18,9 +18,14 @@ export const Label = tw.label`h-10 py-3 leading-none block text-base font-bold`;
 
 export const Output = tw.output`py-2 px-4 h-10 text-base block`;
 
-export const Title = tw.h1`p-3 font-bold text-xl border-b border-gray-500`;
+export const Title = tw.h1`p-4 font-bold text-xl`;
 
-export const Group = tw.div`p-0 m-0 mt-4`;
+export const Group = styled.div([
+  tw`p-0 m-0 mt-4`,
+  {
+    "&:first-of-type": tw`mt-0`
+  }
+]);
 
 export const StackedContainer = tw.styled(
   FocusInTarget

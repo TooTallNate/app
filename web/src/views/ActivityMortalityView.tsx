@@ -182,7 +182,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
             display: "flex"
           }}
         >
-          <Field css={tw`flex-1`} name="natural-quantity" label="Natrual">
+          <Field css={tw`flex-1 mt-0`} name="natural-quantity" label="Natural">
             <NumberInput
               value={formState.naturalQuantity}
               onChange={naturalQuantity =>
@@ -191,11 +191,15 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-12 pt-1`}
           >
             +
           </div>
-          <Field css={tw`flex-1`} name="euthanized-quantity" label="Euthanized">
+          <Field
+            css={tw`flex-1 mt-0`}
+            name="euthanized-quantity"
+            label="Euthanized"
+          >
             <NumberInput
               value={formState.euthanizedQuantity}
               onChange={euthanizedQuantity =>
@@ -204,11 +208,11 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-16 pt-1`}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-12 pt-1`}
           >
             =
           </div>
-          <Field css={{ width: 72 }} name="quantity" label="Quantity">
+          <Field css={tw`w-18 mt-0`} name="quantity" label="Quantity">
             <Output
               id="quantity"
               css={{

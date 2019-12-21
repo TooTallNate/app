@@ -16,6 +16,7 @@ import StackedButtonInput, {
 } from "../components/ui/StackedButtonInput";
 import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
+import tw from "tailwind.macro";
 
 interface FormState {
   fromAnimal?: Animal;
@@ -162,10 +163,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           <Field
             label="From Animal"
             name="from-animal"
-            css={{
-              width: "100%",
-              marginRight: 16
-            }}
+            css={tw`w-full mr-4 mt-0`}
           >
             <StackedButtonInput
               value={formState.fromAnimal}
@@ -179,13 +177,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
               <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
             </StackedButtonInput>
           </Field>
-          <Field
-            label="To Animal"
-            name="to-animal"
-            css={{
-              width: "100%"
-            }}
-          >
+          <Field label="To Animal" name="to-animal" css={tw`w-full mt-0`}>
             <StackedButtonInput
               value={formState.toAnimal}
               onChange={toAnimal => setFormState({ ...formState, toAnimal })}
@@ -204,14 +196,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             display: "flex"
           }}
         >
-          <Field
-            label="From Job"
-            name="from-job"
-            css={{
-              width: "100%",
-              marginRight: 16
-            }}
-          >
+          <Field label="From Job" name="from-job" css={tw`w-full mr-4 mt-0`}>
             <PigJobSelector
               value={formState.fromJob}
               onChange={fromJob => {
@@ -219,13 +204,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
               }}
             />
           </Field>
-          <Field
-            label="To Job"
-            name="to-job"
-            css={{
-              width: "100%"
-            }}
-          >
+          <Field label="To Job" name="to-job" css={tw`w-full mt-0`}>
             <PigJobSelector
               value={formState.toJob}
               onChange={toJob => {
