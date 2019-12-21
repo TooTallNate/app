@@ -191,7 +191,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-12 pt-1`}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-11 pt-1`}
           >
             +
           </div>
@@ -208,11 +208,11 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
             />
           </Field>
           <div
-            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-12 pt-1`}
+            css={tw`flex-auto flex-grow-0 w-8 text-center leading-none mt-11 pt-1`}
           >
             =
           </div>
-          <Field css={tw`w-18 mt-0`} name="quantity" label="Quantity">
+          <Field css={tw`w-18 mt-2`} name="quantity" label="Quantity">
             <Output
               id="quantity"
               css={{
