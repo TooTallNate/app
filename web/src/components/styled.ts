@@ -14,9 +14,9 @@ export const Button = tw.styled(FocusTarget.withComponent("button"))`
 
 export const View = tw.div`flex flex-col h-full`;
 
-export const Label = tw.label`h-10 py-3 leading-none block text-base font-bold`;
+export const Label = tw.label`h-6 pt-2 mb-3 leading-none block text-base font-bold`;
 
-export const Output = tw.output`py-2 px-4 h-10 text-base block`;
+export const Output = tw.output`px-4 h-6 text-base block`;
 
 export const Title = tw.h1`p-4 font-bold text-xl`;
 

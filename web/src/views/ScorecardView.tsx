@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Button, Title } from "../components/styled";
+import { View, Button, Title, Output } from "../components/styled";
 import ScorecardJobSelector from "../components/ScorecardJobSelector";
 import Field from "../components/ui/Field";
 import SliderInput from "../components/ui/SliderInput";
@@ -36,7 +36,7 @@ interface FormState {
 function useForm() {
   return useReducer<React.Reducer<FormState, Partial<FormState>>>(
     (state, newState) => ({ ...state, ...newState }),
-    { sowCare: 5, pigletCare: 5, feed: 5, water: 5, crate: 5, generalRoom: 5 }
+    { sowCare: 0, pigletCare: 0, feed: 0, water: 0, crate: 0, generalRoom: 0 }
   );
 }
 
@@ -58,6 +58,15 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   ] = useDefaults();
   const [postJobJournal, { loading }] = usePostJobJournalMutation();
   const { setMessage } = useFlash();
+
+  const totalScore =
+    state.crate +
+    state.feed +
+    state.generalRoom +
+    state.pigletCare +
+    state.sowCare +
+    state.water;
+  const scorePercent = ((100 * totalScore) / 60).toFixed(1);
 
   function postScore(type: string, score: number, comments?: string) {
     if (state.operator && state.area && user) {
@@ -136,6 +145,11 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         }}
         onSubmit={onSubmit}
       >
+        <Field label="Total Score" name="total-score">
+          <Output>
+            {totalScore} / 60 ({scorePercent}%)
+          </Output>
+        </Field>
         <Field label="Operator" name="operator">
           <ScorecardJobSelector
             value={state.operator}
