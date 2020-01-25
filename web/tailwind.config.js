@@ -426,7 +426,7 @@ module.exports = {
     alignSelf: ["responsive"],
     appearance: ["responsive"],
     backgroundAttachment: ["responsive"],
-    backgroundColor: ["responsive", "hover", "focus"],
+    backgroundColor: ["responsive", "hover", "focus", "checked"],
     backgroundPosition: ["responsive"],
     backgroundRepeat: ["responsive"],
     backgroundSize: ["responsive"],
@@ -434,7 +434,7 @@ module.exports = {
     borderColor: ["responsive", "hover", "focus"],
     borderRadius: ["responsive"],
     borderStyle: ["responsive"],
-    borderWidth: ["responsive"],
+    borderWidth: ["responsive", "last"],
     boxShadow: ["responsive", "hover", "focus", "focus-within"],
     cursor: ["responsive"],
     display: ["responsive"],
@@ -457,7 +457,7 @@ module.exports = {
     lineHeight: ["responsive"],
     listStylePosition: ["responsive"],
     listStyleType: ["responsive"],
-    margin: ["responsive"],
+    margin: ["responsive", "first"],
     maxHeight: ["responsive"],
     maxWidth: ["responsive"],
     minHeight: ["responsive"],
@@ -488,5 +488,15 @@ module.exports = {
     zIndex: ["responsive"]
   },
   corePlugins: {},
-  plugins: []
+  plugins: [
+    function({ addVariant, e }) {
+      // Add checked:<class> variant which applys the style if element or any of its previous siblings are checked.
+      addVariant("checked", ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) => {
+          const c = `.${e(`checked${separator}${className}`)}`;
+          return `${c}:checked, :checked + ${c}`;
+        });
+      });
+    }
+  ]
 };

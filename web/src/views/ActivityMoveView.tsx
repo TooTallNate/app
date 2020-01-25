@@ -1,14 +1,13 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, Group, View } from "../components/styled";
+import { useEffect } from "react";
+import { Title, View, Group } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
 import { RouteComponentProps } from "react-router";
 import PigJobSelector from "../components/PigJobSelector";
 import { getDocumentNumber } from "../utils";
 import { useAuth } from "../contexts/auth";
-import Field from "../components/ui/Field";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
@@ -16,22 +15,28 @@ import StackedButtonInput, {
 } from "../components/ui/StackedButtonInput";
 import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
-import tw from "tailwind.macro";
+import Form from "../components/ui/Form";
+import FormField from "../components/ui/FormField";
+import FormFieldLabel from "../components/ui/FormFieldLabel";
+import FormFieldErrors from "../components/ui/FormFieldErrors";
+import FormFieldInput from "../components/ui/FormFieldInput";
+import FormSubmit from "../components/ui/FormSubmit";
+import { OnSubmit, useForm } from "react-hook-form";
 
-interface FormState {
-  fromAnimal?: Animal;
-  toAnimal?: Animal;
-  fromJob?: Job;
-  toJob?: Job;
-  quantity?: number;
-  weight?: number;
-  price?: number;
+interface FormData {
+  fromAnimal: Animal;
+  toAnimal: Animal;
+  fromJob: Job;
+  toJob: Job;
+  quantity: number;
+  weight: number;
+  price: number;
   comments?: string;
 }
 
 const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
+  const formContext = useForm<FormData>();
   const { user } = useAuth();
-  const [formState, setFormState] = useState<FormState>({});
   const [
     {
       defaults: { price: defaultPrice, pigJob: defaultJob },
@@ -39,45 +44,27 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
     },
     setDefaults
   ] = useDefaults();
-  const [postItem, { loading }] = usePostItemMutation();
+  const [postItem] = usePostItemMutation();
   const { setMessage } = useFlash();
+  const { getValues, setValue } = formContext;
 
   // Set job with default only if not already set.
   useEffect(() => {
-    if (!formState.fromJob && defaultJob) {
-      setFormState(formState => ({
-        ...formState,
-        fromJob: defaultJob
-      }));
+    if (!getValues().fromJob && defaultJob) {
+      setValue("job", defaultJob);
     }
-  }, [defaultJob, formState.fromJob]);
+  }, [defaultJob, getValues, setValue]);
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (
-      typeof formState.price === "undefined" &&
-      typeof defaultPrice === "number"
-    ) {
-      setFormState(formState => ({
-        ...formState,
-        price: defaultPrice
-      }));
+    if (!getValues().price && defaultPrice) {
+      setValue("price", defaultPrice);
     }
-  }, [defaultPrice, formState.price]);
+  }, [defaultPrice, getValues, setValue]);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
-    e.preventDefault();
+  const onSubmit: OnSubmit<FormData> = async data => {
     try {
-      if (
-        !formState.toAnimal ||
-        !formState.toJob ||
-        !formState.fromAnimal ||
-        !formState.fromJob ||
-        !formState.quantity ||
-        !formState.weight ||
-        !formState.price ||
-        !user
-      ) {
+      if (!user) {
         return;
       }
       await postItem({
@@ -86,17 +73,17 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             template: ItemTemplate.Move,
             batch: ItemBatch.Move,
             entryType: EntryType.Negative,
-            item: formState.fromAnimal,
-            job: formState.fromJob.number,
-            quantity: formState.quantity,
-            weight: formState.weight,
+            item: data.fromAnimal,
+            job: data.fromJob.number,
+            quantity: data.quantity,
+            weight: data.weight,
             document: getDocumentNumber("MOVE", user.username),
-            amount: formState.price,
-            description: formState.comments,
+            amount: data.price,
+            description: data.comments,
             date: new Date(),
-            location: formState.fromJob.site,
-            costCenterCode: formState.fromJob.dimensions.costCenter,
-            entityType: formState.fromJob.dimensions.entity
+            location: data.fromJob.site,
+            costCenterCode: data.fromJob.dimensions.costCenter,
+            entityType: data.fromJob.dimensions.entity
           }
         }
       });
@@ -106,25 +93,22 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             template: ItemTemplate.Move,
             batch: ItemBatch.Move,
             entryType: EntryType.Positive,
-            item: formState.toAnimal,
-            job: formState.toJob.number,
-            quantity: formState.quantity,
-            weight: formState.weight,
+            item: data.toAnimal,
+            job: data.toJob.number,
+            quantity: data.quantity,
+            weight: data.weight,
             document: getDocumentNumber("MOVE", user.username),
-            amount: formState.price,
-            description: formState.comments,
+            amount: data.price,
+            description: data.comments,
             date: new Date(),
-            location: formState.toJob.site,
-            costCenterCode: formState.toJob.dimensions.costCenter,
-            entityType: formState.toJob.dimensions.entity
+            location: data.toJob.site,
+            costCenterCode: data.toJob.dimensions.costCenter,
+            entityType: data.toJob.dimensions.entity
           }
         }
       });
-      if (formState.fromJob !== defaultJob) {
-        await setDefaults({ pigJob: formState.fromJob });
-      }
-      if (formState.price !== defaultPrice) {
-        await setDefaults({ price: formState.price });
+      if (data.fromJob !== defaultJob || data.price !== defaultPrice) {
+        await setDefaults({ pigJob: data.fromJob, price: data.price });
       }
       setMessage({
         message: "Entry recorded successfully.",
@@ -145,109 +129,112 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
   ) : (
     <View>
       <Title>Move</Title>
-      <form
-        css={{
-          overflowX: "auto",
-          minHeight: 0,
-          flexGrow: 1,
-          padding: "0 16px 16px 16px"
-        }}
-        onSubmit={onSubmit}
-      >
-        <Group
-          css={{
-            marginTop: 0,
-            display: "flex"
-          }}
-        >
-          <Field
-            label="From Animal"
-            name="from-animal"
-            css={tw`w-full mr-4 mt-0`}
+      <Form context={formContext} onSubmit={onSubmit}>
+        <Group className="flex mt-0">
+          <FormField
+            className="w-full mr-4"
+            name="fromAnimal"
+            rules={{ required: "The from animal field is required." }}
           >
-            <StackedButtonInput
-              value={formState.fromAnimal}
-              onChange={fromAnimal =>
-                setFormState({ ...formState, fromAnimal })
-              }
-            >
-              <StackedButton value={Animal.MARKET_PIGS}>
-                Market Pigs
-              </StackedButton>
-              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-            </StackedButtonInput>
-          </Field>
-          <Field label="To Animal" name="to-animal" css={tw`w-full mt-0`}>
-            <StackedButtonInput
-              value={formState.toAnimal}
-              onChange={toAnimal => setFormState({ ...formState, toAnimal })}
-            >
-              <StackedButton value={Animal.MARKET_PIGS}>
-                Market Pigs
-              </StackedButton>
-              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-              <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-            </StackedButtonInput>
-          </Field>
+            <FormFieldLabel>From Animal</FormFieldLabel>
+            <FormFieldInput>
+              <StackedButtonInput orientation="vertical">
+                <StackedButton value={Animal.MARKET_PIGS}>
+                  Market Pigs
+                </StackedButton>
+                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+                <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+              </StackedButtonInput>
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            className="w-full ml-4"
+            name="toAnimal"
+            rules={{ required: "The to animal field is required." }}
+          >
+            <FormFieldLabel>To Animal</FormFieldLabel>
+            <FormFieldInput>
+              <StackedButtonInput orientation="vertical">
+                <StackedButton value={Animal.MARKET_PIGS}>
+                  Market Pigs
+                </StackedButton>
+                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+                <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+              </StackedButtonInput>
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
         </Group>
-        <Group
-          css={{
-            marginTop: 0,
-            display: "flex"
+        <Group className="flex mt-0">
+          <FormField
+            className="w-full mr-4"
+            name="fromJob"
+            rules={{ required: "The from job field is required." }}
+          >
+            <FormFieldLabel>From Job</FormFieldLabel>
+            <FormFieldInput>
+              <PigJobSelector />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            className="w-full ml-4"
+            name="toJob"
+            rules={{ required: "The to job field is required." }}
+          >
+            <FormFieldLabel>To Job</FormFieldLabel>
+            <FormFieldInput>
+              <PigJobSelector />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+        </Group>
+        <FormField
+          name="quantity"
+          rules={{
+            required: "The quantity field is required."
           }}
         >
-          <Field label="From Job" name="from-job" css={tw`w-full mr-4 mt-0`}>
-            <PigJobSelector
-              value={formState.fromJob}
-              onChange={fromJob => {
-                setFormState({ ...formState, fromJob });
-              }}
-            />
-          </Field>
-          <Field label="To Job" name="to-job" css={tw`w-full mt-0`}>
-            <PigJobSelector
-              value={formState.toJob}
-              onChange={toJob => {
-                setFormState({ ...formState, toJob });
-              }}
-            />
-          </Field>
-        </Group>
-        <Field name="quantity" label="Quantity">
-          <NumberInput
-            value={formState.quantity}
-            onChange={quantity => setFormState({ ...formState, quantity })}
-          />
-        </Field>
-        <Field name="weight" label="Total Weight">
-          <NumberInput
-            value={formState.weight}
-            onChange={weight => setFormState({ ...formState, weight })}
-          />
-        </Field>
-        <Field name="price" label="Price/pig">
-          <NumberInput
-            value={formState.price}
-            onChange={price => setFormState({ ...formState, price })}
-          />
-        </Field>
-        <Field name="comments" label="Comments">
-          <MultilineTextInput
-            value={formState.comments}
-            maxLength={50}
-            onChange={comments => setFormState({ ...formState, comments })}
-          />
-        </Field>
-        <Button
-          type="submit"
-          css={{
-            marginTop: 44
+          <FormFieldLabel>Quantity</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="weight"
+          rules={{
+            required: "The total weight field is required."
           }}
-          disabled={loading}
         >
-          Submit
-        </Button>
-      </form>
+          <FormFieldLabel>Total Weight</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="price"
+          rules={{
+            required: "The price field is required."
+          }}
+        >
+          <FormFieldLabel>Price/pig</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField name="comments">
+          <FormFieldLabel>Comments</FormFieldLabel>
+          <FormFieldInput>
+            <MultilineTextInput maxLength={50} />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormSubmit />
+      </Form>
     </View>
   );
 };

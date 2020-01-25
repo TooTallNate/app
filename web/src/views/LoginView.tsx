@@ -2,41 +2,37 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Button, Title, Group, View } from "../components/styled";
+import { Title, Group, View } from "../components/styled";
 import { TextInput } from "../components/ui/text-inputs";
-import Field from "../components/ui/Field";
+import { useForm } from "react-hook-form";
+import Form from "../components/ui/Form";
+import FormField from "../components/ui/FormField";
+import FormFieldLabel from "../components/ui/FormFieldLabel";
+import FormFieldInput from "../components/ui/FormFieldInput";
+import FormFieldErrors from "../components/ui/FormFieldErrors";
+import FormSubmit from "../components/ui/FormSubmit";
 
-interface Credentials {
-  username?: string;
-  password?: string;
+interface FormData {
+  username: string;
+  password: string;
 }
 
 const LoginView: React.FC = () => {
   const { login } = useAuth();
   const [isInvalid, setInvalid] = useState<boolean>(false);
-  const [{ username, password }, setCredentials] = useState<Credentials>({
-    username: "",
-    password: ""
-  });
+  const formContext = useForm<FormData>();
 
   return (
     <View>
       <Title>Login</Title>
-      <form
-        css={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "0 16px"
-        }}
-        onSubmit={async e => {
-          e.preventDefault();
-          if (username && password) {
-            try {
-              setInvalid(false);
-              await login(username, password);
-            } catch {
-              setInvalid(true);
-            }
+      <Form
+        context={formContext}
+        onSubmit={async data => {
+          try {
+            setInvalid(false);
+            await login(data.username, data.password);
+          } catch {
+            setInvalid(true);
           }
         }}
       >
@@ -45,23 +41,28 @@ const LoginView: React.FC = () => {
             <div css={{ color: "red" }}>Username or password are invalid.</div>
           </Group>
         )}
-        <Field name="username" label="Username">
-          <TextInput
-            value={username}
-            onChange={username => setCredentials(old => ({ ...old, username }))}
-          />
-        </Field>
-        <Field name="password" label="Password">
-          <TextInput
-            type="password"
-            value={password}
-            onChange={password => setCredentials(old => ({ ...old, password }))}
-          />
-        </Field>
-        <Group>
-          <Button type="submit">Log In</Button>
-        </Group>
-      </form>
+        <FormField
+          name="username"
+          rules={{ required: "The username field is required." }}
+        >
+          <FormFieldLabel>Username</FormFieldLabel>
+          <FormFieldInput>
+            <TextInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="password"
+          rules={{ required: "The password field is required." }}
+        >
+          <FormFieldLabel>Password</FormFieldLabel>
+          <FormFieldInput>
+            <TextInput type="password" />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormSubmit>Log In</FormSubmit>
+      </Form>
     </View>
   );
 };

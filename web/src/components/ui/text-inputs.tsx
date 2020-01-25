@@ -1,72 +1,116 @@
 /** @jsx jsx */
+import React from "react";
 import { jsx } from "@emotion/core";
-import { FocusTarget, FocusInTarget } from "../styled";
 import { ComponentProps } from "react";
-import tw from "tailwind.macro";
-
-const BaseTextInput = tw.styled(FocusTarget.withComponent("input"))`
-  py-2 px-4 h-10 w-full block
-  text-base text-black leading-none 
-  border border-gray-500 rounded-lg
-`;
-
-const BaseTextarea = tw.styled(FocusInTarget.withComponent("textarea"))`
-  py-2 px-4 h-24 w-full block
-  text-base text-black leading-none 
-  border border-gray-500 rounded-lg
-  resize-y
-`;
+import { useField } from "./FormField";
 
 interface TextInputProps
-  extends Omit<ComponentProps<typeof BaseTextInput>, "value" | "onChange"> {
+  extends Omit<ComponentProps<"input">, "value" | "onChange"> {
   value?: string;
-  onChange?(value?: string): void;
+  onChange?(value: string): void;
 }
+
+export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
+  function TextInput({ className, onChange, ...props }, ref) {
+    const fieldConfig = useField();
+
+    const labelId =
+      props["aria-labelledby"] || (fieldConfig && fieldConfig.labelId);
+    const name = props.name || (fieldConfig && fieldConfig.name);
+
+    return (
+      <input
+        {...props}
+        aria-labelledby={labelId}
+        name={name}
+        className={`
+          py-2 px-4 h-10 w-full block no-spinner
+          text-base text-black leading-none 
+          border border-gray-500 rounded-lg
+          focus:shadow-outline focus:outline-none
+          ${className}
+        `}
+        onChange={e => onChange && onChange(e.target.value)}
+        ref={ref}
+      />
+    );
+  }
+);
 
 interface MultilineTextInputProps
-  extends Omit<ComponentProps<typeof BaseTextarea>, "value" | "onChange"> {
+  extends Omit<ComponentProps<"textarea">, "value" | "onChange"> {
   value?: string;
-  onChange?(value?: string): void;
+  onChange?(value: string): void;
 }
 
-export const TextInput: React.FC<TextInputProps> = ({
-  onChange = () => {},
-  ...props
-}) => <BaseTextInput {...props} onChange={e => onChange(e.target.value)} />;
+export const MultilineTextInput = React.forwardRef<
+  HTMLTextAreaElement,
+  MultilineTextInputProps
+>(function NumberInput({ className, onChange, ...props }, ref) {
+  const fieldConfig = useField();
 
-export const MultilineTextInput: React.FC<MultilineTextInputProps> = ({
-  onChange = () => {},
-  ...props
-}) => <BaseTextarea {...props} onChange={e => onChange(e.target.value)} />;
+  const labelId =
+    props["aria-labelledby"] || (fieldConfig && fieldConfig.labelId);
+  const name = props.name || (fieldConfig && fieldConfig.name);
+
+  return (
+    <textarea
+      {...props}
+      aria-labelledby={labelId}
+      name={name}
+      className={`
+        py-2 px-4 h-24 w-full block no-spinner
+        text-base text-black leading-none 
+        border border-gray-500 rounded-lg
+        focus:shadow-outline focus:outline-none
+        ${className}
+      `}
+      onChange={e => onChange && onChange(e.target.value)}
+      ref={ref}
+    />
+  );
+});
 
 type NumberInputProps = Omit<
-  ComponentProps<typeof BaseTextInput>,
-  "value" | "onChange" | "type" | "ref"
+  ComponentProps<"input">,
+  "value" | "type" | "onChange"
 > & {
   value?: number;
   onChange?(value?: number): void;
 };
 
-export const NumberInput: React.FC<NumberInputProps> = ({
-  onChange = () => {},
-  ...props
-}) => (
-  <BaseTextInput
-    {...props}
-    css={{
-      "&::-webkit-inner-spin-button": {
-        WebkitAppearance: "none",
-        margin: 0
-      },
-      "&::-webkit-outer-spin-button": {
-        WebkitAppearance: "none",
-        margin: 0
-      }
-    }}
-    type="number"
-    onChange={e => {
-      const value = e.target.valueAsNumber;
-      onChange(Number.isNaN(value) ? undefined : value);
-    }}
-  />
+export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
+  function NumberInput({ className, value, onChange, ...props }, ref) {
+    const fieldConfig = useField();
+
+    const labelId =
+      props["aria-labelledby"] || (fieldConfig && fieldConfig.labelId);
+    const name = props.name || (fieldConfig && fieldConfig.name);
+
+    return (
+      <input
+        {...props}
+        aria-labelledby={labelId}
+        name={name}
+        className={`
+        py-2 px-4 h-10 w-full block no-spinner
+        text-base text-black leading-none 
+        border border-gray-500 rounded-lg
+        focus:shadow-outline focus:outline-none
+        ${className}
+      `}
+        type="number"
+        value={typeof value === "number" && !Number.isNaN(value) ? value : ""}
+        onChange={e =>
+          onChange &&
+          onChange(
+            Number.isNaN(e.target.valueAsNumber)
+              ? undefined
+              : e.target.valueAsNumber
+          )
+        }
+        ref={ref}
+      />
+    );
+  }
 );

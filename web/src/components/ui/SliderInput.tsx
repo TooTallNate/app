@@ -17,7 +17,7 @@ interface SliderInputProps
     React.ComponentProps<"input">,
     "value" | "onChange" | "min" | "max" | "step"
   > {
-  value: number;
+  value?: number;
   onChange?(value: number): void;
   labelStep?: number;
   min?: number;
@@ -36,7 +36,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
   labelStep = step,
   ...props
 }) => {
-  const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(props.value || min);
   const inputElement = useRef<HTMLInputElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const thumbRadius = remToPx(thumbRadiusRem);
@@ -47,8 +47,8 @@ const SliderInput: React.FC<SliderInputProps> = ({
   const trackMargin = `${-(labelWidth / 2 - thumbRadius - 1.5)}px`;
 
   useEffect(() => {
-    setValue(props.value);
-  }, [props.value]);
+    setValue(props.value || min);
+  }, [min, props.value]);
 
   useEffect(() => {
     if (value !== props.value) {
@@ -72,7 +72,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
   return (
     <div className={className} css={tw`flex items-center`}>
       <NumberInput
-        {...{ value, ...props }}
+        value={value}
         css={tw`w-16 mr-2`}
         onChange={value => setValue(Math.max(Math.min(value || min, max), min))}
       />
