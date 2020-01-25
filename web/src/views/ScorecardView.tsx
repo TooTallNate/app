@@ -1,11 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Button, Title } from "../components/styled";
+import { View, Title } from "../components/styled";
 import ScorecardJobSelector from "../components/ScorecardJobSelector";
-import Field from "../components/ui/Field";
 import SliderInput from "../components/ui/SliderInput";
-import { useReducer, useEffect, FormEventHandler } from "react";
+import { useEffect } from "react";
 import { Job, usePostJobJournalMutation } from "../graphql";
 import { MultilineTextInput } from "../components/ui/text-inputs";
 import useDefaults from "../contexts/defaults";

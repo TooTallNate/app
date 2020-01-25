@@ -2,7 +2,9 @@
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
 import { Title, StackedNav, StackedNavLink, View } from "../components/styled";
-import Field from "../components/ui/Field";
+import FormField from "../components/ui/FormField";
+import FormFieldInput from "../components/ui/FormFieldInput";
+import FormFieldLabel from "../components/ui/FormFieldLabel";
 
 const HomeView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
@@ -13,12 +15,15 @@ const HomeView: React.FC<RouteComponentProps> = ({ match }) => {
           padding: "0 16px"
         }}
       >
-        <Field label="Select Form" name="action">
-          <StackedNav>
-            <StackedNavLink to={`/pigs`}>Pig Activity</StackedNavLink>
-            <StackedNavLink to={`/scorecard`}>Scorecard</StackedNavLink>
-          </StackedNav>
-        </Field>
+        <FormField name="action">
+          <FormFieldLabel>Select Form</FormFieldLabel>
+          <FormFieldInput>
+            <StackedNav>
+              <StackedNavLink to={`/pigs`}>Pig Activity</StackedNavLink>
+              <StackedNavLink to={`/scorecard`}>Scorecard</StackedNavLink>
+            </StackedNav>
+          </FormFieldInput>
+        </FormField>
       </div>
     </View>
   );
