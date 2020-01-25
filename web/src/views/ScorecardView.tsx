@@ -259,7 +259,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldErrors />
         </FormField>
         <FormField
-          name="genRoom"
+          name="generalRoom"
           rules={{ required: "The generalRom field is required." }}
         >
           <FormFieldLabel>General Room</FormFieldLabel>
@@ -268,7 +268,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormField name="genRoomComments">
+        <FormField name="generalRoomComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
             <MultilineTextInput maxLength={50} />
