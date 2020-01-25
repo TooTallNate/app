@@ -42,9 +42,7 @@ interface FormData {
 
 const ScorecardSliderInput: React.FC<
   React.ComponentProps<typeof SliderInput>
-> = props => (
-  <SliderInput {...props} min={0} max={10} step={0.5} labelStep={1} />
-);
+> = props => <SliderInput {...props} min={0} max={10} step={1} labelStep={1} />;
 
 const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   const formContext = useForm<FormData>({
@@ -189,7 +187,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="sowCareComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -206,7 +204,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="pigletCareComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -223,7 +221,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="feedComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -239,7 +237,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="waterComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -256,12 +254,12 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="crateComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
         <FormField
-          name="genRoom"
+          name="generalRoom"
           rules={{ required: "The generalRom field is required." }}
         >
           <FormFieldLabel>General Room</FormFieldLabel>
@@ -270,10 +268,10 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormField name="genRoomComments">
+        <FormField name="generalRoomComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>

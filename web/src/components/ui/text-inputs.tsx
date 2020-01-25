@@ -80,7 +80,10 @@ type NumberInputProps = Omit<
 };
 
 export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
-  function NumberInput({ className, value, onChange, ...props }, ref) {
+  function NumberInput(
+    { className, value, onChange, step = "any", ...props },
+    ref
+  ) {
     const fieldConfig = useField();
 
     const labelId =
@@ -92,6 +95,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         {...props}
         aria-labelledby={labelId}
         name={name}
+        step={step}
         className={`
         py-2 px-4 h-10 w-full block no-spinner
         text-base text-black leading-none 
