@@ -187,7 +187,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="sowCareComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -204,7 +204,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="pigletCareComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -221,7 +221,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="feedComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -237,7 +237,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="waterComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -254,7 +254,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="crateComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
@@ -271,7 +271,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         <FormField name="genRoomComments">
           <FormFieldLabel>Comments</FormFieldLabel>
           <FormFieldInput>
-            <MultilineTextInput />
+            <MultilineTextInput maxLength={50} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
