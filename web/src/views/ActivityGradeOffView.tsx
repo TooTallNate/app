@@ -1,14 +1,13 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, FormEventHandler, useEffect } from "react";
-import { Button, Title, View } from "../components/styled";
+import { useEffect } from "react";
+import { Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
-import { RouteComponentProps } from "react-router";
 import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { RouteComponentProps } from "react-router";
 import PigJobSelector from "../components/PigJobSelector";
-import { useAuth } from "../contexts/auth";
 import { getDocumentNumber } from "../utils";
-import Field from "../components/ui/Field";
+import { useAuth } from "../contexts/auth";
 import { usePostItemMutation, Job } from "../graphql";
 import useDefaults from "../contexts/defaults";
 import StackedButtonInput, {
@@ -16,19 +15,26 @@ import StackedButtonInput, {
 } from "../components/ui/StackedButtonInput";
 import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
+import Form from "../components/ui/Form";
+import FormField from "../components/ui/FormField";
+import FormFieldLabel from "../components/ui/FormFieldLabel";
+import FormFieldErrors from "../components/ui/FormFieldErrors";
+import FormFieldInput from "../components/ui/FormFieldInput";
+import FormSubmit from "../components/ui/FormSubmit";
+import { OnSubmit, useForm } from "react-hook-form";
 
-interface FormState {
-  animal?: Animal;
-  job?: Job;
-  quantity?: number;
-  weight?: number;
-  price?: number;
+interface FormData {
+  animal: string;
+  job: Job;
+  quantity: number;
+  weight: number;
+  price: number;
   comments?: string;
 }
 
 const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
+  const formContext = useForm<FormData>();
   const { user } = useAuth();
-  const [formState, setFormState] = useState<FormState>({});
   const [
     {
       defaults: { price: defaultPrice, pigJob: defaultJob },
@@ -36,43 +42,27 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
     },
     setDefaults
   ] = useDefaults();
-  const [postItem, { loading }] = usePostItemMutation();
+  const [postItem] = usePostItemMutation();
   const { setMessage } = useFlash();
+  const { getValues, setValue } = formContext;
 
   // Set job with default only if not already set.
   useEffect(() => {
-    if (!formState.job && defaultJob) {
-      setFormState(formState => ({
-        ...formState,
-        job: defaultJob
-      }));
+    if (!getValues().job && defaultJob) {
+      setValue("job", defaultJob);
     }
-  }, [defaultJob, formState.job]);
+  }, [defaultJob, getValues, setValue]);
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (
-      typeof formState.price === "undefined" &&
-      typeof defaultPrice === "number"
-    ) {
-      setFormState(formState => ({
-        ...formState,
-        price: defaultPrice
-      }));
+    if (!getValues().price && defaultPrice) {
+      setValue("price", defaultPrice);
     }
-  }, [defaultPrice, formState.price]);
+  }, [defaultPrice, getValues, setValue]);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
-    e.preventDefault();
+  const onSubmit: OnSubmit<FormData> = async data => {
     try {
-      if (
-        !formState.animal ||
-        !formState.job ||
-        !formState.quantity ||
-        !formState.weight ||
-        !formState.price ||
-        !user
-      ) {
+      if (!user) {
         return;
       }
       await postItem({
@@ -81,25 +71,22 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
             template: ItemTemplate.GradeOff,
             batch: ItemBatch.Default,
             entryType: EntryType.Negative,
-            item: formState.animal,
-            job: formState.job.number,
-            quantity: formState.quantity,
-            weight: formState.weight,
+            item: data.animal,
+            job: data.job.number,
+            quantity: data.quantity,
+            weight: data.weight,
             document: getDocumentNumber("GRDOFF", user.username),
-            amount: formState.price,
-            description: formState.comments,
+            amount: data.price,
+            description: data.comments,
             date: new Date(),
-            location: formState.job.site,
-            costCenterCode: formState.job.dimensions.costCenter,
-            entityType: formState.job.dimensions.entity
+            location: data.job.site,
+            costCenterCode: data.job.dimensions.costCenter,
+            entityType: data.job.dimensions.entity
           }
         }
       });
-      if (formState.job !== defaultJob) {
-        await setDefaults({ pigJob: formState.job });
-      }
-      if (formState.price !== defaultPrice) {
-        await setDefaults({ price: formState.price });
+      if (data.job !== defaultJob || data.price !== defaultPrice) {
+        await setDefaults({ pigJob: data.job, price: data.price });
       }
       setMessage({
         message: "Entry recorded successfully.",
@@ -120,69 +107,77 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
   ) : (
     <View>
       <Title>Grade Off</Title>
-      <form
-        css={{
-          overflowX: "auto",
-          minHeight: 0,
-          flexGrow: 1,
-          padding: "0 16px 16px 16px"
-        }}
-        onSubmit={onSubmit}
-      >
-        <Field label="Animal" name="animal">
-          <StackedButtonInput
-            value={formState.animal}
-            onChange={animal => setFormState({ ...formState, animal })}
-          >
-            <StackedButton value={Animal.MARKET_PIGS}>
-              Market Pigs
-            </StackedButton>
-            <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-          </StackedButtonInput>
-        </Field>
-        <Field label="Job" name="job">
-          <PigJobSelector
-            value={formState.job}
-            onChange={job => {
-              setFormState({ ...formState, job });
-            }}
-          />
-        </Field>
-        <Field name="quantity" label="Quantity">
-          <NumberInput
-            value={formState.quantity}
-            onChange={quantity => setFormState({ ...formState, quantity })}
-          />
-        </Field>
-        <Field name="weight" label="Total Weight">
-          <NumberInput
-            value={formState.weight}
-            onChange={weight => setFormState({ ...formState, weight })}
-          />
-        </Field>
-        <Field name="price" label="Price/pig">
-          <NumberInput
-            value={formState.price}
-            onChange={price => setFormState({ ...formState, price })}
-          />
-        </Field>
-        <Field name="comments" label="Comments">
-          <MultilineTextInput
-            value={formState.comments}
-            maxLength={50}
-            onChange={comments => setFormState({ ...formState, comments })}
-          />
-        </Field>
-        <Button
-          type="submit"
-          css={{
-            marginTop: 44
-          }}
-          disabled={loading}
+      <Form context={formContext} onSubmit={onSubmit}>
+        <FormField
+          name="animal"
+          rules={{ required: "The animal field is required." }}
         >
-          Submit
-        </Button>
-      </form>
+          <FormFieldLabel>Animal</FormFieldLabel>
+          <FormFieldInput>
+            <StackedButtonInput orientation="vertical">
+              <StackedButton value={Animal.MARKET_PIGS}>
+                Market Pigs
+              </StackedButton>
+              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+            </StackedButtonInput>
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="job"
+          rules={{ required: "The job field is required." }}
+        >
+          <FormFieldLabel>Job</FormFieldLabel>
+          <FormFieldInput>
+            <PigJobSelector />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="quantity"
+          rules={{
+            required: "The quantity field is required."
+          }}
+        >
+          <FormFieldLabel>Quantity</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="weight"
+          rules={{
+            required: "The total weight field is required."
+          }}
+        >
+          <FormFieldLabel>Total Weight</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="price"
+          rules={{
+            required: "The price field is required."
+          }}
+        >
+          <FormFieldLabel>Price/pig</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField name="comments">
+          <FormFieldLabel>Comments</FormFieldLabel>
+          <FormFieldInput>
+            <MultilineTextInput maxLength={50} />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormSubmit />
+      </Form>
     </View>
   );
 };

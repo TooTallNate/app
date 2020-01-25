@@ -21,7 +21,7 @@ export const Output = tw.output`px-4 h-6 text-base block`;
 export const Title = tw.h1`p-4 font-bold text-xl`;
 
 export const Group = styled.div([
-  tw`p-0 m-0 mt-4`,
+  tw`p-0 m-0`,
   {
     "&:first-of-type": tw`mt-0`
   }

@@ -1,12 +1,12 @@
 import React from "react";
-import { useField } from "./Field";
+import { useField } from "./FormField";
 
-interface FieldLabelProps {
+interface FormFieldLabelProps {
   id?: string;
   className?: string;
 }
 
-const FieldLabel: React.FC<FieldLabelProps> = ({
+const FormFieldLabel: React.FC<FormFieldLabelProps> = ({
   className,
   children,
   ...props
@@ -28,4 +28,4 @@ const FieldLabel: React.FC<FieldLabelProps> = ({
   );
 };
 
-export default FieldLabel;
+export default FormFieldLabel;
