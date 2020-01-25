@@ -42,9 +42,7 @@ interface FormData {
 
 const ScorecardSliderInput: React.FC<
   React.ComponentProps<typeof SliderInput>
-> = props => (
-  <SliderInput {...props} min={0} max={10} step={0.5} labelStep={1} />
-);
+> = props => <SliderInput {...props} min={0} max={10} step={1} labelStep={1} />;
 
 const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   const formContext = useForm<FormData>({
