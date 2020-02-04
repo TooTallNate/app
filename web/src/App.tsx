@@ -9,7 +9,6 @@ import HomeView from "./views/HomeView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
-import useDefaults from "./contexts/defaults";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -20,8 +19,6 @@ const UnauthenticatedApp: React.FC = () => {
 };
 
 const AuthenticatedApp: React.FC = () => {
-  useDefaults(); // Load defaults into the cache.
-
   return (
     <div css={tw`max-w-3xl h-full mx-auto flex flex-col`}>
       <div className="min-h-0 flex-1">

@@ -1,0 +1,23 @@
+mutation PostPigMove($input: PigMoveInput!) {
+  postPigMove(input: $input)
+}
+
+mutation PostPigAdjustment($input: PigAdjustmentInput!) {
+  postPigAdjustment(input: $input)
+}
+
+mutation PostPigGradeOff($input: PigGradeOffInput!) {
+  postPigGradeOff(input: $input)
+}
+
+mutation PostPigWean($input: PigWeanInput!) {
+  postPigWean(input: $input)
+}
+
+mutation PostPigPurchase($input: PigPurchaseInput!) {
+  postPigPurchase(input: $input)
+}
+
+mutation PostPigMortality($input: PigMortalityInput!) {
+  postPigMortality(input: $input)
+}

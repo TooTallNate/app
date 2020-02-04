@@ -171,6 +171,114 @@ export type User = {
   name: Scalars["String"];
 };
 
+export type LoginMutationVariables = {
+  input: LoginInput;
+};
+
+export type LoginMutation = { __typename?: "Mutation" } & {
+  login: { __typename?: "User" } & Pick<User, "username" | "name">;
+};
+
+export type LogoutMutationVariables = {};
+
+export type LogoutMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "logout"
+>;
+
+export type PostPigMoveMutationVariables = {
+  input: PigMoveInput;
+};
+
+export type PostPigMoveMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigMove"
+>;
+
+export type PostPigAdjustmentMutationVariables = {
+  input: PigAdjustmentInput;
+};
+
+export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigAdjustment"
+>;
+
+export type PostPigGradeOffMutationVariables = {
+  input: PigGradeOffInput;
+};
+
+export type PostPigGradeOffMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigGradeOff"
+>;
+
+export type PostPigWeanMutationVariables = {
+  input: PigWeanInput;
+};
+
+export type PostPigWeanMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigWean"
+>;
+
+export type PostPigPurchaseMutationVariables = {
+  input: PigPurchaseInput;
+};
+
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigPurchase"
+>;
+
+export type PostPigMortalityMutationVariables = {
+  input: PigMortalityInput;
+};
+
+export type PostPigMortalityMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "postPigMortality"
+>;
+
+export type PostFarrowingBackendScorecardMutationVariables = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type PostFarrowingBackendScorecardMutation = {
+  __typename?: "Mutation";
+} & Pick<Mutation, "postFarrowingBackendScorecard">;
+
+export type PigActivityQueryVariables = {};
+
+export type PigActivityQuery = { __typename?: "Query" } & {
+  pigActivity: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & {
+      jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
+      defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    };
+};
+
+export type FarrowingBackendScorecardQueryVariables = {};
+
+export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
+  farrowingBackendScorecard: { __typename?: "FarrowingBackendScorecard" } & {
+    areas: Array<
+      { __typename?: "Job" } & Pick<
+        Job,
+        "number" | "description" | "personResponsible"
+      >
+    >;
+  };
+};
+
+export type UserQueryVariables = {};
+
+export type UserQuery = { __typename?: "Query" } & {
+  user: Maybe<{ __typename?: "User" } & Pick<User, "username" | "name">>;
+};
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 

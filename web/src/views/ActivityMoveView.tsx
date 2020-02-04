@@ -3,13 +3,9 @@ import { jsx } from "@emotion/core";
 import { useEffect } from "react";
 import { Title, View, Group } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
-import PigJobSelector from "../components/PigJobSelector";
-import { getDocumentNumber } from "../utils";
-import { useAuth } from "../contexts/auth";
-import { usePostItemMutation, Job } from "../graphql";
-import useDefaults from "../contexts/defaults";
+import { usePostPigMoveMutation, usePigActivityQuery } from "../graphql";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
@@ -22,12 +18,13 @@ import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
+import TypeaheadInput from "../components/ui/TypeaheadInput";
 
 interface FormData {
   fromAnimal: Animal;
   toAnimal: Animal;
-  fromJob: Job;
-  toJob: Job;
+  fromJob: string;
+  toJob: string;
   quantity: number;
   weight: number;
   price: number;
@@ -36,80 +33,28 @@ interface FormData {
 
 const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
   const formContext = useForm<FormData>();
-  const { user } = useAuth();
-  const [
-    {
-      defaults: { price: defaultPrice, pigJob: defaultJob },
-      loading: loadingDefaults
-    },
-    setDefaults
-  ] = useDefaults();
-  const [postItem] = usePostItemMutation();
+  const { data, loading } = usePigActivityQuery();
+  const [post] = usePostPigMoveMutation();
   const { setMessage } = useFlash();
   const { getValues, setValue } = formContext;
 
   // Set job with default only if not already set.
   useEffect(() => {
-    if (!getValues().fromJob && defaultJob) {
-      setValue("job", defaultJob);
+    if (!getValues().fromJob && data && data.pigActivity.defaultJob) {
+      setValue("fromJob", data.pigActivity.defaultJob.number);
     }
-  }, [defaultJob, getValues, setValue]);
+  }, [data, getValues, setValue]);
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (!getValues().price && defaultPrice) {
-      setValue("price", defaultPrice);
+    if (!getValues().price && data && data.pigActivity.defaultPrice) {
+      setValue("price", data.pigActivity.defaultPrice);
     }
-  }, [defaultPrice, getValues, setValue]);
+  }, [data, getValues, setValue]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
-      if (!user) {
-        return;
-      }
-      await postItem({
-        variables: {
-          input: {
-            template: ItemTemplate.Move,
-            batch: ItemBatch.Move,
-            entryType: EntryType.Negative,
-            item: data.fromAnimal,
-            job: data.fromJob.number,
-            quantity: data.quantity,
-            weight: data.weight,
-            document: getDocumentNumber("MOVE", user.username),
-            amount: data.price,
-            description: data.comments,
-            date: new Date(),
-            location: data.fromJob.site,
-            costCenterCode: data.fromJob.dimensions.costCenter,
-            entityType: data.fromJob.dimensions.entity
-          }
-        }
-      });
-      await postItem({
-        variables: {
-          input: {
-            template: ItemTemplate.Move,
-            batch: ItemBatch.Move,
-            entryType: EntryType.Positive,
-            item: data.toAnimal,
-            job: data.toJob.number,
-            quantity: data.quantity,
-            weight: data.weight,
-            document: getDocumentNumber("MOVE", user.username),
-            amount: data.price,
-            description: data.comments,
-            date: new Date(),
-            location: data.toJob.site,
-            costCenterCode: data.toJob.dimensions.costCenter,
-            entityType: data.toJob.dimensions.entity
-          }
-        }
-      });
-      if (data.fromJob !== defaultJob || data.price !== defaultPrice) {
-        await setDefaults({ pigJob: data.fromJob, price: data.price });
-      }
+      await post({ variables: { input: data } });
       setMessage({
         message: "Entry recorded successfully.",
         level: "success",
@@ -124,7 +69,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return loadingDefaults ? (
+  return loading || !data ? (
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
@@ -174,7 +119,12 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           >
             <FormFieldLabel>From Job</FormFieldLabel>
             <FormFieldInput>
-              <PigJobSelector />
+              <TypeaheadInput
+                items={data.pigActivity.jobs.map(job => ({
+                  value: job.number,
+                  title: `${job.number} ${job.description}`
+                }))}
+              />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
@@ -185,7 +135,12 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           >
             <FormFieldLabel>To Job</FormFieldLabel>
             <FormFieldInput>
-              <PigJobSelector />
+              <TypeaheadInput
+                items={data.pigActivity.jobs.map(job => ({
+                  value: job.number,
+                  title: `${job.number} ${job.description}`
+                }))}
+              />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>

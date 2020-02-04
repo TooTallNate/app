@@ -1,6 +1,6 @@
 overwrite: true
 schema: "api/schema.gql"
-# documents: "web/**/*.gql"
+documents: "web/**/*.gql"
 hooks:
   afterAllFileWrite:
     - eslint --fix
@@ -18,15 +18,13 @@ generates:
         Job: "../nav#NavJob"
         PigActivity: "./mappers#PigActivityMapper"
         FarrowingBackendScorecard: "./mappers#FarrowingBackendScorecardMapper"
-  # web/src/graphql/index.tsx:
-  #   plugins:
-  #     - "typescript"
-  #     - "typescript-operations"
-  #     - "typescript-react-apollo"
-  #   config:
-  #     withHOC: false
-  #     withHooks: true
-  #     withComponent: false
-  #     scalars:
-  #       Date: Date
+  web/src/graphql/index.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
 

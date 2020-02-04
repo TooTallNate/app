@@ -1,7 +1,0 @@
-mutation UpdateDefaults($input: DefaultsInput!) {
-  updateDefaults(input: $input) {
-    pigJob
-    scorecardJob
-    price
-  }
-}

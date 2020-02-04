@@ -1,0 +1,9 @@
+query FarrowingBackendScorecard {
+  farrowingBackendScorecard {
+    areas {
+      number
+      description
+      personResponsible
+    }
+  }
+}

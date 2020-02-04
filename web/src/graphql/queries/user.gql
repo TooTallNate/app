@@ -1,6 +1,5 @@
 query User {
   user {
-    id
     username
     name
   }

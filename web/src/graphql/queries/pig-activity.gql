@@ -1,0 +1,12 @@
+query PigActivity {
+  pigActivity {
+    jobs {
+      number
+      description
+    }
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
+}
