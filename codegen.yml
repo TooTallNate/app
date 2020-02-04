@@ -1,6 +1,6 @@
 overwrite: true
 schema: "api/schema.gql"
-documents: "web/**/*.gql"
+# documents: "web/**/*.gql"
 hooks:
   afterAllFileWrite:
     - eslint --fix
@@ -14,19 +14,19 @@ generates:
       useIndexSignature: true
       contextType: "../context#GraphqlContext"
       mappers:
-        User: ../nav/types#NavUser
-        Job: ../nav/types#NavJob
-        JobDimensions: ../nav/types#NavDimensions
-        Defaults: ../models/user-settings#UserSettingsDocument
-  web/src/graphql/index.tsx:
-    plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
-    config:
-      withHOC: false
-      withHooks: true
-      withComponent: false
-      scalars:
-        Date: Date
+        User: "../nav#NavUser"
+        Job: "../nav#NavJob"
+        PigActivity: "./mappers#PigActivityMapper"
+        FarrowingBackendScorecard: "./mappers#FarrowingBackendScorecardMapper"
+  # web/src/graphql/index.tsx:
+  #   plugins:
+  #     - "typescript"
+  #     - "typescript-operations"
+  #     - "typescript-react-apollo"
+  #   config:
+  #     withHOC: false
+  #     withHooks: true
+  #     withComponent: false
+  #     scalars:
+  #       Date: Date
 

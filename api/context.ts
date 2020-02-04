@@ -1,11 +1,10 @@
-import createNavClient, { NavClient } from "./nav";
+import { ODataClient } from "./nav";
 
 export interface SessionUser {
-  name: string;
-  license: string;
   username: string;
-  ntPassword: number[];
-  lmPassword: number[];
+  password: string;
+  name: string;
+  securityId: string;
 }
 
 export type Session = Express.Session & { user?: SessionUser };
@@ -13,7 +12,7 @@ export type Session = Express.Session & { user?: SessionUser };
 export interface GraphqlContext {
   session: Session;
   user: SessionUser;
-  navClient: NavClient;
+  navClient: ODataClient;
 }
 
 export interface CreateContextOptions {
@@ -25,15 +24,16 @@ export interface CreateContextOptions {
 export function createContext({
   request
 }: CreateContextOptions): GraphqlContext {
+  const navClient = new ODataClient({
+    serviceRoot: process.env.NAV_BASE_URL
+  });
+  if (request.session.user) {
+    const { username, password } = request.session.user;
+    navClient.auth(username, password);
+  }
   return {
     session: request.session,
     user: request.session.user as SessionUser,
-    navClient: request.session.user
-      ? createNavClient({
-          ...request.session.user,
-          ntPassword: Buffer.from(request.session.user.ntPassword),
-          lmPassword: Buffer.from(request.session.user.lmPassword)
-        })
-      : null
+    navClient
   };
 }

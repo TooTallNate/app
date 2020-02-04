@@ -1,23 +1,29 @@
-import { User, UserQuery, UserMutation } from "./user";
-import { Job, JobDimensions, JobQuery } from "./job";
-import { ItemJournalMutation } from "./item-journal";
-import { JobJournalMutation } from "./job-journal";
-import { Defaults, DefaultsQuery, DefaultsMutation } from "./defaults";
+import { User, UserMutations, UserQueries } from "./user";
+import { Job } from "./jobs";
+import {
+  PigActivityMutations,
+  PigActivity,
+  PigActivityQueries
+} from "./pig-activity";
+import {
+  FarrowingBackendScorecard,
+  ScorecardQueries,
+  ScorecardMutations
+} from "./scorecard";
 
 export default {
   Query: {
-    ...UserQuery,
-    ...JobQuery,
-    ...DefaultsQuery
+    ...UserQueries,
+    ...PigActivityQueries,
+    ...ScorecardQueries
   },
   Mutation: {
-    ...UserMutation,
-    ...ItemJournalMutation,
-    ...DefaultsMutation,
-    ...JobJournalMutation
+    ...UserMutations,
+    ...PigActivityMutations,
+    ...ScorecardMutations
   },
   User,
   Job,
-  JobDimensions,
-  Defaults
+  PigActivity,
+  FarrowingBackendScorecard
 };
