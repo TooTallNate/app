@@ -5,7 +5,7 @@ export function initMongoose() {
     useNewUrlParser: true,
     useFindAndModify: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: process.env.NODE_ENV !== "production"
   });
   mongoose.connection.on("connected", () => {
     console.log("Mongoose connected");

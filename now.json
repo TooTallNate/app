@@ -2,9 +2,10 @@
   "name": "farm-activity-entry",
   "version": 2,
   "env": {
-    "NAV_BASE_URL": "@nav-base-url",
+    "NAV_BASE_URL": "https://nav.moglerfarms.com:7148/PHC_Test/ODataV4",
     "MONGO_URI": "@farm-activity-mongo-uri",
-    "SESSION_SECRET": "@farm-activity-session-secret"
+    "SESSION_SECRET": "@farm-activity-session-secret",
+    "NAV_COMPANY": "TEST_PHC"
   },
   "builds": [
     { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "web/dist" } },
