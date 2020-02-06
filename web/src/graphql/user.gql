@@ -1,0 +1,20 @@
+fragment UserParts on User {
+  username
+  name
+}
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    ...UserParts
+  }
+}
+
+query User {
+  user {
+    ...UserParts
+  }
+}
+
+mutation Logout {
+  logout
+}

@@ -7,3 +7,7 @@ query FarrowingBackendScorecard {
     }
   }
 }
+
+mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
+  postFarrowingBackendScorecard(input: $input)
+}

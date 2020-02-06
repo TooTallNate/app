@@ -171,30 +171,25 @@ export type User = {
   name: Scalars["String"];
 };
 
-export type LoginMutationVariables = {
-  input: LoginInput;
+export type PigActivityDefaultsFragment = { __typename?: "PigActivity" } & Pick<
+  PigActivity,
+  "defaultPrice"
+> & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+
+export type PigActivityQueryVariables = {};
+
+export type PigActivityQuery = { __typename?: "Query" } & {
+  pigActivity: { __typename?: "PigActivity" } & {
+    jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
+  } & PigActivityDefaultsFragment;
 };
-
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "User" } & Pick<User, "username" | "name">;
-};
-
-export type LogoutMutationVariables = {};
-
-export type LogoutMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "logout"
->;
 
 export type PostPigMoveMutationVariables = {
   input: PigMoveInput;
 };
 
 export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+  postPigMove: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
 };
 
 export type PostPigAdjustmentMutationVariables = {
@@ -202,10 +197,9 @@ export type PostPigAdjustmentMutationVariables = {
 };
 
 export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
-  postPigAdjustment: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+  postPigAdjustment: {
+    __typename?: "PigActivity";
+  } & PigActivityDefaultsFragment;
 };
 
 export type PostPigGradeOffMutationVariables = {
@@ -213,10 +207,7 @@ export type PostPigGradeOffMutationVariables = {
 };
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
-  postPigGradeOff: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+  postPigGradeOff: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
 };
 
 export type PostPigWeanMutationVariables = {
@@ -224,10 +215,7 @@ export type PostPigWeanMutationVariables = {
 };
 
 export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+  postPigWean: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
 };
 
 export type PostPigPurchaseMutationVariables = {
@@ -235,10 +223,7 @@ export type PostPigPurchaseMutationVariables = {
 };
 
 export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+  postPigPurchase: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
 };
 
 export type PostPigMortalityMutationVariables = {
@@ -246,30 +231,9 @@ export type PostPigMortalityMutationVariables = {
 };
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
-  postPigMortality: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
-};
-
-export type PostFarrowingBackendScorecardMutationVariables = {
-  input: FarrowingBackendScorecardInput;
-};
-
-export type PostFarrowingBackendScorecardMutation = {
-  __typename?: "Mutation";
-} & Pick<Mutation, "postFarrowingBackendScorecard">;
-
-export type PigActivityQueryVariables = {};
-
-export type PigActivityQuery = { __typename?: "Query" } & {
-  pigActivity: { __typename?: "PigActivity" } & Pick<
-    PigActivity,
-    "defaultPrice"
-  > & {
-      jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
-      defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
-    };
+  postPigMortality: {
+    __typename?: "PigActivity";
+  } & PigActivityDefaultsFragment;
 };
 
 export type FarrowingBackendScorecardQueryVariables = {};
@@ -285,11 +249,39 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
   };
 };
 
+export type PostFarrowingBackendScorecardMutationVariables = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type PostFarrowingBackendScorecardMutation = {
+  __typename?: "Mutation";
+} & Pick<Mutation, "postFarrowingBackendScorecard">;
+
+export type UserPartsFragment = { __typename?: "User" } & Pick<
+  User,
+  "username" | "name"
+>;
+
+export type LoginMutationVariables = {
+  input: LoginInput;
+};
+
+export type LoginMutation = { __typename?: "Mutation" } & {
+  login: { __typename?: "User" } & UserPartsFragment;
+};
+
 export type UserQueryVariables = {};
 
 export type UserQuery = { __typename?: "Query" } & {
-  user: Maybe<{ __typename?: "User" } & Pick<User, "username" | "name">>;
+  user: Maybe<{ __typename?: "User" } & UserPartsFragment>;
 };
+
+export type LogoutMutationVariables = {};
+
+export type LogoutMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "logout"
+>;
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;

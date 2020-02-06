@@ -1,53 +1,51 @@
+fragment PigActivityDefaults on PigActivity {
+  defaultJob {
+    number
+  }
+  defaultPrice
+}
+
+query PigActivity {
+  pigActivity {
+    ...PigActivityDefaults
+    jobs {
+      number
+      description
+    }
+  }
+}
 mutation PostPigMove($input: PigMoveInput!) {
   postPigMove(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
 
 mutation PostPigAdjustment($input: PigAdjustmentInput!) {
   postPigAdjustment(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
 
 mutation PostPigGradeOff($input: PigGradeOffInput!) {
   postPigGradeOff(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
 
 mutation PostPigWean($input: PigWeanInput!) {
   postPigWean(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
 
 mutation PostPigPurchase($input: PigPurchaseInput!) {
   postPigPurchase(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
 
 mutation PostPigMortality($input: PigMortalityInput!) {
   postPigMortality(input: $input) {
-    defaultJob {
-      number
-    }
-    defaultPrice
+    ...PigActivityDefaults
   }
 }
