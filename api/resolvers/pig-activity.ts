@@ -114,7 +114,15 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.pigJob = input.job;
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   },
   async postPigGradeOff(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
@@ -139,7 +147,15 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.pigJob = input.job;
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   },
   async postPigMortality(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MORT", user.name);
@@ -183,7 +199,15 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.pigJob = input.job;
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   },
   async postPigMove(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
@@ -225,7 +249,14 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   },
   async postPigPurchase(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
@@ -250,7 +281,14 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   },
   async postPigWean(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
@@ -276,6 +314,13 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    return true;
+
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    settings.price = input.price;
+    await settings.save();
+
+    return { userSettings: settings };
   }
 };

@@ -47,12 +47,12 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
-  postPigAdjustment: Scalars["Boolean"];
-  postPigGradeOff: Scalars["Boolean"];
-  postPigMortality: Scalars["Boolean"];
-  postPigMove: Scalars["Boolean"];
-  postPigPurchase: Scalars["Boolean"];
-  postPigWean: Scalars["Boolean"];
+  postPigAdjustment: PigActivity;
+  postPigGradeOff: PigActivity;
+  postPigMortality: PigActivity;
+  postPigMove: PigActivity;
+  postPigPurchase: PigActivity;
+  postPigWean: PigActivity;
   postFarrowingBackendScorecard: Scalars["Boolean"];
 };
 
@@ -190,55 +190,67 @@ export type PostPigMoveMutationVariables = {
   input: PigMoveInput;
 };
 
-export type PostPigMoveMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigMove"
->;
+export type PostPigMoveMutation = { __typename?: "Mutation" } & {
+  postPigMove: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigAdjustmentMutationVariables = {
   input: PigAdjustmentInput;
 };
 
-export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigAdjustment"
->;
+export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
+  postPigAdjustment: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigGradeOffMutationVariables = {
   input: PigGradeOffInput;
 };
 
-export type PostPigGradeOffMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigGradeOff"
->;
+export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
+  postPigGradeOff: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigWeanMutationVariables = {
   input: PigWeanInput;
 };
 
-export type PostPigWeanMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigWean"
->;
+export type PostPigWeanMutation = { __typename?: "Mutation" } & {
+  postPigWean: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigPurchaseMutationVariables = {
   input: PigPurchaseInput;
 };
 
-export type PostPigPurchaseMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigPurchase"
->;
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
+  postPigPurchase: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigMortalityMutationVariables = {
   input: PigMortalityInput;
 };
 
-export type PostPigMortalityMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigMortality"
->;
+export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
+  postPigMortality: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostFarrowingBackendScorecardMutationVariables = {
   input: FarrowingBackendScorecardInput;
@@ -463,37 +475,37 @@ export type MutationResolvers<
   >;
   logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   postPigAdjustment?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigAdjustmentArgs, "input">
   >;
   postPigGradeOff?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigGradeOffArgs, "input">
   >;
   postPigMortality?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMortalityArgs, "input">
   >;
   postPigMove?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMoveArgs, "input">
   >;
   postPigPurchase?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigPurchaseArgs, "input">
   >;
   postPigWean?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigWeanArgs, "input">

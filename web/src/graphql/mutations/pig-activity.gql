@@ -1,23 +1,53 @@
 mutation PostPigMove($input: PigMoveInput!) {
-  postPigMove(input: $input)
+  postPigMove(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }
 
 mutation PostPigAdjustment($input: PigAdjustmentInput!) {
-  postPigAdjustment(input: $input)
+  postPigAdjustment(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }
 
 mutation PostPigGradeOff($input: PigGradeOffInput!) {
-  postPigGradeOff(input: $input)
+  postPigGradeOff(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }
 
 mutation PostPigWean($input: PigWeanInput!) {
-  postPigWean(input: $input)
+  postPigWean(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }
 
 mutation PostPigPurchase($input: PigPurchaseInput!) {
-  postPigPurchase(input: $input)
+  postPigPurchase(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }
 
 mutation PostPigMortality($input: PigMortalityInput!) {
-  postPigMortality(input: $input)
+  postPigMortality(input: $input) {
+    defaultJob {
+      number
+    }
+    defaultPrice
+  }
 }

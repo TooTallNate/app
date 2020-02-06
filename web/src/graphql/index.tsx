@@ -42,12 +42,12 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
-  postPigAdjustment: Scalars["Boolean"];
-  postPigGradeOff: Scalars["Boolean"];
-  postPigMortality: Scalars["Boolean"];
-  postPigMove: Scalars["Boolean"];
-  postPigPurchase: Scalars["Boolean"];
-  postPigWean: Scalars["Boolean"];
+  postPigAdjustment: PigActivity;
+  postPigGradeOff: PigActivity;
+  postPigMortality: PigActivity;
+  postPigMove: PigActivity;
+  postPigPurchase: PigActivity;
+  postPigWean: PigActivity;
   postFarrowingBackendScorecard: Scalars["Boolean"];
 };
 
@@ -185,55 +185,67 @@ export type PostPigMoveMutationVariables = {
   input: PigMoveInput;
 };
 
-export type PostPigMoveMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigMove"
->;
+export type PostPigMoveMutation = { __typename?: "Mutation" } & {
+  postPigMove: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigAdjustmentMutationVariables = {
   input: PigAdjustmentInput;
 };
 
-export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigAdjustment"
->;
+export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
+  postPigAdjustment: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigGradeOffMutationVariables = {
   input: PigGradeOffInput;
 };
 
-export type PostPigGradeOffMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigGradeOff"
->;
+export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
+  postPigGradeOff: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigWeanMutationVariables = {
   input: PigWeanInput;
 };
 
-export type PostPigWeanMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigWean"
->;
+export type PostPigWeanMutation = { __typename?: "Mutation" } & {
+  postPigWean: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigPurchaseMutationVariables = {
   input: PigPurchaseInput;
 };
 
-export type PostPigPurchaseMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigPurchase"
->;
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
+  postPigPurchase: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostPigMortalityMutationVariables = {
   input: PigMortalityInput;
 };
 
-export type PostPigMortalityMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postPigMortality"
->;
+export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
+  postPigMortality: { __typename?: "PigActivity" } & Pick<
+    PigActivity,
+    "defaultPrice"
+  > & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+};
 
 export type PostFarrowingBackendScorecardMutationVariables = {
   input: FarrowingBackendScorecardInput;
@@ -370,7 +382,12 @@ export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >;
 export const PostPigMoveDocument = gql`
   mutation PostPigMove($input: PigMoveInput!) {
-    postPigMove(input: $input)
+    postPigMove(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
@@ -418,7 +435,12 @@ export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >;
 export const PostPigAdjustmentDocument = gql`
   mutation PostPigAdjustment($input: PigAdjustmentInput!) {
-    postPigAdjustment(input: $input)
+    postPigAdjustment(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
@@ -466,7 +488,12 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PostPigGradeOffDocument = gql`
   mutation PostPigGradeOff($input: PigGradeOffInput!) {
-    postPigGradeOff(input: $input)
+    postPigGradeOff(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
@@ -514,7 +541,12 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PostPigWeanDocument = gql`
   mutation PostPigWean($input: PigWeanInput!) {
-    postPigWean(input: $input)
+    postPigWean(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
@@ -562,7 +594,12 @@ export type PostPigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >;
 export const PostPigPurchaseDocument = gql`
   mutation PostPigPurchase($input: PigPurchaseInput!) {
-    postPigPurchase(input: $input)
+    postPigPurchase(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
@@ -610,7 +647,12 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PostPigMortalityDocument = gql`
   mutation PostPigMortality($input: PigMortalityInput!) {
-    postPigMortality(input: $input)
+    postPigMortality(input: $input) {
+      defaultJob {
+        number
+      }
+      defaultPrice
+    }
   }
 `;
 export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<

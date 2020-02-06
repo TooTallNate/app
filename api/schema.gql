@@ -106,11 +106,11 @@ type Query {
 type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
-  postPigAdjustment(input: PigAdjustmentInput!): Boolean!
-  postPigGradeOff(input: PigGradeOffInput!): Boolean!
-  postPigMortality(input: PigMortalityInput!): Boolean!
-  postPigMove(input: PigMoveInput!): Boolean!
-  postPigPurchase(input: PigPurchaseInput!): Boolean!
-  postPigWean(input: PigWeanInput!): Boolean!
+  postPigAdjustment(input: PigAdjustmentInput!): PigActivity!
+  postPigGradeOff(input: PigGradeOffInput!): PigActivity!
+  postPigMortality(input: PigMortalityInput!): PigActivity!
+  postPigMove(input: PigMoveInput!): PigActivity!
+  postPigPurchase(input: PigPurchaseInput!): PigActivity!
+  postPigWean(input: PigWeanInput!): PigActivity!
   postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): Boolean!
 }
