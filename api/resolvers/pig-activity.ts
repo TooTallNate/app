@@ -254,6 +254,7 @@ export const PigActivityMutations: MutationResolvers = {
       username: user.username
     });
     settings.price = input.price;
+    settings.pigJob = input.fromJob;
     await settings.save();
 
     return { userSettings: settings };
