@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import createServer from "../server";
 import { Server as HttpServer } from "http";
 import { Server as HttpsServer } from "https";
-import { mock as navMock } from "../nav";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env.test") });
 
@@ -16,9 +15,6 @@ declare global {
     }
   }
 }
-
-jest.setTimeout(10000);
-jest.mock("../nav");
 
 process.env.MONGO_URI = `${global.__MONGO_URI__}${process.env.JEST_WORKER_ID}`;
 
@@ -41,7 +37,6 @@ beforeAll(async () => {
 // Reset the mongo database before each test.
 beforeEach(async () => {
   await mongoose.connection.db.dropDatabase();
-  navMock.mockReset();
 });
 
 // Disconnect from mongo and stop the server

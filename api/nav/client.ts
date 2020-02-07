@@ -157,6 +157,7 @@ export class ODataGetQuery<T extends {}> extends ODataQuery<T> {
     this._client.request.get(url, (error, response, body) => {
       if (error) {
         console.log(`ODATA GET ${url} ERROR`);
+        console.log(error);
         cb && cb(error, response, body);
       } else {
         console.log(`ODATA GET ${url} ${response.statusCode}`);
