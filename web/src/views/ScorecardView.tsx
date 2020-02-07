@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Title } from "../components/styled";
+import { View, Title, Output } from "../components/styled";
 import SliderInput from "../components/ui/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
@@ -56,22 +56,28 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   const { setMessage } = useFlash();
   const { watch } = formContext;
 
-  const scores = watch([
+  const { crate, feed, generalRoom, pigletCare, sowCare, water, area } = watch([
     "sowCare",
     "pigletCare",
     "feed",
     "water",
     "crate",
-    "generalRoom"
+    "generalRoom",
+    "area"
   ]);
+
   const totalScore =
-    (scores.crate || 0) +
-    (scores.feed || 0) +
-    (scores.generalRoom || 0) +
-    (scores.pigletCare || 0) +
-    (scores.sowCare || 0) +
-    (scores.water || 0);
+    (crate || 0) +
+    (feed || 0) +
+    (generalRoom || 0) +
+    (pigletCare || 0) +
+    (sowCare || 0) +
+    (water || 0);
   const scorePercent = ((100 * totalScore) / 60).toFixed(1);
+
+  const selectedArea =
+    data &&
+    data.farrowingBackendScorecard.areas.find(({ number }) => number === area);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -150,6 +156,15 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
+        {selectedArea && (
+          <FormField name="operator">
+            <FormFieldLabel>Operator</FormFieldLabel>
+            <FormFieldInput>
+              <Output>{selectedArea.personResponsible}</Output>
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+        )}
         <FormField
           name="sowCare"
           rules={{ required: "The sow care field is required." }}
