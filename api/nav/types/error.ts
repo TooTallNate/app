@@ -1,4 +1,5 @@
 export enum NavErrorCode {
   InvalidCredentials = "Authentication_InvalidCredentials",
-  NoAvailableLicense = "Authentication_NoLicense"
+  NoAvailableLicense = "Authentication_NoLicense",
+  Unknown = "Unknown"
 }

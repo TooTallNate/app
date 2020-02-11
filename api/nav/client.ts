@@ -11,6 +11,7 @@ import {
   FilterFunction,
   FilterExpression
 } from "./filter";
+import { NavErrorCode } from "./types";
 
 interface ODataRequestAPI
   extends RequestAPI<Request, CoreOptions, RequiredUriUrl> {}
@@ -61,12 +62,18 @@ class ODataQuery<T extends {}> implements Promise<T> {
   protected _reject: (reason?: any) => any;
   protected _client: ODataClient;
   protected _resources: ODataResourceEntry[];
+  protected _method: string;
 
-  constructor(client: ODataClient, resources: ODataResourceEntry[]) {
+  constructor(
+    client: ODataClient,
+    method: string,
+    resources: ODataResourceEntry[]
+  ) {
     this._promise = new Promise<T>((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
+    this._method = method;
     this._resources = resources;
     this._client = client;
   }
@@ -93,6 +100,42 @@ class ODataQuery<T extends {}> implements Promise<T> {
         }
       })
       .join("");
+  }
+
+  protected _handleResponse(
+    cb: (error: any, response: Response, body: any) => void
+  ) {
+    return (error: any, response: Response, body: any) => {
+      if (error) {
+        console.log(`ODATA ${this._method} ${this._resourcePath} ERROR`);
+        cb && cb(error, response, body);
+      } else {
+        console.log(
+          `ODATA ${this._method} ${this._resourcePath} ${response.statusCode}`
+        );
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          cb &&
+            cb(error, response, Array.isArray(body.value) ? body.value : body);
+        } else if (response.statusCode >= 400) {
+          if (body) {
+            console.log(body && body.error);
+            cb &&
+              cb(
+                new ODataError(body.error.code, body.error.message),
+                response,
+                body
+              );
+          } else {
+            cb &&
+              cb(
+                new ODataError(NavErrorCode.Unknown, "Unknown error"),
+                response,
+                body
+              );
+          }
+        }
+      }
+    };
   }
 
   end(cb?: (error: any, response: Response, body: any) => void) {}
@@ -126,7 +169,7 @@ export class ODataGetQuery<T extends {}> extends ODataQuery<T> {
   private _filter?: FilterExpression;
 
   constructor(client: ODataClient, resources: ODataResourceEntry[]) {
-    super(client, resources);
+    super(client, "GET", resources);
     this._select = [];
   }
 
@@ -154,30 +197,7 @@ export class ODataGetQuery<T extends {}> extends ODataQuery<T> {
       .filter(Boolean)
       .join("&");
     const url = `${this._resourcePath}${query ? `?${query}` : ""}`;
-    this._client.request.get(url, (error, response, body) => {
-      if (error) {
-        console.log(`ODATA GET ${url} ERROR`);
-        console.log(error);
-        cb && cb(error, response, body);
-      } else {
-        console.log(`ODATA GET ${url} ${response.statusCode}`);
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-          cb &&
-            cb(error, response, Array.isArray(body.value) ? body.value : body);
-        } else if (response.statusCode >= 400) {
-          if (body && body.error) {
-            cb &&
-              cb(
-                new ODataError(body.error.code, body.error.message),
-                response,
-                body
-              );
-          } else {
-            cb && cb(new Error("Unknown error"), response, body);
-          }
-        }
-      }
-    });
+    this._client.request.get(url, this._handleResponse(cb));
   }
 }
 
@@ -189,7 +209,7 @@ export class ODataPostQuery<T extends {}> extends ODataQuery<T> {
     resources: ODataResourceEntry[],
     doc: Partial<T>
   ) {
-    super(client, resources);
+    super(client, "POST", resources);
     this._body = doc;
   }
 
@@ -197,36 +217,7 @@ export class ODataPostQuery<T extends {}> extends ODataQuery<T> {
     this._client.request.post(
       this._resourcePath,
       { body: this._body },
-      (error, response, body) => {
-        if (error) {
-          console.log(`ODATA POST ${this._resourcePath} ERROR`);
-          cb && cb(error, response, body);
-        } else {
-          console.log(
-            `ODATA POST ${this._resourcePath} ${response.statusCode}`
-          );
-          if (response.statusCode >= 200 && response.statusCode < 300) {
-            cb &&
-              cb(
-                error,
-                response,
-                Array.isArray(body.value) ? body.value : body
-              );
-          } else if (response.statusCode >= 400) {
-            if (body) {
-              console.log(body && body.error);
-              cb &&
-                cb(
-                  new ODataError(body.error.code, body.error.message),
-                  response,
-                  body
-                );
-            } else {
-              cb && cb(new Error("Unknown error"), response, body);
-            }
-          }
-        }
-      }
+      this._handleResponse(cb)
     );
   }
 }
