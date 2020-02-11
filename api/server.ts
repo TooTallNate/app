@@ -6,6 +6,7 @@ import { GraphQLServer } from "graphql-yoga";
 import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
 import { IMiddlewareFunction } from "graphql-middleware";
+import { ErrorCode } from "./resolvers/utils";
 
 export default () => {
   initMongoose();
@@ -22,7 +23,7 @@ export default () => {
     info
   ) => {
     if (!["login", "user"].includes(info.fieldName) && !context.user) {
-      throw new Error("Unauthorized");
+      throw new Error(ErrorCode.Unauthorized);
     } else {
       return resolve(root, args, context, info);
     }

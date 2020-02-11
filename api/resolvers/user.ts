@@ -1,10 +1,11 @@
 import { UserResolvers, MutationResolvers, QueryResolvers } from "./types";
-import { NavUser, Guid } from "../nav";
+import { NavUser, Guid, NavErrorCode } from "../nav";
+import { ErrorCode } from "./utils";
 
 export const UserQueries: QueryResolvers = {
-  user(_, __, { user, navClient }) {
+  async user(_, __, { user, navClient }) {
     if (user) {
-      return navClient
+      return await navClient
         .resource("User", new Guid(user.securityId))
         .get<NavUser>();
     } else {
@@ -16,10 +17,21 @@ export const UserQueries: QueryResolvers = {
 export const UserMutations: MutationResolvers = {
   async login(_, { input: { username, password } }, { session, navClient }) {
     navClient.auth(username, password);
-    const users = await navClient
-      .resource("User")
-      .get<NavUser[]>()
-      .filter(f => f.equals("User_Name", username));
+    try {
+      var users = await navClient
+        .resource("User")
+        .get<NavUser[]>()
+        .filter(f => f.equals("User_Name", username));
+    } catch (error) {
+      switch (error.code) {
+        case NavErrorCode.InvalidCredentials:
+          throw new Error(ErrorCode.InvalidCredentials);
+        case NavErrorCode.NoAvailableLicense:
+          throw new Error(ErrorCode.NoAvailableLicense);
+        default:
+          throw error;
+      }
+    }
     session.user = {
       username,
       password,

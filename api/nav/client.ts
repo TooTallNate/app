@@ -42,7 +42,7 @@ export class Guid {
   }
 }
 
-class ODataError extends Error {
+export class ODataError extends Error {
   private _code: string;
 
   constructor(code: string, message: string) {
@@ -165,8 +165,13 @@ export class ODataGetQuery<T extends {}> extends ODataQuery<T> {
           cb &&
             cb(error, response, Array.isArray(body.value) ? body.value : body);
         } else if (response.statusCode >= 400) {
-          if (body) {
-            cb && cb(new ODataError(body.code, body.message), response, body);
+          if (body && body.error) {
+            cb &&
+              cb(
+                new ODataError(body.error.code, body.error.message),
+                response,
+                body
+              );
           } else {
             cb && cb(new Error("Unknown error"), response, body);
           }

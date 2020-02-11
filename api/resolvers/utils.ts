@@ -9,3 +9,10 @@ export function getDocumentNumber(form: string, username: string) {
 export function navDate(date: Date) {
   return format(date, "YYY-MM-dd");
 }
+
+export enum ErrorCode {
+  Unauthorized = "UNAUTHORIZED",
+  InvalidCredentials = "INVALID_CREDENTIALS",
+  NoAvailableLicense = "NO_AVAILABLE_LICENSE",
+  Unknown = "UNKNOWN_ERROR"
+}
