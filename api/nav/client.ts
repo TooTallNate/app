@@ -103,11 +103,12 @@ class ODataQuery<T extends {}> implements Promise<T> {
   }
 
   protected _handleResponse(
+    url: string,
     cb: (error: any, response: Response, body: any) => void
   ) {
     return (error: any, response: Response, body: any) => {
       if (error) {
-        console.log(`ODATA ${this._method} ${this._resourcePath} ERROR`);
+        console.log(`ODATA ${this._method} ${url} ERROR`);
         cb && cb(error, response, body);
       } else {
         console.log(
@@ -197,7 +198,7 @@ export class ODataGetQuery<T extends {}> extends ODataQuery<T> {
       .filter(Boolean)
       .join("&");
     const url = `${this._resourcePath}${query ? `?${query}` : ""}`;
-    this._client.request.get(url, this._handleResponse(cb));
+    this._client.request.get(url, this._handleResponse(url, cb));
   }
 }
 
@@ -214,10 +215,11 @@ export class ODataPostQuery<T extends {}> extends ODataQuery<T> {
   }
 
   end(cb?: (error: any, response: Response, body: any) => void) {
+    const url = this._resourcePath;
     this._client.request.post(
-      this._resourcePath,
+      url,
       { body: this._body },
-      this._handleResponse(cb)
+      this._handleResponse(url, cb)
     );
   }
 }
