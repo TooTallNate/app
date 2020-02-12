@@ -1,3 +1,11 @@
+import {
+  NavTableID,
+  NavDimensionCode,
+  NavItemJournalTemplate,
+  NavItemJournalBatch,
+  NavEntryType
+} from "./enum";
+
 export interface NavUser {
   Full_Name: string;
   License_Type: string;
