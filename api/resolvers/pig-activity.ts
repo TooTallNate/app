@@ -72,10 +72,12 @@ export const PigActivity: PigActivityResolvers = {
       );
   },
   defaultJob({ userSettings }, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", userSettings.pigJob)
-      .get<NavJob>();
+    if (userSettings.pigJob) {
+      return navClient
+        .resource("Company", process.env.NAV_COMPANY)
+        .resource("Jobs", userSettings.pigJob)
+        .get<NavJob>();
+    }
   },
   defaultPrice: ({ userSettings }) => userSettings.price
 };
