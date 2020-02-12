@@ -111,9 +111,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
         console.log(`ODATA ${this._method} ${url} ERROR`);
         cb && cb(error, response, body);
       } else {
-        console.log(
-          `ODATA ${this._method} ${this._resourcePath} ${response.statusCode}`
-        );
+        console.log(`ODATA ${this._method} ${url} ${response.statusCode}`);
         if (response.statusCode >= 200 && response.statusCode < 300) {
           cb &&
             cb(error, response, Array.isArray(body.value) ? body.value : body);

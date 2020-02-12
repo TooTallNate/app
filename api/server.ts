@@ -29,11 +29,26 @@ export default () => {
     }
   };
 
+  const loggingMiddleware: IMiddlewareFunction<any, GraphqlContext, any> = (
+    resolve,
+    root,
+    args,
+    context,
+    info
+  ) => {
+    console.log(`GraphQL ${info.parentType} ${info.fieldName}`);
+    return resolve(root, args, context, info);
+  };
+
   const server = new GraphQLServer({
     typeDefs,
     resolvers,
     context: createContext,
     middlewares: [
+      {
+        Query: loggingMiddleware,
+        Mutation: loggingMiddleware
+      },
       {
         Query: authMiddleware,
         Mutation: authMiddleware
