@@ -14,7 +14,7 @@ import {
 import { NavErrorCode } from "./types";
 
 interface ODataRequestAPI
-  extends RequestAPI<Request, CoreOptions, RequiredUriUrl> {}
+  extends RequestAPI<Request, CoreOptions, RequiredUriUrl> { }
 
 export interface ODataClientOptions {
   serviceRoot: string;
@@ -117,7 +117,6 @@ class ODataQuery<T extends {}> implements Promise<T> {
             cb(error, response, Array.isArray(body.value) ? body.value : body);
         } else if (response.statusCode >= 400) {
           if (body) {
-            console.log(body && body.error);
             cb &&
               cb(
                 new ODataError(body.error.code, body.error.message),
@@ -137,7 +136,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
     };
   }
 
-  end(cb?: (error: any, response: Response, body: any) => void) {}
+  end(cb?: (error: any, response: Response, body: any) => void) { }
 
   then<TResult1, TResult2>(
     onFulfilled?: (value?: T) => TResult1 | PromiseLike<TResult1>,
