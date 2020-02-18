@@ -26,6 +26,7 @@ function postItemJournal(
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
+  entry.Description = entry.Description || " ";
   return navClient
     .resource("Company", process.env.NAV_COMPANY)
     .resource("ItemJournal")

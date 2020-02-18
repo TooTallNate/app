@@ -1,5 +1,4 @@
 import {
-  NavTableID,
   NavDimensionCode,
   NavItemJournalTemplate,
   NavItemJournalBatch,
@@ -21,11 +20,8 @@ export interface NavJob {
 }
 
 export interface NavDimension {
-  Table_ID: NavTableID;
-  No: string;
   Dimension_Code: NavDimensionCode;
   Dimension_Value_Code: any;
-  Value_Posting: string;
 }
 
 export interface NavItemJournalEntry {

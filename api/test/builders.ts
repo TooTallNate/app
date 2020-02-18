@@ -1,11 +1,12 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import { NavUser, NavJob } from "../nav/types";
+import { NavUser, NavJob, NavDimension, NavDimensionCode } from "../nav/types";
 import uuid from "uuid/v4";
 import {
   FarrowingBackendScorecardInput,
-  ScorecardEntry
+  ScorecardEntry,
+  PigAdjustmentInput
 } from "../resolvers/types";
 
 function oneOf<T>(...list: T[]) {
@@ -28,6 +29,13 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
   )
 });
 
+export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({
+  Dimension_Code: Factory.each(() =>
+    oneOf(NavDimensionCode.CostCenter, NavDimensionCode.Entity)
+  ),
+  Dimension_Value_Code: Factory.each(() => faker.random.alphaNumeric(8))
+});
+
 export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
   ScorecardEntry
 >({
@@ -46,6 +54,17 @@ export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
   water: Factory.each(() => ScorecardEntryInputFactory.build()),
   crate: Factory.each(() => ScorecardEntryInputFactory.build()),
   room: Factory.each(() => ScorecardEntryInputFactory.build())
+});
+
+export const PigAdjustmentInputFactory = Factory.Sync.makeFactory<
+  PigAdjustmentInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
 export const UserSettingsFactory = Factory.Sync.makeFactory({
