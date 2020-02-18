@@ -1,5 +1,6 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
+import { ObjectId } from "mongodb";
 import { NavUser, NavJob } from "../nav/types";
 import uuid from "uuid/v4";
 import {
@@ -45,4 +46,11 @@ export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
   water: Factory.each(() => ScorecardEntryInputFactory.build()),
   crate: Factory.each(() => ScorecardEntryInputFactory.build()),
   room: Factory.each(() => ScorecardEntryInputFactory.build())
+});
+
+export const UserSettingsFactory = Factory.Sync.makeFactory({
+  _id: Factory.each(() => new ObjectId()),
+  username: Factory.each(() => faker.internet.userName()),
+  pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
 });
