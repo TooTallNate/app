@@ -9,7 +9,8 @@ import {
   PigAdjustmentInput,
   PigGradeOffInput,
   PigMortalityInput,
-  PigMoveInput
+  PigMoveInput,
+  PigPurchaseInput
 } from "../resolvers/types";
 
 function oneOf<T>(...list: T[]) {
@@ -102,6 +103,17 @@ export const PigMoveInputFactory = Factory.Sync.makeFactory<PigMoveInput>({
   toAnimal: Factory.each(() => oneOf("01", "02", "03")),
   fromJob: Factory.each(() => faker.random.alphaNumeric(8)),
   toJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigPurchaseInputFactory = Factory.Sync.makeFactory<
+  PigPurchaseInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
   weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
