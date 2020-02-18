@@ -7,7 +7,9 @@ import {
   FarrowingBackendScorecardInput,
   ScorecardEntry,
   PigAdjustmentInput,
-  PigGradeOffInput
+  PigGradeOffInput,
+  PigMortalityInput,
+  PigMoveInput
 } from "../resolvers/types";
 
 function oneOf<T>(...list: T[]) {
@@ -16,7 +18,7 @@ function oneOf<T>(...list: T[]) {
 
 export const UserFactory = Factory.Sync.makeFactory<NavUser>({
   User_Security_ID: Factory.each(() => uuid()),
-  Full_Name: Factory.each(() => faker.name.findName()),
+  Full_Name: Factory.each(() => faker.name.firstName().toUpperCase()),
   License_Type: Factory.each(() => oneOf("Full User", "Limited User")),
   User_Name: Factory.each(() => faker.internet.userName())
 });
@@ -73,6 +75,33 @@ export const PigGradeOffInputFactory = Factory.Sync.makeFactory<
 >({
   animal: Factory.each(() => oneOf("01", "02", "03")),
   job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigMortalityInputFactory = Factory.Sync.makeFactory<
+  PigMortalityInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  euthanizedQuantity: Factory.each(() =>
+    faker.random.number({ min: 1, max: 500 })
+  ),
+  naturalQuantity: Factory.each(() =>
+    faker.random.number({ min: 1, max: 500 })
+  ),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigMoveInputFactory = Factory.Sync.makeFactory<PigMoveInput>({
+  fromAnimal: Factory.each(() => oneOf("01", "02", "03")),
+  toAnimal: Factory.each(() => oneOf("01", "02", "03")),
+  fromJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  toJob: Factory.each(() => faker.random.alphaNumeric(8)),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
   weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),

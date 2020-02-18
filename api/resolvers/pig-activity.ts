@@ -233,6 +233,7 @@ export const PigActivityMutations: MutationResolvers = {
   async postPigMove(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
     const from = await findJob(input.fromJob, navClient);
+    const to = await findJob(input.toJob, navClient);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
@@ -251,14 +252,13 @@ export const PigActivityMutations: MutationResolvers = {
       },
       navClient
     );
-    const to = await findJob(input.toJob, navClient);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
         Journal_Batch_Name: NavItemJournalBatch.Move,
         Entry_Type: NavEntryType.Positive,
         Document_No: docNo,
-        Item_No: input.fromAnimal,
+        Item_No: input.toAnimal,
         Description: input.comments,
         Location_Code: to.job.Site,
         Quantity: input.quantity,
