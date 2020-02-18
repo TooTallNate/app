@@ -7,7 +7,7 @@ import {
   usePostFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import { MultilineTextInput } from "../components/ui/text-inputs";
+import { MultilineTextInput, TextInput } from "../components/ui/text-inputs";
 import { useFlash } from "../contexts/flash";
 import FullPageSpinner from "../components/FullPageSpinner";
 import tw from "tailwind.macro";
@@ -19,9 +19,11 @@ import FormFieldInput from "../components/ui/FormFieldInput";
 import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
 import TypeaheadInput from "../components/ui/TypeaheadInput";
+import { useEffect } from "react";
 
 interface FormData {
   area: string;
+  operator: string;
   sowCare: number;
   sowCareComments?: string;
   pigletCare: number;
@@ -54,7 +56,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   const { data, loading } = useFarrowingBackendScorecardQuery();
   const [post] = usePostFarrowingBackendScorecardMutation();
   const { setMessage } = useFlash();
-  const { watch } = formContext;
+  const { watch, setValue } = formContext;
 
   const { crate, feed, generalRoom, pigletCare, sowCare, water, area } = watch([
     "sowCare",
@@ -75,9 +77,19 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
     (water || 0);
   const scorePercent = ((100 * totalScore) / 60).toFixed(1);
 
-  const selectedArea =
-    data &&
-    data.farrowingBackendScorecard.areas.find(({ number }) => number === area);
+  useEffect(() => {
+    const selectedArea =
+      data &&
+      area &&
+      data.farrowingBackendScorecard.areas.find(
+        ({ number }) => number === area
+      );
+    if (selectedArea) {
+      setValue("operator", selectedArea.personResponsible);
+    } else {
+      setValue("operator", "");
+    }
+  }, [area, data, setValue]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -85,6 +97,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         variables: {
           input: {
             area: data.area,
+            operator: data.operator,
             sows: {
               score: data.sowCare,
               comments: data.sowCareComments
@@ -129,147 +142,148 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
   return loading || !data ? (
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
-    <View>
-      <Title>
-        Farrowing Scorecard
+      <View>
+        <Title>
+          Farrowing Scorecard
         <span
-          css={tw`text-base font-normal float-right pt-1`}
-          aria-label="Total Score"
-        >
-          {totalScore}/60{" "}
-          <span css={tw`hidden xs:inline`}>{scorePercent}%</span>
-        </span>
-      </Title>
-      <Form context={formContext} onSubmit={onSubmit}>
-        <FormField
-          name="area"
-          rules={{ required: "The area field is required." }}
-        >
-          <FormFieldLabel>Area</FormFieldLabel>
-          <FormFieldInput>
-            <TypeaheadInput
-              items={data.farrowingBackendScorecard.areas.map(area => ({
-                value: area.number,
-                title: area.description
-              }))}
-            />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        {selectedArea && (
-          <FormField name="operator">
-            <FormFieldLabel>Operator</FormFieldLabel>
+            css={tw`text-base font-normal float-right pt-1`}
+            aria-label="Total Score"
+          >
+            {totalScore}/60{" "}
+            <span css={tw`hidden xs:inline`}>{scorePercent}%</span>
+          </span>
+        </Title>
+        <Form context={formContext} onSubmit={onSubmit}>
+          <FormField
+            name="area"
+            rules={{ required: "The area field is required." }}
+          >
+            <FormFieldLabel>Area</FormFieldLabel>
             <FormFieldInput>
-              <Output>{selectedArea.personResponsible}</Output>
+              <TypeaheadInput
+                items={data.farrowingBackendScorecard.areas.map(area => ({
+                  value: area.number,
+                  title: area.description
+                }))}
+              />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
-        )}
-        <FormField
-          name="sowCare"
-          rules={{ required: "The sow care field is required." }}
-        >
-          <FormFieldLabel>Sow Care</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="sowCareComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="pigletCare"
-          rules={{ required: "The piglet care field is required." }}
-        >
-          <FormFieldLabel>PigletCare</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="pigletCareComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="feed"
-          rules={{ required: "The feed field is required." }}
-        >
-          <FormFieldLabel>Feed</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="feedComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="water"
-          rules={{ required: "The water field is required." }}
-        >
-          <FormFieldLabel>Water</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-        </FormField>
-        <FormField name="waterComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="crate"
-          rules={{ required: "The crate field is required." }}
-        >
-          <FormFieldLabel>Crate</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="crateComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="generalRoom"
-          rules={{ required: "The generalRom field is required." }}
-        >
-          <FormFieldLabel>General Room</FormFieldLabel>
-          <FormFieldInput>
-            <ScorecardSliderInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="generalRoomComments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormSubmit />
-      </Form>
-    </View>
-  );
+          <FormField
+            name="operator"
+            rules={{ required: "The operator field is required." }}
+          >
+            <FormFieldLabel>Operator</FormFieldLabel>
+            <FormFieldInput>
+              <TextInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="sowCare"
+            rules={{ required: "The sow care field is required." }}
+          >
+            <FormFieldLabel>Sow Care</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="sowCareComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="pigletCare"
+            rules={{ required: "The piglet care field is required." }}
+          >
+            <FormFieldLabel>PigletCare</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="pigletCareComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="feed"
+            rules={{ required: "The feed field is required." }}
+          >
+            <FormFieldLabel>Feed</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="feedComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="water"
+            rules={{ required: "The water field is required." }}
+          >
+            <FormFieldLabel>Water</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+          </FormField>
+          <FormField name="waterComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="crate"
+            rules={{ required: "The crate field is required." }}
+          >
+            <FormFieldLabel>Crate</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="crateComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="generalRoom"
+            rules={{ required: "The generalRom field is required." }}
+          >
+            <FormFieldLabel>General Room</FormFieldLabel>
+            <FormFieldInput>
+              <ScorecardSliderInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="generalRoomComments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormSubmit />
+        </Form>
+      </View>
+    );
 };
 
 export default ScorecardView;

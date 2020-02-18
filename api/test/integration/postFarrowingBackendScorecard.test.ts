@@ -56,7 +56,7 @@ test("submits scores to NAV", async () => {
         Job_No: area.No,
         Location_Code: area.Site,
         Job_Task_No: task,
-        No: area.Person_Responsible,
+        No: input.operator,
         Work_Type_Code: WorkTypeCode.FarrowBackend,
         Quantity: entry.score,
         Description: entry.comments,

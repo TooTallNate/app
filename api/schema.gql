@@ -89,6 +89,7 @@ input ScorecardEntry {
 
 input FarrowingBackendScorecardInput {
   area: String!
+  operator: String!
   sows: ScorecardEntry!
   piglets: ScorecardEntry!
   feed: ScorecardEntry!

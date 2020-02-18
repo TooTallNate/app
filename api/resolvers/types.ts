@@ -23,6 +23,7 @@ export type FarrowingBackendScorecard = {
 
 export type FarrowingBackendScorecardInput = {
   area: Scalars["String"];
+  operator: Scalars["String"];
   sows: ScorecardEntry;
   piglets: ScorecardEntry;
   feed: ScorecardEntry;

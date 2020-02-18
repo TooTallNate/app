@@ -38,6 +38,7 @@ export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
   FarrowingBackendScorecardInput
 >({
   area: Factory.each(() => faker.random.alphaNumeric(8)),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
   sows: Factory.each(() => ScorecardEntryInputFactory.build()),
   piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
   feed: Factory.each(() => ScorecardEntryInputFactory.build()),

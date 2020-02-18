@@ -64,7 +64,7 @@ export const ScorecardMutations: MutationResolvers = {
           Job_No: job.No,
           Location_Code: job.Site,
           Job_Task_No: task,
-          No: job.Person_Responsible,
+          No: input.operator,
           Work_Type_Code: WorkTypeCode.FarrowBackend,
           Quantity: entry.score,
           Description: entry.comments
