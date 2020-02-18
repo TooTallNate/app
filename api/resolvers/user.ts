@@ -33,7 +33,7 @@ export const UserMutations: MutationResolvers = {
       }
     }
     session.user = {
-      username,
+      username: users[0].User_Name,
       password,
       name: users[0].Full_Name,
       securityId: users[0].User_Security_ID
