@@ -67,7 +67,7 @@ export const ScorecardMutations: MutationResolvers = {
           No: input.operator,
           Work_Type_Code: WorkTypeCode.FarrowBackend,
           Quantity: entry.score,
-          Description: entry.comments
+          Description: entry.comments || " "
         },
         navClient
       );
