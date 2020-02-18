@@ -2,11 +2,11 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigAdjustmentMutation,
-  PostPigAdjustmentMutationVariables
+  PostPigGradeOffMutation,
+  PostPigGradeOffMutationVariables
 } from "../../resolvers/types";
 import {
-  PigAdjustmentInputFactory,
+  PigGradeOffInputFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -21,10 +21,10 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigAdjustmentMutationVariables) {
-  return client.request<PostPigAdjustmentMutation>(
-    `mutation PostPigAdjustment($input: PigAdjustmentInput!) {
-      postPigAdjustment(input: $input) {
+function mutation(variables: PostPigGradeOffMutationVariables) {
+  return client.request<PostPigGradeOffMutation>(
+    `mutation PostPigGradeOff($input: PigGradeOffInput!) {
+      postPigGradeOff(input: $input) {
         defaultJob {
           number
         }
@@ -44,13 +44,16 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const costCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigAdjustmentInputFactory.build({
+  const input = PigGradeOffInputFactory.build({
     job: job.No,
     ...inputOverrides
   });
 
   const documentNumberRegex = new RegExp(
-    `^ADJ${user.Full_Name.slice(0, 5)}${format(new Date(), "yyMMddHH")}\\d{4}$`
+    `^GRDOFF${user.Full_Name.slice(0, 2)}${format(
+      new Date(),
+      "yyMMddHH"
+    )}\\d{4}$`
   );
   const date = format(new Date(), "YYY-MM-dd");
 
@@ -84,15 +87,14 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Adjustment,
+      Journal_Template_Name: NavItemJournalTemplate.GradeOff,
       Journal_Batch_Name: NavItemJournalBatch.Default,
-      Entry_Type:
-        input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
+      Entry_Type: NavEntryType.Negative,
       Document_No: documentNumberRegex,
       Item_No: input.animal,
       Description: input.comments || " ",
       Location_Code: job.Site,
-      Quantity: Math.abs(input.quantity),
+      Quantity: input.quantity,
       Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.job,
@@ -109,7 +111,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigAdjustmentInputFactory.build()
+    input: PigGradeOffInputFactory.build()
   })
 );
 
@@ -121,7 +123,7 @@ test("submits data to NAV and creates new user settings document", async () => {
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigAdjustment: {
+    postPigGradeOff: {
       defaultJob: {
         number: job.No
       },
@@ -152,37 +154,7 @@ test("submits data to NAV and updates existing user settings document", async ()
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigAdjustment: {
-      defaultJob: {
-        number: job.No
-      },
-      defaultPrice: input.price
-    }
-  });
-
-  await expect(
-    UserSettings.findById(userSettings._id).lean()
-  ).resolves.toMatchObject({
-    username: user.User_Name,
-    pigJob: job.No,
-    price: input.price
-  });
-});
-
-test("sets entry type to negative adjustment if quantity is negative", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      quantity: faker.random.number({ min: -10, max: -1 })
-    }
-  });
-  const userSettings = await UserSettings.create(
-    UserSettingsFactory.build({
-      username: user.User_Name
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigAdjustment: {
+    postPigGradeOff: {
       defaultJob: {
         number: job.No
       },
@@ -207,7 +179,7 @@ test("sets description to an empty string if there are no comments", async () =>
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigAdjustment: {
+    postPigGradeOff: {
       defaultJob: {
         number: job.No
       },

@@ -129,7 +129,7 @@ export const PigActivityMutations: MutationResolvers = {
         Item_No: input.animal,
         Description: input.comments,
         Location_Code: job.Site,
-        Quantity: input.quantity,
+        Quantity: Math.abs(input.quantity),
         Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.job,
