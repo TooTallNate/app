@@ -329,8 +329,8 @@ export const PigActivityMutations: MutationResolvers = {
         Weight: input.weight,
         Job_No: input.job,
         Gen_Prod_Posting_Group: "WEAN PIGS",
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
+        Shortcut_Dimension_1_Code: "213",
+        Shortcut_Dimension_2_Code: "2"
       },
       navClient
     );
