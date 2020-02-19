@@ -3,7 +3,6 @@ import { Schema, model, Document } from "mongoose";
 export interface UserSettingsDocument extends Document {
   username: string;
   pigJob: string | null | undefined;
-  scorecardJob: string | null | undefined;
   price: number | null | undefined;
 }
 
@@ -17,9 +16,6 @@ const UserSettingsSchema = new Schema(
     pigJob: {
       type: String
     },
-    scorecardJob: {
-      type: String
-    },
     price: {
       type: Number
     }
@@ -29,4 +25,8 @@ const UserSettingsSchema = new Schema(
   }
 );
 
-export default model<UserSettingsDocument>("UserSettings", UserSettingsSchema);
+const UserSettings = model<UserSettingsDocument>(
+  "UserSettings",
+  UserSettingsSchema
+);
+export default UserSettings;

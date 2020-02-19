@@ -14,10 +14,10 @@ generates:
       useIndexSignature: true
       contextType: "../context#GraphqlContext"
       mappers:
-        User: ../nav/types#NavUser
-        Job: ../nav/types#NavJob
-        JobDimensions: ../nav/types#NavDimensions
-        Defaults: ../models/user-settings#UserSettingsDocument
+        User: "../nav#NavUser"
+        Job: "../nav#NavJob"
+        PigActivity: "./mappers#PigActivityMapper"
+        FarrowingBackendScorecard: "./mappers#FarrowingBackendScorecardMapper"
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"
@@ -27,6 +27,4 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
-      scalars:
-        Date: Date
 

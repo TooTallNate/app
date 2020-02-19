@@ -1,8 +1,8 @@
-import { GraphQLClient, ClientError } from "graphql-request";
-import { GraphQLError } from "graphql-request/dist/src/types";
-import { User, MutationLoginArgs } from "../resolvers/types";
-import { mock } from "../nav";
-import { NavMock } from "../nav/__mocks__";
+import faker from "faker";
+import nock from "nock";
+import { GraphQLClient } from "graphql-request";
+import { UserFactory } from "../test/builders";
+import { ErrorCode } from "../resolvers/utils";
 
 const port = process.env.PORT;
 
@@ -17,53 +17,59 @@ declare global {
 
 global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
 
-const client = new GraphQLClient(`http://localhost:${port}`);
+export const client = new GraphQLClient(`http://localhost:${port}`);
 
-const navMock = mock as NavMock;
-export { navMock };
+export async function mockUser({ login = true } = {}) {
+  const user = UserFactory.build();
+  const password = faker.internet.password();
 
-interface GQLResponse<T> {
-  data?: T;
-  extensions?: any;
-  headers: Headers;
-  status: number;
-  errors?: GraphQLError[];
-}
+  const auth = {
+    user: user.User_Name,
+    pass: password
+  };
 
-export function gql<T, V = void>(
-  query: string
-): (variables?: V) => Promise<GQLResponse<T>> {
-  return async (variables: V) => {
-    try {
-      return await client.rawRequest<T>(query, variables);
-    } catch (err) {
-      const response = (err as ClientError).response;
-      if (response) return response as GQLResponse<T>;
-      else throw err;
-    }
+  if (login) {
+    nock(process.env.NAV_BASE_URL)
+      .get("/User")
+      .query({ $filter: `(User_Name eq '${user.User_Name}')` })
+      .basicAuth(auth)
+      .reply(200, { value: [user] });
+
+    await client.request(
+      `
+        mutation Login($input: LoginInput!) {
+          login(input: $input) {
+            username
+          }
+        }
+      `,
+      {
+        input: {
+          username: user.User_Name,
+          password
+        }
+      }
+    );
+  }
+
+  return {
+    user,
+    password,
+    auth
   };
 }
 
-export async function login() {
-  const { ntPassword, lmPassword, ...creds } = navMock.credentials;
-  const { errors } = await gql<{ login: User }, MutationLoginArgs>(
-    `mutation Login($input: LoginInput!) {
-      login(input: $input) {
-        name
-        license
+export function testUnauthenticated(queryOrMutation: () => Promise<any>): void {
+  test("returns with error if unauthenticated", async () => {
+    await expect(queryOrMutation()).rejects.toMatchObject({
+      response: {
+        data: null,
+        errors: [
+          expect.objectContaining({
+            message: ErrorCode.Unauthorized
+          })
+        ]
       }
-    }`
-  )({ input: creds });
-  expect(errors).toBeFalsy();
-}
-
-export async function expectUnauthorized(
-  fn: () => Promise<{ errors?: { message: string }[] }>
-): Promise<void> {
-  const { errors } = await fn();
-  expect(errors).toEqual([
-    expect.objectContaining({
-      message: "Unauthorized"
-    })
-  ]);
+    });
+  });
 }

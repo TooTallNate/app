@@ -1,10 +1,6 @@
-import {
-  GraphQLResolveInfo,
-  GraphQLScalarType,
-  GraphQLScalarTypeConfig
-} from "graphql";
-import { NavUser, NavJob, NavDimensions } from "../nav/types";
-import { UserSettingsDocument } from "../models/user-settings";
+import { GraphQLResolveInfo } from "graphql";
+import { NavUser, NavJob } from "../nav";
+import { PigActivityMapper, FarrowingBackendScorecardMapper } from "./mappers";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
@@ -18,38 +14,29 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
 };
 
-export type Defaults = {
-  __typename?: "Defaults";
-  pigJob?: Maybe<Scalars["String"]>;
-  scorecardJob?: Maybe<Scalars["String"]>;
-  price?: Maybe<Scalars["Float"]>;
+export type FarrowingBackendScorecard = {
+  __typename?: "FarrowingBackendScorecard";
+  areas: Array<Job>;
 };
 
-export type DefaultsInput = {
-  pigJob?: Maybe<Scalars["String"]>;
-  scorecardJob?: Maybe<Scalars["String"]>;
-  price?: Maybe<Scalars["Float"]>;
+export type FarrowingBackendScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntry;
+  piglets: ScorecardEntry;
+  feed: ScorecardEntry;
+  water: ScorecardEntry;
+  crate: ScorecardEntry;
+  room: ScorecardEntry;
 };
 
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
-  site: Scalars["String"];
-  dimensions: JobDimensions;
-};
-
-export type JobDimensions = {
-  __typename?: "JobDimensions";
-  costCenter?: Maybe<Scalars["String"]>;
-  entity?: Maybe<Scalars["String"]>;
-};
-
-export type JobSearchInput = {
-  status?: Maybe<Array<Scalars["String"]>>;
-  postingGroup?: Maybe<Array<Scalars["String"]>>;
+  description: Scalars["String"];
+  personResponsible: Scalars["String"];
 };
 
 export type LoginInput = {
@@ -61,86 +48,233 @@ export type Mutation = {
   __typename?: "Mutation";
   login: User;
   logout: Scalars["Boolean"];
-  updateDefaults: Defaults;
-  postItemJournal: Scalars["Boolean"];
-  postJobJournal: Scalars["Boolean"];
+  postPigAdjustment: PigActivity;
+  postPigGradeOff: PigActivity;
+  postPigMortality: PigActivity;
+  postPigMove: PigActivity;
+  postPigPurchase: PigActivity;
+  postPigWean: PigActivity;
+  postFarrowingBackendScorecard: Scalars["Boolean"];
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-export type MutationUpdateDefaultsArgs = {
-  input: DefaultsInput;
+export type MutationPostPigAdjustmentArgs = {
+  input: PigAdjustmentInput;
 };
 
-export type MutationPostItemJournalArgs = {
-  input: PostItemJournalInput;
+export type MutationPostPigGradeOffArgs = {
+  input: PigGradeOffInput;
 };
 
-export type MutationPostJobJournalArgs = {
-  input: PostJobJournalInput;
+export type MutationPostPigMortalityArgs = {
+  input: PigMortalityInput;
 };
 
-export type PostItemJournalInput = {
-  template: Scalars["String"];
-  batch: Scalars["String"];
-  date: Scalars["Date"];
-  entryType: Scalars["String"];
-  document: Scalars["String"];
-  item: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  location: Scalars["String"];
-  quantity: Scalars["Float"];
-  amount: Scalars["Float"];
+export type MutationPostPigMoveArgs = {
+  input: PigMoveInput;
+};
+
+export type MutationPostPigPurchaseArgs = {
+  input: PigPurchaseInput;
+};
+
+export type MutationPostPigWeanArgs = {
+  input: PigWeanInput;
+};
+
+export type MutationPostFarrowingBackendScorecardArgs = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type PigActivity = {
+  __typename?: "PigActivity";
+  jobs: Array<Job>;
+  defaultJob?: Maybe<Job>;
+  defaultPrice?: Maybe<Scalars["Float"]>;
+};
+
+export type PigAdjustmentInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
   weight: Scalars["Float"];
-  job: Scalars["String"];
-  prodPostingGroup?: Maybe<Scalars["String"]>;
-  costCenterCode?: Maybe<Scalars["String"]>;
-  entityType?: Maybe<Scalars["String"]>;
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
 };
 
-export type PostJobJournalInput = {
-  template: Scalars["String"];
-  batch: Scalars["String"];
-  date: Scalars["Date"];
-  document: Scalars["String"];
+export type PigGradeOffInput = {
+  animal: Scalars["String"];
   job: Scalars["String"];
-  location: Scalars["String"];
-  task: Scalars["String"];
-  number: Scalars["String"];
-  workType: Scalars["String"];
-  quantity: Scalars["Float"];
-  unitPrice: Scalars["Float"];
-  description?: Maybe<Scalars["String"]>;
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigMortalityInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  naturalQuantity: Scalars["Int"];
+  euthanizedQuantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigMoveInput = {
+  fromAnimal: Scalars["String"];
+  toAnimal: Scalars["String"];
+  fromJob: Scalars["String"];
+  toJob: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigPurchaseInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigWeanInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
-  defaults: Defaults;
-  jobs: Array<Job>;
+  pigActivity: PigActivity;
+  farrowingBackendScorecard: FarrowingBackendScorecard;
 };
 
-export type QueryJobsArgs = {
-  input?: Maybe<JobSearchInput>;
+export type ScorecardEntry = {
+  score: Scalars["Int"];
+  comments?: Maybe<Scalars["String"]>;
 };
 
 export type User = {
   __typename?: "User";
-  id: Scalars["ID"];
   username: Scalars["String"];
-  domain: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
 };
+
+export type PigActivityDefaultsFragment = { __typename?: "PigActivity" } & Pick<
+  PigActivity,
+  "defaultPrice"
+> & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+
+export type PigActivityQueryVariables = {};
+
+export type PigActivityQuery = { __typename?: "Query" } & {
+  pigActivity: { __typename?: "PigActivity" } & {
+    jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
+  } & PigActivityDefaultsFragment;
+};
+
+export type PostPigMoveMutationVariables = {
+  input: PigMoveInput;
+};
+
+export type PostPigMoveMutation = { __typename?: "Mutation" } & {
+  postPigMove: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+};
+
+export type PostPigAdjustmentMutationVariables = {
+  input: PigAdjustmentInput;
+};
+
+export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
+  postPigAdjustment: {
+    __typename?: "PigActivity";
+  } & PigActivityDefaultsFragment;
+};
+
+export type PostPigGradeOffMutationVariables = {
+  input: PigGradeOffInput;
+};
+
+export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
+  postPigGradeOff: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+};
+
+export type PostPigWeanMutationVariables = {
+  input: PigWeanInput;
+};
+
+export type PostPigWeanMutation = { __typename?: "Mutation" } & {
+  postPigWean: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+};
+
+export type PostPigPurchaseMutationVariables = {
+  input: PigPurchaseInput;
+};
+
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
+  postPigPurchase: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+};
+
+export type PostPigMortalityMutationVariables = {
+  input: PigMortalityInput;
+};
+
+export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
+  postPigMortality: {
+    __typename?: "PigActivity";
+  } & PigActivityDefaultsFragment;
+};
+
+export type FarrowingBackendScorecardQueryVariables = {};
+
+export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
+  farrowingBackendScorecard: { __typename?: "FarrowingBackendScorecard" } & {
+    areas: Array<
+      { __typename?: "Job" } & Pick<
+        Job,
+        "number" | "description" | "personResponsible"
+      >
+    >;
+  };
+};
+
+export type PostFarrowingBackendScorecardMutationVariables = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type PostFarrowingBackendScorecardMutation = {
+  __typename?: "Mutation";
+} & Pick<Mutation, "postFarrowingBackendScorecard">;
+
+export type UserPartsFragment = { __typename?: "User" } & Pick<
+  User,
+  "username" | "name"
+>;
 
 export type LoginMutationVariables = {
   input: LoginInput;
 };
 
 export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "User" } & Pick<User, "id" | "username" | "name">;
+  login: { __typename?: "User" } & UserPartsFragment;
+};
+
+export type UserQueryVariables = {};
+
+export type UserQuery = { __typename?: "Query" } & {
+  user: Maybe<{ __typename?: "User" } & UserPartsFragment>;
 };
 
 export type LogoutMutationVariables = {};
@@ -149,65 +283,6 @@ export type LogoutMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "logout"
 >;
-
-export type PostItemMutationVariables = {
-  input: PostItemJournalInput;
-};
-
-export type PostItemMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postItemJournal"
->;
-
-export type PostJobMutationVariables = {
-  input: PostJobJournalInput;
-};
-
-export type PostJobMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "postJobJournal"
->;
-
-export type UpdateDefaultsMutationVariables = {
-  input: DefaultsInput;
-};
-
-export type UpdateDefaultsMutation = { __typename?: "Mutation" } & {
-  updateDefaults: { __typename?: "Defaults" } & Pick<
-    Defaults,
-    "pigJob" | "scorecardJob" | "price"
-  >;
-};
-
-export type DefaultsQueryVariables = {};
-
-export type DefaultsQuery = { __typename?: "Query" } & {
-  defaults: { __typename?: "Defaults" } & Pick<
-    Defaults,
-    "pigJob" | "scorecardJob" | "price"
-  >;
-};
-
-export type JobsQueryVariables = {
-  input?: Maybe<JobSearchInput>;
-};
-
-export type JobsQuery = { __typename?: "Query" } & {
-  jobs: Array<
-    { __typename?: "Job" } & Pick<Job, "number" | "site"> & {
-        dimensions: { __typename?: "JobDimensions" } & Pick<
-          JobDimensions,
-          "costCenter" | "entity"
-        >;
-      }
-  >;
-};
-
-export type UserQueryVariables = {};
-
-export type UserQuery = { __typename?: "Query" } & {
-  user: Maybe<{ __typename?: "User" } & Pick<User, "id" | "username" | "name">>;
-};
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -317,58 +392,55 @@ export type DirectiveResolverFn<
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<NavUser>;
-  ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  Defaults: ResolverTypeWrapper<UserSettingsDocument>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
-  JobSearchInput: JobSearchInput;
+  PigActivity: ResolverTypeWrapper<PigActivityMapper>;
   Job: ResolverTypeWrapper<NavJob>;
-  JobDimensions: ResolverTypeWrapper<NavDimensions>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
+  FarrowingBackendScorecard: ResolverTypeWrapper<
+    FarrowingBackendScorecardMapper
+  >;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
-  DefaultsInput: DefaultsInput;
-  PostItemJournalInput: PostItemJournalInput;
-  Date: ResolverTypeWrapper<Scalars["Date"]>;
-  PostJobJournalInput: PostJobJournalInput;
+  PigAdjustmentInput: PigAdjustmentInput;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
+  PigGradeOffInput: PigGradeOffInput;
+  PigMortalityInput: PigMortalityInput;
+  PigMoveInput: PigMoveInput;
+  PigPurchaseInput: PigPurchaseInput;
+  PigWeanInput: PigWeanInput;
+  FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
+  ScorecardEntry: ScorecardEntry;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: NavUser;
-  ID: Scalars["ID"];
   String: Scalars["String"];
-  Defaults: UserSettingsDocument;
-  Float: Scalars["Float"];
-  JobSearchInput: JobSearchInput;
+  PigActivity: PigActivityMapper;
   Job: NavJob;
-  JobDimensions: NavDimensions;
+  Float: Scalars["Float"];
+  FarrowingBackendScorecard: FarrowingBackendScorecardMapper;
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
-  DefaultsInput: DefaultsInput;
-  PostItemJournalInput: PostItemJournalInput;
-  Date: Scalars["Date"];
-  PostJobJournalInput: PostJobJournalInput;
+  PigAdjustmentInput: PigAdjustmentInput;
+  Int: Scalars["Int"];
+  PigGradeOffInput: PigGradeOffInput;
+  PigMortalityInput: PigMortalityInput;
+  PigMoveInput: PigMoveInput;
+  PigPurchaseInput: PigPurchaseInput;
+  PigWeanInput: PigWeanInput;
+  FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
+  ScorecardEntry: ScorecardEntry;
 }>;
 
-export interface DateScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["Date"], any> {
-  name: "Date";
-}
-
-export type DefaultsResolvers<
+export type FarrowingBackendScorecardResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["Defaults"] = ResolversParentTypes["Defaults"]
+  ParentType extends ResolversParentTypes["FarrowingBackendScorecard"] = ResolversParentTypes["FarrowingBackendScorecard"]
 > = ResolversObject<{
-  pigJob?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  scorecardJob?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  areas?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
 }>;
 
 export type JobResolvers<
@@ -376,24 +448,12 @@ export type JobResolvers<
   ParentType extends ResolversParentTypes["Job"] = ResolversParentTypes["Job"]
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  site?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  dimensions?: Resolver<
-    ResolversTypes["JobDimensions"],
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  personResponsible?: Resolver<
+    ResolversTypes["String"],
     ParentType,
     ContextType
   >;
-}>;
-
-export type JobDimensionsResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["JobDimensions"] = ResolversParentTypes["JobDimensions"]
-> = ResolversObject<{
-  costCenter?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  entity?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<
@@ -407,23 +467,60 @@ export type MutationResolvers<
     RequireFields<MutationLoginArgs, "input">
   >;
   logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  updateDefaults?: Resolver<
-    ResolversTypes["Defaults"],
+  postPigAdjustment?: Resolver<
+    ResolversTypes["PigActivity"],
     ParentType,
     ContextType,
-    RequireFields<MutationUpdateDefaultsArgs, "input">
+    RequireFields<MutationPostPigAdjustmentArgs, "input">
   >;
-  postItemJournal?: Resolver<
+  postPigGradeOff?: Resolver<
+    ResolversTypes["PigActivity"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigGradeOffArgs, "input">
+  >;
+  postPigMortality?: Resolver<
+    ResolversTypes["PigActivity"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigMortalityArgs, "input">
+  >;
+  postPigMove?: Resolver<
+    ResolversTypes["PigActivity"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigMoveArgs, "input">
+  >;
+  postPigPurchase?: Resolver<
+    ResolversTypes["PigActivity"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigPurchaseArgs, "input">
+  >;
+  postPigWean?: Resolver<
+    ResolversTypes["PigActivity"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigWeanArgs, "input">
+  >;
+  postFarrowingBackendScorecard?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
     ContextType,
-    RequireFields<MutationPostItemJournalArgs, "input">
+    RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
-  postJobJournal?: Resolver<
-    ResolversTypes["Boolean"],
+}>;
+
+export type PigActivityResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigActivity"] = ResolversParentTypes["PigActivity"]
+> = ResolversObject<{
+  jobs?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
+  defaultJob?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  defaultPrice?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
     ParentType,
-    ContextType,
-    RequireFields<MutationPostJobJournalArgs, "input">
+    ContextType
   >;
 }>;
 
@@ -432,12 +529,15 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  defaults?: Resolver<ResolversTypes["Defaults"], ParentType, ContextType>;
-  jobs?: Resolver<
-    Array<ResolversTypes["Job"]>,
+  pigActivity?: Resolver<
+    ResolversTypes["PigActivity"],
     ParentType,
-    ContextType,
-    QueryJobsArgs
+    ContextType
+  >;
+  farrowingBackendScorecard?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType
   >;
 }>;
 
@@ -445,19 +545,16 @@ export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = ResolversObject<{
-  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   username?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  domain?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   license?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
-  Date?: GraphQLScalarType;
-  Defaults?: DefaultsResolvers<ContextType>;
+  FarrowingBackendScorecard?: FarrowingBackendScorecardResolvers<ContextType>;
   Job?: JobResolvers<ContextType>;
-  JobDimensions?: JobDimensionsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PigActivity?: PigActivityResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

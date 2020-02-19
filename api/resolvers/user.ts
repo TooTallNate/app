@@ -1,39 +1,44 @@
-import { MutationResolvers, UserResolvers, QueryResolvers } from "./types";
-import createNavClient, { hashPassword } from "../nav";
+import { UserResolvers, MutationResolvers, QueryResolvers } from "./types";
+import { NavUser, Guid, NavErrorCode } from "../nav";
+import { ErrorCode } from "./utils";
 
-export const UserQuery: QueryResolvers = {
-  async user(_, __, { navClient }) {
-    if (navClient) {
-      return await navClient.getUser();
+export const UserQueries: QueryResolvers = {
+  async user(_, __, { user, navClient }) {
+    if (user) {
+      return await navClient
+        .resource("User", new Guid(user.securityId))
+        .get<NavUser>();
     } else {
       return null;
     }
   }
 };
 
-export const UserMutation: MutationResolvers = {
-  async login(_, { input }, context) {
-    const [ntPassword, lmPassword] = hashPassword(input.password);
-    const navClient = createNavClient({
-      username: input.username,
-      ntPassword,
-      lmPassword
-    });
-    const user = await navClient.getUser();
-    if (user) {
-      const sessionUser = {
-        license: user.License_Type,
-        name: user.Full_Name,
-        username: input.username,
-        ntPassword: Array.from(ntPassword),
-        lmPassword: Array.from(lmPassword)
-      };
-      context.session.user = sessionUser;
-      context.user = sessionUser;
-      return user;
-    } else {
-      throw new Error("Login failed");
+export const UserMutations: MutationResolvers = {
+  async login(_, { input: { username, password } }, { session, navClient }) {
+    navClient.auth(username, password);
+    try {
+      var users = await navClient
+        .resource("User")
+        .get<NavUser[]>()
+        .filter(f => f.equals("User_Name", username));
+    } catch (error) {
+      switch (error.code) {
+        case NavErrorCode.InvalidCredentials:
+          throw new Error(ErrorCode.InvalidCredentials);
+        case NavErrorCode.NoAvailableLicense:
+          throw new Error(ErrorCode.NoAvailableLicense);
+        default:
+          throw error;
+      }
     }
+    session.user = {
+      username: users[0].User_Name,
+      password,
+      name: users[0].Full_Name,
+      securityId: users[0].User_Security_ID
+    };
+    return users[0];
   },
   async logout(_, __, context) {
     await new Promise((res, rej) =>
@@ -47,9 +52,7 @@ export const UserMutation: MutationResolvers = {
 };
 
 export const User: UserResolvers = {
-  id: user => user.User_Security_ID,
-  license: user => user.License_Type,
+  username: user => user.User_Name,
   name: user => user.Full_Name,
-  username: (_, __, { user }) => user.username.split("\\")[1],
-  domain: (_, __, { user }) => user.username.split("\\")[0]
+  license: user => user.License_Type
 };

@@ -1,34 +1,138 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
-import { NavJob, NavUser, NavDimension } from "../nav/types";
+import { ObjectId } from "mongodb";
+import { NavUser, NavJob, NavDimension, NavDimensionCode } from "../nav/types";
 import uuid from "uuid/v4";
+import {
+  FarrowingBackendScorecardInput,
+  ScorecardEntry,
+  PigAdjustmentInput,
+  PigGradeOffInput,
+  PigMortalityInput,
+  PigMoveInput,
+  PigPurchaseInput,
+  PigWeanInput
+} from "../resolvers/types";
 
-const JOB_POSTING_GROUPS = ["MKT PIGS", "GDU", "SOWS", "CATTLE", "FARROW-BE"];
-const JOB_STATUSES = ["Planning", "Open", "Complete"];
-const DIMENSION_CODES = ["ENTITY", "COST CENTER"];
+function oneOf<T>(...list: T[]) {
+  return list[faker.random.number({ min: 0, max: list.length - 1 })];
+}
 
-const oneOf = (list: any[]): (() => any) => () =>
-  list[faker.random.number({ min: 0, max: list.length - 1 })];
-
-export const userFactory = Factory.Sync.makeFactory<NavUser>({
+export const UserFactory = Factory.Sync.makeFactory<NavUser>({
   User_Security_ID: Factory.each(() => uuid()),
-  Full_Name: Factory.each(() => faker.name.findName()),
-  License_Type: "Full User"
+  Full_Name: Factory.each(() => faker.name.firstName().toUpperCase()),
+  License_Type: Factory.each(() => oneOf("Full User", "Limited User")),
+  User_Name: Factory.each(() => faker.internet.userName())
 });
 
-export const jobFactory = Factory.Sync.makeFactory<NavJob>({
+export const JobFactory = Factory.Sync.makeFactory<NavJob>({
   No: Factory.each(() => faker.random.alphaNumeric(8)),
-  Job_Posting_Group: Factory.each(oneOf(JOB_POSTING_GROUPS)),
-  Site: Factory.each(() => faker.random.number({ min: 1, max: 99 }).toString()),
-  Status: Factory.each(oneOf(JOB_STATUSES))
+  Description: Factory.each(() => faker.lorem.words(2)),
+  Person_Responsible: Factory.each(() => faker.name.firstName().toUpperCase()),
+  Site: Factory.each(() =>
+    faker.random.number({ min: 10, max: 999 }).toString()
+  )
 });
 
-export const dimensionFactory = Factory.Sync.makeFactory<NavDimension>({
-  Table_ID: 167,
-  No: Factory.each(() => faker.random.alphaNumeric(8)),
-  Dimension_Code: Factory.each(oneOf(DIMENSION_CODES)),
-  Dimension_Value_Code: Factory.each(() =>
-    faker.random.number({ min: 1, max: 500 }).toString()
+export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({
+  Dimension_Code: Factory.each(() =>
+    oneOf(NavDimensionCode.CostCenter, NavDimensionCode.Entity)
   ),
-  Value_Posting: "Code Mandatory"
+  Dimension_Value_Code: Factory.each(() => faker.random.alphaNumeric(8))
+});
+
+export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
+  ScorecardEntry
+>({
+  score: Factory.each(() => faker.random.number({ min: 0, max: 10 })),
+  comments: Factory.each(() => faker.lorem.words(3))
+});
+
+export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
+  FarrowingBackendScorecardInput
+>({
+  area: Factory.each(() => faker.random.alphaNumeric(8)),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
+  sows: Factory.each(() => ScorecardEntryInputFactory.build()),
+  piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
+  feed: Factory.each(() => ScorecardEntryInputFactory.build()),
+  water: Factory.each(() => ScorecardEntryInputFactory.build()),
+  crate: Factory.each(() => ScorecardEntryInputFactory.build()),
+  room: Factory.each(() => ScorecardEntryInputFactory.build())
+});
+
+export const PigAdjustmentInputFactory = Factory.Sync.makeFactory<
+  PigAdjustmentInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigGradeOffInputFactory = Factory.Sync.makeFactory<
+  PigGradeOffInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigMortalityInputFactory = Factory.Sync.makeFactory<
+  PigMortalityInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  euthanizedQuantity: Factory.each(() =>
+    faker.random.number({ min: 1, max: 500 })
+  ),
+  naturalQuantity: Factory.each(() =>
+    faker.random.number({ min: 1, max: 500 })
+  ),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigMoveInputFactory = Factory.Sync.makeFactory<PigMoveInput>({
+  fromAnimal: Factory.each(() => oneOf("01", "02", "03")),
+  toAnimal: Factory.each(() => oneOf("01", "02", "03")),
+  fromJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  toJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigPurchaseInputFactory = Factory.Sync.makeFactory<
+  PigPurchaseInput
+>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const PigWeanInputFactory = Factory.Sync.makeFactory<PigWeanInput>({
+  animal: Factory.each(() => oneOf("01", "02", "03")),
+  job: Factory.each(() => faker.random.alphaNumeric(8)),
+  quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
+});
+
+export const UserSettingsFactory = Factory.Sync.makeFactory({
+  _id: Factory.each(() => new ObjectId()),
+  username: Factory.each(() => faker.internet.userName()),
+  pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
 });

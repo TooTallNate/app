@@ -3,13 +3,9 @@ import { jsx } from "@emotion/core";
 import { useEffect } from "react";
 import { Title, View } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
-import { Animal, ItemTemplate, ItemBatch, EntryType } from "../entities";
+import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
-import PigJobSelector from "../components/PigJobSelector";
-import { getDocumentNumber } from "../utils";
-import { useAuth } from "../contexts/auth";
-import { usePostItemMutation, Job } from "../graphql";
-import useDefaults from "../contexts/defaults";
+import { usePostPigPurchaseMutation, usePigActivityQuery } from "../graphql";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
@@ -22,10 +18,11 @@ import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
+import TypeaheadInput from "../components/ui/TypeaheadInput";
 
 interface FormData {
   animal: string;
-  job: Job;
+  job: string;
   quantity: number;
   weight: number;
   price: number;
@@ -34,53 +31,21 @@ interface FormData {
 
 const ActivityPurchaseView: React.FC<RouteComponentProps> = ({ history }) => {
   const formContext = useForm<FormData>();
-  const { user } = useAuth();
-  const [
-    {
-      defaults: { price: defaultPrice },
-      loading: loadingDefaults
-    },
-    setDefaults
-  ] = useDefaults();
-  const [postItem] = usePostItemMutation();
+  const { data, loading } = usePigActivityQuery();
+  const [post] = usePostPigPurchaseMutation();
   const { setMessage } = useFlash();
   const { getValues, setValue } = formContext;
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (!getValues().price && defaultPrice) {
-      setValue("price", defaultPrice);
+    if (!getValues().price && data && data.pigActivity.defaultPrice) {
+      setValue("price", data.pigActivity.defaultPrice);
     }
-  }, [defaultPrice, getValues, setValue]);
+  }, [data, getValues, setValue]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
-      if (!user) {
-        return;
-      }
-      await postItem({
-        variables: {
-          input: {
-            template: ItemTemplate.Wean,
-            batch: ItemBatch.Wean,
-            entryType: EntryType.Positive,
-            item: data.animal,
-            job: data.job.number,
-            quantity: data.quantity,
-            weight: data.weight,
-            document: getDocumentNumber("PURCH", user.username),
-            amount: data.price,
-            description: data.comments,
-            date: new Date(),
-            location: data.job.site,
-            costCenterCode: data.job.dimensions.costCenter,
-            entityType: data.job.dimensions.entity
-          }
-        }
-      });
-      if (data.price !== defaultPrice) {
-        await setDefaults({ price: data.price });
-      }
+      await post({ variables: { input: data } });
       setMessage({
         message: "Entry recorded successfully.",
         level: "success",
@@ -95,7 +60,7 @@ const ActivityPurchaseView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return loadingDefaults ? (
+  return loading || !data ? (
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
@@ -122,7 +87,12 @@ const ActivityPurchaseView: React.FC<RouteComponentProps> = ({ history }) => {
         >
           <FormFieldLabel>Job</FormFieldLabel>
           <FormFieldInput>
-            <PigJobSelector />
+            <TypeaheadInput
+              items={data.pigActivity.jobs.map(job => ({
+                value: job.number,
+                title: `${job.number} ${job.description}`
+              }))}
+            />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>

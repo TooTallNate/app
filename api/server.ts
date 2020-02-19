@@ -6,6 +6,7 @@ import { GraphQLServer } from "graphql-yoga";
 import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
 import { IMiddlewareFunction } from "graphql-middleware";
+import { ErrorCode } from "./resolvers/utils";
 
 export default () => {
   initMongoose();
@@ -22,10 +23,21 @@ export default () => {
     info
   ) => {
     if (!["login", "user"].includes(info.fieldName) && !context.user) {
-      throw new Error("Unauthorized");
+      throw new Error(ErrorCode.Unauthorized);
     } else {
       return resolve(root, args, context, info);
     }
+  };
+
+  const loggingMiddleware: IMiddlewareFunction<any, GraphqlContext, any> = (
+    resolve,
+    root,
+    args,
+    context,
+    info
+  ) => {
+    console.log(`GraphQL ${info.parentType} ${info.fieldName}`);
+    return resolve(root, args, context, info);
   };
 
   const server = new GraphQLServer({
@@ -33,6 +45,10 @@ export default () => {
     resolvers,
     context: createContext,
     middlewares: [
+      {
+        Query: loggingMiddleware,
+        Mutation: loggingMiddleware
+      },
       {
         Query: authMiddleware,
         Mutation: authMiddleware

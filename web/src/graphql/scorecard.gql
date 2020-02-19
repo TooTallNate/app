@@ -1,0 +1,13 @@
+query FarrowingBackendScorecard {
+  farrowingBackendScorecard {
+    areas {
+      number
+      description
+      personResponsible
+    }
+  }
+}
+
+mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
+  postFarrowingBackendScorecard(input: $input)
+}

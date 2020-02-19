@@ -1,28 +1,7 @@
-scalar Date
-
 type User {
-  id: ID!
   username: String!
-  domain: String!
   license: String!
   name: String!
-}
-
-type Defaults {
-  pigJob: String
-  scorecardJob: String
-  price: Float
-}
-
-type Job {
-  number: String!
-  site: String!
-  dimensions: JobDimensions!
-}
-
-type JobDimensions {
-  costCenter: String
-  entity: String
 }
 
 input LoginInput {
@@ -30,60 +9,109 @@ input LoginInput {
   password: String!
 }
 
-input DefaultsInput {
-  pigJob: String
-  scorecardJob: String
-  price: Float
-}
-
-input JobSearchInput {
-  status: [String!]
-  postingGroup: [String!]
-}
-
-input PostItemJournalInput {
-  template: String!
-  batch: String!
-  date: Date!
-  entryType: String!
-  document: String!
-  item: String!
-  description: String
-  location: String!
-  quantity: Float!
-  amount: Float!
-  weight: Float!
-  job: String!
-  prodPostingGroup: String
-  costCenterCode: String
-  entityType: String
-}
-
-input PostJobJournalInput {
-  template: String!
-  batch: String!
-  date: Date!
-  document: String!
-  job: String!
-  location: String!
-  task: String!
+type Job {
   number: String!
-  workType: String!
-  quantity: Float!
-  unitPrice: Float!
-  description: String
+  description: String!
+  personResponsible: String!
+}
+
+type PigActivity {
+  jobs: [Job!]!
+  defaultJob: Job
+  defaultPrice: Float
+}
+
+input PigAdjustmentInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+input PigGradeOffInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+input PigMortalityInput {
+  animal: String!
+  job: String!
+  naturalQuantity: Int!
+  euthanizedQuantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+input PigMoveInput {
+  fromAnimal: String!
+  toAnimal: String!
+  fromJob: String!
+  toJob: String!
+  quantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+input PigPurchaseInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+input PigWeanInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  weight: Float!
+  price: Float!
+  comments: String
+}
+
+type FarrowingBackendScorecard {
+  areas: [Job!]!
+}
+
+input ScorecardEntry {
+  score: Int!
+  comments: String
+}
+
+input FarrowingBackendScorecardInput {
+  area: String!
+  operator: String!
+  sows: ScorecardEntry!
+  piglets: ScorecardEntry!
+  feed: ScorecardEntry!
+  water: ScorecardEntry!
+  crate: ScorecardEntry!
+  room: ScorecardEntry!
 }
 
 type Query {
   user: User
-  defaults: Defaults!
-  jobs(input: JobSearchInput): [Job!]!
+  pigActivity: PigActivity!
+  farrowingBackendScorecard: FarrowingBackendScorecard!
 }
 
 type Mutation {
   login(input: LoginInput!): User!
   logout: Boolean!
-  updateDefaults(input: DefaultsInput!): Defaults!
-  postItemJournal(input: PostItemJournalInput!): Boolean!
-  postJobJournal(input: PostJobJournalInput!): Boolean!
+  postPigAdjustment(input: PigAdjustmentInput!): PigActivity!
+  postPigGradeOff(input: PigGradeOffInput!): PigActivity!
+  postPigMortality(input: PigMortalityInput!): PigActivity!
+  postPigMove(input: PigMoveInput!): PigActivity!
+  postPigPurchase(input: PigPurchaseInput!): PigActivity!
+  postPigWean(input: PigWeanInput!): PigActivity!
+  postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): Boolean!
 }

@@ -10,7 +10,7 @@ import {
 } from "../graphql";
 import FullPageSpinner from "../components/FullPageSpinner";
 
-type AuthUser = Pick<User, "id" | "name" | "username">;
+type AuthUser = Pick<User, "name" | "username">;
 
 export interface AuthContextValue {
   isAuthenticated: boolean;
