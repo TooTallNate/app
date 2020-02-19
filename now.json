@@ -1,69 +1,78 @@
 {
-  "name": "farm-activity-entry",
-  "version": 2,
-  "env": {
-    "NAV_BASE_URL": "https://nav.moglerfarms.com:7148/PHC_Test/ODataV4",
-    "MONGO_URI": "@farm-activity-mongo-uri",
-    "SESSION_SECRET": "@farm-activity-session-secret",
-    "NAV_COMPANY": "TEST_PHC"
-  },
-  "builds": [
-    { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "web/dist" } },
-    { "src": "api/index.ts", "use": "@now/node-server" }
-  ],
-  "routes": [
-     {
-        "src": "/api",
-        "dest": "/api/index.ts"
-     },
-     {
-        "src": "/static/(.*)",
-        "headers": {
-           "cache-control": "s-maxage=31536000, immutable"
-        },
-        "dest": "/static/$1"
-     },
-     {
-        "src": "/favicon.ico",
-        "dest": "/favicon.ico"
-     },
-     {
-        "src": "/logo192.png",
-        "dest": "/logo192.png"
-     },
-     {
-        "src": "/logo512.png",
-        "dest": "/logo512.png"
-     },
-     {
-        "src": "/asset-manifest.json",
-        "dest": "/asset-manifest.json"
-     },
-     {
-        "src": "/manifest.json",
-        "dest": "/manifest.json"
-     },
-     {
-        "src": "/precache-manifest.(.*)",
-        "dest": "/precache-manifest.$1"
-     },
-     {
-        "src": "/service-worker.js",
-        "headers": {
-           "cache-control": "s-maxage=0"
-        },
-        "dest": "/service-worker.js"
-     },
-     {
-        "src": "/sockjs-node/(.*)",
-        "dest": "/sockjs-node/$1"
-     },
-     {
-        "src": "/(.*)",
-        "headers": {
-           "cache-control": "s-maxage=0"
-        },
-        "dest": "/index.html"
-     }
-  ]
+   "name": "farm-activity-entry",
+   "version": 2,
+   "env": {
+      "NAV_BASE_URL": "https://nav.moglerfarms.com:4248/PHC2/ODataV4",
+      "MONGO_URI": "@farm-activity-mongo-uri",
+      "SESSION_SECRET": "@farm-activity-session-secret",
+      "NAV_COMPANY": "PHC_LIVE"
+   },
+   "builds": [
+      {
+         "src": "package.json",
+         "use": "@now/static-build",
+         "config": {
+            "distDir": "web/dist"
+         }
+      },
+      {
+         "src": "api/index.ts",
+         "use": "@now/node-server"
+      }
+   ],
+   "routes": [
+      {
+         "src": "/api",
+         "dest": "/api/index.ts"
+      },
+      {
+         "src": "/static/(.*)",
+         "headers": {
+            "cache-control": "s-maxage=31536000, immutable"
+         },
+         "dest": "/static/$1"
+      },
+      {
+         "src": "/favicon.ico",
+         "dest": "/favicon.ico"
+      },
+      {
+         "src": "/logo192.png",
+         "dest": "/logo192.png"
+      },
+      {
+         "src": "/logo512.png",
+         "dest": "/logo512.png"
+      },
+      {
+         "src": "/asset-manifest.json",
+         "dest": "/asset-manifest.json"
+      },
+      {
+         "src": "/manifest.json",
+         "dest": "/manifest.json"
+      },
+      {
+         "src": "/precache-manifest.(.*)",
+         "dest": "/precache-manifest.$1"
+      },
+      {
+         "src": "/service-worker.js",
+         "headers": {
+            "cache-control": "s-maxage=0"
+         },
+         "dest": "/service-worker.js"
+      },
+      {
+         "src": "/sockjs-node/(.*)",
+         "dest": "/sockjs-node/$1"
+      },
+      {
+         "src": "/(.*)",
+         "headers": {
+            "cache-control": "s-maxage=0"
+         },
+         "dest": "/index.html"
+      }
+   ]
 }
