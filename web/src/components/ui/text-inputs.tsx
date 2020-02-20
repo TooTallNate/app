@@ -24,7 +24,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         aria-labelledby={labelId}
         name={name}
         className={`
-          py-2 px-4 h-10 w-full block no-spinner
+          py-2.5 px-4 h-11 w-full block no-spinner
           text-base text-black leading-none 
           border border-gray-500 rounded-lg
           focus:shadow-outline focus:outline-none
@@ -46,7 +46,7 @@ interface MultilineTextInputProps
 export const MultilineTextInput = React.forwardRef<
   HTMLTextAreaElement,
   MultilineTextInputProps
->(function NumberInput({ className, onChange, ...props }, ref) {
+>(function MultilineTextInput({ className, onChange, ...props }, ref) {
   const fieldConfig = useField();
 
   const labelId =
@@ -59,7 +59,7 @@ export const MultilineTextInput = React.forwardRef<
       aria-labelledby={labelId}
       name={name}
       className={`
-        py-2 px-4 h-24 w-full block no-spinner
+        py-2.5 px-4 h-24 w-full block no-spinner
         text-base text-black leading-none 
         border border-gray-500 rounded-lg
         focus:shadow-outline focus:outline-none
@@ -97,7 +97,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         name={name}
         step={step}
         className={`
-        py-2 px-4 h-10 w-full block no-spinner
+        py-2.5 px-4 h-11 w-full block no-spinner
         text-base text-black leading-none 
         border border-gray-500 rounded-lg
         focus:shadow-outline focus:outline-none

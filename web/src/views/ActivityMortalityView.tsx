@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
-import { Title, View, Group } from "../components/styled";
+import { Title, View, Output } from "../components/styled";
 import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
@@ -111,49 +111,37 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <Group className="flex mt-0">
-          <FormField
-            className="flex-1"
-            name="naturalQuantity"
-            rules={{
-              required: "The natural quantity field is required."
-            }}
-          >
-            <FormFieldLabel>Natural</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <div className="flex-auto flex-grow-0 w-8 text-center leading-none mt-16">
-            +
-          </div>
-          <FormField
-            className="flex-1"
-            name="euthanizedQuantity"
-            rules={{
-              required: "The euthanized quantity field is required."
-            }}
-          >
-            <FormFieldLabel>Euthanized</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <div className="flex-auto flex-grow-0 w-8 text-center leading-none mt-16">
-            =
-          </div>
-          <FormField className="w-18" name="total-quantity">
-            <FormFieldLabel>Total</FormFieldLabel>
-            <FormFieldInput>
-              <output className="p-0 mt-2 h-6 text-base block">
-                {totalQuantity}
-              </output>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-        </Group>
+        <FormField
+          name="naturalQuantity"
+          rules={{
+            required: "The natural quantity field is required."
+          }}
+        >
+          <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField
+          name="euthanizedQuantity"
+          rules={{
+            required: "The euthanized quantity field is required."
+          }}
+        >
+          <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
+          <FormFieldInput>
+            <NumberInput />
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
+        <FormField name="total-quantity">
+          <FormFieldLabel>Total Quantity</FormFieldLabel>
+          <FormFieldInput>
+            <Output>{totalQuantity}</Output>
+          </FormFieldInput>
+          <FormFieldErrors />
+        </FormField>
         <FormField
           name="weight"
           rules={{
