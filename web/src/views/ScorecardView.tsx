@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Title, Output } from "../components/styled";
+import { View, Title, Output, Button } from "../components/styled";
 import SliderInput from "../components/ui/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,

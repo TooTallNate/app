@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../styled";
+import Spinner from "./Spinner";
 
 const FormSubmit: React.FC = ({ children }) => {
   const { formState } = useFormContext();
@@ -12,7 +13,14 @@ const FormSubmit: React.FC = ({ children }) => {
         (!formState.isValid && formState.isSubmitted) || formState.isSubmitting
       }
     >
-      {children || "Submit"}
+      {formState.isSubmitting ? (
+        <Fragment>
+          <span className="mr-2">Loading</span>
+          <Spinner size={22} color="white" className="align-middle" />
+        </Fragment>
+      ) : (
+        children || "Submit"
+      )}
     </Button>
   );
 };
