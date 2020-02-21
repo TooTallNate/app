@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
 import { Title, View, Output } from "../components/styled";
-import { NumberInput } from "../components/ui/text-inputs";
+import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";

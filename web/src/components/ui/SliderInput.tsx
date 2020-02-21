@@ -3,7 +3,7 @@ import { jsx } from "@emotion/core";
 import tw from "tailwind.macro";
 import { useRef, useState, useLayoutEffect, useEffect } from "react";
 import { remToPx } from "../../utils";
-import { NumberInput } from "./text-inputs";
+import NumberInput from "./NumberInput";
 
 const trackStyles = tw`w-full h-11 cursor-pointer border border-solid border-gray-500 rounded-lg bg-transparent`;
 const thumbStyles = [

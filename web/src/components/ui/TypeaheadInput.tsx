@@ -7,7 +7,7 @@ import {
   KeyboardEventHandler,
   FocusEventHandler
 } from "react";
-import { TextInput } from "./text-inputs";
+import TextInput from "./TextInput";
 import typeaheadMachine, {
   TypeaheadItem,
   TypeaheadContext,

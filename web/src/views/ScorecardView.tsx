@@ -7,7 +7,7 @@ import {
   usePostFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import { TextInput } from "../components/ui/text-inputs";
+import TextInput from "../components/ui/TextInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { useFlash } from "../contexts/flash";
 import FullPageSpinner from "../components/FullPageSpinner";
