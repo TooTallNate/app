@@ -11,7 +11,10 @@ interface TextInputProps
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  function TextInput({ className, onChange, ...props }, ref) {
+  function TextInput(
+    { className, onChange, autoComplete = "off", ...props },
+    ref
+  ) {
     const fieldConfig = useField();
 
     const labelId =
@@ -21,6 +24,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     return (
       <input
         {...props}
+        autoComplete={autoComplete}
         aria-labelledby={labelId}
         name={name}
         className={`
@@ -81,7 +85,14 @@ type NumberInputProps = Omit<
 
 export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
   function NumberInput(
-    { className, value, onChange, step = "any", ...props },
+    {
+      className,
+      value,
+      onChange,
+      autoComplete = "off",
+      step = "any",
+      ...props
+    },
     ref
   ) {
     const fieldConfig = useField();
@@ -93,6 +104,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <input
         {...props}
+        autoComplete={autoComplete}
         aria-labelledby={labelId}
         name={name}
         step={step}
