@@ -2,7 +2,8 @@
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
 import { Title, View } from "../components/styled";
-import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
+import { NumberInput } from "../components/ui/text-inputs";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import { usePostPigPurchaseMutation, usePigActivityQuery } from "../graphql";

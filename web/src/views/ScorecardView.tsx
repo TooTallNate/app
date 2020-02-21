@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Title, Output, Button } from "../components/styled";
+import { View, Title } from "../components/styled";
 import SliderInput from "../components/ui/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import { MultilineTextInput, TextInput } from "../components/ui/text-inputs";
+import { TextInput } from "../components/ui/text-inputs";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { useFlash } from "../contexts/flash";
 import FullPageSpinner from "../components/FullPageSpinner";
 import tw from "tailwind.macro";
