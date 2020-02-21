@@ -96,6 +96,7 @@ const ActivityAdjustmentView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldLabel>Job</FormFieldLabel>
           <FormFieldInput>
             <TypeaheadInput
+              sort="desc"
               items={data.pigActivity.jobs.map(job => ({
                 value: job.number,
                 title: `${job.number} ${job.description}`
