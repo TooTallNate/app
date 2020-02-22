@@ -14,6 +14,7 @@ export type Scalars = {
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
   areas: Array<Job>;
+  operators: Array<Resource>;
 };
 
 export type FarrowingBackendScorecardInput = {
@@ -50,6 +51,7 @@ export type Mutation = {
   postPigPurchase: PigActivity;
   postPigWean: PigActivity;
   postFarrowingBackendScorecard: Scalars["Boolean"];
+  setAreaOperator: FarrowingBackendScorecard;
 };
 
 export type MutationLoginArgs = {
@@ -82,6 +84,10 @@ export type MutationPostPigWeanArgs = {
 
 export type MutationPostFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
+};
+
+export type MutationSetAreaOperatorArgs = {
+  input: SetAreaOperatorInput;
 };
 
 export type PigActivity = {
@@ -155,9 +161,20 @@ export type Query = {
   farrowingBackendScorecard: FarrowingBackendScorecard;
 };
 
+export type Resource = {
+  __typename?: "Resource";
+  number: Scalars["String"];
+  name: Scalars["String"];
+};
+
 export type ScorecardEntry = {
   score: Scalars["Int"];
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type SetAreaOperatorInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
 };
 
 export type User = {

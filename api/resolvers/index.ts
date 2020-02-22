@@ -1,5 +1,6 @@
 import { User, UserMutations, UserQueries } from "./user";
 import { Job } from "./jobs";
+import { Resource } from "./resource";
 import {
   PigActivityMutations,
   PigActivity,
@@ -24,6 +25,7 @@ export default {
   },
   User,
   Job,
+  Resource,
   PigActivity,
   FarrowingBackendScorecard
 };

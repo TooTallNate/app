@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob } from "../nav";
+import { NavUser, NavJob, NavResource } from "../nav";
 import { PigActivityMapper, FarrowingBackendScorecardMapper } from "./mappers";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
@@ -19,6 +19,7 @@ export type Scalars = {
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
   areas: Array<Job>;
+  operators: Array<Resource>;
 };
 
 export type FarrowingBackendScorecardInput = {
@@ -55,6 +56,7 @@ export type Mutation = {
   postPigPurchase: PigActivity;
   postPigWean: PigActivity;
   postFarrowingBackendScorecard: Scalars["Boolean"];
+  setAreaOperator: FarrowingBackendScorecard;
 };
 
 export type MutationLoginArgs = {
@@ -87,6 +89,10 @@ export type MutationPostPigWeanArgs = {
 
 export type MutationPostFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
+};
+
+export type MutationSetAreaOperatorArgs = {
+  input: SetAreaOperatorInput;
 };
 
 export type PigActivity = {
@@ -160,9 +166,20 @@ export type Query = {
   farrowingBackendScorecard: FarrowingBackendScorecard;
 };
 
+export type Resource = {
+  __typename?: "Resource";
+  number: Scalars["String"];
+  name: Scalars["String"];
+};
+
 export type ScorecardEntry = {
   score: Scalars["Int"];
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type SetAreaOperatorInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
 };
 
 export type User = {
@@ -399,6 +416,7 @@ export type ResolversTypes = ResolversObject<{
   FarrowingBackendScorecard: ResolverTypeWrapper<
     FarrowingBackendScorecardMapper
   >;
+  Resource: ResolverTypeWrapper<NavResource>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
@@ -411,6 +429,7 @@ export type ResolversTypes = ResolversObject<{
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntry: ScorecardEntry;
+  SetAreaOperatorInput: SetAreaOperatorInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -422,6 +441,7 @@ export type ResolversParentTypes = ResolversObject<{
   Job: NavJob;
   Float: Scalars["Float"];
   FarrowingBackendScorecard: FarrowingBackendScorecardMapper;
+  Resource: NavResource;
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
@@ -434,6 +454,7 @@ export type ResolversParentTypes = ResolversObject<{
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntry: ScorecardEntry;
+  SetAreaOperatorInput: SetAreaOperatorInput;
 }>;
 
 export type FarrowingBackendScorecardResolvers<
@@ -441,6 +462,11 @@ export type FarrowingBackendScorecardResolvers<
   ParentType extends ResolversParentTypes["FarrowingBackendScorecard"] = ResolversParentTypes["FarrowingBackendScorecard"]
 > = ResolversObject<{
   areas?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
+  operators?: Resolver<
+    Array<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type JobResolvers<
@@ -509,6 +535,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
+  setAreaOperator?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSetAreaOperatorArgs, "input">
+  >;
 }>;
 
 export type PigActivityResolvers<
@@ -541,6 +573,14 @@ export type QueryResolvers<
   >;
 }>;
 
+export type ResourceResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Resource"] = ResolversParentTypes["Resource"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
 export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
@@ -556,6 +596,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   PigActivity?: PigActivityResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Resource?: ResourceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

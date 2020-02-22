@@ -4,4 +4,4 @@ export interface PigActivityMapper {
   userSettings?: UserSettingsDocument;
 }
 
-export interface FarrowingBackendScorecardMapper { }
+export interface FarrowingBackendScorecardMapper {}

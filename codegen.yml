@@ -16,6 +16,7 @@ generates:
       mappers:
         User: "../nav#NavUser"
         Job: "../nav#NavJob"
+        Resource: "../nav#NavResource"
         PigActivity: "./mappers#PigActivityMapper"
         FarrowingBackendScorecard: "./mappers#FarrowingBackendScorecardMapper"
   web/src/graphql/index.tsx:

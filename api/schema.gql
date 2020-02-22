@@ -15,6 +15,11 @@ type Job {
   personResponsible: String!
 }
 
+type Resource {
+  number: String!
+  name: String!
+}
+
 type PigActivity {
   jobs: [Job!]!
   defaultJob: Job
@@ -80,11 +85,17 @@ input PigWeanInput {
 
 type FarrowingBackendScorecard {
   areas: [Job!]!
+  operators: [Resource!]!
 }
 
 input ScorecardEntry {
   score: Int!
   comments: String
+}
+
+input SetAreaOperatorInput {
+  area: String!
+  operator: String!
 }
 
 input FarrowingBackendScorecardInput {
@@ -114,4 +125,5 @@ type Mutation {
   postPigPurchase(input: PigPurchaseInput!): PigActivity!
   postPigWean(input: PigWeanInput!): PigActivity!
   postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): Boolean!
+  setAreaOperator(input: SetAreaOperatorInput!): FarrowingBackendScorecard!
 }

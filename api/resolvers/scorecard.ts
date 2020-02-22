@@ -7,6 +7,7 @@ import {
 import {
   NavJob,
   NavJobJournalEntry,
+  NavResource,
   ODataClient,
   NavJobJournalTemplate,
   NavJobJournalBatch,
@@ -40,6 +41,13 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
           f.equals("Job_Posting_Group", "FARROW-BE")
         )
       );
+  },
+  operators(_, __, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Resources")
+      .get<NavResource[]>()
+      .filter(f => f.equals("Resource_Group_No", "FARROW-BE"));
   }
 };
 
@@ -80,5 +88,15 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
     return true;
+  },
+  async setAreaOperator(_, { input }, { navClient }) {
+    await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.area)
+      .patch<NavJob>({
+        Person_Responsible: input.operator
+      });
+
+    return {};
   }
 };
