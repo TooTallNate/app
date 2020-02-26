@@ -311,10 +311,7 @@ export const PigActivityMutations: MutationResolvers = {
     return { userSettings };
   },
   async postPigWean(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
+    const { job } = await findJob(input.job, navClient);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,
@@ -329,8 +326,8 @@ export const PigActivityMutations: MutationResolvers = {
         Weight: input.weight,
         Job_No: input.job,
         Gen_Prod_Posting_Group: "WEAN PIGS",
-        Shortcut_Dimension_1_Code: "213",
-        Shortcut_Dimension_2_Code: "2"
+        Shortcut_Dimension_1_Code: "2",
+        Shortcut_Dimension_2_Code: "213"
       },
       navClient
     );
