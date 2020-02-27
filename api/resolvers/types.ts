@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo } from "graphql";
 import { NavUser, NavJob, NavResource } from "../nav";
 import { UserSettingsDocument } from "../models/user-settings";
-import { BaseResultMapper } from "./mappers";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -487,7 +486,11 @@ export type ResolversTypes = ResolversObject<{
   LogoutResult: ResolverTypeWrapper<LogoutResult>;
   PigAdjustmentInput: PigAdjustmentInput;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
-  PostPigActivityResult: ResolverTypeWrapper<BaseResultMapper>;
+  PostPigActivityResult: ResolverTypeWrapper<
+    Omit<PostPigActivityResult, "defaults"> & {
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
   PigGradeOffInput: PigGradeOffInput;
   PigMortalityInput: PigMortalityInput;
   PigMoveInput: PigMoveInput;
@@ -528,7 +531,9 @@ export type ResolversParentTypes = ResolversObject<{
   LogoutResult: LogoutResult;
   PigAdjustmentInput: PigAdjustmentInput;
   Int: Scalars["Int"];
-  PostPigActivityResult: BaseResultMapper;
+  PostPigActivityResult: Omit<PostPigActivityResult, "defaults"> & {
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
   PigGradeOffInput: PigGradeOffInput;
   PigMortalityInput: PigMortalityInput;
   PigMoveInput: PigMoveInput;

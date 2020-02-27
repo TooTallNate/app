@@ -18,7 +18,6 @@ generates:
         Job: "../nav#NavJob"
         Resource: "../nav#NavResource"
         PigActivityDefaults: "../models/user-settings#UserSettingsDocument"
-        PostPigActivityResult: "./mappers#BaseResultMapper"
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"
