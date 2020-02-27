@@ -307,7 +307,7 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
 export type FarrowingBackendScorecardQueryVariables = {};
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  farrowingBackendAreas: Array<
+  areas: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
@@ -315,13 +315,8 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
         >;
       }
   >;
-};
-
-export type FarrowingBackendOperatorsQueryVariables = {};
-
-export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
-  farrowingBackendOperators: Array<
-    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+  operators: Array<
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 

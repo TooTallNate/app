@@ -301,7 +301,7 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
 export type FarrowingBackendScorecardQueryVariables = {};
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  farrowingBackendAreas: Array<
+  areas: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
@@ -309,13 +309,8 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
         >;
       }
   >;
-};
-
-export type FarrowingBackendOperatorsQueryVariables = {};
-
-export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
-  farrowingBackendOperators: Array<
-    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+  operators: Array<
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 
@@ -746,13 +741,17 @@ export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
 >;
 export const FarrowingBackendScorecardDocument = gql`
   query FarrowingBackendScorecard {
-    farrowingBackendAreas {
+    areas: farrowingBackendAreas {
       number
       description
       personResponsible {
         name
         number
       }
+    }
+    operators: farrowingBackendOperators {
+      number
+      name
     }
   }
 `;
@@ -803,62 +802,6 @@ export type FarrowingBackendScorecardLazyQueryHookResult = ReturnType<
 export type FarrowingBackendScorecardQueryResult = ApolloReactCommon.QueryResult<
   FarrowingBackendScorecardQuery,
   FarrowingBackendScorecardQueryVariables
->;
-export const FarrowingBackendOperatorsDocument = gql`
-  query FarrowingBackendOperators {
-    farrowingBackendOperators {
-      name
-      number
-    }
-  }
-`;
-
-/**
- * __useFarrowingBackendOperatorsQuery__
- *
- * To run a query within a React component, call `useFarrowingBackendOperatorsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFarrowingBackendOperatorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFarrowingBackendOperatorsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useFarrowingBackendOperatorsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >(FarrowingBackendOperatorsDocument, baseOptions);
-}
-export function useFarrowingBackendOperatorsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >(FarrowingBackendOperatorsDocument, baseOptions);
-}
-export type FarrowingBackendOperatorsQueryHookResult = ReturnType<
-  typeof useFarrowingBackendOperatorsQuery
->;
-export type FarrowingBackendOperatorsLazyQueryHookResult = ReturnType<
-  typeof useFarrowingBackendOperatorsLazyQuery
->;
-export type FarrowingBackendOperatorsQueryResult = ApolloReactCommon.QueryResult<
-  FarrowingBackendOperatorsQuery,
-  FarrowingBackendOperatorsQueryVariables
 >;
 export const PostFarrowingBackendScorecardDocument = gql`
   mutation PostFarrowingBackendScorecard(

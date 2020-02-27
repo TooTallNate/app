@@ -7,7 +7,6 @@ import {
   usePostFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import TextInput from "../components/ui/TextInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { useFlash } from "../contexts/flash";
 import FullPageSpinner from "../components/FullPageSpinner";
@@ -80,9 +79,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
 
   useEffect(() => {
     const selectedArea =
-      data &&
-      area &&
-      data.farrowingBackendAreas.find(({ number }) => number === area);
+      data && area && data.areas.find(({ number }) => number === area);
     if (selectedArea) {
       setValue("operator", selectedArea.personResponsible.number);
     } else {
@@ -160,7 +157,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldLabel>Area</FormFieldLabel>
           <FormFieldInput>
             <TypeaheadInput
-              items={data.farrowingBackendAreas.map(area => ({
+              items={data.areas.map(area => ({
                 value: area.number,
                 title: area.description
               }))}
@@ -174,7 +171,12 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
         >
           <FormFieldLabel>Operator</FormFieldLabel>
           <FormFieldInput>
-            <TextInput />
+            <TypeaheadInput
+              items={data.operators.map(operator => ({
+                value: operator.number,
+                title: operator.name
+              }))}
+            />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
