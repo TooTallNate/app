@@ -38,7 +38,10 @@ export const UserMutations: MutationResolvers = {
       name: users[0].Full_Name,
       securityId: users[0].User_Security_ID
     };
-    return users[0];
+    return {
+      success: true,
+      user: users[0]
+    };
   },
   async logout(_, __, context) {
     await new Promise((res, rej) =>
@@ -47,7 +50,7 @@ export const UserMutations: MutationResolvers = {
         else res();
       })
     );
-    return true;
+    return { success: true };
   }
 };
 

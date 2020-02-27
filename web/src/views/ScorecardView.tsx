@@ -82,11 +82,9 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
     const selectedArea =
       data &&
       area &&
-      data.farrowingBackendScorecard.areas.find(
-        ({ number }) => number === area
-      );
+      data.farrowingBackendAreas.find(({ number }) => number === area);
     if (selectedArea) {
-      setValue("operator", selectedArea.personResponsible);
+      setValue("operator", selectedArea.personResponsible.number);
     } else {
       setValue("operator", "");
     }
@@ -162,7 +160,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldLabel>Area</FormFieldLabel>
           <FormFieldInput>
             <TypeaheadInput
-              items={data.farrowingBackendScorecard.areas.map(area => ({
+              items={data.farrowingBackendAreas.map(area => ({
                 value: area.number,
                 title: area.description
               }))}

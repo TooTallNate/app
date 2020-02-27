@@ -5,7 +5,9 @@ fragment UserParts on User {
 
 mutation Login($input: LoginInput!) {
   login(input: $input) {
-    ...UserParts
+    user {
+      ...UserParts
+    }
   }
 }
 
@@ -16,5 +18,7 @@ query User {
 }
 
 mutation Logout {
-  logout
+  logout {
+    success
+  }
 }

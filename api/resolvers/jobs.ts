@@ -1,7 +1,13 @@
 import { JobResolvers } from "./types";
+import { NavResource } from "../nav";
 
 export const Job: JobResolvers = {
   number: job => job.No,
   description: job => job.Description,
-  personResponsible: job => job.Person_Responsible
+  personResponsible(job, _, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Resources", job.Person_Responsible)
+      .get<NavResource>();
+  }
 };

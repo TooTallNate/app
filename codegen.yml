@@ -17,8 +17,8 @@ generates:
         User: "../nav#NavUser"
         Job: "../nav#NavJob"
         Resource: "../nav#NavResource"
-        PigActivity: "./mappers#PigActivityMapper"
-        FarrowingBackendScorecard: "./mappers#FarrowingBackendScorecardMapper"
+        PigActivityDefaults: "../models/user-settings#UserSettingsDocument"
+        PostPigActivityResult: "./mappers#BaseResultMapper"
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"

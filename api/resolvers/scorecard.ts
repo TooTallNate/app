@@ -1,9 +1,4 @@
-import {
-  MutationResolvers,
-  QueryResolvers,
-  FarrowingBackendScorecardResolvers,
-  ScorecardEntry
-} from "./types";
+import { MutationResolvers, QueryResolvers, ScorecardEntry } from "./types";
 import {
   NavJob,
   NavJobJournalEntry,
@@ -29,8 +24,8 @@ function postJobJournal(
     .post(entry);
 }
 
-export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
-  areas(_, __, { navClient }) {
+export const ScorecardQueries: QueryResolvers = {
+  farrowingBackendAreas(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs")
@@ -42,17 +37,13 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
         )
       );
   },
-  operators(_, __, { navClient }) {
+  farrowingBackendOperators(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Resources")
       .get<NavResource[]>()
       .filter(f => f.equals("Resource_Group_No", "FARROW-BE"));
   }
-};
-
-export const ScorecardQueries: QueryResolvers = {
-  farrowingBackendScorecard: () => ({})
 };
 
 export const ScorecardMutations: MutationResolvers = {
@@ -87,16 +78,16 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowCare, input.sows);
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
-    return true;
+    return { success: true };
   },
   async setAreaOperator(_, { input }, { navClient }) {
-    await navClient
+    const area = await navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", input.area)
       .patch<NavJob>({
         Person_Responsible: input.operator
       });
 
-    return {};
+    return { success: true, area };
   }
 };

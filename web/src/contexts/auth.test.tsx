@@ -74,7 +74,7 @@ test("login updates context when successful", async () => {
     },
     {
       request: { query: LoginDocument, variables: { input: creds } },
-      result: { data: { login: user } }
+      result: { data: { login: { user } } }
     }
   ]);
   await findByText(/Child/i);

@@ -1,8 +1,10 @@
 import { GraphQLResolveInfo } from "graphql";
 import { NavUser, NavJob, NavResource } from "../nav";
-import { PigActivityMapper, FarrowingBackendScorecardMapper } from "./mappers";
+import { UserSettingsDocument } from "../models/user-settings";
+import { BaseResultMapper } from "./mappers";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
 } &
@@ -37,7 +39,7 @@ export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
   description: Scalars["String"];
-  personResponsible: Scalars["String"];
+  personResponsible: Resource;
 };
 
 export type LoginInput = {
@@ -45,18 +47,29 @@ export type LoginInput = {
   password: Scalars["String"];
 };
 
+export type LoginResult = {
+  __typename?: "LoginResult";
+  success: Scalars["Boolean"];
+  user: User;
+};
+
+export type LogoutResult = {
+  __typename?: "LogoutResult";
+  success: Scalars["Boolean"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
-  login: User;
-  logout: Scalars["Boolean"];
-  postPigAdjustment: PigActivity;
-  postPigGradeOff: PigActivity;
-  postPigMortality: PigActivity;
-  postPigMove: PigActivity;
-  postPigPurchase: PigActivity;
-  postPigWean: PigActivity;
-  postFarrowingBackendScorecard: Scalars["Boolean"];
-  setAreaOperator: FarrowingBackendScorecard;
+  login: LoginResult;
+  logout: LogoutResult;
+  postPigAdjustment: PostPigActivityResult;
+  postPigGradeOff: PostPigActivityResult;
+  postPigMortality: PostPigActivityResult;
+  postPigMove: PostPigActivityResult;
+  postPigPurchase: PostPigActivityResult;
+  postPigWean: PostPigActivityResult;
+  postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
+  setAreaOperator: SetAreaOperatorResult;
 };
 
 export type MutationLoginArgs = {
@@ -95,11 +108,10 @@ export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
 };
 
-export type PigActivity = {
-  __typename?: "PigActivity";
-  jobs: Array<Job>;
-  defaultJob?: Maybe<Job>;
-  defaultPrice?: Maybe<Scalars["Float"]>;
+export type PigActivityDefaults = {
+  __typename?: "PigActivityDefaults";
+  job?: Maybe<Job>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type PigAdjustmentInput = {
@@ -159,11 +171,24 @@ export type PigWeanInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PostFarrowingBackendScorecardResult = {
+  __typename?: "PostFarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+};
+
+export type PostPigActivityResult = {
+  __typename?: "PostPigActivityResult";
+  success: Scalars["Boolean"];
+  defaults: PigActivityDefaults;
+};
+
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
-  pigActivity: PigActivity;
-  farrowingBackendScorecard: FarrowingBackendScorecard;
+  pigActivityJobs: Array<Job>;
+  pigActivityDefaults: PigActivityDefaults;
+  farrowingBackendAreas: Array<Job>;
+  farrowingBackendOperators: Array<Resource>;
 };
 
 export type Resource = {
@@ -182,6 +207,12 @@ export type SetAreaOperatorInput = {
   operator: Scalars["String"];
 };
 
+export type SetAreaOperatorResult = {
+  __typename?: "SetAreaOperatorResult";
+  success: Scalars["Boolean"];
+  area: Job;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
@@ -189,17 +220,29 @@ export type User = {
   name: Scalars["String"];
 };
 
-export type PigActivityDefaultsFragment = { __typename?: "PigActivity" } & Pick<
-  PigActivity,
-  "defaultPrice"
-> & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+export type PigActivityDefaultsFragmentFragment = {
+  __typename?: "PigActivityDefaults";
+} & Pick<PigActivityDefaults, "price"> & {
+    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
+
+export type PostPigActivityResultFragmentFragment = {
+  __typename?: "PostPigActivityResult";
+} & {
+  defaults: {
+    __typename?: "PigActivityDefaults";
+  } & PigActivityDefaultsFragmentFragment;
+};
 
 export type PigActivityQueryVariables = {};
 
 export type PigActivityQuery = { __typename?: "Query" } & {
-  pigActivity: { __typename?: "PigActivity" } & {
-    jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
-  } & PigActivityDefaultsFragment;
+  pigActivityJobs: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description">
+  >;
+  pigActivityDefaults: {
+    __typename?: "PigActivityDefaults";
+  } & PigActivityDefaultsFragmentFragment;
 };
 
 export type PostPigMoveMutationVariables = {
@@ -207,7 +250,9 @@ export type PostPigMoveMutationVariables = {
 };
 
 export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigMove: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigAdjustmentMutationVariables = {
@@ -216,8 +261,8 @@ export type PostPigAdjustmentMutationVariables = {
 
 export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
   postPigAdjustment: {
-    __typename?: "PigActivity";
-  } & PigActivityDefaultsFragment;
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigGradeOffMutationVariables = {
@@ -225,7 +270,9 @@ export type PostPigGradeOffMutationVariables = {
 };
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
-  postPigGradeOff: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigGradeOff: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigWeanMutationVariables = {
@@ -233,7 +280,9 @@ export type PostPigWeanMutationVariables = {
 };
 
 export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigWean: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigPurchaseMutationVariables = {
@@ -241,7 +290,9 @@ export type PostPigPurchaseMutationVariables = {
 };
 
 export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigPurchase: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigMortalityMutationVariables = {
@@ -250,21 +301,29 @@ export type PostPigMortalityMutationVariables = {
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
   postPigMortality: {
-    __typename?: "PigActivity";
-  } & PigActivityDefaultsFragment;
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type FarrowingBackendScorecardQueryVariables = {};
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  farrowingBackendScorecard: { __typename?: "FarrowingBackendScorecard" } & {
-    areas: Array<
-      { __typename?: "Job" } & Pick<
-        Job,
-        "number" | "description" | "personResponsible"
-      >
-    >;
-  };
+  farrowingBackendAreas: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
+        personResponsible: { __typename?: "Resource" } & Pick<
+          Resource,
+          "name" | "number"
+        >;
+      }
+  >;
+};
+
+export type FarrowingBackendOperatorsQueryVariables = {};
+
+export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
+  farrowingBackendOperators: Array<
+    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+  >;
 };
 
 export type PostFarrowingBackendScorecardMutationVariables = {
@@ -273,7 +332,11 @@ export type PostFarrowingBackendScorecardMutationVariables = {
 
 export type PostFarrowingBackendScorecardMutation = {
   __typename?: "Mutation";
-} & Pick<Mutation, "postFarrowingBackendScorecard">;
+} & {
+  postFarrowingBackendScorecard: {
+    __typename?: "PostFarrowingBackendScorecardResult";
+  } & Pick<PostFarrowingBackendScorecardResult, "success">;
+};
 
 export type UserPartsFragment = { __typename?: "User" } & Pick<
   User,
@@ -285,7 +348,9 @@ export type LoginMutationVariables = {
 };
 
 export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "User" } & UserPartsFragment;
+  login: { __typename?: "LoginResult" } & {
+    user: { __typename?: "User" } & UserPartsFragment;
+  };
 };
 
 export type UserQueryVariables = {};
@@ -296,10 +361,9 @@ export type UserQuery = { __typename?: "Query" } & {
 
 export type LogoutMutationVariables = {};
 
-export type LogoutMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "logout"
->;
+export type LogoutMutation = { __typename?: "Mutation" } & {
+  logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
+};
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -410,18 +474,20 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<NavUser>;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  PigActivity: ResolverTypeWrapper<PigActivityMapper>;
   Job: ResolverTypeWrapper<NavJob>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
-  FarrowingBackendScorecard: ResolverTypeWrapper<
-    FarrowingBackendScorecardMapper
-  >;
   Resource: ResolverTypeWrapper<NavResource>;
+  PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
+  LoginResult: ResolverTypeWrapper<
+    Omit<LoginResult, "user"> & { user: ResolversTypes["User"] }
+  >;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
+  LogoutResult: ResolverTypeWrapper<LogoutResult>;
   PigAdjustmentInput: PigAdjustmentInput;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
+  PostPigActivityResult: ResolverTypeWrapper<BaseResultMapper>;
   PigGradeOffInput: PigGradeOffInput;
   PigMortalityInput: PigMortalityInput;
   PigMoveInput: PigMoveInput;
@@ -429,7 +495,19 @@ export type ResolversTypes = ResolversObject<{
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntry: ScorecardEntry;
+  PostFarrowingBackendScorecardResult: ResolverTypeWrapper<
+    PostFarrowingBackendScorecardResult
+  >;
   SetAreaOperatorInput: SetAreaOperatorInput;
+  SetAreaOperatorResult: ResolverTypeWrapper<
+    Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
+  >;
+  FarrowingBackendScorecard: ResolverTypeWrapper<
+    Omit<FarrowingBackendScorecard, "areas" | "operators"> & {
+      areas: Array<ResolversTypes["Job"]>;
+      operators: Array<ResolversTypes["Resource"]>;
+    }
+  >;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -437,16 +515,20 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: NavUser;
   String: Scalars["String"];
-  PigActivity: PigActivityMapper;
   Job: NavJob;
-  Float: Scalars["Float"];
-  FarrowingBackendScorecard: FarrowingBackendScorecardMapper;
   Resource: NavResource;
+  PigActivityDefaults: UserSettingsDocument;
+  Float: Scalars["Float"];
   Mutation: {};
   LoginInput: LoginInput;
+  LoginResult: Omit<LoginResult, "user"> & {
+    user: ResolversParentTypes["User"];
+  };
   Boolean: Scalars["Boolean"];
+  LogoutResult: LogoutResult;
   PigAdjustmentInput: PigAdjustmentInput;
   Int: Scalars["Int"];
+  PostPigActivityResult: BaseResultMapper;
   PigGradeOffInput: PigGradeOffInput;
   PigMortalityInput: PigMortalityInput;
   PigMoveInput: PigMoveInput;
@@ -454,7 +536,18 @@ export type ResolversParentTypes = ResolversObject<{
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntry: ScorecardEntry;
+  PostFarrowingBackendScorecardResult: PostFarrowingBackendScorecardResult;
   SetAreaOperatorInput: SetAreaOperatorInput;
+  SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
+    area: ResolversParentTypes["Job"];
+  };
+  FarrowingBackendScorecard: Omit<
+    FarrowingBackendScorecard,
+    "areas" | "operators"
+  > & {
+    areas: Array<ResolversParentTypes["Job"]>;
+    operators: Array<ResolversParentTypes["Resource"]>;
+  };
 }>;
 
 export type FarrowingBackendScorecardResolvers<
@@ -476,10 +569,25 @@ export type JobResolvers<
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   personResponsible?: Resolver<
-    ResolversTypes["String"],
+    ResolversTypes["Resource"],
     ParentType,
     ContextType
   >;
+}>;
+
+export type LoginResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LoginResult"] = ResolversParentTypes["LoginResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+}>;
+
+export type LogoutResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LogoutResult"] = ResolversParentTypes["LogoutResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<
@@ -487,70 +595,84 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
   login?: Resolver<
-    ResolversTypes["User"],
+    ResolversTypes["LoginResult"],
     ParentType,
     ContextType,
     RequireFields<MutationLoginArgs, "input">
   >;
-  logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  logout?: Resolver<ResolversTypes["LogoutResult"], ParentType, ContextType>;
   postPigAdjustment?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigAdjustmentArgs, "input">
   >;
   postPigGradeOff?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigGradeOffArgs, "input">
   >;
   postPigMortality?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMortalityArgs, "input">
   >;
   postPigMove?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMoveArgs, "input">
   >;
   postPigPurchase?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigPurchaseArgs, "input">
   >;
   postPigWean?: Resolver<
-    ResolversTypes["PigActivity"],
+    ResolversTypes["PostPigActivityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigWeanArgs, "input">
   >;
   postFarrowingBackendScorecard?: Resolver<
-    ResolversTypes["Boolean"],
+    ResolversTypes["PostFarrowingBackendScorecardResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
   setAreaOperator?: Resolver<
-    ResolversTypes["FarrowingBackendScorecard"],
+    ResolversTypes["SetAreaOperatorResult"],
     ParentType,
     ContextType,
     RequireFields<MutationSetAreaOperatorArgs, "input">
   >;
 }>;
 
-export type PigActivityResolvers<
+export type PigActivityDefaultsResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigActivity"] = ResolversParentTypes["PigActivity"]
+  ParentType extends ResolversParentTypes["PigActivityDefaults"] = ResolversParentTypes["PigActivityDefaults"]
 > = ResolversObject<{
-  jobs?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
-  defaultJob?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
-  defaultPrice?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
+  job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+}>;
+
+export type PostFarrowingBackendScorecardResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostFarrowingBackendScorecardResult"] = ResolversParentTypes["PostFarrowingBackendScorecardResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+}>;
+
+export type PostPigActivityResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigActivityResult"] = ResolversParentTypes["PostPigActivityResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
     ParentType,
     ContextType
   >;
@@ -561,13 +683,23 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  pigActivity?: Resolver<
-    ResolversTypes["PigActivity"],
+  pigActivityJobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
     ParentType,
     ContextType
   >;
-  farrowingBackendScorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecard"],
+  pigActivityDefaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  farrowingBackendAreas?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType
+  >;
+  farrowingBackendOperators?: Resolver<
+    Array<ResolversTypes["Resource"]>,
     ParentType,
     ContextType
   >;
@@ -579,6 +711,14 @@ export type ResourceResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
+export type SetAreaOperatorResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SetAreaOperatorResult"] = ResolversParentTypes["SetAreaOperatorResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
 }>;
 
 export type UserResolvers<
@@ -593,10 +733,17 @@ export type UserResolvers<
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FarrowingBackendScorecard?: FarrowingBackendScorecardResolvers<ContextType>;
   Job?: JobResolvers<ContextType>;
+  LoginResult?: LoginResultResolvers<ContextType>;
+  LogoutResult?: LogoutResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
-  PigActivity?: PigActivityResolvers<ContextType>;
+  PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
+  PostFarrowingBackendScorecardResult?: PostFarrowingBackendScorecardResultResolvers<
+    ContextType
+  >;
+  PostPigActivityResult?: PostPigActivityResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
+  SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

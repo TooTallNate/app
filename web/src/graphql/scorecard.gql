@@ -1,13 +1,23 @@
 query FarrowingBackendScorecard {
-  farrowingBackendScorecard {
-    areas {
+  farrowingBackendAreas {
+    number
+    description
+    personResponsible {
+      name
       number
-      description
-      personResponsible
     }
   }
 }
 
+query FarrowingBackendOperators {
+  farrowingBackendOperators {
+    name
+    number
+  }
+}
+
 mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
-  postFarrowingBackendScorecard(input: $input)
+  postFarrowingBackendScorecard(input: $input) {
+    success
+  }
 }

@@ -4,15 +4,10 @@ type User {
   name: String!
 }
 
-input LoginInput {
-  username: String!
-  password: String!
-}
-
 type Job {
   number: String!
   description: String!
-  personResponsible: String!
+  personResponsible: Resource!
 }
 
 type Resource {
@@ -20,10 +15,20 @@ type Resource {
   name: String!
 }
 
-type PigActivity {
-  jobs: [Job!]!
-  defaultJob: Job
-  defaultPrice: Float
+type PigActivityDefaults {
+  job: Job
+  price: Float
+}
+
+type FarrowingBackendScorecard {
+  areas: [Job!]!
+  operators: [Resource!]!
+}
+
+
+input LoginInput {
+  username: String!
+  password: String!
 }
 
 input PigAdjustmentInput {
@@ -83,11 +88,6 @@ input PigWeanInput {
   comments: String
 }
 
-type FarrowingBackendScorecard {
-  areas: [Job!]!
-  operators: [Resource!]!
-}
-
 input ScorecardEntry {
   score: Int!
   comments: String
@@ -109,21 +109,48 @@ input FarrowingBackendScorecardInput {
   room: ScorecardEntry!
 }
 
+
+type LoginResult {
+  success: Boolean!
+  user: User!
+}
+
+type LogoutResult {
+  success: Boolean!
+}
+
+type PostPigActivityResult {
+  success: Boolean!
+  defaults: PigActivityDefaults!
+}
+
+type PostFarrowingBackendScorecardResult {
+  success: Boolean!
+}
+
+type SetAreaOperatorResult {
+  success: Boolean!
+  area: Job!
+}
+
+
 type Query {
   user: User
-  pigActivity: PigActivity!
-  farrowingBackendScorecard: FarrowingBackendScorecard!
+  pigActivityJobs: [Job!]!
+  pigActivityDefaults: PigActivityDefaults!
+  farrowingBackendAreas: [Job!]!
+  farrowingBackendOperators: [Resource!]!
 }
 
 type Mutation {
-  login(input: LoginInput!): User!
-  logout: Boolean!
-  postPigAdjustment(input: PigAdjustmentInput!): PigActivity!
-  postPigGradeOff(input: PigGradeOffInput!): PigActivity!
-  postPigMortality(input: PigMortalityInput!): PigActivity!
-  postPigMove(input: PigMoveInput!): PigActivity!
-  postPigPurchase(input: PigPurchaseInput!): PigActivity!
-  postPigWean(input: PigWeanInput!): PigActivity!
-  postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): Boolean!
-  setAreaOperator(input: SetAreaOperatorInput!): FarrowingBackendScorecard!
+  login(input: LoginInput!): LoginResult!
+  logout: LogoutResult!
+  postPigAdjustment(input: PigAdjustmentInput!): PostPigActivityResult!
+  postPigGradeOff(input: PigGradeOffInput!): PostPigActivityResult!
+  postPigMortality(input: PigMortalityInput!): PostPigActivityResult!
+  postPigMove(input: PigMoveInput!): PostPigActivityResult!
+  postPigPurchase(input: PigPurchaseInput!): PostPigActivityResult!
+  postPigWean(input: PigWeanInput!): PostPigActivityResult!
+  postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
+  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
 }

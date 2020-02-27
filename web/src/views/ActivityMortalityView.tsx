@@ -40,15 +40,15 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
 
   // Set job with default only if not already set.
   useEffect(() => {
-    if (!getValues().job && data && data.pigActivity.defaultJob) {
-      setValue("job", data.pigActivity.defaultJob.number);
+    if (!getValues().job && data && data.pigActivityDefaults.job) {
+      setValue("job", data.pigActivityDefaults.job.number);
     }
   }, [data, getValues, setValue]);
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (!getValues().price && data && data.pigActivity.defaultPrice) {
-      setValue("price", data.pigActivity.defaultPrice);
+    if (!getValues().price && data && data.pigActivityDefaults.price) {
+      setValue("price", data.pigActivityDefaults.price);
     }
   }, [data, getValues, setValue]);
 
@@ -105,7 +105,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldInput>
             <TypeaheadInput
               sort="desc"
-              items={data.pigActivity.jobs.map(job => ({
+              items={data.pigActivityJobs.map(job => ({
                 value: job.number,
                 title: `${job.number} ${job.description}`
               }))}

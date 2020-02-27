@@ -116,7 +116,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
           cb &&
             cb(error, response, Array.isArray(body.value) ? body.value : body);
         } else if (response.statusCode >= 400) {
-          if (body) {
+          if (body && body.error) {
             cb &&
               cb(
                 new ODataError(body.error.code, body.error.message),
@@ -126,7 +126,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
           } else {
             cb &&
               cb(
-                new ODataError(NavErrorCode.Unknown, "Unknown error"),
+                new ODataError(NavErrorCode.Unknown, `${response.statusCode}`),
                 response,
                 body
               );

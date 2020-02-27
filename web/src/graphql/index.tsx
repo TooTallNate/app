@@ -32,7 +32,7 @@ export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
   description: Scalars["String"];
-  personResponsible: Scalars["String"];
+  personResponsible: Resource;
 };
 
 export type LoginInput = {
@@ -40,18 +40,29 @@ export type LoginInput = {
   password: Scalars["String"];
 };
 
+export type LoginResult = {
+  __typename?: "LoginResult";
+  success: Scalars["Boolean"];
+  user: User;
+};
+
+export type LogoutResult = {
+  __typename?: "LogoutResult";
+  success: Scalars["Boolean"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
-  login: User;
-  logout: Scalars["Boolean"];
-  postPigAdjustment: PigActivity;
-  postPigGradeOff: PigActivity;
-  postPigMortality: PigActivity;
-  postPigMove: PigActivity;
-  postPigPurchase: PigActivity;
-  postPigWean: PigActivity;
-  postFarrowingBackendScorecard: Scalars["Boolean"];
-  setAreaOperator: FarrowingBackendScorecard;
+  login: LoginResult;
+  logout: LogoutResult;
+  postPigAdjustment: PostPigActivityResult;
+  postPigGradeOff: PostPigActivityResult;
+  postPigMortality: PostPigActivityResult;
+  postPigMove: PostPigActivityResult;
+  postPigPurchase: PostPigActivityResult;
+  postPigWean: PostPigActivityResult;
+  postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
+  setAreaOperator: SetAreaOperatorResult;
 };
 
 export type MutationLoginArgs = {
@@ -90,11 +101,10 @@ export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
 };
 
-export type PigActivity = {
-  __typename?: "PigActivity";
-  jobs: Array<Job>;
-  defaultJob?: Maybe<Job>;
-  defaultPrice?: Maybe<Scalars["Float"]>;
+export type PigActivityDefaults = {
+  __typename?: "PigActivityDefaults";
+  job?: Maybe<Job>;
+  price?: Maybe<Scalars["Float"]>;
 };
 
 export type PigAdjustmentInput = {
@@ -154,11 +164,24 @@ export type PigWeanInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PostFarrowingBackendScorecardResult = {
+  __typename?: "PostFarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+};
+
+export type PostPigActivityResult = {
+  __typename?: "PostPigActivityResult";
+  success: Scalars["Boolean"];
+  defaults: PigActivityDefaults;
+};
+
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
-  pigActivity: PigActivity;
-  farrowingBackendScorecard: FarrowingBackendScorecard;
+  pigActivityJobs: Array<Job>;
+  pigActivityDefaults: PigActivityDefaults;
+  farrowingBackendAreas: Array<Job>;
+  farrowingBackendOperators: Array<Resource>;
 };
 
 export type Resource = {
@@ -177,6 +200,12 @@ export type SetAreaOperatorInput = {
   operator: Scalars["String"];
 };
 
+export type SetAreaOperatorResult = {
+  __typename?: "SetAreaOperatorResult";
+  success: Scalars["Boolean"];
+  area: Job;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
@@ -184,17 +213,29 @@ export type User = {
   name: Scalars["String"];
 };
 
-export type PigActivityDefaultsFragment = { __typename?: "PigActivity" } & Pick<
-  PigActivity,
-  "defaultPrice"
-> & { defaultJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">> };
+export type PigActivityDefaultsFragmentFragment = {
+  __typename?: "PigActivityDefaults";
+} & Pick<PigActivityDefaults, "price"> & {
+    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
+
+export type PostPigActivityResultFragmentFragment = {
+  __typename?: "PostPigActivityResult";
+} & {
+  defaults: {
+    __typename?: "PigActivityDefaults";
+  } & PigActivityDefaultsFragmentFragment;
+};
 
 export type PigActivityQueryVariables = {};
 
 export type PigActivityQuery = { __typename?: "Query" } & {
-  pigActivity: { __typename?: "PigActivity" } & {
-    jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
-  } & PigActivityDefaultsFragment;
+  pigActivityJobs: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description">
+  >;
+  pigActivityDefaults: {
+    __typename?: "PigActivityDefaults";
+  } & PigActivityDefaultsFragmentFragment;
 };
 
 export type PostPigMoveMutationVariables = {
@@ -202,7 +243,9 @@ export type PostPigMoveMutationVariables = {
 };
 
 export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigMove: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigAdjustmentMutationVariables = {
@@ -211,8 +254,8 @@ export type PostPigAdjustmentMutationVariables = {
 
 export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
   postPigAdjustment: {
-    __typename?: "PigActivity";
-  } & PigActivityDefaultsFragment;
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigGradeOffMutationVariables = {
@@ -220,7 +263,9 @@ export type PostPigGradeOffMutationVariables = {
 };
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
-  postPigGradeOff: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigGradeOff: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigWeanMutationVariables = {
@@ -228,7 +273,9 @@ export type PostPigWeanMutationVariables = {
 };
 
 export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigWean: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigPurchaseMutationVariables = {
@@ -236,7 +283,9 @@ export type PostPigPurchaseMutationVariables = {
 };
 
 export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PigActivity" } & PigActivityDefaultsFragment;
+  postPigPurchase: {
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type PostPigMortalityMutationVariables = {
@@ -245,21 +294,29 @@ export type PostPigMortalityMutationVariables = {
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
   postPigMortality: {
-    __typename?: "PigActivity";
-  } & PigActivityDefaultsFragment;
+    __typename?: "PostPigActivityResult";
+  } & PostPigActivityResultFragmentFragment;
 };
 
 export type FarrowingBackendScorecardQueryVariables = {};
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  farrowingBackendScorecard: { __typename?: "FarrowingBackendScorecard" } & {
-    areas: Array<
-      { __typename?: "Job" } & Pick<
-        Job,
-        "number" | "description" | "personResponsible"
-      >
-    >;
-  };
+  farrowingBackendAreas: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
+        personResponsible: { __typename?: "Resource" } & Pick<
+          Resource,
+          "name" | "number"
+        >;
+      }
+  >;
+};
+
+export type FarrowingBackendOperatorsQueryVariables = {};
+
+export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
+  farrowingBackendOperators: Array<
+    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+  >;
 };
 
 export type PostFarrowingBackendScorecardMutationVariables = {
@@ -268,7 +325,11 @@ export type PostFarrowingBackendScorecardMutationVariables = {
 
 export type PostFarrowingBackendScorecardMutation = {
   __typename?: "Mutation";
-} & Pick<Mutation, "postFarrowingBackendScorecard">;
+} & {
+  postFarrowingBackendScorecard: {
+    __typename?: "PostFarrowingBackendScorecardResult";
+  } & Pick<PostFarrowingBackendScorecardResult, "success">;
+};
 
 export type UserPartsFragment = { __typename?: "User" } & Pick<
   User,
@@ -280,7 +341,9 @@ export type LoginMutationVariables = {
 };
 
 export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "User" } & UserPartsFragment;
+  login: { __typename?: "LoginResult" } & {
+    user: { __typename?: "User" } & UserPartsFragment;
+  };
 };
 
 export type UserQueryVariables = {};
@@ -291,18 +354,25 @@ export type UserQuery = { __typename?: "Query" } & {
 
 export type LogoutMutationVariables = {};
 
-export type LogoutMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "logout"
->;
+export type LogoutMutation = { __typename?: "Mutation" } & {
+  logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
+};
 
-export const PigActivityDefaultsFragmentDoc = gql`
-  fragment PigActivityDefaults on PigActivity {
-    defaultJob {
+export const PigActivityDefaultsFragmentFragmentDoc = gql`
+  fragment PigActivityDefaultsFragment on PigActivityDefaults {
+    job {
       number
     }
-    defaultPrice
+    price
   }
+`;
+export const PostPigActivityResultFragmentFragmentDoc = gql`
+  fragment PostPigActivityResultFragment on PostPigActivityResult {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
 `;
 export const UserPartsFragmentDoc = gql`
   fragment UserParts on User {
@@ -312,15 +382,15 @@ export const UserPartsFragmentDoc = gql`
 `;
 export const PigActivityDocument = gql`
   query PigActivity {
-    pigActivity {
-      ...PigActivityDefaults
-      jobs {
-        number
-        description
-      }
+    pigActivityJobs {
+      number
+      description
+    }
+    pigActivityDefaults {
+      ...PigActivityDefaultsFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PigActivityDefaultsFragmentFragmentDoc}
 `;
 
 /**
@@ -371,10 +441,10 @@ export type PigActivityQueryResult = ApolloReactCommon.QueryResult<
 export const PostPigMoveDocument = gql`
   mutation PostPigMove($input: PigMoveInput!) {
     postPigMove(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
   PostPigMoveMutation,
@@ -422,10 +492,10 @@ export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const PostPigAdjustmentDocument = gql`
   mutation PostPigAdjustment($input: PigAdjustmentInput!) {
     postPigAdjustment(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
   PostPigAdjustmentMutation,
@@ -473,10 +543,10 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 export const PostPigGradeOffDocument = gql`
   mutation PostPigGradeOff($input: PigGradeOffInput!) {
     postPigGradeOff(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
   PostPigGradeOffMutation,
@@ -524,10 +594,10 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 export const PostPigWeanDocument = gql`
   mutation PostPigWean($input: PigWeanInput!) {
     postPigWean(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
   PostPigWeanMutation,
@@ -575,10 +645,10 @@ export type PostPigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const PostPigPurchaseDocument = gql`
   mutation PostPigPurchase($input: PigPurchaseInput!) {
     postPigPurchase(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
   PostPigPurchaseMutation,
@@ -626,10 +696,10 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
 export const PostPigMortalityDocument = gql`
   mutation PostPigMortality($input: PigMortalityInput!) {
     postPigMortality(input: $input) {
-      ...PigActivityDefaults
+      ...PostPigActivityResultFragment
     }
   }
-  ${PigActivityDefaultsFragmentDoc}
+  ${PostPigActivityResultFragmentFragmentDoc}
 `;
 export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<
   PostPigMortalityMutation,
@@ -676,11 +746,12 @@ export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
 >;
 export const FarrowingBackendScorecardDocument = gql`
   query FarrowingBackendScorecard {
-    farrowingBackendScorecard {
-      areas {
+    farrowingBackendAreas {
+      number
+      description
+      personResponsible {
+        name
         number
-        description
-        personResponsible
       }
     }
   }
@@ -733,11 +804,69 @@ export type FarrowingBackendScorecardQueryResult = ApolloReactCommon.QueryResult
   FarrowingBackendScorecardQuery,
   FarrowingBackendScorecardQueryVariables
 >;
+export const FarrowingBackendOperatorsDocument = gql`
+  query FarrowingBackendOperators {
+    farrowingBackendOperators {
+      name
+      number
+    }
+  }
+`;
+
+/**
+ * __useFarrowingBackendOperatorsQuery__
+ *
+ * To run a query within a React component, call `useFarrowingBackendOperatorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFarrowingBackendOperatorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFarrowingBackendOperatorsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFarrowingBackendOperatorsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    FarrowingBackendOperatorsQuery,
+    FarrowingBackendOperatorsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    FarrowingBackendOperatorsQuery,
+    FarrowingBackendOperatorsQueryVariables
+  >(FarrowingBackendOperatorsDocument, baseOptions);
+}
+export function useFarrowingBackendOperatorsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    FarrowingBackendOperatorsQuery,
+    FarrowingBackendOperatorsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    FarrowingBackendOperatorsQuery,
+    FarrowingBackendOperatorsQueryVariables
+  >(FarrowingBackendOperatorsDocument, baseOptions);
+}
+export type FarrowingBackendOperatorsQueryHookResult = ReturnType<
+  typeof useFarrowingBackendOperatorsQuery
+>;
+export type FarrowingBackendOperatorsLazyQueryHookResult = ReturnType<
+  typeof useFarrowingBackendOperatorsLazyQuery
+>;
+export type FarrowingBackendOperatorsQueryResult = ApolloReactCommon.QueryResult<
+  FarrowingBackendOperatorsQuery,
+  FarrowingBackendOperatorsQueryVariables
+>;
 export const PostFarrowingBackendScorecardDocument = gql`
   mutation PostFarrowingBackendScorecard(
     $input: FarrowingBackendScorecardInput!
   ) {
-    postFarrowingBackendScorecard(input: $input)
+    postFarrowingBackendScorecard(input: $input) {
+      success
+    }
   }
 `;
 export type PostFarrowingBackendScorecardMutationFn = ApolloReactCommon.MutationFunction<
@@ -786,7 +915,9 @@ export type PostFarrowingBackendScorecardMutationOptions = ApolloReactCommon.Bas
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
-      ...UserParts
+      user {
+        ...UserParts
+      }
     }
   }
   ${UserPartsFragmentDoc}
@@ -883,7 +1014,9 @@ export type UserQueryResult = ApolloReactCommon.QueryResult<
 >;
 export const LogoutDocument = gql`
   mutation Logout {
-    logout
+    logout {
+      success
+    }
   }
 `;
 export type LogoutMutationFn = ApolloReactCommon.MutationFunction<

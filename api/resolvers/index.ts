@@ -3,14 +3,10 @@ import { Job } from "./jobs";
 import { Resource } from "./resource";
 import {
   PigActivityMutations,
-  PigActivity,
+  PigActivityDefaults,
   PigActivityQueries
 } from "./pig-activity";
-import {
-  FarrowingBackendScorecard,
-  ScorecardQueries,
-  ScorecardMutations
-} from "./scorecard";
+import { ScorecardQueries, ScorecardMutations } from "./scorecard";
 
 export default {
   Query: {
@@ -26,6 +22,5 @@ export default {
   User,
   Job,
   Resource,
-  PigActivity,
-  FarrowingBackendScorecard
+  PigActivityDefaults
 };
