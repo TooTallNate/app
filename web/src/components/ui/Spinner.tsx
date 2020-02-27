@@ -3,6 +3,8 @@ import { jsx, keyframes } from "@emotion/core";
 
 interface SpinnerProps {
   className?: string;
+  size?: number;
+  color?: string;
 }
 
 const spinner = keyframes({
@@ -14,24 +16,28 @@ const spinner = keyframes({
   }
 });
 
-const Spinner: React.FC<SpinnerProps> = ({ className }) => {
+const Spinner: React.FC<SpinnerProps> = ({
+  className,
+  size = 56,
+  color = "black"
+}) => {
+  const width = `${Math.floor(size / 7)}px`;
   return (
     <div
       className={className}
       css={{
         display: "inline-block",
-        width: 56,
-        height: 56,
+        width: size,
+        height: size,
         "::after": {
           content: "' '",
           boxSizing: "border-box",
           display: "block",
-          width: 56,
-          height: 56,
-          margin: 1,
+          width: size,
+          height: size,
           borderRadius: "50%",
-          border: `5px solid black`,
-          borderColor: "black transparent black transparent",
+          border: `${width} solid`,
+          borderColor: `${color} transparent ${color} transparent`,
           animation: `${spinner} 1.2s linear infinite`
         }
       }}

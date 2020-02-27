@@ -7,7 +7,7 @@ import {
   KeyboardEventHandler,
   FocusEventHandler
 } from "react";
-import { TextInput } from "./text-inputs";
+import TextInput from "./TextInput";
 import typeaheadMachine, {
   TypeaheadItem,
   TypeaheadContext,
@@ -21,6 +21,7 @@ interface TypeaheadInputProps
   items: TypeaheadItem[];
   value?: any;
   onChange?: (value: any) => void;
+  sort?: "asc" | "desc";
 }
 
 let idCounter = 0;
@@ -33,6 +34,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   onBlur = () => {},
   onKeyDown = () => {},
   className,
+  sort = "asc",
   "aria-labelledby": ariaLabelledBy,
   ...props
 }) => {
@@ -66,8 +68,14 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
 
   // Override the context of the typeahead machine when items or value change.
   useEffect(() => {
-    send({ type: "OVERRIDE", items, value });
-  }, [items, send, value]);
+    send({
+      type: "OVERRIDE",
+      items: items.sort(
+        (a, b) => (sort === "asc" ? 1 : -1) * a.title.localeCompare(b.title)
+      ),
+      value
+    });
+  }, [items, send, sort, value]);
 
   const _onKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
     switch (e.key) {

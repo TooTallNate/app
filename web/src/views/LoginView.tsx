@@ -3,7 +3,7 @@ import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
 import { Title, Group, View } from "../components/styled";
-import { TextInput } from "../components/ui/text-inputs";
+import TextInput from "../components/ui/TextInput";
 import { useForm } from "react-hook-form";
 import Form from "../components/ui/Form";
 import FormField from "../components/ui/FormField";

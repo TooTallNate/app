@@ -3,14 +3,14 @@ import { jsx } from "@emotion/core";
 import tw from "tailwind.macro";
 import { useRef, useState, useLayoutEffect, useEffect } from "react";
 import { remToPx } from "../../utils";
-import { NumberInput } from "./text-inputs";
+import NumberInput from "./NumberInput";
 
-const trackStyles = tw`w-full h-10 cursor-pointer border border-solid border-gray-500 rounded-lg bg-transparent`;
+const trackStyles = tw`w-full h-11 cursor-pointer border border-solid border-gray-500 rounded-lg bg-transparent`;
 const thumbStyles = [
-  tw`border-0 h-12 w-12 rounded-full bg-black cursor-pointer`,
-  { WebkitAppearance: "none", marginTop: -5 }
+  tw`border-0 h-11 w-11 rounded-full bg-black cursor-pointer`,
+  { WebkitAppearance: "none", marginTop: -1 }
 ];
-const thumbRadiusRem = 3 / 2;
+const thumbRadiusRem = 2.75 / 2;
 
 interface SliderInputProps
   extends Omit<
@@ -76,9 +76,9 @@ const SliderInput: React.FC<SliderInputProps> = ({
         css={tw`w-16 mr-2`}
         onChange={value => setValue(Math.max(Math.min(value || min, max), min))}
       />
-      <div css={tw`relative flex-1 h-10`}>
+      <div css={tw`relative flex-1 h-11`}>
         {/* Slider Progress */}
-        <div css={[tw`absolute inset-0 h-10 mx-6`]} aria-hidden>
+        <div css={[tw`absolute inset-0 h-11 mx-6`]} aria-hidden>
           <div
             css={[
               tw`absolute bg-blue-300 top-0 bottom-0 left-0`,
@@ -96,7 +96,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
         {/* Slider Labels */}
         <div
           css={[
-            tw`absolute inset-0 h-10 flex items-center`,
+            tw`absolute inset-0 h-11 flex items-center`,
             { marginLeft: trackMargin, marginRight: trackMargin }
           ]}
           aria-hidden
@@ -115,7 +115,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           onChange={e => setValue(e.target.valueAsNumber)}
           type="range"
           css={[
-            tw`relative w-full mx-0 h-10 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,
+            tw`relative w-full mx-0 h-11 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,
             {
               WebkitAppearance: "none",
               "&::-webkit-slider-runnable-track": trackStyles,
@@ -123,7 +123,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
               "&::-moz-range-track": trackStyles,
               "&::-moz-range-thumb": thumbStyles,
               "&::-moz-focus-outer": tw`border-0`,
-              "&::-ms-track": tw`w-full h-10 cursor-pointer bg-transparent border-transparent text-transparent`,
+              "&::-ms-track": tw`w-full h-11 cursor-pointer bg-transparent border-transparent text-transparent`,
               "&::-ms-fill-upper": tw`border border-solid border-gray-500 rounded-lg`,
               "&::-ms-fill-lower": tw`border border-solid border-gray-500 rounded-lg`,
               "&::-ms-thumb": thumbStyles

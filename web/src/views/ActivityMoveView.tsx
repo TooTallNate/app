@@ -2,7 +2,8 @@
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
 import { Title, View, Group } from "../components/styled";
-import { NumberInput, MultilineTextInput } from "../components/ui/text-inputs";
+import NumberInput from "../components/ui/NumberInput";
+import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import { usePostPigMoveMutation, usePigActivityQuery } from "../graphql";
@@ -120,6 +121,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldLabel>From Job</FormFieldLabel>
             <FormFieldInput>
               <TypeaheadInput
+                sort="desc"
                 items={data.pigActivity.jobs.map(job => ({
                   value: job.number,
                   title: `${job.number} ${job.description}`
@@ -136,6 +138,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldLabel>To Job</FormFieldLabel>
             <FormFieldInput>
               <TypeaheadInput
+                sort="desc"
                 items={data.pigActivity.jobs.map(job => ({
                   value: job.number,
                   title: `${job.number} ${job.description}`
