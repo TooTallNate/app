@@ -1,7 +1,13 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import { NavUser, NavJob, NavDimension, NavDimensionCode } from "../nav/types";
+import {
+  NavUser,
+  NavJob,
+  NavDimension,
+  NavDimensionCode,
+  NavResource
+} from "../nav/types";
 import uuid from "uuid/v4";
 import {
   FarrowingBackendScorecardInput,
@@ -26,12 +32,17 @@ export const UserFactory = Factory.Sync.makeFactory<NavUser>({
 });
 
 export const JobFactory = Factory.Sync.makeFactory<NavJob>({
-  No: Factory.each(() => faker.random.alphaNumeric(8)),
+  No: Factory.each(() => `job_${faker.random.alphaNumeric(8)}`),
   Description: Factory.each(() => faker.lorem.words(2)),
   Person_Responsible: Factory.each(() => faker.name.firstName().toUpperCase()),
   Site: Factory.each(() =>
     faker.random.number({ min: 10, max: 999 }).toString()
   )
+});
+
+export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
+  Name: Factory.each(() => faker.name.firstName()),
+  No: Factory.each(() => `resource_${faker.random.alphaNumeric(8)}`)
 });
 
 export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({

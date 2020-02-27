@@ -1,16 +1,17 @@
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { FarrowingBackendScorecardQuery } from "../../resolvers/types";
-import { JobFactory } from "../builders";
+import { JobFactory, ResourceFactory } from "../builders";
 import nock = require("nock");
 
 function query() {
   return client.request<FarrowingBackendScorecardQuery>(`
     {
-      farrowingBackendScorecard {
-        areas {
+      farrowingBackendAreas {
+        number
+        description
+        personResponsible {
+          name
           number
-          description
-          personResponsible
         }
       }
     }
@@ -21,7 +22,18 @@ testUnauthenticated(query);
 
 test("returns areas for the farrowing backend", async () => {
   const { auth } = await mockUser();
+  const resources = ResourceFactory.buildList(3);
   const areas = JobFactory.buildList(3);
+  areas.forEach((area, i) => (area.Person_Responsible = resources[i].No));
+
+  resources.forEach(resource =>
+    nock(process.env.NAV_BASE_URL)
+      .get(
+        `/Company(%27${process.env.NAV_COMPANY}%27)/Resources(%27${resource.No}%27)`
+      )
+      .basicAuth(auth)
+      .reply(200, resource)
+  );
 
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
@@ -32,12 +44,13 @@ test("returns areas for the farrowing backend", async () => {
     .reply(200, { value: areas });
 
   await expect(query()).resolves.toEqual({
-    farrowingBackendScorecard: {
-      areas: areas.map(area => ({
-        number: area.No,
-        description: area.Description,
-        personResponsible: area.Person_Responsible
-      }))
-    }
+    farrowingBackendAreas: areas.map((area, i) => ({
+      number: area.No,
+      description: area.Description,
+      personResponsible: {
+        name: resources[i].Name,
+        number: resources[i].No
+      }
+    }))
   });
 });

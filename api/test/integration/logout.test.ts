@@ -3,11 +3,11 @@ import { LogoutMutation } from "../../resolvers/types";
 
 function mutation() {
   return client.request<LogoutMutation>(
-    `
-        mutation Logout {
-          logout
-        }
-      `
+    `mutation Logout {
+      logout {
+        success
+      }
+    }`
   );
 }
 
@@ -17,6 +17,8 @@ test("returns true if user is logged in", async () => {
   await mockUser();
 
   await expect(mutation()).resolves.toEqual({
-    logout: true
+    logout: {
+      success: true
+    }
   });
 });

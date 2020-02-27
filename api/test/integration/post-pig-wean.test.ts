@@ -25,10 +25,13 @@ function mutation(variables: PostPigWeanMutationVariables) {
   return client.request<PostPigWeanMutation>(
     `mutation PostPigWean($input: PigWeanInput!) {
       postPigWean(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults {
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -122,8 +125,11 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -151,8 +157,11 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -173,8 +182,11 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 

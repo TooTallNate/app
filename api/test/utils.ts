@@ -36,13 +36,13 @@ export async function mockUser({ login = true } = {}) {
       .reply(200, { value: [user] });
 
     await client.request(
-      `
-        mutation Login($input: LoginInput!) {
-          login(input: $input) {
+      `mutation Login($input: LoginInput!) {
+        login(input: $input) {
+          user {
             username
           }
         }
-      `,
+      }`,
       {
         input: {
           username: user.User_Name,

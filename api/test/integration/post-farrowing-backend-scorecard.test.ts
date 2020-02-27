@@ -16,11 +16,11 @@ import nock = require("nock");
 
 function mutation(variables: PostFarrowingBackendScorecardMutationVariables) {
   return client.request<PostFarrowingBackendScorecardMutation>(
-    `
-      mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
-        postFarrowingBackendScorecard(input: $input) 
+    `mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
+      postFarrowingBackendScorecard(input: $input) {
+        success
       }
-    `,
+    }`,
     variables
   );
 }
@@ -75,6 +75,8 @@ test("submits scores to NAV", async () => {
   mockScorePost(JobTaskNumber.Water, input.water);
 
   await expect(mutation({ input })).resolves.toEqual({
-    postFarrowingBackendScorecard: true
+    postFarrowingBackendScorecard: {
+      success: true
+    }
   });
 });

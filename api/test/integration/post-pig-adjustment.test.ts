@@ -25,10 +25,13 @@ function mutation(variables: PostPigAdjustmentMutationVariables) {
   return client.request<PostPigAdjustmentMutation>(
     `mutation PostPigAdjustment($input: PigAdjustmentInput!) {
       postPigAdjustment(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults { 
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -122,10 +125,13 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
-      defaultJob: {
-        number: job.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: input.price
+      }
     }
   });
 
@@ -153,10 +159,13 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
-      defaultJob: {
-        number: job.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: input.price
+      }
     }
   });
 
@@ -183,10 +192,13 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
-      defaultJob: {
-        number: job.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: input.price
+      }
     }
   });
 
@@ -208,10 +220,13 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
-      defaultJob: {
-        number: job.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: input.price
+      }
     }
   });
 

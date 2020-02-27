@@ -25,10 +25,13 @@ function mutation(variables: PostPigPurchaseMutationVariables) {
   return client.request<PostPigPurchaseMutation>(
     `mutation PostPigPurchase($input: PigPurchaseInput!) {
       postPigPurchase(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults {
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -124,8 +127,11 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -153,8 +159,11 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -175,8 +184,11 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
