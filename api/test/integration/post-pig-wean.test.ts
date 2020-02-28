@@ -99,8 +99,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Weight: input.weight,
       Job_No: input.job,
       Gen_Prod_Posting_Group: "WEAN PIGS",
-      Shortcut_Dimension_1_Code: "213",
-      Shortcut_Dimension_2_Code: "2",
+      Shortcut_Dimension_1_Code: "2",
+      Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
       Document_Date: date
     })
