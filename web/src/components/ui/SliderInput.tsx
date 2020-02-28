@@ -102,7 +102,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           aria-hidden
         >
           {Array.from({ length: labelCount }, (_, i) => (
-            <span key={i} css={tw`text-center text-sm flex-1`}>
+            <span key={i} css={tw`text-center text-sm flex-1 pb-px`}>
               {(min + labelStep * i).toFixed(labelPrecision)}
             </span>
           ))}

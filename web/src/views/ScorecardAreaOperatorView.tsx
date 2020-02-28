@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Title, Output, Button, ButtonLink } from "../components/styled";
+import { View, Title, Output, ButtonLink } from "../components/styled";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import Form from "../components/ui/Form";
 import { useForm, OnSubmit } from "react-hook-form";
