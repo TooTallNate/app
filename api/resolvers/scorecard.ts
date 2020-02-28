@@ -37,6 +37,12 @@ export const ScorecardQueries: QueryResolvers = {
         )
       );
   },
+  farrowingBackendArea(_, { number }, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", number)
+      .get<NavJob>();
+  },
   farrowingBackendOperators(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)

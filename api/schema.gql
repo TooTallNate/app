@@ -139,6 +139,7 @@ type Query {
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
   farrowingBackendAreas: [Job!]!
+  farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
 }
 

@@ -12,6 +12,13 @@ export const Button = tw.styled(FocusTarget.withComponent("button"))`
   border border-black rounded-lg active:border-gray-500
 `;
 
+export const ButtonLink = tw.styled(FocusTarget.withComponent(Link))`
+  py-2 px-4 h-10 block
+  text-base font-bold text-white active:text-black 
+  bg-black active:bg-white
+  border border-black rounded-lg active:border-gray-500
+`;
+
 export const View = tw.div`flex flex-col h-full`;
 
 export const Label = tw.label`h-6 pt-2 mb-3 leading-none block text-base font-bold`;

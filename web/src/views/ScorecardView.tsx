@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Title } from "../components/styled";
+import { View, Title, ButtonLink } from "../components/styled";
 import SliderInput from "../components/ui/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
@@ -42,9 +42,14 @@ const ScorecardSliderInput: React.FC<
   React.ComponentProps<typeof SliderInput>
 > = props => <SliderInput {...props} min={0} max={10} step={1} labelStep={1} />;
 
-const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
+const ScorecardView: React.FC<RouteComponentProps> = ({
+  history,
+  location
+}) => {
+  const query = new URLSearchParams(location.search);
   const formContext = useForm<FormData>({
     defaultValues: {
+      area: query.get("area") || "",
       crate: 0,
       feed: 0,
       water: 0,
@@ -170,15 +175,27 @@ const ScorecardView: React.FC<RouteComponentProps> = ({ history }) => {
           rules={{ required: "The operator field is required." }}
         >
           <FormFieldLabel>Operator</FormFieldLabel>
-          <FormFieldInput>
-            <TypeaheadInput
-              items={data.operators.map(operator => ({
-                value: operator.number,
-                title: operator.name
-              }))}
-            />
-          </FormFieldInput>
-          <FormFieldErrors />
+          <div className="flex">
+            <div className="flex-grow">
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.operators.map(operator => ({
+                    value: operator.number,
+                    title: operator.name
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </div>
+            {area && (
+              <ButtonLink
+                className="ml-4"
+                to={`/scorecard/area/${area}/operator`}
+              >
+                Change
+              </ButtonLink>
+            )}
+          </div>
         </FormField>
         <FormField
           name="sowCare"

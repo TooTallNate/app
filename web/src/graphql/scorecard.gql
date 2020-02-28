@@ -1,20 +1,45 @@
+fragment FarrowingBackendAreaFields on Job {
+  number
+  description
+  personResponsible {
+    name
+    number
+  }
+}
+
+fragment FarrowingBackendOperatorFields on Resource {
+  number
+  name
+}
+
 query FarrowingBackendScorecard {
   areas: farrowingBackendAreas {
-    number
-    description
-    personResponsible {
-      name
-      number
-    }
+    ...FarrowingBackendAreaFields
   }
   operators: farrowingBackendOperators {
-    number
-    name
+    ...FarrowingBackendOperatorFields
+  }
+}
+
+query FarrowingBackendOperators($area: String!) {
+  area: farrowingBackendArea(number: $area) {
+    ...FarrowingBackendAreaFields
+  }
+  operators: farrowingBackendOperators {
+    ...FarrowingBackendOperatorFields
   }
 }
 
 mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
   postFarrowingBackendScorecard(input: $input) {
     success
+  }
+}
+
+mutation SetAreaOperator($input: SetAreaOperatorInput!) {
+  setAreaOperator(input: $input) {
+    area {
+      ...FarrowingBackendAreaFields
+    }
   }
 }

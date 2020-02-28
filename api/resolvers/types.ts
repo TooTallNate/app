@@ -187,7 +187,12 @@ export type Query = {
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
   farrowingBackendAreas: Array<Job>;
+  farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
+};
+
+export type QueryFarrowingBackendAreaArgs = {
+  number: Scalars["String"];
 };
 
 export type Resource = {
@@ -304,19 +309,37 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
   } & PostPigActivityResultFragmentFragment;
 };
 
+export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
+  Job,
+  "number" | "description"
+> & {
+    personResponsible: { __typename?: "Resource" } & Pick<
+      Resource,
+      "name" | "number"
+    >;
+  };
+
+export type FarrowingBackendOperatorFieldsFragment = {
+  __typename?: "Resource";
+} & Pick<Resource, "number" | "name">;
+
 export type FarrowingBackendScorecardQueryVariables = {};
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  areas: Array<
-    { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
-        personResponsible: { __typename?: "Resource" } & Pick<
-          Resource,
-          "name" | "number"
-        >;
-      }
-  >;
+  areas: Array<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
-    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
+    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+  >;
+};
+
+export type FarrowingBackendOperatorsQueryVariables = {
+  area: Scalars["String"];
+};
+
+export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
+  area: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
+  operators: Array<
+    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
   >;
 };
 
@@ -330,6 +353,16 @@ export type PostFarrowingBackendScorecardMutation = {
   postFarrowingBackendScorecard: {
     __typename?: "PostFarrowingBackendScorecardResult";
   } & Pick<PostFarrowingBackendScorecardResult, "success">;
+};
+
+export type SetAreaOperatorMutationVariables = {
+  input: SetAreaOperatorInput;
+};
+
+export type SetAreaOperatorMutation = { __typename?: "Mutation" } & {
+  setAreaOperator: { __typename?: "SetAreaOperatorResult" } & {
+    area: { __typename?: "Job" } & FarrowingBackendAreaFieldsFragment;
+  };
 };
 
 export type UserPartsFragment = { __typename?: "User" } & Pick<
@@ -697,6 +730,12 @@ export type QueryResolvers<
     Array<ResolversTypes["Job"]>,
     ParentType,
     ContextType
+  >;
+  farrowingBackendArea?: Resolver<
+    Maybe<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFarrowingBackendAreaArgs, "number">
   >;
   farrowingBackendOperators?: Resolver<
     Array<ResolversTypes["Resource"]>,
