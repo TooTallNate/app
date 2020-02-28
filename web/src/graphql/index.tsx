@@ -13,11 +13,6 @@ export type Scalars = {
 
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
-  areas: Array<Job>;
-  operators: Array<Resource>;
-};
-
-export type FarrowingBackendScorecardInput = {
   area: Scalars["String"];
   operator: Scalars["String"];
   sows: ScorecardEntry;
@@ -26,6 +21,17 @@ export type FarrowingBackendScorecardInput = {
   water: ScorecardEntry;
   crate: ScorecardEntry;
   room: ScorecardEntry;
+};
+
+export type FarrowingBackendScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntryInput;
+  piglets: ScorecardEntryInput;
+  feed: ScorecardEntryInput;
+  water: ScorecardEntryInput;
+  crate: ScorecardEntryInput;
+  room: ScorecardEntryInput;
 };
 
 export type Job = {
@@ -62,6 +68,7 @@ export type Mutation = {
   postPigPurchase: PostPigActivityResult;
   postPigWean: PostPigActivityResult;
   postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
+  saveFarrwoingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -94,6 +101,10 @@ export type MutationPostPigWeanArgs = {
 };
 
 export type MutationPostFarrowingBackendScorecardArgs = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type MutationSaveFarrwoingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
@@ -167,6 +178,7 @@ export type PigWeanInput = {
 export type PostFarrowingBackendScorecardResult = {
   __typename?: "PostFarrowingBackendScorecardResult";
   success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
 };
 
 export type PostPigActivityResult = {
@@ -180,9 +192,14 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
+  farrowingBackendScorecard: FarrowingBackendScorecard;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
+};
+
+export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
 };
 
 export type QueryFarrowingBackendAreaArgs = {
@@ -195,7 +212,19 @@ export type Resource = {
   name: Scalars["String"];
 };
 
+export type SaveFarrowingBackendScorecardResult = {
+  __typename?: "SaveFarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
+};
+
 export type ScorecardEntry = {
+  __typename?: "ScorecardEntry";
+  score: Scalars["Int"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ScorecardEntryInput = {
   score: Scalars["Int"];
   comments?: Maybe<Scalars["String"]>;
 };

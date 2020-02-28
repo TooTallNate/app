@@ -19,11 +19,6 @@ export type Scalars = {
 
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
-  areas: Array<Job>;
-  operators: Array<Resource>;
-};
-
-export type FarrowingBackendScorecardInput = {
   area: Scalars["String"];
   operator: Scalars["String"];
   sows: ScorecardEntry;
@@ -32,6 +27,17 @@ export type FarrowingBackendScorecardInput = {
   water: ScorecardEntry;
   crate: ScorecardEntry;
   room: ScorecardEntry;
+};
+
+export type FarrowingBackendScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntryInput;
+  piglets: ScorecardEntryInput;
+  feed: ScorecardEntryInput;
+  water: ScorecardEntryInput;
+  crate: ScorecardEntryInput;
+  room: ScorecardEntryInput;
 };
 
 export type Job = {
@@ -68,6 +74,7 @@ export type Mutation = {
   postPigPurchase: PostPigActivityResult;
   postPigWean: PostPigActivityResult;
   postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
+  saveFarrwoingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -100,6 +107,10 @@ export type MutationPostPigWeanArgs = {
 };
 
 export type MutationPostFarrowingBackendScorecardArgs = {
+  input: FarrowingBackendScorecardInput;
+};
+
+export type MutationSaveFarrwoingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
@@ -173,6 +184,7 @@ export type PigWeanInput = {
 export type PostFarrowingBackendScorecardResult = {
   __typename?: "PostFarrowingBackendScorecardResult";
   success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
 };
 
 export type PostPigActivityResult = {
@@ -186,9 +198,14 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
+  farrowingBackendScorecard: FarrowingBackendScorecard;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
+};
+
+export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
 };
 
 export type QueryFarrowingBackendAreaArgs = {
@@ -201,7 +218,19 @@ export type Resource = {
   name: Scalars["String"];
 };
 
+export type SaveFarrowingBackendScorecardResult = {
+  __typename?: "SaveFarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
+};
+
 export type ScorecardEntry = {
+  __typename?: "ScorecardEntry";
+  score: Scalars["Int"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ScorecardEntryInput = {
   score: Scalars["Int"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -505,6 +534,9 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
+  FarrowingBackendScorecard: ResolverTypeWrapper<FarrowingBackendScorecard>;
+  ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -513,7 +545,6 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   LogoutResult: ResolverTypeWrapper<LogoutResult>;
   PigAdjustmentInput: PigAdjustmentInput;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   PostPigActivityResult: ResolverTypeWrapper<
     Omit<PostPigActivityResult, "defaults"> & {
       defaults: ResolversTypes["PigActivityDefaults"];
@@ -525,19 +556,16 @@ export type ResolversTypes = ResolversObject<{
   PigPurchaseInput: PigPurchaseInput;
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
-  ScorecardEntry: ScorecardEntry;
+  ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: ResolverTypeWrapper<
     PostFarrowingBackendScorecardResult
+  >;
+  SaveFarrowingBackendScorecardResult: ResolverTypeWrapper<
+    SaveFarrowingBackendScorecardResult
   >;
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: ResolverTypeWrapper<
     Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
-  >;
-  FarrowingBackendScorecard: ResolverTypeWrapper<
-    Omit<FarrowingBackendScorecard, "areas" | "operators"> & {
-      areas: Array<ResolversTypes["Job"]>;
-      operators: Array<ResolversTypes["Resource"]>;
-    }
   >;
 }>;
 
@@ -550,6 +578,9 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
+  FarrowingBackendScorecard: FarrowingBackendScorecard;
+  ScorecardEntry: ScorecardEntry;
+  Int: Scalars["Int"];
   Mutation: {};
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -558,7 +589,6 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars["Boolean"];
   LogoutResult: LogoutResult;
   PigAdjustmentInput: PigAdjustmentInput;
-  Int: Scalars["Int"];
   PostPigActivityResult: Omit<PostPigActivityResult, "defaults"> & {
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
@@ -568,18 +598,12 @@ export type ResolversParentTypes = ResolversObject<{
   PigPurchaseInput: PigPurchaseInput;
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
-  ScorecardEntry: ScorecardEntry;
+  ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: PostFarrowingBackendScorecardResult;
+  SaveFarrowingBackendScorecardResult: SaveFarrowingBackendScorecardResult;
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
     area: ResolversParentTypes["Job"];
-  };
-  FarrowingBackendScorecard: Omit<
-    FarrowingBackendScorecard,
-    "areas" | "operators"
-  > & {
-    areas: Array<ResolversParentTypes["Job"]>;
-    operators: Array<ResolversParentTypes["Resource"]>;
   };
 }>;
 
@@ -587,12 +611,14 @@ export type FarrowingBackendScorecardResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["FarrowingBackendScorecard"] = ResolversParentTypes["FarrowingBackendScorecard"]
 > = ResolversObject<{
-  areas?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
-  operators?: Resolver<
-    Array<ResolversTypes["Resource"]>,
-    ParentType,
-    ContextType
-  >;
+  area?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  operator?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  sows?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  piglets?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  feed?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  water?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  crate?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  room?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
 }>;
 
 export type JobResolvers<
@@ -676,6 +702,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
+  saveFarrwoingBackendScorecard?: Resolver<
+    ResolversTypes["SaveFarrowingBackendScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSaveFarrwoingBackendScorecardArgs, "input">
+  >;
   setAreaOperator?: Resolver<
     ResolversTypes["SetAreaOperatorResult"],
     ParentType,
@@ -697,6 +729,11 @@ export type PostFarrowingBackendScorecardResultResolvers<
   ParentType extends ResolversParentTypes["PostFarrowingBackendScorecardResult"] = ResolversParentTypes["PostFarrowingBackendScorecardResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  scorecard?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type PostPigActivityResultResolvers<
@@ -726,6 +763,12 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  farrowingBackendScorecard?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryFarrowingBackendScorecardArgs, "area">
+  >;
   farrowingBackendAreas?: Resolver<
     Array<ResolversTypes["Job"]>,
     ParentType,
@@ -750,6 +793,26 @@ export type ResourceResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
+export type SaveFarrowingBackendScorecardResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SaveFarrowingBackendScorecardResult"] = ResolversParentTypes["SaveFarrowingBackendScorecardResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  scorecard?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type ScorecardEntryResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardEntry"] = ResolversParentTypes["ScorecardEntry"]
+> = ResolversObject<{
+  score?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 }>;
 
 export type SetAreaOperatorResultResolvers<
@@ -782,6 +845,10 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PostPigActivityResult?: PostPigActivityResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
+  SaveFarrowingBackendScorecardResult?: SaveFarrowingBackendScorecardResultResolvers<
+    ContextType
+  >;
+  ScorecardEntry?: ScorecardEntryResolvers<ContextType>;
   SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

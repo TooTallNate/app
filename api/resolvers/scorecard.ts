@@ -84,7 +84,7 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowCare, input.sows);
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
-    return { success: true };
+    return { success: true, scorecard: null as any };
   },
   async setAreaOperator(_, { input }, { navClient }) {
     const area = await navClient

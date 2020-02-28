@@ -9,9 +9,5 @@
       "../node_modules/@types",
       "@types"
     ]
-  },
-  "exclude": [
-    "test/**/*",
-    "**/*.test.*"
-  ]
+  }
 }
