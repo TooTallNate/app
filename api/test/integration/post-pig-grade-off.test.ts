@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigGradeOffMutation,
-  PostPigGradeOffMutationVariables
+  PostPigActivityResult,
+  MutationPostPigGradeOffArgs
 } from "../../resolvers/types";
 import {
   PigGradeOffInputFactory,
@@ -21,8 +21,8 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigGradeOffMutationVariables) {
-  return client.request<PostPigGradeOffMutation>(
+function mutation(variables: MutationPostPigGradeOffArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigGradeOff($input: PigGradeOffInput!) {
       postPigGradeOff(input: $input) {
         success

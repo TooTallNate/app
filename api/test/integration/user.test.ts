@@ -1,9 +1,13 @@
 import nock from "nock";
 import { client, mockUser } from "../utils";
-import { UserQuery } from "../../resolvers/types";
+import { User } from "../../resolvers/types";
+
+interface QueryResult {
+  user: User;
+}
 
 function query() {
-  return client.request<UserQuery>(`
+  return client.request<QueryResult>(`
       {
         user {
           name

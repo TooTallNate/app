@@ -11,13 +11,13 @@ import {
 import uuid from "uuid/v4";
 import {
   FarrowingBackendScorecardInput,
-  ScorecardEntry,
   PigAdjustmentInput,
   PigGradeOffInput,
   PigMortalityInput,
   PigMoveInput,
   PigPurchaseInput,
-  PigWeanInput
+  PigWeanInput,
+  ScorecardEntryInput
 } from "../resolvers/types";
 
 function oneOf<T>(...list: T[]) {
@@ -53,7 +53,7 @@ export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({
 });
 
 export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
-  ScorecardEntry
+  ScorecardEntryInput
 >({
   score: Factory.each(() => faker.random.number({ min: 0, max: 10 })),
   comments: Factory.each(() => faker.lorem.words(3))
@@ -146,4 +146,23 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
+});
+
+function generateScorecardEntry(min: number, max: number) {
+  return {
+    score: faker.random.number({ min, max }),
+    ...(faker.random.boolean() && { comments: faker.lorem.words(3) })
+  };
+}
+
+export const FarrowingBackendScorecardFactory = Factory.Sync.makeFactory({
+  _id: Factory.each(() => new ObjectId()),
+  area: Factory.each(() => `Room ${faker.random.number({ min: 1, max: 9 })}`),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
+  sows: generateScorecardEntry(0, 10),
+  piglets: generateScorecardEntry(0, 10),
+  feed: generateScorecardEntry(0, 10),
+  water: generateScorecardEntry(0, 10),
+  crate: generateScorecardEntry(0, 10),
+  room: generateScorecardEntry(0, 10)
 });

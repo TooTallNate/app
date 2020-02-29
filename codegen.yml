@@ -18,6 +18,7 @@ generates:
         Job: "../nav#NavJob"
         Resource: "../nav#NavResource"
         PigActivityDefaults: "../models/user-settings#UserSettingsDocument"
+        FarrowingBackendScorecard: "../models/farrowing-backend-scorecard#FarrowingBackendScorecardDocument"
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"

@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigWeanMutation,
-  PostPigWeanMutationVariables
+  PostPigActivityResult,
+  MutationPostPigWeanArgs
 } from "../../resolvers/types";
 import {
   PigWeanInputFactory,
@@ -21,8 +21,8 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigWeanMutationVariables) {
-  return client.request<PostPigWeanMutation>(
+function mutation(variables: MutationPostPigWeanArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigWean($input: PigWeanInput!) {
       postPigWean(input: $input) {
         success

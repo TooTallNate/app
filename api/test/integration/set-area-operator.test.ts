@@ -5,8 +5,7 @@ import {
   MutationSetAreaOperatorArgs,
   SetAreaOperatorResult
 } from "../../resolvers/types";
-import { NavErrorCode, NavJob } from "../../nav";
-import { ErrorCode } from "../../resolvers/utils";
+import { NavJob } from "../../nav";
 import { JobFactory, ResourceFactory } from "../builders";
 
 function mutation(variables: MutationSetAreaOperatorArgs) {

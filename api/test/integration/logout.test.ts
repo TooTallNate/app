@@ -1,8 +1,8 @@
 import { client, mockUser, testUnauthenticated } from "../utils";
-import { LogoutMutation } from "../../resolvers/types";
+import { LogoutResult } from "../../resolvers/types";
 
 function mutation() {
-  return client.request<LogoutMutation>(
+  return client.request<LogoutResult>(
     `mutation Logout {
       logout {
         success

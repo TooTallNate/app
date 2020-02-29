@@ -1,7 +1,7 @@
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostFarrowingBackendScorecardMutation,
-  PostFarrowingBackendScorecardMutationVariables,
+  PostFarrowingBackendScorecardResult,
+  MutationPostFarrowingBackendScorecardArgs,
   ScorecardEntry
 } from "../../resolvers/types";
 import { JobFactory, FarrowingBackendScorecardInputFactory } from "../builders";
@@ -14,8 +14,8 @@ import {
 import { format } from "date-fns";
 import nock = require("nock");
 
-function mutation(variables: PostFarrowingBackendScorecardMutationVariables) {
-  return client.request<PostFarrowingBackendScorecardMutation>(
+function mutation(variables: MutationPostFarrowingBackendScorecardArgs) {
+  return client.request<PostFarrowingBackendScorecardResult>(
     `mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
       postFarrowingBackendScorecard(input: $input) {
         success

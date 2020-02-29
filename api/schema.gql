@@ -26,8 +26,8 @@ type ScorecardEntry {
 }
 
 type FarrowingBackendScorecard {
-  area: String!
-  operator: String
+  area: Job!
+  operator: Resource
   sows: ScorecardEntry!
   piglets: ScorecardEntry!
   feed: ScorecardEntry!
@@ -155,7 +155,8 @@ type Query {
   user: User
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard!
+  farrowingBackendScorecards: [FarrowingBackendScorecard!]!
+  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
@@ -171,6 +172,6 @@ type Mutation {
   postPigPurchase(input: PigPurchaseInput!): PostPigActivityResult!
   postPigWean(input: PigWeanInput!): PostPigActivityResult!
   postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
-  saveFarrwoingBackendScorecard(input: FarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
+  saveFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
 }

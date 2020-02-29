@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from "graphql";
 import { NavUser, NavJob, NavResource } from "../nav";
 import { UserSettingsDocument } from "../models/user-settings";
+import { FarrowingBackendScorecardDocument } from "../models/farrowing-backend-scorecard";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -19,8 +20,8 @@ export type Scalars = {
 
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
-  area: Scalars["String"];
-  operator: Scalars["String"];
+  area: Job;
+  operator?: Maybe<Resource>;
   sows: ScorecardEntry;
   piglets: ScorecardEntry;
   feed: ScorecardEntry;
@@ -74,7 +75,7 @@ export type Mutation = {
   postPigPurchase: PostPigActivityResult;
   postPigWean: PostPigActivityResult;
   postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
-  saveFarrwoingBackendScorecard: SaveFarrowingBackendScorecardResult;
+  saveFarrowingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -110,7 +111,7 @@ export type MutationPostFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
-export type MutationSaveFarrwoingBackendScorecardArgs = {
+export type MutationSaveFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
@@ -198,7 +199,8 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  farrowingBackendScorecard: FarrowingBackendScorecard;
+  farrowingBackendScorecards: Array<FarrowingBackendScorecard>;
+  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
@@ -226,7 +228,7 @@ export type SaveFarrowingBackendScorecardResult = {
 
 export type ScorecardEntry = {
   __typename?: "ScorecardEntry";
-  score: Scalars["Int"];
+  score?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -510,6 +512,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes>;
 
+export type isTypeOfResolverFn<T = {}> = (
+  obj: T,
+  info: GraphQLResolveInfo
+) => boolean;
+
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
@@ -534,7 +541,9 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
-  FarrowingBackendScorecard: ResolverTypeWrapper<FarrowingBackendScorecard>;
+  FarrowingBackendScorecard: ResolverTypeWrapper<
+    FarrowingBackendScorecardDocument
+  >;
   ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -558,10 +567,14 @@ export type ResolversTypes = ResolversObject<{
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: ResolverTypeWrapper<
-    PostFarrowingBackendScorecardResult
+    Omit<PostFarrowingBackendScorecardResult, "scorecard"> & {
+      scorecard: ResolversTypes["FarrowingBackendScorecard"];
+    }
   >;
   SaveFarrowingBackendScorecardResult: ResolverTypeWrapper<
-    SaveFarrowingBackendScorecardResult
+    Omit<SaveFarrowingBackendScorecardResult, "scorecard"> & {
+      scorecard: ResolversTypes["FarrowingBackendScorecard"];
+    }
   >;
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: ResolverTypeWrapper<
@@ -578,7 +591,7 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
-  FarrowingBackendScorecard: FarrowingBackendScorecard;
+  FarrowingBackendScorecard: FarrowingBackendScorecardDocument;
   ScorecardEntry: ScorecardEntry;
   Int: Scalars["Int"];
   Mutation: {};
@@ -599,8 +612,14 @@ export type ResolversParentTypes = ResolversObject<{
   PigWeanInput: PigWeanInput;
   FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
-  PostFarrowingBackendScorecardResult: PostFarrowingBackendScorecardResult;
-  SaveFarrowingBackendScorecardResult: SaveFarrowingBackendScorecardResult;
+  PostFarrowingBackendScorecardResult: Omit<
+    PostFarrowingBackendScorecardResult,
+    "scorecard"
+  > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
+  SaveFarrowingBackendScorecardResult: Omit<
+    SaveFarrowingBackendScorecardResult,
+    "scorecard"
+  > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
     area: ResolversParentTypes["Job"];
@@ -611,14 +630,19 @@ export type FarrowingBackendScorecardResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["FarrowingBackendScorecard"] = ResolversParentTypes["FarrowingBackendScorecard"]
 > = ResolversObject<{
-  area?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  operator?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  operator?: Resolver<
+    Maybe<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType
+  >;
   sows?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   piglets?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   feed?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   water?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   crate?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   room?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type JobResolvers<
@@ -632,6 +656,7 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type LoginResultResolvers<
@@ -640,6 +665,7 @@ export type LoginResultResolvers<
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type LogoutResultResolvers<
@@ -647,6 +673,7 @@ export type LogoutResultResolvers<
   ParentType extends ResolversParentTypes["LogoutResult"] = ResolversParentTypes["LogoutResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type MutationResolvers<
@@ -702,11 +729,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
-  saveFarrwoingBackendScorecard?: Resolver<
+  saveFarrowingBackendScorecard?: Resolver<
     ResolversTypes["SaveFarrowingBackendScorecardResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSaveFarrwoingBackendScorecardArgs, "input">
+    RequireFields<MutationSaveFarrowingBackendScorecardArgs, "input">
   >;
   setAreaOperator?: Resolver<
     ResolversTypes["SetAreaOperatorResult"],
@@ -722,6 +749,7 @@ export type PigActivityDefaultsResolvers<
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type PostFarrowingBackendScorecardResultResolvers<
@@ -734,6 +762,7 @@ export type PostFarrowingBackendScorecardResultResolvers<
     ParentType,
     ContextType
   >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type PostPigActivityResultResolvers<
@@ -746,6 +775,7 @@ export type PostPigActivityResultResolvers<
     ParentType,
     ContextType
   >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type QueryResolvers<
@@ -763,8 +793,13 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  farrowingBackendScorecards?: Resolver<
+    Array<ResolversTypes["FarrowingBackendScorecard"]>,
+    ParentType,
+    ContextType
+  >;
   farrowingBackendScorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecard"],
+    Maybe<ResolversTypes["FarrowingBackendScorecard"]>,
     ParentType,
     ContextType,
     RequireFields<QueryFarrowingBackendScorecardArgs, "area">
@@ -793,6 +828,7 @@ export type ResourceResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type SaveFarrowingBackendScorecardResultResolvers<
@@ -805,14 +841,16 @@ export type SaveFarrowingBackendScorecardResultResolvers<
     ParentType,
     ContextType
   >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type ScorecardEntryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["ScorecardEntry"] = ResolversParentTypes["ScorecardEntry"]
 > = ResolversObject<{
-  score?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  score?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type SetAreaOperatorResultResolvers<
@@ -821,6 +859,7 @@ export type SetAreaOperatorResultResolvers<
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type UserResolvers<
@@ -830,6 +869,7 @@ export type UserResolvers<
   username?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   license?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{

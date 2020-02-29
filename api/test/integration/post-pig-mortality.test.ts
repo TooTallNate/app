@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigMortalityMutation,
-  PostPigMortalityMutationVariables
+  PostPigActivityResult,
+  MutationPostPigMortalityArgs
 } from "../../resolvers/types";
 import {
   PigMortalityInputFactory,
@@ -21,8 +21,8 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigMortalityMutationVariables) {
-  return client.request<PostPigMortalityMutation>(
+function mutation(variables: MutationPostPigMortalityArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigMortality($input: PigMortalityInput!) {
       postPigMortality(input: $input) {
         success

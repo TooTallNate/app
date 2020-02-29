@@ -1,12 +1,19 @@
 import faker from "faker";
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
-import { PigActivityQuery } from "../../resolvers/types";
+import { Job } from "../../resolvers/types";
 import { JobFactory, UserSettingsFactory } from "../builders";
 import UserSettings from "../../models/user-settings";
 
+interface QueryResult {
+  pigActivityDefaults: {
+    job: Job;
+    price: number;
+  };
+}
+
 function query() {
-  return client.request<PigActivityQuery>(
+  return client.request<QueryResult>(
     `{
       pigActivityDefaults {
         job {

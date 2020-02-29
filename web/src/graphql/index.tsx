@@ -13,8 +13,8 @@ export type Scalars = {
 
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
-  area: Scalars["String"];
-  operator: Scalars["String"];
+  area: Job;
+  operator?: Maybe<Resource>;
   sows: ScorecardEntry;
   piglets: ScorecardEntry;
   feed: ScorecardEntry;
@@ -68,7 +68,7 @@ export type Mutation = {
   postPigPurchase: PostPigActivityResult;
   postPigWean: PostPigActivityResult;
   postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
-  saveFarrwoingBackendScorecard: SaveFarrowingBackendScorecardResult;
+  saveFarrowingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -104,7 +104,7 @@ export type MutationPostFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
-export type MutationSaveFarrwoingBackendScorecardArgs = {
+export type MutationSaveFarrowingBackendScorecardArgs = {
   input: FarrowingBackendScorecardInput;
 };
 
@@ -192,7 +192,8 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  farrowingBackendScorecard: FarrowingBackendScorecard;
+  farrowingBackendScorecards: Array<FarrowingBackendScorecard>;
+  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
@@ -220,7 +221,7 @@ export type SaveFarrowingBackendScorecardResult = {
 
 export type ScorecardEntry = {
   __typename?: "ScorecardEntry";
-  score: Scalars["Int"];
+  score?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 

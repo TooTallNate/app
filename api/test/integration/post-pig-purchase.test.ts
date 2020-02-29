@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigPurchaseMutation,
-  PostPigPurchaseMutationVariables
+  PostPigActivityResult,
+  MutationPostPigPurchaseArgs
 } from "../../resolvers/types";
 import {
   PigPurchaseInputFactory,
@@ -21,8 +21,8 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigPurchaseMutationVariables) {
-  return client.request<PostPigPurchaseMutation>(
+function mutation(variables: MutationPostPigPurchaseArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigPurchase($input: PigPurchaseInput!) {
       postPigPurchase(input: $input) {
         success

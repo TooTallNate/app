@@ -1,4 +1,9 @@
-import { MutationResolvers, QueryResolvers, ScorecardEntry } from "./types";
+import {
+  MutationResolvers,
+  QueryResolvers,
+  ScorecardEntry,
+  FarrowingBackendScorecardResolvers
+} from "./types";
 import {
   NavJob,
   NavJobJournalEntry,
@@ -10,6 +15,7 @@ import {
   WorkTypeCode
 } from "../nav";
 import { navDate, getDocumentNumber } from "./utils";
+import FarrowingBackendScorecardModel from "../models/farrowing-backend-scorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,
@@ -24,7 +30,30 @@ function postJobJournal(
     .post(entry);
 }
 
+export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
+  area(scorecard, _, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", scorecard.area)
+      .get<NavJob>();
+  },
+  operator(scorecard, _, { navClient }) {
+    return scorecard.operator
+      ? navClient
+          .resource("Company", process.env.NAV_COMPANY)
+          .resource("Resources", scorecard.operator)
+          .get<NavResource>()
+      : null;
+  }
+};
+
 export const ScorecardQueries: QueryResolvers = {
+  async farrowingBackendScorecards() {
+    return await FarrowingBackendScorecardModel.find();
+  },
+  async farrowingBackendScorecard(_, { area }) {
+    return await FarrowingBackendScorecardModel.findOne({ area });
+  },
   farrowingBackendAreas(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)

@@ -6,7 +6,11 @@ import {
   PigActivityDefaults,
   PigActivityQueries
 } from "./pig-activity";
-import { ScorecardQueries, ScorecardMutations } from "./scorecard";
+import {
+  FarrowingBackendScorecard,
+  ScorecardQueries,
+  ScorecardMutations
+} from "./scorecard";
 
 export default {
   Query: {
@@ -22,5 +26,6 @@ export default {
   User,
   Job,
   Resource,
-  PigActivityDefaults
+  PigActivityDefaults,
+  FarrowingBackendScorecard
 };

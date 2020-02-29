@@ -1,11 +1,15 @@
 import { client, testUnauthenticated, mockUser } from "../utils";
-import { FarrowingBackendScorecardQuery } from "../../resolvers/types";
+import { Resource } from "../../resolvers/types";
 import { ResourceFactory } from "../builders";
 import nock = require("nock");
 
+interface QueryResult {
+  farrowingBackendOperators: Resource[];
+}
+
 function query() {
-  return client.request<FarrowingBackendScorecardQuery>(`
-    {
+  return client.request<QueryResult>(`
+    query FarrowingBackendOperators {
       farrowingBackendOperators {
         name
         number

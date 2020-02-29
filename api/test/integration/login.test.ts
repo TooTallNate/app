@@ -1,11 +1,11 @@
 import nock from "nock";
 import { client, mockUser } from "../utils";
-import { LoginMutationVariables, LoginMutation } from "../../resolvers/types";
+import { MutationLoginArgs, LoginResult } from "../../resolvers/types";
 import { NavErrorCode } from "../../nav";
 import { ErrorCode } from "../../resolvers/utils";
 
-function mutation(variables: LoginMutationVariables) {
-  return client.request<LoginMutation>(
+function mutation(variables: MutationLoginArgs) {
+  return client.request<LoginResult>(
     `mutation Login($input: LoginInput!) {
       login(input: $input) {
         success

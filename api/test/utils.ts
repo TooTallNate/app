@@ -59,11 +59,14 @@ export async function mockUser({ login = true } = {}) {
   };
 }
 
-export function testUnauthenticated(queryOrMutation: () => Promise<any>): void {
+export function testUnauthenticated(
+  queryOrMutation: () => Promise<any>,
+  data: any = null
+): void {
   test("returns with error if unauthenticated", async () => {
     await expect(queryOrMutation()).rejects.toMatchObject({
       response: {
-        data: null,
+        data,
         errors: [
           expect.objectContaining({
             message: ErrorCode.Unauthorized

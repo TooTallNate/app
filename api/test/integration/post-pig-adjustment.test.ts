@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigAdjustmentMutation,
-  PostPigAdjustmentMutationVariables
+  PostPigActivityResult,
+  MutationPostPigAdjustmentArgs
 } from "../../resolvers/types";
 import {
   PigAdjustmentInputFactory,
@@ -21,8 +21,8 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigAdjustmentMutationVariables) {
-  return client.request<PostPigAdjustmentMutation>(
+function mutation(variables: MutationPostPigAdjustmentArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigAdjustment($input: PigAdjustmentInput!) {
       postPigAdjustment(input: $input) {
         success
