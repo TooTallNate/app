@@ -82,6 +82,18 @@ export const ScorecardQueries: QueryResolvers = {
 };
 
 export const ScorecardMutations: MutationResolvers = {
+  async saveFarrowingBackendScorecard(_, { input }) {
+    let doc = await FarrowingBackendScorecardModel.findOne({
+      area: input.area
+    });
+    if (!doc) {
+      doc = new FarrowingBackendScorecardModel(input);
+    } else {
+      doc.set(input);
+    }
+    await doc.save();
+    return { success: true, scorecard: doc };
+  },
   async postFarrowingBackendScorecard(_, { input }, { navClient, user }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
@@ -113,7 +125,18 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowCare, input.sows);
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
-    return { success: true, scorecard: null as any };
+
+    const doc = await FarrowingBackendScorecardModel.findOne({
+      area: input.area
+    });
+    if (doc) {
+      doc.overwrite({
+        area: input.area
+      });
+      await doc.save();
+    }
+
+    return { success: true, scorecard: doc };
   },
   async setAreaOperator(_, { input }, { navClient }) {
     const area = await navClient
