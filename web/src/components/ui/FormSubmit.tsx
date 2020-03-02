@@ -8,7 +8,6 @@ const FormSubmit: React.FC = ({ children }) => {
   return (
     <Button
       type="submit"
-      className={"mt-10"}
       disabled={
         (!formState.isValid && formState.isSubmitted) || formState.isSubmitting
       }

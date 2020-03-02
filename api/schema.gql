@@ -109,7 +109,7 @@ input SetAreaOperatorInput {
   operator: String!
 }
 
-input FarrowingBackendScorecardInput {
+input PostFarrowingBackendScorecardInput {
   area: String!
   operator: String!
   sows: ScorecardEntryInput!
@@ -118,6 +118,17 @@ input FarrowingBackendScorecardInput {
   water: ScorecardEntryInput!
   crate: ScorecardEntryInput!
   room: ScorecardEntryInput!
+}
+
+input SaveFarrowingBackendScorecardInput {
+  area: String!
+  operator: String
+  sows: ScorecardEntryInput
+  piglets: ScorecardEntryInput
+  feed: ScorecardEntryInput
+  water: ScorecardEntryInput
+  crate: ScorecardEntryInput
+  room: ScorecardEntryInput
 }
 
 
@@ -171,7 +182,7 @@ type Mutation {
   postPigMove(input: PigMoveInput!): PostPigActivityResult!
   postPigPurchase(input: PigPurchaseInput!): PostPigActivityResult!
   postPigWean(input: PigWeanInput!): PostPigActivityResult!
-  postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
-  saveFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
+  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
+  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
 }

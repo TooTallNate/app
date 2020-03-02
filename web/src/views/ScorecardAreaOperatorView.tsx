@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Title, Output, ButtonLink } from "../components/styled";
+import {
+  View,
+  Title,
+  Output,
+  ButtonLink,
+  FormGroup
+} from "../components/styled";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import Form from "../components/ui/Form";
 import { useForm, OnSubmit } from "react-hook-form";
@@ -89,12 +95,12 @@ const ScorecardAreaOperatorView: React.FC<RouteComponentProps<RouteParams>> = ({
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
-          <div className="flex">
-            <ButtonLink className="mt-10 mr-4" to={backUrl}>
+          <FormGroup>
+            <ButtonLink className="mr-4" to={backUrl}>
               Back
             </ButtonLink>
             <FormSubmit>Save</FormSubmit>
-          </div>
+          </FormGroup>
         </Form>
       </View>
     );

@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Title, Group, View } from "../components/styled";
+import { Title, Group, View, FormGroup } from "../components/styled";
 import TextInput from "../components/ui/TextInput";
 import { useForm } from "react-hook-form";
 import Form from "../components/ui/Form";
@@ -61,7 +61,9 @@ const LoginView: React.FC = () => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormSubmit>Log In</FormSubmit>
+        <FormGroup>
+          <FormSubmit>Log In</FormSubmit>
+        </FormGroup>
       </Form>
     </View>
   );

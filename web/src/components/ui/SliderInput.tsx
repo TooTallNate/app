@@ -50,12 +50,6 @@ const SliderInput: React.FC<SliderInputProps> = ({
     setValue(props.value || min);
   }, [min, props.value]);
 
-  useEffect(() => {
-    if (value !== props.value) {
-      onChange && onChange(value);
-    }
-  }, [onChange, props.value, value]);
-
   useLayoutEffect(() => {
     function handler() {
       if (inputElement.current) {
@@ -74,7 +68,11 @@ const SliderInput: React.FC<SliderInputProps> = ({
       <NumberInput
         value={value}
         css={tw`w-16 mr-2`}
-        onChange={value => setValue(Math.max(Math.min(value || min, max), min))}
+        onChange={value => {
+          const clampedValue = Math.max(Math.min(value || min, max), min);
+          setValue(clampedValue);
+          onChange && onChange(clampedValue);
+        }}
       />
       <div css={tw`relative flex-1 h-11`}>
         {/* Slider Progress */}
@@ -112,7 +110,11 @@ const SliderInput: React.FC<SliderInputProps> = ({
         <input
           {...{ value, min, max, step, ...props }}
           ref={inputElement}
-          onChange={e => setValue(e.target.valueAsNumber)}
+          onChange={e => {
+            const value = e.target.valueAsNumber;
+            setValue(value);
+            onChange && onChange(value);
+          }}
           type="range"
           css={[
             tw`relative w-full mx-0 h-11 rounded-lg bg-transparent focus:outline-none focus:shadow-outline`,

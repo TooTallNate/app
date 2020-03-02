@@ -12,12 +12,53 @@ fragment FarrowingBackendOperatorFields on Resource {
   name
 }
 
-query FarrowingBackendScorecard {
+fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
+  area {
+    number
+    description
+  }
+  operator {
+    number
+    name
+  }
+  sows {
+    score
+    comments
+  }
+  piglets {
+    score
+    comments
+  }
+  feed {
+    score
+    comments
+  }
+  water {
+    score
+    comments
+  }
+  crate {
+    score
+    comments
+  }
+  room {
+    score
+    comments
+  }
+}
+
+query FarrowingBackendScorecardData {
   areas: farrowingBackendAreas {
     ...FarrowingBackendAreaFields
   }
   operators: farrowingBackendOperators {
     ...FarrowingBackendOperatorFields
+  }
+}
+
+query FarrowingBackendScorecard($area: String!) {
+  scorecard: farrowingBackendScorecard(area: $area) {
+    ...FarrowingBackendScorecardFields 
   }
 }
 
@@ -30,9 +71,21 @@ query FarrowingBackendOperators($area: String!) {
   }
 }
 
-mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
+mutation PostFarrowingBackendScorecard($input: PostFarrowingBackendScorecardInput!) {
   postFarrowingBackendScorecard(input: $input) {
     success
+    scorecard {
+      ...FarrowingBackendScorecardFields 
+    }
+  }
+}
+
+mutation SaveFarrowingBackendScorecard($input: SaveFarrowingBackendScorecardInput!) {
+  saveFarrowingBackendScorecard(input: $input) {
+    success
+    scorecard {
+      ...FarrowingBackendScorecardFields 
+    }
   }
 }
 

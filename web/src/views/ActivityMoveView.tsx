@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
-import { Title, View, Group } from "../components/styled";
+import { Title, View, Group, FormGroup } from "../components/styled";
 import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
@@ -191,7 +191,9 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormSubmit />
+        <FormGroup>
+          <FormSubmit />
+        </FormGroup>
       </Form>
     </View>
   );

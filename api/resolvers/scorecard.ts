@@ -44,7 +44,13 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
           .resource("Resources", scorecard.operator)
           .get<NavResource>()
       : null;
-  }
+  },
+  sows: scorecard => scorecard.sows || {},
+  piglets: scorecard => scorecard.piglets || {},
+  feed: scorecard => scorecard.feed || {},
+  water: scorecard => scorecard.water || {},
+  crate: scorecard => scorecard.crate || {},
+  room: scorecard => scorecard.room || {}
 };
 
 export const ScorecardQueries: QueryResolvers = {

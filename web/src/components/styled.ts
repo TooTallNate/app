@@ -34,6 +34,13 @@ export const Group = styled.div([
   }
 ]);
 
+export const FormGroup = styled.div([
+  tw`p-0 m-0 mt-10 flex`,
+  {
+    "&:first-of-type": tw`mt-0`
+  }
+]);
+
 export const StackedContainer = tw.styled(
   FocusInTarget
 )`flex flex-col rounded-lg border border-gray-500 overflow-hidden`;

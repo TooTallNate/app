@@ -30,17 +30,6 @@ export type FarrowingBackendScorecard = {
   room: ScorecardEntry;
 };
 
-export type FarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
-};
-
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
@@ -108,11 +97,11 @@ export type MutationPostPigWeanArgs = {
 };
 
 export type MutationPostFarrowingBackendScorecardArgs = {
-  input: FarrowingBackendScorecardInput;
+  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: FarrowingBackendScorecardInput;
+  input: SaveFarrowingBackendScorecardInput;
 };
 
 export type MutationSetAreaOperatorArgs = {
@@ -182,6 +171,17 @@ export type PigWeanInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PostFarrowingBackendScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntryInput;
+  piglets: ScorecardEntryInput;
+  feed: ScorecardEntryInput;
+  water: ScorecardEntryInput;
+  crate: ScorecardEntryInput;
+  room: ScorecardEntryInput;
+};
+
 export type PostFarrowingBackendScorecardResult = {
   __typename?: "PostFarrowingBackendScorecardResult";
   success: Scalars["Boolean"];
@@ -218,6 +218,17 @@ export type Resource = {
   __typename?: "Resource";
   number: Scalars["String"];
   name: Scalars["String"];
+};
+
+export type SaveFarrowingBackendScorecardInput = {
+  area: Scalars["String"];
+  operator?: Maybe<Scalars["String"]>;
+  sows?: Maybe<ScorecardEntryInput>;
+  piglets?: Maybe<ScorecardEntryInput>;
+  feed?: Maybe<ScorecardEntryInput>;
+  water?: Maybe<ScorecardEntryInput>;
+  crate?: Maybe<ScorecardEntryInput>;
+  room?: Maybe<ScorecardEntryInput>;
 };
 
 export type SaveFarrowingBackendScorecardResult = {
@@ -354,12 +365,57 @@ export type FarrowingBackendOperatorFieldsFragment = {
   __typename?: "Resource";
 } & Pick<Resource, "number" | "name">;
 
-export type FarrowingBackendScorecardQueryVariables = {};
+export type FarrowingBackendScorecardFieldsFragment = {
+  __typename?: "FarrowingBackendScorecard";
+} & {
+  area: { __typename?: "Job" } & Pick<Job, "number" | "description">;
+  operator: Maybe<
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
+  >;
+  sows: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+  piglets: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+  feed: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+  water: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+  crate: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+  room: { __typename?: "ScorecardEntry" } & Pick<
+    ScorecardEntry,
+    "score" | "comments"
+  >;
+};
 
-export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
+export type FarrowingBackendScorecardDataQueryVariables = {};
+
+export type FarrowingBackendScorecardDataQuery = { __typename?: "Query" } & {
   areas: Array<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
     { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+  >;
+};
+
+export type FarrowingBackendScorecardQueryVariables = {
+  area: Scalars["String"];
+};
+
+export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
+  scorecard: Maybe<
+    {
+      __typename?: "FarrowingBackendScorecard";
+    } & FarrowingBackendScorecardFieldsFragment
   >;
 };
 
@@ -375,7 +431,7 @@ export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
 };
 
 export type PostFarrowingBackendScorecardMutationVariables = {
-  input: FarrowingBackendScorecardInput;
+  input: PostFarrowingBackendScorecardInput;
 };
 
 export type PostFarrowingBackendScorecardMutation = {
@@ -383,7 +439,27 @@ export type PostFarrowingBackendScorecardMutation = {
 } & {
   postFarrowingBackendScorecard: {
     __typename?: "PostFarrowingBackendScorecardResult";
-  } & Pick<PostFarrowingBackendScorecardResult, "success">;
+  } & Pick<PostFarrowingBackendScorecardResult, "success"> & {
+      scorecard: {
+        __typename?: "FarrowingBackendScorecard";
+      } & FarrowingBackendScorecardFieldsFragment;
+    };
+};
+
+export type SaveFarrowingBackendScorecardMutationVariables = {
+  input: SaveFarrowingBackendScorecardInput;
+};
+
+export type SaveFarrowingBackendScorecardMutation = {
+  __typename?: "Mutation";
+} & {
+  saveFarrowingBackendScorecard: {
+    __typename?: "SaveFarrowingBackendScorecardResult";
+  } & Pick<SaveFarrowingBackendScorecardResult, "success"> & {
+      scorecard: {
+        __typename?: "FarrowingBackendScorecard";
+      } & FarrowingBackendScorecardFieldsFragment;
+    };
 };
 
 export type SetAreaOperatorMutationVariables = {
@@ -564,13 +640,14 @@ export type ResolversTypes = ResolversObject<{
   PigMoveInput: PigMoveInput;
   PigPurchaseInput: PigPurchaseInput;
   PigWeanInput: PigWeanInput;
-  FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
+  PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: ResolverTypeWrapper<
     Omit<PostFarrowingBackendScorecardResult, "scorecard"> & {
       scorecard: ResolversTypes["FarrowingBackendScorecard"];
     }
   >;
+  SaveFarrowingBackendScorecardInput: SaveFarrowingBackendScorecardInput;
   SaveFarrowingBackendScorecardResult: ResolverTypeWrapper<
     Omit<SaveFarrowingBackendScorecardResult, "scorecard"> & {
       scorecard: ResolversTypes["FarrowingBackendScorecard"];
@@ -610,12 +687,13 @@ export type ResolversParentTypes = ResolversObject<{
   PigMoveInput: PigMoveInput;
   PigPurchaseInput: PigPurchaseInput;
   PigWeanInput: PigWeanInput;
-  FarrowingBackendScorecardInput: FarrowingBackendScorecardInput;
+  PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: Omit<
     PostFarrowingBackendScorecardResult,
     "scorecard"
   > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
+  SaveFarrowingBackendScorecardInput: SaveFarrowingBackendScorecardInput;
   SaveFarrowingBackendScorecardResult: Omit<
     SaveFarrowingBackendScorecardResult,
     "scorecard"
