@@ -4,7 +4,9 @@ import {
   faTimesCircle,
   faInfoCircle,
   faCheckCircle,
-  faTimes
+  faTimes,
+  faChevronDown,
+  faChevronUp
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -12,5 +14,7 @@ library.add(
   faExclamationCircle,
   faTimesCircle,
   faInfoCircle,
-  faCheckCircle
+  faCheckCircle,
+  faChevronDown,
+  faChevronUp
 );

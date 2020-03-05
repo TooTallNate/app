@@ -1,11 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
-import {
-  View,
-  Title,
-  ButtonLink,
-  Button,
-  FormGroup
-} from "../components/styled";
+import { View, Title, ButtonLink, FormGroup } from "../components/styled";
+import Button from "../components/ui/Button";
 import SliderInput from "../components/ui/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
@@ -24,8 +19,8 @@ import FormFieldLabel from "../components/ui/FormFieldLabel";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
-import TypeaheadInput from "../components/ui/TypeaheadInput";
-import React, { useEffect } from "react";
+import TypeaheadInput, { TypeaheadItem } from "../components/ui/TypeaheadInput";
+import React, { useEffect, useState, useMemo } from "react";
 
 interface FormData {
   area: string;
@@ -150,6 +145,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
   history,
   location
 }) => {
+  const [scorecardLoaded, setScorecardLoaded] = useState(false);
   const query = new URLSearchParams(location.search);
   const formContext = useForm<FormData>({
     defaultValues: {
@@ -165,7 +161,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
   const { data, loading } = useFarrowingBackendScorecardDataQuery();
   const [
     getScorecard,
-    { loading: loadingScorecard, data: scorecardData, called: scorecardLoaded }
+    { loading: loadingScorecard, data: scorecardData }
   ] = useFarrowingBackendScorecardLazyQuery();
   const [post] = usePostFarrowingBackendScorecardMutation();
   const [save] = useSaveFarrowingBackendScorecardMutation();
@@ -175,8 +171,11 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
   const { score, max, percent } = useScore(formContext);
   const { selectedArea } = useSelectedArea(formContext, data);
 
+  console.log(getValues());
+
   // Load the cached scorecard data when the selected area changes.
   useEffect(() => {
+    setScorecardLoaded(false);
     if (selectedArea) {
       reset({
         area: selectedArea.number,
@@ -188,30 +187,67 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
         generalRoom: 0
       });
       getScorecard({ variables: { area: selectedArea.number } });
+    } else {
+      reset({
+        crate: 0,
+        feed: 0,
+        water: 0,
+        sowCare: 0,
+        pigletCare: 0,
+        generalRoom: 0
+      });
     }
   }, [getScorecard, reset, selectedArea]);
 
   // Update the scorecard form when the cached scorecard data is loaded.
   useEffect(() => {
-    if (scorecardData && scorecardData.scorecard) {
-      const data = scorecardData.scorecard;
-      if (data.operator) setValue("operator", data.operator.number);
-      if (data.sows.score) setValue("sowCare", data.sows.score);
-      if (data.sows.comments) setValue("sowCareComments", data.sows.comments);
-      if (data.piglets.score) setValue("pigletCare", data.piglets.score);
-      if (data.piglets.comments)
-        setValue("pigletCareComments", data.piglets.comments);
-      if (data.feed.score) setValue("feed", data.feed.score);
-      if (data.feed.comments) setValue("feedComments", data.feed.comments);
-      if (data.water.score) setValue("water", data.water.score);
-      if (data.water.comments) setValue("waterComments", data.water.comments);
-      if (data.crate.score) setValue("crate", data.crate.score);
-      if (data.crate.comments) setValue("crateComments", data.crate.comments);
-      if (data.room.score) setValue("generalRoom", data.room.score);
-      if (data.room.comments)
-        setValue("generalRoomComments", data.room.comments);
+    if (scorecardData) {
+      setScorecardLoaded(true);
+      if (scorecardData.scorecard) {
+        const data = scorecardData.scorecard;
+        if (data.operator) setValue("operator", data.operator.number);
+        if (data.sows.score) setValue("sowCare", data.sows.score);
+        if (data.sows.comments) setValue("sowCareComments", data.sows.comments);
+        if (data.piglets.score) setValue("pigletCare", data.piglets.score);
+        if (data.piglets.comments)
+          setValue("pigletCareComments", data.piglets.comments);
+        if (data.feed.score) setValue("feed", data.feed.score);
+        if (data.feed.comments) setValue("feedComments", data.feed.comments);
+        if (data.water.score) setValue("water", data.water.score);
+        if (data.water.comments) setValue("waterComments", data.water.comments);
+        if (data.crate.score) setValue("crate", data.crate.score);
+        if (data.crate.comments) setValue("crateComments", data.crate.comments);
+        if (data.room.score) setValue("generalRoom", data.room.score);
+        if (data.room.comments)
+          setValue("generalRoomComments", data.room.comments);
+      }
+      if (selectedArea && !getValues().operator) {
+        setValue("operator", selectedArea.personResponsible.number);
+      }
     }
-  }, [scorecardData, setValue]);
+  }, [getValues, scorecardData, selectedArea, setValue]);
+
+  const areas = useMemo<TypeaheadItem[]>(() => {
+    if (data) {
+      return data.areas.map(area => ({
+        value: area.number,
+        title: area.description
+      }));
+    } else {
+      return [];
+    }
+  }, [data]);
+
+  const operators = useMemo<TypeaheadItem[]>(() => {
+    if (data) {
+      return data.operators.map(operator => ({
+        value: operator.number,
+        title: operator.name
+      }));
+    } else {
+      return [];
+    }
+  }, [data]);
 
   // Post the scorecard as a final submission.
   const onSubmit: OnSubmit<FormData> = async data => {
@@ -277,64 +313,49 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
         >
           <FormFieldLabel>Area</FormFieldLabel>
           <FormFieldInput>
-            <TypeaheadInput
-              items={data.areas.map(area => ({
-                value: area.number,
-                title: area.description
-              }))}
-            />
+            <TypeaheadInput items={areas} />
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        {(() => {
-          if (loadingScorecard) {
-            return <FullPageSpinner>Loading Scorecard...</FullPageSpinner>;
-          } else if (scorecardLoaded) {
-            return (
-              <>
-                <FormField
-                  name="operator"
-                  rules={{ required: "The operator field is required." }}
+        {loadingScorecard && (
+          <FullPageSpinner>Loading Scorecard...</FullPageSpinner>
+        )}
+        <div>
+          <FormField
+            name="operator"
+            rules={{ required: "The operator field is required." }}
+          >
+            <FormFieldLabel>Operator</FormFieldLabel>
+            <div className="flex">
+              <div className="flex-grow">
+                <FormFieldInput>
+                  <TypeaheadInput items={operators} />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </div>
+              {selectedArea && (
+                <ButtonLink
+                  className="ml-4"
+                  to={`/scorecard/area/${selectedArea.number}/operator`}
                 >
-                  <FormFieldLabel>Operator</FormFieldLabel>
-                  <div className="flex">
-                    <div className="flex-grow">
-                      <FormFieldInput>
-                        <TypeaheadInput
-                          items={data.operators.map(operator => ({
-                            value: operator.number,
-                            title: operator.name
-                          }))}
-                        />
-                      </FormFieldInput>
-                      <FormFieldErrors />
-                    </div>
-                    {selectedArea && (
-                      <ButtonLink
-                        className="ml-4"
-                        to={`/scorecard/area/${selectedArea.number}/operator`}
-                      >
-                        Change
-                      </ButtonLink>
-                    )}
-                  </div>
-                </FormField>
-                <ScoreEntry name="sowCare" label="Sow Care" />
-                <ScoreEntry name="pigletCare" label="Piglet Care" />
-                <ScoreEntry name="feed" label="Feed" />
-                <ScoreEntry name="water" label="Water" />
-                <ScoreEntry name="crate" label="Crate" />
-                <ScoreEntry name="generalRoom" label="General Room" />
-                <FormGroup>
-                  <Button className="mr-4" type="button" onClick={onSave}>
-                    Save
-                  </Button>
-                  <FormSubmit />
-                </FormGroup>
-              </>
-            );
-          }
-        })()}
+                  Change
+                </ButtonLink>
+              )}
+            </div>
+          </FormField>
+          <ScoreEntry name="sowCare" label="Sow Care" />
+          <ScoreEntry name="pigletCare" label="Piglet Care" />
+          <ScoreEntry name="feed" label="Feed" />
+          <ScoreEntry name="water" label="Water" />
+          <ScoreEntry name="crate" label="Crate" />
+          <ScoreEntry name="generalRoom" label="General Room" />
+          <FormGroup>
+            <Button className="mr-4 w-full" type="button" onClick={onSave}>
+              Save
+            </Button>
+            <FormSubmit />
+          </FormGroup>
+        </div>
       </Form>
     </View>
   );

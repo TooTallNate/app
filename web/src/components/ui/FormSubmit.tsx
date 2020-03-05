@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useFormContext } from "react-hook-form";
-import { Button } from "../styled";
+import Button from "../ui/Button";
 import Spinner from "./Spinner";
 
 const FormSubmit: React.FC = ({ children }) => {
@@ -8,6 +8,7 @@ const FormSubmit: React.FC = ({ children }) => {
   return (
     <Button
       type="submit"
+      className="w-full"
       disabled={
         (!formState.isValid && formState.isSubmitted) || formState.isSubmitting
       }
