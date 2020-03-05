@@ -170,7 +170,7 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
   const [post] = usePostFarrowingBackendScorecardMutation();
   const [save] = useSaveFarrowingBackendScorecardMutation();
   const { setMessage } = useFlash();
-  const { setValue, getValues } = formContext;
+  const { setValue, getValues, reset } = formContext;
 
   const { score, max, percent } = useScore(formContext);
   const { selectedArea } = useSelectedArea(formContext, data);
@@ -178,9 +178,18 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
   // Load the cached scorecard data when the selected area changes.
   useEffect(() => {
     if (selectedArea) {
+      reset({
+        area: selectedArea.number,
+        crate: 0,
+        feed: 0,
+        water: 0,
+        sowCare: 0,
+        pigletCare: 0,
+        generalRoom: 0
+      });
       getScorecard({ variables: { area: selectedArea.number } });
     }
-  }, [getScorecard, selectedArea]);
+  }, [getScorecard, reset, selectedArea]);
 
   // Update the scorecard form when the cached scorecard data is loaded.
   useEffect(() => {
@@ -257,7 +266,8 @@ const ScorecardView: React.FC<RouteComponentProps> = ({
           className="text-base font-normal float-right pt-1"
           aria-label="Total Score"
         >
-          {score}/{max} <span className="hidden xs:inline">{percent}%</span>
+          {score}/{max}{" "}
+          <span className="hidden xs:inline">{percent.toFixed(2)}%</span>
         </span>
       </Title>
       <Form context={formContext} onSubmit={onSubmit}>

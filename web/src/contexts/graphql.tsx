@@ -17,7 +17,7 @@ const cache = new InMemoryCache({
         return `Resource:${(object as Resource).number}`;
       case "FarrowingBackendScorecard":
         return `FarrowingBackendScorecard:${
-          (object as FarrowingBackendScorecard).area
+          (object as FarrowingBackendScorecard).area.number
         }`;
       default:
         return defaultDataIdFromObject(object); // fall back to default handling
