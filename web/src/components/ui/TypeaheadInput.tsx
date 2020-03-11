@@ -26,58 +26,51 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   sort = "asc",
   "aria-labelledby": ariaLabelledBy
 }) => {
-  console.log(ariaLabelledBy, value);
   const [items, setItems] = useState(itemsProp);
+  const [inputValue, setInputValue] = useState<string | undefined>("");
+  const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(null);
+
+  useEffect(() => {
+    const selectedItem = itemsProp.find(item => item.value === value) || null;
+    setSelectedItem(selectedItem);
+    setInputValue(selectedItem ? selectedItem.title : "");
+  }, [itemsProp, value]);
+
+  useEffect(() => {
+    if (inputValue) {
+      setItems(
+        itemsProp.filter(item =>
+          item.title.toLowerCase().startsWith(inputValue.toLowerCase())
+        )
+      );
+    } else {
+      setItems(itemsProp);
+    }
+  }, [inputValue, itemsProp]);
+
   const {
     isOpen,
-    selectedItem,
     highlightedIndex,
-    setInputValue,
-    selectItem,
     getToggleButtonProps,
     getMenuProps,
     getInputProps,
     getComboboxProps,
     getItemProps
   } = useCombobox<TypeaheadItem>({
-    items: items,
+    items,
+    selectedItem: selectedItem as any,
+    inputValue,
     labelId: ariaLabelledBy,
-    onInputValueChange: ({ inputValue }) => {
-      // Filter
-      if (inputValue) {
-        setItems(
-          itemsProp.filter(item =>
-            item.title.toLowerCase().startsWith(inputValue.toLowerCase())
-          )
-        );
-      } else {
-        setItems(itemsProp);
+    onStateChange: state => {
+      if (state.selectedItem !== selectedItem) {
+        onChange(state.selectedItem ? state.selectedItem.value : undefined);
       }
-      if (selectedItem && selectedItem.title !== inputValue) {
-        onChange(null);
+      if (state.inputValue !== inputValue) {
+        setInputValue(state.inputValue);
       }
     },
-    itemToString: item => (item ? item.title : ""),
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (
-        (selectedItem && selectedItem.value !== value) ||
-        (!selectedItem && !!value)
-      ) {
-        onChange(selectedItem ? selectedItem.value : null);
-      }
-    }
+    itemToString: item => (item ? item.title : "")
   });
-
-  useEffect(() => {
-    if (
-      (selectedItem && selectedItem.value !== value) ||
-      (!selectedItem && !!value)
-    ) {
-      const newItem = itemsProp.find(item => item.value === value);
-      selectItem(newItem as any);
-      setInputValue(newItem ? newItem.title : "");
-    }
-  }, [selectItem, itemsProp, value, selectedItem, setInputValue]);
 
   return (
     <div className="relative">
@@ -101,7 +94,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
           className="px-4 border-t border-b border-gray-500 focus:outline-none"
           tabIndex={-1}
           onClick={() => {
-            onChange(null);
+            onChange(undefined);
           }}
         >
           <FontAwesomeIcon icon="times" />
