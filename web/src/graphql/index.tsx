@@ -361,10 +361,8 @@ export type FarrowingBackendOperatorFieldsFragment = {
 export type FarrowingBackendScorecardFieldsFragment = {
   __typename?: "FarrowingBackendScorecard";
 } & {
-  area: { __typename?: "Job" } & Pick<Job, "number" | "description">;
-  operator: Maybe<
-    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
-  >;
+  area: { __typename?: "Job" } & Pick<Job, "number">;
+  operator: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
   sows: { __typename?: "ScorecardEntry" } & Pick<
     ScorecardEntry,
     "score" | "comments"
@@ -391,13 +389,10 @@ export type FarrowingBackendScorecardFieldsFragment = {
   >;
 };
 
-export type FarrowingBackendScorecardDataQueryVariables = {};
+export type FarrowingBackendScorecardAreasQueryVariables = {};
 
-export type FarrowingBackendScorecardDataQuery = { __typename?: "Query" } & {
-  areas: Array<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
-  operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
-  >;
+export type FarrowingBackendScorecardAreasQuery = { __typename?: "Query" } & {
+  areas: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
 };
 
 export type FarrowingBackendScorecardQueryVariables = {
@@ -405,6 +400,17 @@ export type FarrowingBackendScorecardQueryVariables = {
 };
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
+  area: Maybe<
+    { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
+        personResponsible: { __typename?: "Resource" } & Pick<
+          Resource,
+          "number"
+        >;
+      }
+  >;
+  operators: Array<
+    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+  >;
   scorecard: Maybe<
     {
       __typename?: "FarrowingBackendScorecard";
@@ -528,11 +534,9 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
   fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
     area {
       number
-      description
     }
     operator {
       number
-      name
     }
     sows {
       score
@@ -930,72 +934,79 @@ export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
   PostPigMortalityMutation,
   PostPigMortalityMutationVariables
 >;
-export const FarrowingBackendScorecardDataDocument = gql`
-  query FarrowingBackendScorecardData {
+export const FarrowingBackendScorecardAreasDocument = gql`
+  query FarrowingBackendScorecardAreas {
     areas: farrowingBackendAreas {
-      ...FarrowingBackendAreaFields
-    }
-    operators: farrowingBackendOperators {
-      ...FarrowingBackendOperatorFields
+      number
+      description
     }
   }
-  ${FarrowingBackendAreaFieldsFragmentDoc}
-  ${FarrowingBackendOperatorFieldsFragmentDoc}
 `;
 
 /**
- * __useFarrowingBackendScorecardDataQuery__
+ * __useFarrowingBackendScorecardAreasQuery__
  *
- * To run a query within a React component, call `useFarrowingBackendScorecardDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useFarrowingBackendScorecardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFarrowingBackendScorecardAreasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFarrowingBackendScorecardAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFarrowingBackendScorecardDataQuery({
+ * const { data, loading, error } = useFarrowingBackendScorecardAreasQuery({
  *   variables: {
  *   },
  * });
  */
-export function useFarrowingBackendScorecardDataQuery(
+export function useFarrowingBackendScorecardAreasQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    FarrowingBackendScorecardDataQuery,
-    FarrowingBackendScorecardDataQueryVariables
+    FarrowingBackendScorecardAreasQuery,
+    FarrowingBackendScorecardAreasQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    FarrowingBackendScorecardDataQuery,
-    FarrowingBackendScorecardDataQueryVariables
-  >(FarrowingBackendScorecardDataDocument, baseOptions);
+    FarrowingBackendScorecardAreasQuery,
+    FarrowingBackendScorecardAreasQueryVariables
+  >(FarrowingBackendScorecardAreasDocument, baseOptions);
 }
-export function useFarrowingBackendScorecardDataLazyQuery(
+export function useFarrowingBackendScorecardAreasLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    FarrowingBackendScorecardDataQuery,
-    FarrowingBackendScorecardDataQueryVariables
+    FarrowingBackendScorecardAreasQuery,
+    FarrowingBackendScorecardAreasQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    FarrowingBackendScorecardDataQuery,
-    FarrowingBackendScorecardDataQueryVariables
-  >(FarrowingBackendScorecardDataDocument, baseOptions);
+    FarrowingBackendScorecardAreasQuery,
+    FarrowingBackendScorecardAreasQueryVariables
+  >(FarrowingBackendScorecardAreasDocument, baseOptions);
 }
-export type FarrowingBackendScorecardDataQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardDataQuery
+export type FarrowingBackendScorecardAreasQueryHookResult = ReturnType<
+  typeof useFarrowingBackendScorecardAreasQuery
 >;
-export type FarrowingBackendScorecardDataLazyQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardDataLazyQuery
+export type FarrowingBackendScorecardAreasLazyQueryHookResult = ReturnType<
+  typeof useFarrowingBackendScorecardAreasLazyQuery
 >;
-export type FarrowingBackendScorecardDataQueryResult = ApolloReactCommon.QueryResult<
-  FarrowingBackendScorecardDataQuery,
-  FarrowingBackendScorecardDataQueryVariables
+export type FarrowingBackendScorecardAreasQueryResult = ApolloReactCommon.QueryResult<
+  FarrowingBackendScorecardAreasQuery,
+  FarrowingBackendScorecardAreasQueryVariables
 >;
 export const FarrowingBackendScorecardDocument = gql`
   query FarrowingBackendScorecard($area: String!) {
+    area: farrowingBackendArea(number: $area) {
+      number
+      description
+      personResponsible {
+        number
+      }
+    }
+    operators: farrowingBackendOperators {
+      ...FarrowingBackendOperatorFields
+    }
     scorecard: farrowingBackendScorecard(area: $area) {
       ...FarrowingBackendScorecardFields
     }
   }
+  ${FarrowingBackendOperatorFieldsFragmentDoc}
   ${FarrowingBackendScorecardFieldsFragmentDoc}
 `;
 

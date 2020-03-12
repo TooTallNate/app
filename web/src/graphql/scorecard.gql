@@ -7,19 +7,12 @@ fragment FarrowingBackendAreaFields on Job {
   }
 }
 
-fragment FarrowingBackendOperatorFields on Resource {
-  number
-  name
-}
-
 fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
   area {
     number
-    description
   }
   operator {
     number
-    name
   }
   sows {
     score
@@ -47,16 +40,25 @@ fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
   }
 }
 
-query FarrowingBackendScorecardData {
+query FarrowingBackendScorecardAreas {
   areas: farrowingBackendAreas {
-    ...FarrowingBackendAreaFields
-  }
-  operators: farrowingBackendOperators {
-    ...FarrowingBackendOperatorFields
+    number
+    description
   }
 }
 
 query FarrowingBackendScorecard($area: String!) {
+  area: farrowingBackendArea(number: $area) {
+    number
+    description
+    personResponsible {
+      number
+    }
+  }
+  operators: farrowingBackendOperators {
+    number
+    name
+  }
   scorecard: farrowingBackendScorecard(area: $area) {
     ...FarrowingBackendScorecardFields 
   }
@@ -67,7 +69,8 @@ query FarrowingBackendOperators($area: String!) {
     ...FarrowingBackendAreaFields
   }
   operators: farrowingBackendOperators {
-    ...FarrowingBackendOperatorFields
+    number
+    name
   }
 }
 

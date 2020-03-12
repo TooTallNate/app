@@ -4,7 +4,10 @@ import {
   MutationPostFarrowingBackendScorecardArgs,
   ScorecardEntry
 } from "../../resolvers/types";
-import { JobFactory, FarrowingBackendScorecardInputFactory } from "../builders";
+import {
+  JobFactory,
+  PostFarrowingBackendScorecardInputFactory
+} from "../builders";
 import {
   NavJobJournalTemplate,
   NavJobJournalBatch,
@@ -17,7 +20,7 @@ import nock = require("nock");
 
 function mutation(variables: MutationPostFarrowingBackendScorecardArgs) {
   return client.request<PostFarrowingBackendScorecardResult>(
-    `mutation PostFarrowingBackendScorecard($input: FarrowingBackendScorecardInput!) {
+    `mutation PostFarrowingBackendScorecard($input: PostFarrowingBackendScorecardInput!) {
       postFarrowingBackendScorecard(input: $input) {
         success
       }
@@ -27,13 +30,13 @@ function mutation(variables: MutationPostFarrowingBackendScorecardArgs) {
 }
 
 testUnauthenticated(() =>
-  mutation({ input: FarrowingBackendScorecardInputFactory.build() })
+  mutation({ input: PostFarrowingBackendScorecardInputFactory.build() })
 );
 
 test("submits scores to NAV", async () => {
   const { user, auth } = await mockUser();
   const area = JobFactory.build();
-  const input = FarrowingBackendScorecardInputFactory.build({
+  const input = PostFarrowingBackendScorecardInputFactory.build({
     area: area.No
   });
 
@@ -85,7 +88,7 @@ test("submits scores to NAV", async () => {
 test("clears scorecard from database", async () => {
   const { user, auth } = await mockUser();
   const area = JobFactory.build();
-  const input = FarrowingBackendScorecardInputFactory.build({
+  const input = PostFarrowingBackendScorecardInputFactory.build({
     area: area.No
   });
   const scorecard = await FarrowingBackendScorecardModel.create(input);

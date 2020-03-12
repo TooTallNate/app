@@ -10,7 +10,8 @@ import {
 } from "../nav/types";
 import uuid from "uuid/v4";
 import {
-  FarrowingBackendScorecardInput,
+  SaveFarrowingBackendScorecardInput,
+  PostFarrowingBackendScorecardInput,
   PigAdjustmentInput,
   PigGradeOffInput,
   PigMortalityInput,
@@ -59,8 +60,21 @@ export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
   comments: Factory.each(() => faker.lorem.words(3))
 });
 
-export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
-  FarrowingBackendScorecardInput
+export const PostFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
+  PostFarrowingBackendScorecardInput
+>({
+  area: Factory.each(() => faker.random.alphaNumeric(8)),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
+  sows: Factory.each(() => ScorecardEntryInputFactory.build()),
+  piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
+  feed: Factory.each(() => ScorecardEntryInputFactory.build()),
+  water: Factory.each(() => ScorecardEntryInputFactory.build()),
+  crate: Factory.each(() => ScorecardEntryInputFactory.build()),
+  room: Factory.each(() => ScorecardEntryInputFactory.build())
+});
+
+export const SaveFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
+  SaveFarrowingBackendScorecardInput
 >({
   area: Factory.each(() => faker.random.alphaNumeric(8)),
   operator: Factory.each(() => faker.name.firstName().toUpperCase()),

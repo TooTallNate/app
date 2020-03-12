@@ -95,7 +95,7 @@ export const ScorecardMutations: MutationResolvers = {
     if (!doc) {
       doc = new FarrowingBackendScorecardModel(input);
     } else {
-      doc.set(input);
+      doc.overwrite(input);
     }
     await doc.save();
     return { success: true, scorecard: doc };

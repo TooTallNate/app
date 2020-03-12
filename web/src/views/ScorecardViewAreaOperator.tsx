@@ -21,23 +21,31 @@ import {
 } from "../graphql";
 import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
+import StackedButtonInput, {
+  StackedButton
+} from "../components/ui/StackedButtonInput";
 
 interface FormData {
   operator: string;
 }
 
 interface RouteParams {
-  id: string;
+  area: string;
 }
 
-const ScorecardAreaOperatorView: React.FC<RouteComponentProps<RouteParams>> = ({
+const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
   match,
   history
 }) => {
   const formContext = useForm<FormData>();
   const { data, loading } = useFarrowingBackendOperatorsQuery({
     variables: {
-      area: match.params.id
+      area: match.params.area
+    },
+    onCompleted(data) {
+      if (data.area) {
+        formContext.setValue("operator", data.area.personResponsible.number);
+      }
     }
   });
   const [post] = useSetAreaOperatorMutation();
@@ -49,13 +57,13 @@ const ScorecardAreaOperatorView: React.FC<RouteComponentProps<RouteParams>> = ({
     return <Redirect to="/scorecard" />;
   } else {
     const { area, operators } = data;
-    const backUrl = `/scorecard?area=${area.number}`;
+    const backUrl = `/scorecard/areas/${area.number}`;
 
     const onSubmit: OnSubmit<FormData> = async data => {
       await post({
         variables: {
           input: {
-            area: match.params.id,
+            area: match.params.area,
             operator: data.operator
           }
         }
@@ -86,12 +94,13 @@ const ScorecardAreaOperatorView: React.FC<RouteComponentProps<RouteParams>> = ({
           >
             <FormFieldLabel>Operator</FormFieldLabel>
             <FormFieldInput>
-              <TypeaheadInput
-                items={operators.map(operator => ({
-                  value: operator.number,
-                  title: operator.name
-                }))}
-              />
+              <StackedButtonInput orientation="vertical">
+                {operators.map(operator => (
+                  <StackedButton value={operator.number} key={operator.number}>
+                    {operator.name}
+                  </StackedButton>
+                ))}
+              </StackedButtonInput>
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
@@ -107,4 +116,4 @@ const ScorecardAreaOperatorView: React.FC<RouteComponentProps<RouteParams>> = ({
   }
 };
 
-export default ScorecardAreaOperatorView;
+export default ScorecardViewAreaOperator;

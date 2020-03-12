@@ -9,7 +9,6 @@ import HomeView from "./views/HomeView";
 import LoginView from "./views/LoginView";
 import MainNav from "./components/MainNav";
 import { useAuth } from "./contexts/auth";
-import ScorecardAreaOperatorView from "./views/ScorecardAreaOperatorView";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -26,11 +25,7 @@ const AuthenticatedApp: React.FC = () => {
         <Switch>
           <Route exact path="/" component={HomeView} />
           <Route path="/pigs" component={ActivityView} />
-          <Route exact path="/scorecard" component={ScorecardView} />
-          <Route
-            path="/scorecard/area/:id/operator"
-            component={ScorecardAreaOperatorView}
-          />
+          <Route path="/scorecard" component={ScorecardView} />
           <Route path="/account" component={AccountView} />
           <Redirect to="/" />
         </Switch>

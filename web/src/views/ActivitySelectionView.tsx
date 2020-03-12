@@ -10,11 +10,7 @@ const ActivitySelectionView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <View>
       <Title>Activity</Title>
-      <div
-        css={{
-          padding: "0 16px"
-        }}
-      >
+      <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
         <FormField name="action">
           <FormFieldLabel>Select Activity</FormFieldLabel>
           <FormFieldInput>
