@@ -1,11 +1,15 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { View, Title, StackedNavLink, StackedNav } from "../components/styled";
+import { StackedNavLink, StackedNav } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import { useFarrowingBackendScorecardAreasQuery } from "../graphql";
 import FullPageSpinner from "../components/FullPageSpinner";
 import FormField from "../components/ui/FormField";
 import FormFieldLabel from "../components/ui/FormFieldLabel";
 import FormFieldInput from "../components/ui/FormFieldInput";
+import BackButton from "../components/ui/BackButton";
 
 const ScorecardViewArea: React.FC<RouteComponentProps> = ({
   history,
@@ -17,7 +21,10 @@ const ScorecardViewArea: React.FC<RouteComponentProps> = ({
     <FullPageSpinner>Loading...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Farrowing Scorecard</Title>
+      <ViewHeader>
+        <BackButton />
+        <Title>Farrowing Scorecard</Title>
+      </ViewHeader>
       <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
         <FormField name="area">
           <FormFieldLabel>Area</FormFieldLabel>

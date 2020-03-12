@@ -1,7 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
-import { Title, View, FormGroup } from "../components/styled";
+import { FormGroup } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
@@ -20,6 +23,7 @@ import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import TypeaheadInput from "../components/ui/TypeaheadInput";
+import BackButton from "../components/ui/BackButton";
 
 interface FormData {
   animal: string;
@@ -65,7 +69,10 @@ const ActivityPurchaseView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Purchase</Title>
+      <ViewHeader>
+        <BackButton />
+        <Title>Purchase</Title>
+      </ViewHeader>
       <Form context={formContext} onSubmit={onSubmit}>
         <FormField
           name="animal"

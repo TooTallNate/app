@@ -12,13 +12,9 @@ export const ButtonLink = tw.styled(FocusTarget.withComponent(Link))`
   border border-black rounded-lg active:border-gray-500
 `;
 
-export const View = tw.div`flex flex-col h-full`;
-
 export const Label = tw.label`h-6 pt-2 mb-3 leading-none block text-base font-bold`;
 
 export const Output = tw.output`flex items-center px-4 h-11 text-base`;
-
-export const Title = tw.h1`p-4 font-bold text-xl`;
 
 export const Group = styled.div([
   tw`p-0 m-0`,

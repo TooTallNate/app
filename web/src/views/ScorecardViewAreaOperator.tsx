@@ -1,11 +1,9 @@
 import React from "react";
-import {
-  View,
-  Title,
-  Output,
-  ButtonLink,
-  FormGroup
-} from "../components/styled";
+import { Output, ButtonLink, FormGroup } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
+import BackButton from "../components/ui/BackButton";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import Form from "../components/ui/Form";
 import { useForm, OnSubmit } from "react-hook-form";
@@ -79,7 +77,10 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
 
     return (
       <View>
-        <Title>Scorecard Area Operator</Title>
+        <ViewHeader>
+          <BackButton />
+          <Title>Scorecard Area Operator</Title>
+        </ViewHeader>
         <Form context={formContext} onSubmit={onSubmit}>
           <FormField name="area">
             <FormFieldLabel>Area</FormFieldLabel>

@@ -6,7 +6,8 @@ import {
   faCheckCircle,
   faTimes,
   faChevronDown,
-  faChevronUp
+  faChevronUp,
+  faChevronLeft
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -16,5 +17,6 @@ library.add(
   faInfoCircle,
   faCheckCircle,
   faChevronDown,
-  faChevronUp
+  faChevronUp,
+  faChevronLeft
 );

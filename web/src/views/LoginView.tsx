@@ -2,7 +2,10 @@
 import { jsx } from "@emotion/core";
 import { useState } from "react";
 import { useAuth } from "../contexts/auth";
-import { Title, Group, View, FormGroup } from "../components/styled";
+import { Group, FormGroup } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import TextInput from "../components/ui/TextInput";
 import { useForm } from "react-hook-form";
 import Form from "../components/ui/Form";
@@ -24,7 +27,9 @@ const LoginView: React.FC = () => {
 
   return (
     <View>
-      <Title>Login</Title>
+      <ViewHeader>
+        <Title>Login</Title>
+      </ViewHeader>
       <Form
         context={formContext}
         onSubmit={async data => {

@@ -1,11 +1,8 @@
 import { RouteComponentProps } from "react-router-dom";
-import {
-  View,
-  Title,
-  ButtonLink,
-  FormGroup,
-  Output
-} from "../components/styled";
+import { ButtonLink, FormGroup, Output } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import Button from "../components/ui/Button";
 import SliderInput from "../components/ui/SliderInput";
 import {
@@ -25,6 +22,7 @@ import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
 import TypeaheadInput, { TypeaheadItem } from "../components/ui/TypeaheadInput";
 import React, { useMemo } from "react";
+import BackButton from "../components/ui/BackButton";
 
 interface FormData {
   operator: string;
@@ -249,16 +247,14 @@ const ScorecardViewScores: React.FC<RouteComponentProps<{ area: string }>> = ({
     <FullPageSpinner>Loading...</FullPageSpinner>
   ) : (
     <View>
-      <Title>
-        Farrowing Scorecard
-        <span
-          className="text-base font-normal float-right pt-1"
-          aria-label="Total Score"
-        >
+      <ViewHeader>
+        <BackButton />
+        <Title>Farrowing Scorecard</Title>
+        <div className="text-base font-normal" aria-label="Total Score">
           {score}/{max}{" "}
           <span className="hidden xs:inline">{percent.toFixed(2)}%</span>
-        </span>
-      </Title>
+        </div>
+      </ViewHeader>
       <Form context={formContext} onSubmit={onSubmit}>
         <FormField name="area">
           <FormFieldLabel>Area</FormFieldLabel>
