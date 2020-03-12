@@ -43,7 +43,7 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
   return (
     <label
       className={`
-        h-11 text-base font-bold border-gray-500
+        h-11 text-base font-medium border-gray-500
         focus:outline-none focus:bg-blue-300
         ${
           orientation === "vertical"

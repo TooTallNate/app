@@ -1,5 +1,5 @@
 import React from "react";
-import { Output, ButtonLink, FormGroup } from "../components/styled";
+import { Output, FormGroup } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
 import ViewHeader from "../components/ui/ViewHeader";
@@ -54,7 +54,6 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
     return <Redirect to="/scorecard" />;
   } else {
     const { area, operators } = data;
-    const backUrl = `/scorecard/areas/${area.number}`;
 
     const onSubmit: OnSubmit<FormData> = async data => {
       await post({
@@ -72,7 +71,7 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
           message: `${area.description} operator updated to ${operator.name}.`
         });
       }
-      history.push(backUrl);
+      history.push(`/scorecard/areas/${area.number}`);
     };
 
     return (
@@ -105,9 +104,6 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
             <FormFieldErrors />
           </FormField>
           <FormGroup>
-            <ButtonLink className="mr-4" to={backUrl}>
-              Back
-            </ButtonLink>
             <FormSubmit>Save</FormSubmit>
           </FormGroup>
         </Form>

@@ -37,7 +37,7 @@ export const StackedContainer = tw.styled(
 export const StackedItem = styled.div`
   ${tw`
     flex items-center px-4 h-11
-    text-base font-bold
+    text-base font-medium
     border-b border-gray-500
     focus:outline-none focus:bg-blue-300
   `}
