@@ -12,7 +12,6 @@ import { useForm, OnSubmit } from "react-hook-form";
 import FormField from "../components/ui/FormField";
 import FormFieldLabel from "../components/ui/FormFieldLabel";
 import FormFieldInput from "../components/ui/FormFieldInput";
-import TypeaheadInput from "../components/ui/TypeaheadInput";
 import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
 import {

@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
-import { Button, View } from "../components/styled";
+import { View } from "../components/styled";
+import Button from "../components/ui/Button";
 import { useAuth } from "../contexts/auth";
 import { Title } from "../components/styled";
 
