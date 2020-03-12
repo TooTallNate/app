@@ -106,9 +106,11 @@ export const PigActivityQueries: QueryResolvers = {
       );
   },
   async pigActivityDefaults(_, __, { navClient, user }) {
-    return await UserSettingsModel.findOne({
-      username: user.username
-    });
+    return (
+      (await UserSettingsModel.findOne({
+        username: user.username
+      })) || new UserSettingsModel({ username: user.username })
+    );
   }
 };
 

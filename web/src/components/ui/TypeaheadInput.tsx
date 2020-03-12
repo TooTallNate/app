@@ -18,6 +18,11 @@ interface TypeaheadInputProps {
   "aria-labelledby"?: string;
 }
 
+const sortPredicate = (sort: "asc" | "desc") => (
+  a: TypeaheadItem,
+  b: TypeaheadItem
+) => (sort === "asc" ? 1 : -1) * a.title.localeCompare(b.title);
+
 const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   items: itemsProp,
   value,
@@ -26,28 +31,32 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   sort = "asc",
   "aria-labelledby": ariaLabelledBy
 }) => {
-  const [items, setItems] = useState(itemsProp);
+  const [items, setItems] = useState<TypeaheadItem[]>([]);
   const [inputValue, setInputValue] = useState<string | undefined>("");
   const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(null);
 
+  // Update state whenever, the value or items props change.
   useEffect(() => {
     const selectedItem = itemsProp.find(item => item.value === value) || null;
     setSelectedItem(selectedItem);
     setInputValue(selectedItem ? selectedItem.title : "");
   }, [itemsProp, value]);
 
+  // Filter the items when the input value changes.
   useEffect(() => {
     if (inputValue) {
+      const matcher = new RegExp(inputValue, "i");
       setItems(
-        itemsProp.filter(item =>
-          item.title.toLowerCase().startsWith(inputValue.toLowerCase())
-        )
+        itemsProp
+          .filter(item => matcher.test(item.title))
+          .sort(sortPredicate(sort))
       );
     } else {
-      setItems(itemsProp);
+      setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
     }
-  }, [inputValue, itemsProp]);
+  }, [inputValue, itemsProp, sort]);
 
+  // Configure downshift.
   const {
     isOpen,
     highlightedIndex,
@@ -73,7 +82,7 @@ const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
   });
 
   return (
-    <div className="relative">
+    <div className={`relative ${className}`}>
       <div
         {...getComboboxProps()}
         className={`
