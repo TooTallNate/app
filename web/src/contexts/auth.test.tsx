@@ -8,10 +8,7 @@ import { UserDocument, LoginDocument, LogoutDocument } from "../graphql";
 function render(mocks: MockedResponse[]) {
   return renderHook(useAuth, {
     wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
-    apollo: {
-      mocks,
-      addTypename: false
-    }
+    apollo: { mocks }
   });
 }
 
@@ -38,7 +35,7 @@ test("returns unauthenticated if user query returns null", async () => {
 
 test("returns authenticated if user query returns with user", async () => {
   const user = {
-    id: faker.random.alphaNumeric(24),
+    __typename: "User",
     name: faker.name.findName(),
     username: faker.internet.userName()
   };
@@ -59,7 +56,7 @@ test("returns authenticated if user query returns with user", async () => {
 
 test("login updates context when successful", async () => {
   const user = {
-    id: faker.random.alphaNumeric(24),
+    __typename: "User",
     name: faker.name.findName(),
     username: faker.internet.userName()
   };
@@ -74,7 +71,14 @@ test("login updates context when successful", async () => {
     },
     {
       request: { query: LoginDocument, variables: { input: creds } },
-      result: { data: { login: { user } } }
+      result: {
+        data: {
+          login: {
+            __typename: "LoginResult",
+            user
+          }
+        }
+      }
     }
   ]);
   await findByText(/Child/i);
@@ -89,7 +93,7 @@ test("login updates context when successful", async () => {
 
 test("logout updates context when successful", async () => {
   const user = {
-    id: faker.random.alphaNumeric(24),
+    __typename: "User",
     name: faker.name.findName(),
     username: faker.internet.userName()
   };
@@ -100,7 +104,14 @@ test("logout updates context when successful", async () => {
     },
     {
       request: { query: LogoutDocument },
-      result: { data: { logout: true } }
+      result: {
+        data: {
+          logout: {
+            __typename: "LogoutResult",
+            success: true
+          }
+        }
+      }
     }
   ]);
   await findByText(/Child/i);
