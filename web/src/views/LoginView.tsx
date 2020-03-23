@@ -14,6 +14,7 @@ import FormFieldLabel from "../components/ui/FormFieldLabel";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
+import { useHistory } from "react-router-dom";
 
 interface FormData {
   username: string;
@@ -21,9 +22,15 @@ interface FormData {
 }
 
 const LoginView: React.FC = () => {
+  const history = useHistory();
   const { login } = useAuth();
   const [isInvalid, setInvalid] = useState<boolean>(false);
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: {
+      username: "",
+      password: ""
+    }
+  });
 
   return (
     <View>
@@ -36,6 +43,7 @@ const LoginView: React.FC = () => {
           try {
             setInvalid(false);
             await login(data.username, data.password);
+            history.push("/");
           } catch {
             setInvalid(true);
           }

@@ -13,7 +13,10 @@ import { useAuth } from "./contexts/auth";
 const UnauthenticatedApp: React.FC = () => {
   return (
     <div className="max-w-3xl h-full mx-auto flex flex-col">
-      <LoginView />
+      <Switch>
+        <Route exact path="/login" component={LoginView} />
+        <Redirect to="/login" />
+      </Switch>
     </div>
   );
 };
