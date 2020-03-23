@@ -72,93 +72,95 @@ const ActivityGradeOffView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return loading || !data ? (
-    <FullPageSpinner>Loading Defaults...</FullPageSpinner>
-  ) : (
+  return (
     <View>
       <ViewHeader>
         <BackButton />
         <Title>Grade Off</Title>
       </ViewHeader>
-      <Form context={formContext} onSubmit={onSubmit}>
-        <FormField
-          name="animal"
-          rules={{ required: "The animal field is required." }}
-        >
-          <FormFieldLabel>Animal</FormFieldLabel>
-          <FormFieldInput>
-            <StackedButtonInput orientation="vertical">
-              <StackedButton value={Animal.MARKET_PIGS}>
-                Market Pigs
-              </StackedButton>
-              <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-            </StackedButtonInput>
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="job"
-          rules={{ required: "The job field is required." }}
-        >
-          <FormFieldLabel>Job</FormFieldLabel>
-          <FormFieldInput>
-            <TypeaheadInput
-              sort="desc"
-              items={data.pigActivityJobs.map(job => ({
-                value: job.number,
-                title: `${job.number} ${job.description}`
-              }))}
-            />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="quantity"
-          rules={{
-            required: "The quantity field is required."
-          }}
-        >
-          <FormFieldLabel>Quantity</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="weight"
-          rules={{
-            required: "The total weight field is required."
-          }}
-        >
-          <FormFieldLabel>Total Weight</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="price"
-          rules={{
-            required: "The price field is required."
-          }}
-        >
-          <FormFieldLabel>Price/pig</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="comments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormGroup>
-          <FormSubmit />
-        </FormGroup>
-      </Form>
+      {loading || !data ? (
+        <FullPageSpinner />
+      ) : (
+        <Form context={formContext} onSubmit={onSubmit}>
+          <FormField
+            name="animal"
+            rules={{ required: "The animal field is required." }}
+          >
+            <FormFieldLabel>Animal</FormFieldLabel>
+            <FormFieldInput>
+              <StackedButtonInput orientation="vertical">
+                <StackedButton value={Animal.MARKET_PIGS}>
+                  Market Pigs
+                </StackedButton>
+                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
+              </StackedButtonInput>
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="job"
+            rules={{ required: "The job field is required." }}
+          >
+            <FormFieldLabel>Job</FormFieldLabel>
+            <FormFieldInput>
+              <TypeaheadInput
+                sort="desc"
+                items={data.pigActivityJobs.map(job => ({
+                  value: job.number,
+                  title: `${job.number} ${job.description}`
+                }))}
+              />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="quantity"
+            rules={{
+              required: "The quantity field is required."
+            }}
+          >
+            <FormFieldLabel>Quantity</FormFieldLabel>
+            <FormFieldInput>
+              <NumberInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="weight"
+            rules={{
+              required: "The total weight field is required."
+            }}
+          >
+            <FormFieldLabel>Total Weight</FormFieldLabel>
+            <FormFieldInput>
+              <NumberInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="price"
+            rules={{
+              required: "The price field is required."
+            }}
+          >
+            <FormFieldLabel>Price/pig</FormFieldLabel>
+            <FormFieldInput>
+              <NumberInput />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField name="comments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormGroup>
+            <FormSubmit />
+          </FormGroup>
+        </Form>
+      )}
     </View>
   );
 };

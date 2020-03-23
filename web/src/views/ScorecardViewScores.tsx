@@ -243,9 +243,7 @@ const ScorecardViewScores: React.FC<RouteComponentProps<{ area: string }>> = ({
     }
   };
 
-  return loading || !data ? (
-    <FullPageSpinner>Loading...</FullPageSpinner>
-  ) : (
+  return (
     <View>
       <ViewHeader>
         <BackButton />
@@ -255,46 +253,50 @@ const ScorecardViewScores: React.FC<RouteComponentProps<{ area: string }>> = ({
           <span className="hidden xs:inline">{percent.toFixed(2)}%</span>
         </div>
       </ViewHeader>
-      <Form context={formContext} onSubmit={onSubmit}>
-        <FormField name="area">
-          <FormFieldLabel>Area</FormFieldLabel>
-          <FormFieldInput>
-            <Output>{data.area && data.area.description}</Output>
-          </FormFieldInput>
-        </FormField>
-        <FormField
-          name="operator"
-          rules={{ required: "The operator field is required." }}
-        >
-          <FormFieldLabel>Operator</FormFieldLabel>
-          <div className="flex">
-            <div className="flex-grow">
-              <FormFieldInput>
-                <TypeaheadInput items={operators} />
-              </FormFieldInput>
-              <FormFieldErrors />
+      {loading || !data ? (
+        <FullPageSpinner />
+      ) : (
+        <Form context={formContext} onSubmit={onSubmit}>
+          <FormField name="area">
+            <FormFieldLabel>Area</FormFieldLabel>
+            <FormFieldInput>
+              <Output>{data.area && data.area.description}</Output>
+            </FormFieldInput>
+          </FormField>
+          <FormField
+            name="operator"
+            rules={{ required: "The operator field is required." }}
+          >
+            <FormFieldLabel>Operator</FormFieldLabel>
+            <div className="flex">
+              <div className="flex-grow">
+                <FormFieldInput>
+                  <TypeaheadInput items={operators} />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </div>
+              <ButtonLink
+                className="ml-4"
+                to={`/scorecard/areas/${match.params.area}/operator`}
+              >
+                Change
+              </ButtonLink>
             </div>
-            <ButtonLink
-              className="ml-4"
-              to={`/scorecard/areas/${match.params.area}/operator`}
-            >
-              Change
-            </ButtonLink>
-          </div>
-        </FormField>
-        <ScoreEntry name="sowCare" label="Sow Care" />
-        <ScoreEntry name="pigletCare" label="Piglet Care" />
-        <ScoreEntry name="feed" label="Feed" />
-        <ScoreEntry name="water" label="Water" />
-        <ScoreEntry name="crate" label="Crate" />
-        <ScoreEntry name="generalRoom" label="General Room" />
-        <FormGroup>
-          <Button className="mr-4 w-full" type="button" onClick={onSave}>
-            Save
-          </Button>
-          <FormSubmit />
-        </FormGroup>
-      </Form>
+          </FormField>
+          <ScoreEntry name="sowCare" label="Sow Care" />
+          <ScoreEntry name="pigletCare" label="Piglet Care" />
+          <ScoreEntry name="feed" label="Feed" />
+          <ScoreEntry name="water" label="Water" />
+          <ScoreEntry name="crate" label="Crate" />
+          <ScoreEntry name="generalRoom" label="General Room" />
+          <FormGroup>
+            <Button className="mr-4 w-full" type="button" onClick={onSave}>
+              Save
+            </Button>
+            <FormSubmit />
+          </FormGroup>
+        </Form>
+      )}
     </View>
   );
 };

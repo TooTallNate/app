@@ -13,8 +13,8 @@ function render(mocks: MockedResponse[]) {
 }
 
 test("renders loading ui", async () => {
-  const { findByText } = render([]);
-  await findByText(/Logging In.../i);
+  const { findByTestId } = render([]);
+  await findByTestId("spinner");
 });
 
 test("returns unauthenticated if user query returns null", async () => {
