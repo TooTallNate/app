@@ -74,134 +74,140 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  return loading || !data ? (
-    <FullPageSpinner>Loading Defaults...</FullPageSpinner>
-  ) : (
+  return (
     <View>
       <ViewHeader>
         <BackButton />
         <Title>Move</Title>
       </ViewHeader>
-      <Form context={formContext} onSubmit={onSubmit}>
-        <Group className="flex mt-0">
+      {loading || !data ? (
+        <FullPageSpinner />
+      ) : (
+        <Form context={formContext} onSubmit={onSubmit}>
+          <Group className="flex mt-0">
+            <FormField
+              className="w-full mr-4"
+              name="fromAnimal"
+              rules={{ required: "The from animal field is required." }}
+            >
+              <FormFieldLabel>From Animal</FormFieldLabel>
+              <FormFieldInput>
+                <StackedButtonInput orientation="vertical">
+                  <StackedButton value={Animal.MARKET_PIGS}>
+                    Market Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.GDU_PIGS}>
+                    GDU Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                </StackedButtonInput>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              className="w-full ml-4"
+              name="toAnimal"
+              rules={{ required: "The to animal field is required." }}
+            >
+              <FormFieldLabel>To Animal</FormFieldLabel>
+              <FormFieldInput>
+                <StackedButtonInput orientation="vertical">
+                  <StackedButton value={Animal.MARKET_PIGS}>
+                    Market Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.GDU_PIGS}>
+                    GDU Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                </StackedButtonInput>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+          </Group>
+          <Group className="flex mt-0">
+            <FormField
+              className="w-full mr-4"
+              name="fromJob"
+              rules={{ required: "The from job field is required." }}
+            >
+              <FormFieldLabel>From Job</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  sort="desc"
+                  items={data.pigActivityJobs.map(job => ({
+                    value: job.number,
+                    title: `${job.number} ${job.description}`
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              className="w-full ml-4"
+              name="toJob"
+              rules={{ required: "The to job field is required." }}
+            >
+              <FormFieldLabel>To Job</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  sort="desc"
+                  items={data.pigActivityJobs.map(job => ({
+                    value: job.number,
+                    title: `${job.number} ${job.description}`
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+          </Group>
           <FormField
-            className="w-full mr-4"
-            name="fromAnimal"
-            rules={{ required: "The from animal field is required." }}
+            name="quantity"
+            rules={{
+              required: "The quantity field is required."
+            }}
           >
-            <FormFieldLabel>From Animal</FormFieldLabel>
+            <FormFieldLabel>Quantity</FormFieldLabel>
             <FormFieldInput>
-              <StackedButtonInput orientation="vertical">
-                <StackedButton value={Animal.MARKET_PIGS}>
-                  Market Pigs
-                </StackedButton>
-                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-                <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-              </StackedButtonInput>
+              <NumberInput />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
           <FormField
-            className="w-full ml-4"
-            name="toAnimal"
-            rules={{ required: "The to animal field is required." }}
+            name="weight"
+            rules={{
+              required: "The total weight field is required."
+            }}
           >
-            <FormFieldLabel>To Animal</FormFieldLabel>
+            <FormFieldLabel>Total Weight</FormFieldLabel>
             <FormFieldInput>
-              <StackedButtonInput orientation="vertical">
-                <StackedButton value={Animal.MARKET_PIGS}>
-                  Market Pigs
-                </StackedButton>
-                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-                <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-              </StackedButtonInput>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-        </Group>
-        <Group className="flex mt-0">
-          <FormField
-            className="w-full mr-4"
-            name="fromJob"
-            rules={{ required: "The from job field is required." }}
-          >
-            <FormFieldLabel>From Job</FormFieldLabel>
-            <FormFieldInput>
-              <TypeaheadInput
-                sort="desc"
-                items={data.pigActivityJobs.map(job => ({
-                  value: job.number,
-                  title: `${job.number} ${job.description}`
-                }))}
-              />
+              <NumberInput />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
           <FormField
-            className="w-full ml-4"
-            name="toJob"
-            rules={{ required: "The to job field is required." }}
+            name="price"
+            rules={{
+              required: "The price field is required."
+            }}
           >
-            <FormFieldLabel>To Job</FormFieldLabel>
+            <FormFieldLabel>Price/pig</FormFieldLabel>
             <FormFieldInput>
-              <TypeaheadInput
-                sort="desc"
-                items={data.pigActivityJobs.map(job => ({
-                  value: job.number,
-                  title: `${job.number} ${job.description}`
-                }))}
-              />
+              <NumberInput />
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
-        </Group>
-        <FormField
-          name="quantity"
-          rules={{
-            required: "The quantity field is required."
-          }}
-        >
-          <FormFieldLabel>Quantity</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="weight"
-          rules={{
-            required: "The total weight field is required."
-          }}
-        >
-          <FormFieldLabel>Total Weight</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField
-          name="price"
-          rules={{
-            required: "The price field is required."
-          }}
-        >
-          <FormFieldLabel>Price/pig</FormFieldLabel>
-          <FormFieldInput>
-            <NumberInput />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormField name="comments">
-          <FormFieldLabel>Comments</FormFieldLabel>
-          <FormFieldInput>
-            <MultilineTextInput maxLength={50} />
-          </FormFieldInput>
-          <FormFieldErrors />
-        </FormField>
-        <FormGroup>
-          <FormSubmit />
-        </FormGroup>
-      </Form>
+          <FormField name="comments">
+            <FormFieldLabel>Comments</FormFieldLabel>
+            <FormFieldInput>
+              <MultilineTextInput maxLength={50} />
+            </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormGroup>
+            <FormSubmit />
+          </FormGroup>
+        </Form>
+      )}
     </View>
   );
 };

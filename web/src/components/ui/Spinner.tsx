@@ -41,6 +41,7 @@ const Spinner: React.FC<SpinnerProps> = ({
           animation: `${spinner} 1.2s linear infinite`
         }
       }}
+      data-testid="spinner"
       aria-hidden
     />
   );

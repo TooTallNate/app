@@ -48,68 +48,75 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
   const [post] = useSetAreaOperatorMutation();
   const { setMessage } = useFlash();
 
-  if (loading || !data) {
-    return <FullPageSpinner>Loading...</FullPageSpinner>;
-  } else if (!data.area) {
-    return <Redirect to="/scorecard" />;
-  } else {
-    const { area, operators } = data;
+  return (
+    <View>
+      <ViewHeader>
+        <BackButton />
+        <Title>Scorecard Area Operator</Title>
+      </ViewHeader>
+      {(() => {
+        if (loading || !data) {
+          return <FullPageSpinner />;
+        } else if (!data.area) {
+          return <Redirect to="/scorecard" />;
+        } else {
+          const { area, operators } = data;
 
-    const onSubmit: OnSubmit<FormData> = async data => {
-      await post({
-        variables: {
-          input: {
-            area: match.params.area,
-            operator: data.operator
-          }
+          const onSubmit: OnSubmit<FormData> = async data => {
+            await post({
+              variables: {
+                input: {
+                  area: match.params.area,
+                  operator: data.operator
+                }
+              }
+            });
+            const operator = operators.find(o => o.number === data.operator);
+            if (operator) {
+              setMessage({
+                level: "success",
+                message: `${area.description} operator updated to ${operator.name}.`
+              });
+            }
+            history.push(`/scorecard/areas/${area.number}`);
+          };
+
+          return (
+            <Form context={formContext} onSubmit={onSubmit}>
+              <FormField name="area">
+                <FormFieldLabel>Area</FormFieldLabel>
+                <FormFieldInput>
+                  <Output>{area.description}</Output>
+                </FormFieldInput>
+              </FormField>
+              <FormField
+                name="operator"
+                rules={{ required: "The operator field is required." }}
+              >
+                <FormFieldLabel>Operator</FormFieldLabel>
+                <FormFieldInput>
+                  <StackedButtonInput orientation="vertical">
+                    {operators.map(operator => (
+                      <StackedButton
+                        value={operator.number}
+                        key={operator.number}
+                      >
+                        {operator.name}
+                      </StackedButton>
+                    ))}
+                  </StackedButtonInput>
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormGroup>
+                <FormSubmit>Save</FormSubmit>
+              </FormGroup>
+            </Form>
+          );
         }
-      });
-      const operator = operators.find(o => o.number === data.operator);
-      if (operator) {
-        setMessage({
-          level: "success",
-          message: `${area.description} operator updated to ${operator.name}.`
-        });
-      }
-      history.push(`/scorecard/areas/${area.number}`);
-    };
-
-    return (
-      <View>
-        <ViewHeader>
-          <BackButton />
-          <Title>Scorecard Area Operator</Title>
-        </ViewHeader>
-        <Form context={formContext} onSubmit={onSubmit}>
-          <FormField name="area">
-            <FormFieldLabel>Area</FormFieldLabel>
-            <FormFieldInput>
-              <Output>{area.description}</Output>
-            </FormFieldInput>
-          </FormField>
-          <FormField
-            name="operator"
-            rules={{ required: "The operator field is required." }}
-          >
-            <FormFieldLabel>Operator</FormFieldLabel>
-            <FormFieldInput>
-              <StackedButtonInput orientation="vertical">
-                {operators.map(operator => (
-                  <StackedButton value={operator.number} key={operator.number}>
-                    {operator.name}
-                  </StackedButton>
-                ))}
-              </StackedButtonInput>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormGroup>
-            <FormSubmit>Save</FormSubmit>
-          </FormGroup>
-        </Form>
-      </View>
-    );
-  }
+      })()}
+    </View>
+  );
 };
 
 export default ScorecardViewAreaOperator;

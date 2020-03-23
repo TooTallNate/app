@@ -17,31 +17,33 @@ const ScorecardViewArea: React.FC<RouteComponentProps> = ({
 }) => {
   const { data, loading } = useFarrowingBackendScorecardAreasQuery();
 
-  return loading || !data ? (
-    <FullPageSpinner>Loading...</FullPageSpinner>
-  ) : (
+  return (
     <View>
       <ViewHeader>
         <BackButton />
         <Title>Farrowing Scorecard</Title>
       </ViewHeader>
-      <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
-        <FormField name="area">
-          <FormFieldLabel>Area</FormFieldLabel>
-          <FormFieldInput>
-            <StackedNav>
-              {data.areas.map(area => (
-                <StackedNavLink
-                  to={`${match.url}/${area.number}`}
-                  key={area.number}
-                >
-                  {area.description}
-                </StackedNavLink>
-              ))}
-            </StackedNav>
-          </FormFieldInput>
-        </FormField>
-      </div>
+      {loading || !data ? (
+        <FullPageSpinner />
+      ) : (
+        <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
+          <FormField name="area">
+            <FormFieldLabel>Area</FormFieldLabel>
+            <FormFieldInput>
+              <StackedNav>
+                {data.areas.map(area => (
+                  <StackedNavLink
+                    to={`${match.url}/${area.number}`}
+                    key={area.number}
+                  >
+                    {area.description}
+                  </StackedNavLink>
+                ))}
+              </StackedNav>
+            </FormFieldInput>
+          </FormField>
+        </div>
+      )}
     </View>
   );
 };
