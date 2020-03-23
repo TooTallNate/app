@@ -14,7 +14,7 @@ import {
 import { NavErrorCode } from "./types";
 
 interface ODataRequestAPI
-  extends RequestAPI<Request, CoreOptions, RequiredUriUrl> { }
+  extends RequestAPI<Request, CoreOptions, RequiredUriUrl> {}
 
 export interface ODataClientOptions {
   serviceRoot: string;
@@ -116,7 +116,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
           cb &&
             cb(error, response, Array.isArray(body.value) ? body.value : body);
         } else if (response.statusCode >= 400) {
-          if (body) {
+          if (body && body.error) {
             cb &&
               cb(
                 new ODataError(body.error.code, body.error.message),
@@ -126,7 +126,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
           } else {
             cb &&
               cb(
-                new ODataError(NavErrorCode.Unknown, "Unknown error"),
+                new ODataError(NavErrorCode.Unknown, `${response.statusCode}`),
                 response,
                 body
               );
@@ -136,7 +136,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
     };
   }
 
-  end(cb?: (error: any, response: Response, body: any) => void) { }
+  end(cb?: (error: any, response: Response, body: any) => void) {}
 
   then<TResult1, TResult2>(
     onFulfilled?: (value?: T) => TResult1 | PromiseLike<TResult1>,
@@ -221,6 +221,45 @@ export class ODataPostQuery<T extends {}> extends ODataQuery<T> {
   }
 }
 
+export class ODataPatchQuery<T extends {}> extends ODataQuery<T> {
+  private _body: Partial<T>;
+
+  constructor(
+    client: ODataClient,
+    resources: ODataResourceEntry[],
+    doc: Partial<T>
+  ) {
+    super(client, "PATCH", resources);
+    this._body = doc;
+  }
+
+  end(cb?: (error: any, response: Response, body: any) => void) {
+    const url = this._resourcePath;
+    this._client.request.get(
+      url,
+      { body: this._body },
+      (error: any, response: Response, body: any) => {
+        if (error) {
+          cb && cb(error, response, body);
+        } else if (body["@odata.etag"]) {
+          this._client.request.patch(
+            url,
+            {
+              body: this._body,
+              headers: {
+                "If-Match": body["@odata.etag"]
+              }
+            },
+            this._handleResponse(url, cb)
+          );
+        } else {
+          cb && cb(new Error("OData resource does not exist"), response, body);
+        }
+      }
+    );
+  }
+}
+
 export class ODataResource {
   private _resources: ODataResourceEntry[];
   private _client: ODataClient;
@@ -241,6 +280,10 @@ export class ODataResource {
 
   post<T extends {}>(doc: Partial<T>) {
     return new ODataPostQuery<T>(this._client, this._resources, doc);
+  }
+
+  patch<T extends {}>(doc: Partial<T>) {
+    return new ODataPatchQuery<T>(this._client, this._resources, doc);
   }
 }
 

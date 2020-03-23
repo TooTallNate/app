@@ -1,7 +1,6 @@
 import { UserSettingsDocument } from "../models/user-settings";
 
-export interface PigActivityMapper {
-  userSettings?: UserSettingsDocument;
+export interface PostPigActivityResultMapper {
+  success: Boolean;
+  defaults?: UserSettingsDocument;
 }
-
-export interface FarrowingBackendScorecardMapper { }

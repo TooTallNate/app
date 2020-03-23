@@ -36,13 +36,13 @@ export async function mockUser({ login = true } = {}) {
       .reply(200, { value: [user] });
 
     await client.request(
-      `
-        mutation Login($input: LoginInput!) {
-          login(input: $input) {
+      `mutation Login($input: LoginInput!) {
+        login(input: $input) {
+          user {
             username
           }
         }
-      `,
+      }`,
       {
         input: {
           username: user.User_Name,
@@ -59,11 +59,14 @@ export async function mockUser({ login = true } = {}) {
   };
 }
 
-export function testUnauthenticated(queryOrMutation: () => Promise<any>): void {
+export function testUnauthenticated(
+  queryOrMutation: () => Promise<any>,
+  data: any = null
+): void {
   test("returns with error if unauthenticated", async () => {
     await expect(queryOrMutation()).rejects.toMatchObject({
       response: {
-        data: null,
+        data,
         errors: [
           expect.objectContaining({
             message: ErrorCode.Unauthorized

@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigPurchaseMutation,
-  PostPigPurchaseMutationVariables
+  PostPigActivityResult,
+  MutationPostPigPurchaseArgs
 } from "../../resolvers/types";
 import {
   PigPurchaseInputFactory,
@@ -21,14 +21,17 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigPurchaseMutationVariables) {
-  return client.request<PostPigPurchaseMutation>(
+function mutation(variables: MutationPostPigPurchaseArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigPurchase($input: PigPurchaseInput!) {
       postPigPurchase(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults {
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -124,8 +127,11 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -153,8 +159,11 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -175,8 +184,11 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 

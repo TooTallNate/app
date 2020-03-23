@@ -1,7 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
-import { Title, View } from "../components/styled";
+import { FormGroup } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
@@ -20,6 +23,7 @@ import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import TypeaheadInput from "../components/ui/TypeaheadInput";
+import BackButton from "../components/ui/BackButton";
 
 interface FormData {
   animal: string;
@@ -39,8 +43,8 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (!getValues().price && data && data.pigActivity.defaultPrice) {
-      setValue("price", data.pigActivity.defaultPrice);
+    if (!getValues().price && data && data.pigActivityDefaults.price) {
+      setValue("price", data.pigActivityDefaults.price);
     }
   }, [data, getValues, setValue]);
 
@@ -65,7 +69,10 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Wean</Title>
+      <ViewHeader>
+        <BackButton />
+        <Title>Wean</Title>
+      </ViewHeader>
       <Form context={formContext} onSubmit={onSubmit}>
         <FormField
           name="animal"
@@ -90,7 +97,7 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
           <FormFieldInput>
             <TypeaheadInput
               sort="desc"
-              items={data.pigActivity.jobs.map(job => ({
+              items={data.pigActivityJobs.map(job => ({
                 value: job.number,
                 title: `${job.number} ${job.description}`
               }))}
@@ -141,7 +148,9 @@ const ActivityWeanView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormSubmit />
+        <FormGroup>
+          <FormSubmit />
+        </FormGroup>
       </Form>
     </View>
   );

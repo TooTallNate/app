@@ -4,21 +4,42 @@ type User {
   name: String!
 }
 
-input LoginInput {
-  username: String!
-  password: String!
-}
-
 type Job {
   number: String!
   description: String!
-  personResponsible: String!
+  personResponsible: Resource!
 }
 
-type PigActivity {
-  jobs: [Job!]!
-  defaultJob: Job
-  defaultPrice: Float
+type Resource {
+  number: String!
+  name: String!
+}
+
+type PigActivityDefaults {
+  job: Job
+  price: Float
+}
+
+type ScorecardEntry {
+  score: Int
+  comments: String
+}
+
+type FarrowingBackendScorecard {
+  area: Job!
+  operator: Resource
+  sows: ScorecardEntry!
+  piglets: ScorecardEntry!
+  feed: ScorecardEntry!
+  water: ScorecardEntry!
+  crate: ScorecardEntry!
+  room: ScorecardEntry!
+}
+
+
+input LoginInput {
+  username: String!
+  password: String!
 }
 
 input PigAdjustmentInput {
@@ -78,40 +99,90 @@ input PigWeanInput {
   comments: String
 }
 
-type FarrowingBackendScorecard {
-  areas: [Job!]!
-}
-
-input ScorecardEntry {
+input ScorecardEntryInput {
   score: Int!
   comments: String
 }
 
-input FarrowingBackendScorecardInput {
+input SetAreaOperatorInput {
   area: String!
   operator: String!
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
 }
+
+input PostFarrowingBackendScorecardInput {
+  area: String!
+  operator: String!
+  sows: ScorecardEntryInput!
+  piglets: ScorecardEntryInput!
+  feed: ScorecardEntryInput!
+  water: ScorecardEntryInput!
+  crate: ScorecardEntryInput!
+  room: ScorecardEntryInput!
+}
+
+input SaveFarrowingBackendScorecardInput {
+  area: String!
+  operator: String
+  sows: ScorecardEntryInput
+  piglets: ScorecardEntryInput
+  feed: ScorecardEntryInput
+  water: ScorecardEntryInput
+  crate: ScorecardEntryInput
+  room: ScorecardEntryInput
+}
+
+
+type LoginResult {
+  success: Boolean!
+  user: User!
+}
+
+type LogoutResult {
+  success: Boolean!
+}
+
+type PostPigActivityResult {
+  success: Boolean!
+  defaults: PigActivityDefaults!
+}
+
+type PostFarrowingBackendScorecardResult {
+  success: Boolean!
+  scorecard: FarrowingBackendScorecard!
+}
+
+type SaveFarrowingBackendScorecardResult {
+  success: Boolean!
+  scorecard: FarrowingBackendScorecard!
+}
+
+type SetAreaOperatorResult {
+  success: Boolean!
+  area: Job!
+}
+
 
 type Query {
   user: User
-  pigActivity: PigActivity!
-  farrowingBackendScorecard: FarrowingBackendScorecard!
+  pigActivityJobs: [Job!]!
+  pigActivityDefaults: PigActivityDefaults!
+  farrowingBackendScorecards: [FarrowingBackendScorecard!]!
+  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
+  farrowingBackendAreas: [Job!]!
+  farrowingBackendArea(number: String!): Job
+  farrowingBackendOperators: [Resource!]!
 }
 
 type Mutation {
-  login(input: LoginInput!): User!
-  logout: Boolean!
-  postPigAdjustment(input: PigAdjustmentInput!): PigActivity!
-  postPigGradeOff(input: PigGradeOffInput!): PigActivity!
-  postPigMortality(input: PigMortalityInput!): PigActivity!
-  postPigMove(input: PigMoveInput!): PigActivity!
-  postPigPurchase(input: PigPurchaseInput!): PigActivity!
-  postPigWean(input: PigWeanInput!): PigActivity!
-  postFarrowingBackendScorecard(input: FarrowingBackendScorecardInput!): Boolean!
+  login(input: LoginInput!): LoginResult!
+  logout: LogoutResult!
+  postPigAdjustment(input: PigAdjustmentInput!): PostPigActivityResult!
+  postPigGradeOff(input: PigGradeOffInput!): PostPigActivityResult!
+  postPigMortality(input: PigMortalityInput!): PostPigActivityResult!
+  postPigMove(input: PigMoveInput!): PostPigActivityResult!
+  postPigPurchase(input: PigPurchaseInput!): PostPigActivityResult!
+  postPigWean(input: PigWeanInput!): PostPigActivityResult!
+  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
+  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
+  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
 }

@@ -1,187 +1,146 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import {
-  useState,
-  useRef,
-  useEffect,
-  KeyboardEventHandler,
-  FocusEventHandler
-} from "react";
+import React, { useState, useEffect } from "react";
 import TextInput from "./TextInput";
-import typeaheadMachine, {
-  TypeaheadItem,
-  TypeaheadContext,
-  TypeaheadEvent
-} from "./TypeaheadInput.machine";
-import { useMachine } from "@xstate/react";
-import { StateListener } from "xstate/lib/interpreter";
+import { useCombobox } from "downshift";
+import Button from "../ui/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface TypeaheadInputProps
-  extends Omit<React.ComponentProps<typeof TextInput>, "value" | "onChange"> {
+export interface TypeaheadItem {
+  title: string;
+  value: any;
+}
+
+interface TypeaheadInputProps {
   items: TypeaheadItem[];
   value?: any;
   onChange?: (value: any) => void;
   sort?: "asc" | "desc";
+  className?: string;
+  "aria-labelledby"?: string;
 }
 
-let idCounter = 0;
+const sortPredicate = (sort: "asc" | "desc") => (
+  a: TypeaheadItem,
+  b: TypeaheadItem
+) => (sort === "asc" ? 1 : -1) * a.title.localeCompare(b.title);
 
 const TypeaheadInput: React.FC<TypeaheadInputProps> = ({
-  items,
+  items: itemsProp,
   value,
   onChange = () => {},
-  onFocus = () => {},
-  onBlur = () => {},
-  onKeyDown = () => {},
   className,
   sort = "asc",
-  "aria-labelledby": ariaLabelledBy,
-  ...props
+  "aria-labelledby": ariaLabelledBy
 }) => {
-  const [id] = useState(() => idCounter++);
-  const [current, send, service] = useMachine(typeaheadMachine);
-  const listElement = useRef<HTMLUListElement>(null);
+  const [items, setItems] = useState<TypeaheadItem[]>([]);
+  const [inputValue, setInputValue] = useState<string | undefined>("");
+  const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(null);
 
-  const isOpen = current.matches("active.matching");
-
-  // Make sure the item option is visible.
+  // Update state whenever, the value or items props change.
   useEffect(() => {
-    if (listElement.current) {
-      const item = listElement.current.children[current.context.selectedIndex];
-      if (item) item.scrollIntoView(false);
+    const selectedItem = itemsProp.find(item => item.value === value) || null;
+    setSelectedItem(selectedItem);
+    setInputValue(selectedItem ? selectedItem.title : "");
+  }, [itemsProp, value]);
+
+  // Filter the items when the input value changes.
+  useEffect(() => {
+    if (inputValue) {
+      const matcher = new RegExp(inputValue, "i");
+      setItems(
+        itemsProp
+          .filter(item => matcher.test(item.title))
+          .sort(sortPredicate(sort))
+      );
+    } else {
+      setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
     }
-  }, [current.context.selectedIndex]);
+  }, [inputValue, itemsProp, sort]);
 
-  // Emit the onChange event when the value of the typeahead machine changes.
-  useEffect(() => {
-    const handler: StateListener<TypeaheadContext, TypeaheadEvent> = state => {
-      if (state.event.type === "SELECT") {
-        const item = state.context.value;
-        onChange(typeof item === "undefined" ? item : item.value);
+  // Configure downshift.
+  const {
+    isOpen,
+    highlightedIndex,
+    getToggleButtonProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    getItemProps
+  } = useCombobox<TypeaheadItem>({
+    items,
+    selectedItem: selectedItem as any,
+    inputValue,
+    labelId: ariaLabelledBy,
+    onStateChange: state => {
+      if (state.selectedItem !== selectedItem) {
+        onChange(state.selectedItem ? state.selectedItem.value : undefined);
       }
-    };
-    service.onTransition(handler);
-    return () => {
-      service.off(handler);
-    };
-  }, [onChange, service]);
-
-  // Override the context of the typeahead machine when items or value change.
-  useEffect(() => {
-    send({
-      type: "OVERRIDE",
-      items: items.sort(
-        (a, b) => (sort === "asc" ? 1 : -1) * a.title.localeCompare(b.title)
-      ),
-      value
-    });
-  }, [items, send, sort, value]);
-
-  const _onKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
-    switch (e.key) {
-      case "ArrowUp": {
-        send("PREV");
-        break;
+      if (state.inputValue !== inputValue) {
+        setInputValue(state.inputValue);
       }
-      case "ArrowDown": {
-        send("NEXT");
-        break;
-      }
-      case "Enter": {
-        send("SELECT");
-        break;
-      }
-      case "Escape": {
-        send("CANCEL");
-        break;
-      }
-    }
-    onKeyDown(e);
-  };
-
-  const _onFocus: FocusEventHandler<HTMLInputElement> = e => {
-    send("FOCUS");
-    onFocus(e);
-  };
-
-  const _onBlur: FocusEventHandler<HTMLInputElement> = e => {
-    send("BLUR");
-    onBlur(e);
-  };
+    },
+    itemToString: item => (item ? item.title : "")
+  });
 
   return (
-    <div
-      css={{
-        position: "relative"
-      }}
-      className={className}
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-owns={`items-${id}`}
-      aria-controls={`items-${id}`}
-      aria-expanded={isOpen}
-    >
-      <TextInput
-        {...props}
-        autoComplete="off"
-        value={current.context.textValue}
-        onChange={value => send({ type: "TYPE", value })}
-        onFocus={_onFocus}
-        onBlur={_onBlur}
-        onKeyDown={_onKeyDown}
-        aria-labelledby={ariaLabelledBy}
-        aria-autocomplete="list"
-        aria-activedescendant={`items-${id}-${current.context.selectedIndex}`}
-      />
-      <ul
-        id={`items-${id}`}
-        ref={listElement}
-        role="listbox"
-        aria-labelledby={ariaLabelledBy}
-        css={{
-          display: isOpen ? "block" : "none",
-          position: "absolute",
-          background: "white",
-          width: "calc(100% - 32px)",
-          margin: "0 16px",
-          padding: "0 0 8px 0",
-          border: "1px solid #9ca1b1",
-          borderTop: "none",
-          borderRadius: "0 0 8px 8px",
-          maxHeight: 44 * 4,
-          overflowX: "auto",
-          zIndex: 1
-        }}
+    <div className={`relative ${className}`}>
+      <div
+        {...getComboboxProps()}
+        className={`
+          flex rounded-lg focus-within:shadow-outline
+          ${isOpen ? "rounded-bl-none" : ""}
+        `}
       >
-        {current.context.matchedItems.map(({ title }, i) => (
-          <li
-            key={i}
-            id={`items-${id}-${i}`}
-            role="option"
-            css={{
-              listStyle: "none",
-              height: 44,
-              border: "none",
-              background: "inherit",
-              boxSizing: "border-box",
-              margin: 0,
-              padding: "0 16px",
-              lineHeight: "44px",
-              width: "100%",
-              textAlign: "left",
-              backgroundColor:
-                current.context.selectedIndex === i ? "#7fdcf1" : "inherit",
-              cursor: "pointer"
-            }}
-            onMouseDown={() => {
-              send({ type: "SELECT", index: i });
-            }}
-            aria-selected={current.context.selectedIndex === i}
-          >
-            {title}
-          </li>
-        ))}
-      </ul>
+        <TextInput
+          {...getInputProps()}
+          onChange={setInputValue}
+          className={`
+            rounded-r-none border-r-0 focus:shadow-none
+            ${isOpen ? "rounded-bl-none" : ""}
+          `}
+        />
+        <button
+          type="button"
+          className="px-4 border-t border-b border-gray-500 focus:outline-none"
+          tabIndex={-1}
+          onClick={() => {
+            onChange(undefined);
+          }}
+        >
+          <FontAwesomeIcon icon="times" />
+        </button>
+        <Button
+          {...getToggleButtonProps()}
+          type="button"
+          className="rounded-l-none text-center focus:shadow-none"
+          aria-label={"toggle menu"}
+        >
+          <FontAwesomeIcon className="text-white" icon="chevron-down" />
+        </Button>
+      </div>
+      {isOpen && (
+        <ul
+          {...getMenuProps()}
+          className={`
+          absolute bg-white z-10 overflow-x-auto
+          max-h-44 left-0 right-0 mr-12 mt-px
+          border border-gray-500 rounded-b-lg
+          shadow
+        `}
+        >
+          {items.map((item, index) => (
+            <li
+              className={`
+                h-11 px-4 flex items-center block
+                ${highlightedIndex === index ? "bg-blue-300" : ""}
+              `}
+              key={`${item}${index}`}
+              {...getItemProps({ item, index })}
+            >
+              {item.title}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

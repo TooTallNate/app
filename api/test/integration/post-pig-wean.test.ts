@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigWeanMutation,
-  PostPigWeanMutationVariables
+  PostPigActivityResult,
+  MutationPostPigWeanArgs
 } from "../../resolvers/types";
 import {
   PigWeanInputFactory,
@@ -21,14 +21,17 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigWeanMutationVariables) {
-  return client.request<PostPigWeanMutation>(
+function mutation(variables: MutationPostPigWeanArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigWean($input: PigWeanInput!) {
       postPigWean(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults {
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -96,8 +99,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Weight: input.weight,
       Job_No: input.job,
       Gen_Prod_Posting_Group: "WEAN PIGS",
-      Shortcut_Dimension_1_Code: "213",
-      Shortcut_Dimension_2_Code: "2",
+      Shortcut_Dimension_1_Code: "2",
+      Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
       Document_Date: date
     })
@@ -122,8 +125,11 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -151,8 +157,11 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 
@@ -173,8 +182,11 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigWean: {
-      defaultJob: null,
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: null,
+        price: input.price
+      }
     }
   });
 

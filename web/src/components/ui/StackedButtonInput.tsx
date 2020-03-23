@@ -43,7 +43,7 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
   return (
     <label
       className={`
-        h-10 text-base font-bold border-gray-500
+        h-11 text-base font-medium border-gray-500
         focus:outline-none focus:bg-blue-300
         ${
           orientation === "vertical"
@@ -60,7 +60,9 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
         checked={selected === value}
         onChange={e => onChange && onChange(e.target.value)}
       />
-      <div className="py-2 px-4 checked:bg-blue-300">{children}</div>
+      <div className="flex items-center h-full px-4 checked:bg-blue-300">
+        {children}
+      </div>
     </label>
   );
 };

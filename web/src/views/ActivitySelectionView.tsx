@@ -1,20 +1,23 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router-dom";
-import { Title, StackedNav, StackedNavLink, View } from "../components/styled";
+import { StackedNav, StackedNavLink } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import FormField from "../components/ui/FormField";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormFieldLabel from "../components/ui/FormFieldLabel";
+import BackButton from "../components/ui/BackButton";
 
 const ActivitySelectionView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <View>
-      <Title>Activity</Title>
-      <div
-        css={{
-          padding: "0 16px"
-        }}
-      >
+      <ViewHeader>
+        <BackButton />
+        <Title>Activity</Title>
+      </ViewHeader>
+      <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
         <FormField name="action">
           <FormFieldLabel>Select Activity</FormFieldLabel>
           <FormFieldInput>

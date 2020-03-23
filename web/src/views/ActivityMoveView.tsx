@@ -1,7 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useEffect } from "react";
-import { Title, View, Group } from "../components/styled";
+import { Group, FormGroup } from "../components/styled";
+import Title from "../components/ui/ViewTitle";
+import View from "../components/ui/View";
+import ViewHeader from "../components/ui/ViewHeader";
 import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
@@ -20,6 +23,7 @@ import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import TypeaheadInput from "../components/ui/TypeaheadInput";
+import BackButton from "../components/ui/BackButton";
 
 interface FormData {
   fromAnimal: Animal;
@@ -41,15 +45,15 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
 
   // Set job with default only if not already set.
   useEffect(() => {
-    if (!getValues().fromJob && data && data.pigActivity.defaultJob) {
-      setValue("fromJob", data.pigActivity.defaultJob.number);
+    if (!getValues().fromJob && data && data.pigActivityDefaults.job) {
+      setValue("fromJob", data.pigActivityDefaults.job.number);
     }
   }, [data, getValues, setValue]);
 
   // Set price with default only if not already set.
   useEffect(() => {
-    if (!getValues().price && data && data.pigActivity.defaultPrice) {
-      setValue("price", data.pigActivity.defaultPrice);
+    if (!getValues().price && data && data.pigActivityDefaults.price) {
+      setValue("price", data.pigActivityDefaults.price);
     }
   }, [data, getValues, setValue]);
 
@@ -74,7 +78,10 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
     <FullPageSpinner>Loading Defaults...</FullPageSpinner>
   ) : (
     <View>
-      <Title>Move</Title>
+      <ViewHeader>
+        <BackButton />
+        <Title>Move</Title>
+      </ViewHeader>
       <Form context={formContext} onSubmit={onSubmit}>
         <Group className="flex mt-0">
           <FormField
@@ -122,7 +129,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldInput>
               <TypeaheadInput
                 sort="desc"
-                items={data.pigActivity.jobs.map(job => ({
+                items={data.pigActivityJobs.map(job => ({
                   value: job.number,
                   title: `${job.number} ${job.description}`
                 }))}
@@ -139,7 +146,7 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldInput>
               <TypeaheadInput
                 sort="desc"
-                items={data.pigActivity.jobs.map(job => ({
+                items={data.pigActivityJobs.map(job => ({
                   value: job.number,
                   title: `${job.number} ${job.description}`
                 }))}
@@ -191,7 +198,9 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
           </FormFieldInput>
           <FormFieldErrors />
         </FormField>
-        <FormSubmit />
+        <FormGroup>
+          <FormSubmit />
+        </FormGroup>
       </Form>
     </View>
   );

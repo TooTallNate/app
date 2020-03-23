@@ -1,20 +1,21 @@
 import nock from "nock";
 import { client, mockUser } from "../utils";
-import { LoginMutationVariables, LoginMutation } from "../../resolvers/types";
+import { MutationLoginArgs, LoginResult } from "../../resolvers/types";
 import { NavErrorCode } from "../../nav";
 import { ErrorCode } from "../../resolvers/utils";
 
-function mutation(variables: LoginMutationVariables) {
-  return client.request<LoginMutation>(
-    `
-        mutation Login($input: LoginInput!) {
-          login(input: $input) {
-            username
-            name
-            license
-          }
+function mutation(variables: MutationLoginArgs) {
+  return client.request<LoginResult>(
+    `mutation Login($input: LoginInput!) {
+      login(input: $input) {
+        success
+        user {
+          username
+          name
+          license
         }
-      `,
+      }
+    }`,
     variables
   );
 }
@@ -32,9 +33,12 @@ test("returns user data if login is successful", async () => {
     mutation({ input: { username: user.User_Name, password } })
   ).resolves.toEqual({
     login: {
-      username: user.User_Name,
-      name: user.Full_Name,
-      license: user.License_Type
+      success: true,
+      user: {
+        username: user.User_Name,
+        name: user.Full_Name,
+        license: user.License_Type
+      }
     }
   });
 });

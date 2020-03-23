@@ -1,17 +1,24 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import { NavUser, NavJob, NavDimension, NavDimensionCode } from "../nav/types";
+import {
+  NavUser,
+  NavJob,
+  NavDimension,
+  NavDimensionCode,
+  NavResource
+} from "../nav/types";
 import uuid from "uuid/v4";
 import {
-  FarrowingBackendScorecardInput,
-  ScorecardEntry,
+  SaveFarrowingBackendScorecardInput,
+  PostFarrowingBackendScorecardInput,
   PigAdjustmentInput,
   PigGradeOffInput,
   PigMortalityInput,
   PigMoveInput,
   PigPurchaseInput,
-  PigWeanInput
+  PigWeanInput,
+  ScorecardEntryInput
 } from "../resolvers/types";
 
 function oneOf<T>(...list: T[]) {
@@ -26,12 +33,17 @@ export const UserFactory = Factory.Sync.makeFactory<NavUser>({
 });
 
 export const JobFactory = Factory.Sync.makeFactory<NavJob>({
-  No: Factory.each(() => faker.random.alphaNumeric(8)),
+  No: Factory.each(() => `job_${faker.random.alphaNumeric(8)}`),
   Description: Factory.each(() => faker.lorem.words(2)),
   Person_Responsible: Factory.each(() => faker.name.firstName().toUpperCase()),
   Site: Factory.each(() =>
     faker.random.number({ min: 10, max: 999 }).toString()
   )
+});
+
+export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
+  Name: Factory.each(() => faker.name.firstName()),
+  No: Factory.each(() => `resource_${faker.random.alphaNumeric(8)}`)
 });
 
 export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({
@@ -42,14 +54,27 @@ export const DimensionFactory = Factory.Sync.makeFactory<NavDimension>({
 });
 
 export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
-  ScorecardEntry
+  ScorecardEntryInput
 >({
   score: Factory.each(() => faker.random.number({ min: 0, max: 10 })),
   comments: Factory.each(() => faker.lorem.words(3))
 });
 
-export const FarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
-  FarrowingBackendScorecardInput
+export const PostFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
+  PostFarrowingBackendScorecardInput
+>({
+  area: Factory.each(() => faker.random.alphaNumeric(8)),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
+  sows: Factory.each(() => ScorecardEntryInputFactory.build()),
+  piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
+  feed: Factory.each(() => ScorecardEntryInputFactory.build()),
+  water: Factory.each(() => ScorecardEntryInputFactory.build()),
+  crate: Factory.each(() => ScorecardEntryInputFactory.build()),
+  room: Factory.each(() => ScorecardEntryInputFactory.build())
+});
+
+export const SaveFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactory<
+  SaveFarrowingBackendScorecardInput
 >({
   area: Factory.each(() => faker.random.alphaNumeric(8)),
   operator: Factory.each(() => faker.name.firstName().toUpperCase()),
@@ -135,4 +160,23 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
+});
+
+function generateScorecardEntry(min: number, max: number) {
+  return {
+    score: faker.random.number({ min, max }),
+    ...(faker.random.boolean() && { comments: faker.lorem.words(3) })
+  };
+}
+
+export const FarrowingBackendScorecardFactory = Factory.Sync.makeFactory({
+  _id: Factory.each(() => new ObjectId()),
+  area: Factory.each(() => `Room ${faker.random.number({ min: 1, max: 9 })}`),
+  operator: Factory.each(() => faker.name.firstName().toUpperCase()),
+  sows: generateScorecardEntry(0, 10),
+  piglets: generateScorecardEntry(0, 10),
+  feed: generateScorecardEntry(0, 10),
+  water: generateScorecardEntry(0, 10),
+  crate: generateScorecardEntry(0, 10),
+  room: generateScorecardEntry(0, 10)
 });

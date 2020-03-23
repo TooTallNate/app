@@ -1,12 +1,13 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  FarrowingBackendScorecardResolvers,
-  ScorecardEntry
+  ScorecardEntry,
+  FarrowingBackendScorecardResolvers
 } from "./types";
 import {
   NavJob,
   NavJobJournalEntry,
+  NavResource,
   ODataClient,
   NavJobJournalTemplate,
   NavJobJournalBatch,
@@ -14,6 +15,7 @@ import {
   WorkTypeCode
 } from "../nav";
 import { navDate, getDocumentNumber } from "./utils";
+import FarrowingBackendScorecardModel from "../models/farrowing-backend-scorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,
@@ -29,7 +31,36 @@ function postJobJournal(
 }
 
 export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
-  areas(_, __, { navClient }) {
+  area(scorecard, _, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", scorecard.area)
+      .get<NavJob>();
+  },
+  operator(scorecard, _, { navClient }) {
+    return scorecard.operator
+      ? navClient
+          .resource("Company", process.env.NAV_COMPANY)
+          .resource("Resources", scorecard.operator)
+          .get<NavResource>()
+      : null;
+  },
+  sows: scorecard => scorecard.sows || {},
+  piglets: scorecard => scorecard.piglets || {},
+  feed: scorecard => scorecard.feed || {},
+  water: scorecard => scorecard.water || {},
+  crate: scorecard => scorecard.crate || {},
+  room: scorecard => scorecard.room || {}
+};
+
+export const ScorecardQueries: QueryResolvers = {
+  async farrowingBackendScorecards() {
+    return await FarrowingBackendScorecardModel.find();
+  },
+  async farrowingBackendScorecard(_, { area }) {
+    return await FarrowingBackendScorecardModel.findOne({ area });
+  },
+  farrowingBackendAreas(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs")
@@ -40,14 +71,35 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
           f.equals("Job_Posting_Group", "FARROW-BE")
         )
       );
+  },
+  farrowingBackendArea(_, { number }, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", number)
+      .get<NavJob>();
+  },
+  farrowingBackendOperators(_, __, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Resources")
+      .get<NavResource[]>()
+      .filter(f => f.equals("Resource_Group_No", "FARROW-BE"));
   }
 };
 
-export const ScorecardQueries: QueryResolvers = {
-  farrowingBackendScorecard: () => ({})
-};
-
 export const ScorecardMutations: MutationResolvers = {
+  async saveFarrowingBackendScorecard(_, { input }) {
+    let doc = await FarrowingBackendScorecardModel.findOne({
+      area: input.area
+    });
+    if (!doc) {
+      doc = new FarrowingBackendScorecardModel(input);
+    } else {
+      doc.overwrite(input);
+    }
+    await doc.save();
+    return { success: true, scorecard: doc };
+  },
   async postFarrowingBackendScorecard(_, { input }, { navClient, user }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
@@ -79,6 +131,27 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowCare, input.sows);
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
-    return true;
+
+    const doc = await FarrowingBackendScorecardModel.findOne({
+      area: input.area
+    });
+    if (doc) {
+      doc.overwrite({
+        area: input.area
+      });
+      await doc.save();
+    }
+
+    return { success: true, scorecard: doc };
+  },
+  async setAreaOperator(_, { input }, { navClient }) {
+    const area = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.area)
+      .patch<NavJob>({
+        Person_Responsible: input.operator
+      });
+
+    return { success: true, area };
   }
 };

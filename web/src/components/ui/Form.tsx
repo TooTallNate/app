@@ -3,7 +3,7 @@ import { FormContext, OnSubmit, FormContextValues } from "react-hook-form";
 
 interface FormProps<T> {
   className?: string;
-  onSubmit: OnSubmit<T>;
+  onSubmit?: OnSubmit<T>;
   children: React.ReactNode;
   context: FormContextValues<T>;
 }
@@ -19,7 +19,7 @@ function Form<T = Record<string, any>>({
   return (
     <FormContext {...context}>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={onSubmit && handleSubmit(onSubmit)}
         className={`
           overflow-x-auto min-h-0 flex-grow p-4 pt-0 
           ${className}

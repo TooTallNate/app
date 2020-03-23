@@ -34,7 +34,7 @@ const AuthProvider: React.FC = ({ children }) => {
         cache.writeQuery<UserQuery, UserQueryVariables>({
           query: UserDocument,
           data: {
-            user: data.login
+            user: data.login.user
           }
         });
       }

@@ -24,6 +24,11 @@ export interface NavDimension {
   Dimension_Value_Code: any;
 }
 
+export interface NavResource {
+  No: string;
+  Name: string;
+}
+
 export interface NavItemJournalEntry {
   Journal_Template_Name: NavItemJournalTemplate;
   Journal_Batch_Name: NavItemJournalBatch;

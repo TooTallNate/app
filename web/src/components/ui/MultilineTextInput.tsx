@@ -38,7 +38,7 @@ const MultilineTextInput = React.forwardRef<
         maxLength={maxLength}
         name={name}
         className={`
-          py-2.5 px-4 h-24 w-full block no-spinner
+          block py-3 px-4 h-24 w-full no-spinner
           text-base text-black leading-none 
           border border-gray-500 rounded-lg rounded-br-none
           focus:shadow-outline focus:outline-none

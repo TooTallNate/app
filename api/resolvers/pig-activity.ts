@@ -1,7 +1,7 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigActivityResolvers
+  PigActivityDefaultsResolvers
 } from "./types";
 import {
   NavItemJournalEntry,
@@ -74,8 +74,22 @@ async function updateUserSettings({
   return settings;
 }
 
-export const PigActivity: PigActivityResolvers = {
-  jobs(_, __, { navClient }) {
+export const PigActivityDefaults: PigActivityDefaultsResolvers = {
+  job(userSettings, _, { navClient }) {
+    if (userSettings && userSettings.pigJob) {
+      return navClient
+        .resource("Company", process.env.NAV_COMPANY)
+        .resource("Jobs", userSettings.pigJob)
+        .get<NavJob>();
+    } else {
+      return null;
+    }
+  },
+  price: userSettings => (userSettings ? userSettings.price : null)
+};
+
+export const PigActivityQueries: QueryResolvers = {
+  async pigActivityJobs(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs")
@@ -91,25 +105,12 @@ export const PigActivity: PigActivityResolvers = {
         )
       );
   },
-  defaultJob({ userSettings }, _, { navClient }) {
-    if (userSettings && userSettings.pigJob) {
-      return navClient
-        .resource("Company", process.env.NAV_COMPANY)
-        .resource("Jobs", userSettings.pigJob)
-        .get<NavJob>();
-    } else {
-      return null;
-    }
-  },
-  defaultPrice: ({ userSettings }) => (userSettings ? userSettings.price : null)
-};
-
-export const PigActivityQueries: QueryResolvers = {
-  async pigActivity(_, __, { navClient, user }) {
-    const userSettings = await UserSettingsModel.findOne({
-      username: user.username
-    });
-    return { userSettings };
+  async pigActivityDefaults(_, __, { navClient, user }) {
+    return (
+      (await UserSettingsModel.findOne({
+        username: user.username
+      })) || new UserSettingsModel({ username: user.username })
+    );
   }
 };
 
@@ -145,7 +146,7 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   },
   async postPigGradeOff(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
@@ -177,7 +178,7 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   },
   async postPigMortality(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MORT", user.name);
@@ -228,7 +229,7 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   },
   async postPigMove(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
@@ -277,7 +278,7 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   },
   async postPigPurchase(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
@@ -308,7 +309,7 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   },
   async postPigWean(_, { input }, { user, navClient }) {
     const { job } = await findJob(input.job, navClient);
@@ -337,6 +338,6 @@ export const PigActivityMutations: MutationResolvers = {
       price: input.price
     });
 
-    return { userSettings };
+    return { success: true, defaults: userSettings };
   }
 };

@@ -2,7 +2,7 @@ module.exports = {
   displayName: "api",
   preset: "@shelf/jest-mongodb",
   collectCoverageFrom: ["**/*!(.test).{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
-  setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/test/setup.ts", "<rootDir>/test/matchers.ts"],
   testMatch: ["<rootDir>/**/?(*.)(test).{js,jsx,ts,tsx}"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "ts-jest"

@@ -2,8 +2,8 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigMoveMutation,
-  PostPigMoveMutationVariables
+  PostPigActivityResult,
+  MutationPostPigMoveArgs
 } from "../../resolvers/types";
 import {
   PigMoveInputFactory,
@@ -21,14 +21,17 @@ import {
 import { format } from "date-fns";
 import UserSettings from "../../models/user-settings";
 
-function mutation(variables: PostPigMoveMutationVariables) {
-  return client.request<PostPigMoveMutation>(
+function mutation(variables: MutationPostPigMoveArgs) {
+  return client.request<PostPigActivityResult>(
     `mutation PostPigMove($input: PigMoveInput!) {
       postPigMove(input: $input) {
-        defaultJob {
-          number
+        success
+        defaults {
+          job {
+            number
+          }
+          price
         }
-        defaultPrice
       }
     }`,
     variables
@@ -139,24 +142,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .basicAuth(auth)
     .reply(200, {});
 
-  console.log({
-    Journal_Template_Name: NavItemJournalTemplate.Move,
-    Journal_Batch_Name: NavItemJournalBatch.Move,
-    Entry_Type: NavEntryType.Positive,
-    Document_No: documentNumberRegex,
-    Item_No: input.toAnimal,
-    Description: input.comments || " ",
-    Location_Code: toJob.Site,
-    Quantity: input.quantity,
-    Unit_Amount: input.price,
-    Weight: input.weight,
-    Job_No: input.toJob,
-    Shortcut_Dimension_1_Code: toEntityDimension.Dimension_Value_Code,
-    Shortcut_Dimension_2_Code: toCostCenterDimension.Dimension_Value_Code,
-    Posting_Date: date,
-    Document_Date: date
-  });
-
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Move,
@@ -196,10 +181,13 @@ test("submits data to NAV and creates new user settings document", async () => {
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigMove: {
-      defaultJob: {
-        number: fromJob.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: fromJob.No
+        },
+        price: input.price
+      }
     }
   });
 
@@ -227,10 +215,13 @@ test("submits data to NAV and updates existing user settings document", async ()
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigMove: {
-      defaultJob: {
-        number: fromJob.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: fromJob.No
+        },
+        price: input.price
+      }
     }
   });
 
@@ -252,10 +243,13 @@ test("sets description to an empty string if there are no comments", async () =>
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigMove: {
-      defaultJob: {
-        number: fromJob.No
-      },
-      defaultPrice: input.price
+      success: true,
+      defaults: {
+        job: {
+          number: fromJob.No
+        },
+        price: input.price
+      }
     }
   });
 

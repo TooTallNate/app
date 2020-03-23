@@ -132,7 +132,6 @@ module.exports = {
       "0": "0",
       "1": "0.25rem",
       "2": "0.5rem",
-      "2.5": "0.625rem",
       "3": "0.75rem",
       "4": "1rem",
       "5": "1.25rem",
@@ -148,6 +147,7 @@ module.exports = {
       "24": "6rem",
       "32": "8rem",
       "40": "10rem",
+      "44": "11rem",
       "48": "12rem",
       "56": "14rem",
       "64": "16rem"
@@ -314,7 +314,8 @@ module.exports = {
     }),
     maxHeight: {
       full: "100%",
-      screen: "100vh"
+      screen: "100vh",
+      "44": "11rem"
     },
     maxWidth: {
       xs: "20rem",
