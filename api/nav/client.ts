@@ -104,33 +104,52 @@ class ODataQuery<T extends {}> implements Promise<T> {
 
   protected _handleResponse(
     url: string,
-    cb: (error: any, response: Response, body: any) => void
+    cb: (error: any, response: Response, body: any) => void = () => {}
   ) {
     return (error: any, response: Response, body: any) => {
+      // Error in http library.
       if (error) {
         console.log(`ODATA ${this._method} ${url} ERROR`);
-        cb && cb(error, response, body);
-      } else {
+        cb(error, response, body);
+      }
+      // Completed network request.
+      else {
         console.log(`ODATA ${this._method} ${url} ${response.statusCode}`);
+        // Request completed successfully.
         if (response.statusCode >= 200 && response.statusCode < 300) {
-          cb &&
-            cb(error, response, Array.isArray(body.value) ? body.value : body);
-        } else if (response.statusCode >= 400) {
+          cb(error, response, Array.isArray(body.value) ? body.value : body);
+        }
+        // Error occured in handling the request.
+        else if (response.statusCode >= 400) {
+          let navError: ODataError;
+          // Response has an error object
           if (body && body.error) {
-            cb &&
-              cb(
-                new ODataError(body.error.code, body.error.message),
-                response,
-                body
+            // License error has to be handled separately since it does not have its own error code.
+            if (
+              body.error.code === NavErrorCode.Unknown &&
+              body.error.message.includes(
+                "Your program license does not permit more users to work simultaneously"
+              )
+            ) {
+              navError = new ODataError(
+                NavErrorCode.NoAvailableLicense,
+                body.error.message
               );
-          } else {
-            cb &&
-              cb(
-                new ODataError(NavErrorCode.Unknown, `${response.statusCode}`),
-                response,
-                body
-              );
+            }
+            // Normal error with code and message.
+            else {
+              navError = new ODataError(body.error.code, body.error.message);
+            }
           }
+          // Response has no error object.
+          else {
+            navError = new ODataError(
+              NavErrorCode.Unknown,
+              `${response.statusCode}`
+            );
+          }
+
+          cb(navError, response, body);
         }
       }
     };

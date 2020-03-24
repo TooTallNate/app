@@ -2,7 +2,12 @@ import React from "react";
 import faker from "faker";
 import { MockedResponse } from "@apollo/react-testing";
 import { renderHook, act } from "../../test/utils";
-import { AuthProvider, useAuth } from "./auth";
+import {
+  AuthProvider,
+  useAuth,
+  InvalidCredentialsError,
+  NoAvailableLicenseError
+} from "./auth";
 import { UserDocument, LoginDocument, LogoutDocument } from "../graphql";
 
 function render(mocks: MockedResponse[]) {
@@ -86,6 +91,76 @@ test("login updates context when successful", async () => {
   expect(getHook()).toEqual({
     isAuthenticated: true,
     user,
+    login: expect.any(Function),
+    logout: expect.any(Function)
+  });
+});
+
+test("login throws error if credentials are invalid", async () => {
+  const creds = {
+    username: faker.internet.userName(),
+    password: faker.internet.password()
+  };
+  const { getHook, findByText } = render([
+    {
+      request: { query: UserDocument },
+      result: { data: { user: null } }
+    },
+    {
+      request: { query: LoginDocument, variables: { input: creds } },
+      result: {
+        errors: [
+          {
+            message: "INVALID_CREDENTIALS"
+          } as any
+        ]
+      }
+    }
+  ]);
+  await findByText(/Child/i);
+  await act(() =>
+    expect(
+      getHook().login(creds.username, creds.password)
+    ).rejects.toThrowError(new InvalidCredentialsError())
+  );
+  expect(getHook()).toEqual({
+    isAuthenticated: false,
+    user: null,
+    login: expect.any(Function),
+    logout: expect.any(Function)
+  });
+});
+
+test("login throws error if no license is available", async () => {
+  const creds = {
+    username: faker.internet.userName(),
+    password: faker.internet.password()
+  };
+  const { getHook, findByText } = render([
+    {
+      request: { query: UserDocument },
+      result: { data: { user: null } }
+    },
+    {
+      request: { query: LoginDocument, variables: { input: creds } },
+      result: {
+        errors: [
+          {
+            message: "NO_AVAILABLE_LICENSE"
+          } as any
+        ]
+      }
+    }
+  ]);
+  await findByText(/Child/i);
+  await act(() =>
+    expect(
+      getHook().login(creds.username, creds.password)
+    ).rejects.toThrowError(new NoAvailableLicenseError())
+  );
+  expect(getHook()).toEqual({
+    isAuthenticated: false,
+    user: null,
     login: expect.any(Function),
     logout: expect.any(Function)
   });

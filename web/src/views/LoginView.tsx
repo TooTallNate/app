@@ -1,7 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState } from "react";
-import { useAuth } from "../contexts/auth";
+import {
+  useAuth,
+  InvalidCredentialsError,
+  NoAvailableLicenseError
+} from "../contexts/auth";
 import { Group, FormGroup } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
@@ -15,6 +19,7 @@ import FormFieldInput from "../components/ui/FormFieldInput";
 import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormSubmit from "../components/ui/FormSubmit";
 import { useHistory } from "react-router-dom";
+import { useFlash } from "../contexts/flash";
 
 interface FormData {
   username: string;
@@ -24,7 +29,7 @@ interface FormData {
 const LoginView: React.FC = () => {
   const history = useHistory();
   const { login } = useAuth();
-  const [isInvalid, setInvalid] = useState<boolean>(false);
+  const { addMessage } = useFlash();
   const formContext = useForm<FormData>({
     defaultValues: {
       username: "",
@@ -41,19 +46,28 @@ const LoginView: React.FC = () => {
         context={formContext}
         onSubmit={async data => {
           try {
-            setInvalid(false);
             await login(data.username, data.password);
             history.push("/");
-          } catch {
-            setInvalid(true);
+          } catch (e) {
+            if (e instanceof InvalidCredentialsError) {
+              addMessage({
+                message: "Username or password are incorrect.",
+                level: "error"
+              });
+            } else if (e instanceof NoAvailableLicenseError) {
+              addMessage({
+                message: "No license is available to access NAV.",
+                level: "error"
+              });
+            } else {
+              addMessage({
+                message: "An unknown error occred.",
+                level: "error"
+              });
+            }
           }
         }}
       >
-        {isInvalid && (
-          <Group>
-            <div css={{ color: "red" }}>Username or password are invalid.</div>
-          </Group>
-        )}
         <FormField
           name="username"
           rules={{ required: "The username field is required." }}
