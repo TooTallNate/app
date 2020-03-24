@@ -12,6 +12,20 @@ import FullPageSpinner from "../components/FullPageSpinner";
 
 type AuthUser = Pick<User, "name" | "username">;
 
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super("Username or password are incorrect.");
+    this.name = "InvalidCredentialsError";
+  }
+}
+
+export class NoAvailableLicenseError extends Error {
+  constructor() {
+    super("No license is avaiable to access NAV.");
+    this.name = "NoAvailableLicenseError";
+  }
+}
+
 export interface AuthContextValue {
   isAuthenticated: boolean;
   user: AuthUser | null;
@@ -54,14 +68,26 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const login = useCallback(
     async (username: string, password: string) => {
-      await loginMutation({
-        variables: {
-          input: {
-            username,
-            password
+      try {
+        await loginMutation({
+          variables: {
+            input: {
+              username,
+              password
+            }
           }
+        });
+      } catch (e) {
+        const code = (e.graphQLErrors || [])[0].message;
+        switch (code) {
+          case "INVALID_CREDENTIALS":
+            throw new InvalidCredentialsError();
+          case "NO_AVAILABLE_LICENSE":
+            throw new NoAvailableLicenseError();
+          default:
+            throw e;
         }
-      });
+      }
     },
     [loginMutation]
   );
