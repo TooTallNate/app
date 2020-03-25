@@ -1,11 +1,10 @@
+// Do this first to load the test envrionment.
+import "./env";
+
 import mongoose from "mongoose";
-import path from "path";
-import dotenv from "dotenv";
 import createServer from "../server";
 import { Server as HttpServer } from "http";
 import { Server as HttpsServer } from "https";
-
-dotenv.config({ path: path.resolve(__dirname, "../../.env.test") });
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -29,7 +28,10 @@ let server: HttpServer | HttpsServer;
 // before any tests run.
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
   });
   server = await createServer();
 });

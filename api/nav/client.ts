@@ -12,6 +12,7 @@ import {
   FilterExpression
 } from "./filter";
 import { NavErrorCode } from "./types";
+import logger from "../config/logging";
 
 interface ODataRequestAPI
   extends RequestAPI<Request, CoreOptions, RequiredUriUrl> {}
@@ -109,12 +110,12 @@ class ODataQuery<T extends {}> implements Promise<T> {
     return (error: any, response: Response, body: any) => {
       // Error in http library.
       if (error) {
-        console.log(`ODATA ${this._method} ${url} ERROR`);
+        logger.info(`ODATA ${this._method} ${url} ERROR`);
         cb(error, response, body);
       }
       // Completed network request.
       else {
-        console.log(`ODATA ${this._method} ${url} ${response.statusCode}`);
+        logger.info(`ODATA ${this._method} ${url} ${response.statusCode}`);
         // Request completed successfully.
         if (response.statusCode >= 200 && response.statusCode < 300) {
           cb(error, response, Array.isArray(body.value) ? body.value : body);

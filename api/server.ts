@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import logger from "./config/logging";
 import { initMongoose } from "./config/mongoose";
 import { initPassport, sessions } from "./config/passport";
 import { GraphQLServer } from "graphql-yoga";
@@ -36,7 +37,7 @@ export default () => {
     context,
     info
   ) => {
-    console.log(`GraphQL ${info.parentType} ${info.fieldName}`);
+    logger.info(`GraphQL ${info.parentType} ${info.fieldName}`);
     return resolve(root, args, context, info);
   };
 
@@ -69,6 +70,6 @@ export default () => {
     {
       port
     },
-    () => console.log(`server listening on port ${port}`)
+    () => logger.info(`server listening on port ${port}`)
   );
 };
