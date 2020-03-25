@@ -8,6 +8,7 @@ const { combine, timestamp, printf } = winston.format;
 const PAPERTRAIL_URL = process.env.PAPERTRAIL_URL;
 const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 const NODE_ENV = process.env.NODE_ENV || "production";
+const BRANCH = process.env.NOW_GITHUB_COMMIT_REF || "unknown";
 
 const transports: Transport[] = [new winston.transports.Console()];
 const exceptionHandlers: Transport[] = [new winston.transports.Console()];
@@ -15,11 +16,12 @@ const exceptionHandlers: Transport[] = [new winston.transports.Console()];
 if (NODE_ENV === "production") {
   if (PAPERTRAIL_URL) {
     const [host, port] = PAPERTRAIL_URL.split(":");
+    const app_name = BRANCH === "master" ? "api" : `api-${BRANCH}`;
     transports.push(
       new Syslog({
         host,
         port: Number(port),
-        app_name: "api",
+        app_name,
         localhost: hostname()
       })
     );
@@ -27,7 +29,7 @@ if (NODE_ENV === "production") {
       new Syslog({
         host,
         port: Number(port),
-        app_name: "api",
+        app_name,
         localhost: hostname()
       })
     );
