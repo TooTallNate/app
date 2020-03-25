@@ -1,33 +1,44 @@
 import winston from "winston";
 import { Syslog } from "winston-syslog";
 import { hostname } from "os";
+import * as Transport from "winston-transport";
 
 const { combine, timestamp, printf } = winston.format;
 
+const PAPERTRAIL_URL = process.env.PAPERTRAIL_URL;
 const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 const NODE_ENV = process.env.NODE_ENV || "production";
 
-const transports = [];
-const exceptionHandlers = [];
+const transports: Transport[] = [new winston.transports.Console()];
+const exceptionHandlers: Transport[] = [new winston.transports.Console()];
 
 if (NODE_ENV === "production") {
-  transports.push(
-    new Syslog({
-      host: "logs2.papertrailapp.com",
-      port: 43899,
-      app_name: "api",
-      localhost: hostname()
-    })
-  );
+  if (PAPERTRAIL_URL) {
+    const [host, port] = PAPERTRAIL_URL.split(":");
+    transports.push(
+      new Syslog({
+        host,
+        port: Number(port),
+        app_name: "api",
+        localhost: hostname()
+      })
+    );
+    exceptionHandlers.push(
+      new Syslog({
+        host,
+        port: Number(port),
+        app_name: "api",
+        localhost: hostname()
+      })
+    );
+  }
 } else {
   transports.push(
-    new winston.transports.Console(),
     new winston.transports.File({
       filename: "logs/api.log"
     })
   );
   exceptionHandlers.push(
-    new winston.transports.Console(),
     new winston.transports.File({
       filename: "logs/api.log"
     })
