@@ -7,10 +7,7 @@ export enum NavItemJournalTemplate {
 }
 
 export enum NavItemJournalBatch {
-  Mortality = "MORTALITY",
-  Move = "MOVE",
-  Wean = "WEAN PIGS",
-  Default = "DEFAULT"
+  FarmApp = "FARMAPP"
 }
 
 export enum NavJobJournalTemplate {
