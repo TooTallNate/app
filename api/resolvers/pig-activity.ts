@@ -123,7 +123,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Adjustment,
-        Journal_Batch_Name: NavItemJournalBatch.Default,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type:
           input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
         Document_No: getDocumentNumber("ADJ", user.name),
@@ -156,7 +156,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.GradeOff,
-        Journal_Batch_Name: NavItemJournalBatch.Default,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Negative,
         Document_No: getDocumentNumber("GRDOFF", user.name),
         Item_No: input.animal,
@@ -189,7 +189,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.Mortality,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Negative,
         Document_No: docNo,
         Item_No: input.animal,
@@ -207,7 +207,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.Mortality,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Negative,
         Document_No: docNo,
         Item_No: input.animal,
@@ -238,7 +238,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
-        Journal_Batch_Name: NavItemJournalBatch.Move,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Negative,
         Document_No: docNo,
         Item_No: input.fromAnimal,
@@ -256,7 +256,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
-        Journal_Batch_Name: NavItemJournalBatch.Move,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Positive,
         Document_No: docNo,
         Item_No: input.toAnimal,
@@ -288,7 +288,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,
-        Journal_Batch_Name: NavItemJournalBatch.Wean,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Positive,
         Document_No: getDocumentNumber("PURCH", user.name),
         Item_No: input.animal,
@@ -316,7 +316,7 @@ export const PigActivityMutations: MutationResolvers = {
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,
-        Journal_Batch_Name: NavItemJournalBatch.Wean,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Positive,
         Document_No: getDocumentNumber("WEAN", user.name),
         Item_No: input.animal,

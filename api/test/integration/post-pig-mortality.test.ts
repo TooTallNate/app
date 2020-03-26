@@ -88,7 +88,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Mortality,
-      Journal_Batch_Name: NavItemJournalBatch.Mortality,
+      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
       Entry_Type: NavEntryType.Negative,
       Document_No: documentNumberRegex,
       Item_No: input.animal,
@@ -109,7 +109,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Mortality,
-      Journal_Batch_Name: NavItemJournalBatch.Mortality,
+      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
       Entry_Type: NavEntryType.Negative,
       Document_No: documentNumberRegex,
       Item_No: input.animal,

@@ -88,7 +88,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Adjustment,
-      Journal_Batch_Name: NavItemJournalBatch.Default,
+      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
       Entry_Type:
         input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
       Document_No: documentNumberRegex,
