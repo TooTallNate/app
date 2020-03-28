@@ -158,7 +158,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: toEntityDimension.Dimension_Value_Code,
       Shortcut_Dimension_2_Code: toCostCenterDimension.Dimension_Value_Code,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Meta: input.smallPigQuantity
     })
     .basicAuth(auth)
     .reply(200, {});

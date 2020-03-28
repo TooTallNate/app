@@ -148,6 +148,7 @@ export type PigMoveInput = {
   fromJob: Scalars["String"];
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
@@ -166,6 +167,7 @@ export type PigWeanInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
@@ -361,10 +363,6 @@ export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
     >;
   };
 
-export type FarrowingBackendOperatorFieldsFragment = {
-  __typename?: "Resource";
-} & Pick<Resource, "number" | "name">;
-
 export type FarrowingBackendScorecardFieldsFragment = {
   __typename?: "FarrowingBackendScorecard";
 } & {
@@ -416,7 +414,7 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
       }
   >;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
   scorecard: Maybe<
     {
@@ -432,7 +430,7 @@ export type FarrowingBackendOperatorsQueryVariables = {
 export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
   area: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 

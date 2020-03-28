@@ -102,7 +102,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: "2",
       Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Meta: input.smallPigQuantity
     })
     .basicAuth(auth)
     .reply(200, {});
