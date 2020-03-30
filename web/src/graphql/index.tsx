@@ -192,7 +192,6 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  farrowingBackendScorecards: Array<FarrowingBackendScorecard>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
@@ -354,10 +353,6 @@ export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
     >;
   };
 
-export type FarrowingBackendOperatorFieldsFragment = {
-  __typename?: "Resource";
-} & Pick<Resource, "number" | "name">;
-
 export type FarrowingBackendScorecardFieldsFragment = {
   __typename?: "FarrowingBackendScorecard";
 } & {
@@ -409,7 +404,7 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
       }
   >;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
   scorecard: Maybe<
     {
@@ -425,7 +420,7 @@ export type FarrowingBackendOperatorsQueryVariables = {
 export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
   area: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 
@@ -522,12 +517,6 @@ export const FarrowingBackendAreaFieldsFragmentDoc = gql`
       name
       number
     }
-  }
-`;
-export const FarrowingBackendOperatorFieldsFragmentDoc = gql`
-  fragment FarrowingBackendOperatorFields on Resource {
-    number
-    name
   }
 `;
 export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
@@ -1000,13 +989,13 @@ export const FarrowingBackendScorecardDocument = gql`
       }
     }
     operators: farrowingBackendOperators {
-      ...FarrowingBackendOperatorFields
+      number
+      name
     }
     scorecard: farrowingBackendScorecard(area: $area) {
       ...FarrowingBackendScorecardFields
     }
   }
-  ${FarrowingBackendOperatorFieldsFragmentDoc}
   ${FarrowingBackendScorecardFieldsFragmentDoc}
 `;
 
@@ -1064,11 +1053,11 @@ export const FarrowingBackendOperatorsDocument = gql`
       ...FarrowingBackendAreaFields
     }
     operators: farrowingBackendOperators {
-      ...FarrowingBackendOperatorFields
+      number
+      name
     }
   }
   ${FarrowingBackendAreaFieldsFragmentDoc}
-  ${FarrowingBackendOperatorFieldsFragmentDoc}
 `;
 
 /**

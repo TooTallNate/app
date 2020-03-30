@@ -166,7 +166,6 @@ type Query {
   user: User
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
-  farrowingBackendScorecards: [FarrowingBackendScorecard!]!
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job

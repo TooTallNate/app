@@ -199,7 +199,6 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  farrowingBackendScorecards: Array<FarrowingBackendScorecard>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
@@ -361,10 +360,6 @@ export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
     >;
   };
 
-export type FarrowingBackendOperatorFieldsFragment = {
-  __typename?: "Resource";
-} & Pick<Resource, "number" | "name">;
-
 export type FarrowingBackendScorecardFieldsFragment = {
   __typename?: "FarrowingBackendScorecard";
 } & {
@@ -416,7 +411,7 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
       }
   >;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
   scorecard: Maybe<
     {
@@ -432,7 +427,7 @@ export type FarrowingBackendOperatorsQueryVariables = {
 export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
   area: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
-    { __typename?: "Resource" } & FarrowingBackendOperatorFieldsFragment
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 
@@ -874,11 +869,6 @@ export type QueryResolvers<
   >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  farrowingBackendScorecards?: Resolver<
-    Array<ResolversTypes["FarrowingBackendScorecard"]>,
     ParentType,
     ContextType
   >;

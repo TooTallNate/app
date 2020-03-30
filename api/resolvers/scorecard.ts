@@ -54,9 +54,6 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
 };
 
 export const ScorecardQueries: QueryResolvers = {
-  async farrowingBackendScorecards() {
-    return await FarrowingBackendScorecardModel.find();
-  },
   async farrowingBackendScorecard(_, { area }) {
     return await FarrowingBackendScorecardModel.findOne({ area });
   },
