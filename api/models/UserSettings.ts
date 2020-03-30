@@ -25,8 +25,8 @@ const UserSettingsSchema = new Schema(
   }
 );
 
-const UserSettings = model<UserSettingsDocument>(
+const UserSettingsModel = model<UserSettingsDocument>(
   "UserSettings",
   UserSettingsSchema
 );
-export default UserSettings;
+export default UserSettingsModel;

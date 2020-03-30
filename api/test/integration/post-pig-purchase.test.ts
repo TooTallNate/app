@@ -19,7 +19,7 @@ import {
   NavTableID
 } from "../../nav";
 import { format } from "date-fns";
-import UserSettings from "../../models/user-settings";
+import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {
   return client.request<PostPigActivityResult>(
@@ -136,7 +136,7 @@ test("submits data to NAV and creates new user settings document", async () => {
   });
 
   await expect(
-    UserSettings.findOne({
+    UserSettingsModel.findOne({
       username: user.User_Name
     }).lean()
   ).resolves.toMatchObject({
@@ -150,7 +150,7 @@ test("submits data to NAV and updates existing user settings document", async ()
       comments: faker.lorem.words(3)
     }
   });
-  const userSettings = await UserSettings.create(
+  const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: undefined
@@ -168,7 +168,7 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
 
   await expect(
-    UserSettings.findById(userSettings._id).lean()
+    UserSettingsModel.findById(userSettings._id).lean()
   ).resolves.toMatchObject({
     username: user.User_Name,
     price: input.price
@@ -193,7 +193,7 @@ test("sets description to an empty string if there are no comments", async () =>
   });
 
   await expect(
-    UserSettings.findOne({
+    UserSettingsModel.findOne({
       username: user.User_Name
     }).lean()
   ).resolves.toMatchObject({

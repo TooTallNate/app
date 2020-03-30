@@ -15,7 +15,7 @@ import {
   JobTaskNumber
 } from "../../nav";
 import { format } from "date-fns";
-import FarrowingBackendScorecardModel from "../../models/farrowing-backend-scorecard";
+import FarrowingBackendScorecardModel from "../../models/FarrowingBackendScorecard";
 import nock = require("nock");
 
 function mutation(variables: MutationPostFarrowingBackendScorecardArgs) {

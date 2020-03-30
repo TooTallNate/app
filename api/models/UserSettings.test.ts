@@ -1,4 +1,4 @@
-import UserSettingsModel from "./user-settings";
+import UserSettingsModel from "./UserSettings";
 
 test("username is required", () => {
   const settings = new UserSettingsModel();

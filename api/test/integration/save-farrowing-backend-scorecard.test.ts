@@ -4,7 +4,7 @@ import {
   MutationSaveFarrowingBackendScorecardArgs
 } from "../../resolvers/types";
 import { SaveFarrowingBackendScorecardInputFactory } from "../builders";
-import FarrowingBackendScorecardModel from "../../models/farrowing-backend-scorecard";
+import FarrowingBackendScorecardModel from "../../models/FarrowingBackendScorecard";
 import { ObjectId } from "mongodb";
 
 function mutation(variables: MutationSaveFarrowingBackendScorecardArgs) {

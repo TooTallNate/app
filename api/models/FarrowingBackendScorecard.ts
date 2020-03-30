@@ -1,7 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 import createScorecardEntrySchema, {
   ScorecardEntryDocument
-} from "./scorecard-entry";
+} from "./ScorecardEntry";
 
 const ScorecardEntrySchema = createScorecardEntrySchema(0, 10);
 
@@ -41,8 +41,8 @@ const FarrowingBackendScorecardSchema = new Schema(
   }
 );
 
-const FarrowingBackendScorecard = model<FarrowingBackendScorecardDocument>(
+const FarrowingBackendScorecardModel = model<FarrowingBackendScorecardDocument>(
   "FarrowingBackendScorecard",
   FarrowingBackendScorecardSchema
 );
-export default FarrowingBackendScorecard;
+export default FarrowingBackendScorecardModel;

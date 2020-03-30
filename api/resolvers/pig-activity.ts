@@ -16,7 +16,7 @@ import {
 } from "../nav";
 import UserSettingsModel, {
   UserSettingsDocument
-} from "../models/user-settings";
+} from "../models/UserSettings";
 import { navDate, getDocumentNumber } from "./utils";
 
 function postItemJournal(

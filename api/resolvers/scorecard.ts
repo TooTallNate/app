@@ -15,7 +15,7 @@ import {
   WorkTypeCode
 } from "../nav";
 import { navDate, getDocumentNumber } from "./utils";
-import FarrowingBackendScorecardModel from "../models/farrowing-backend-scorecard";
+import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,

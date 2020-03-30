@@ -3,7 +3,7 @@ import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { Job } from "../../resolvers/types";
 import { JobFactory, UserSettingsFactory } from "../builders";
-import UserSettings from "../../models/user-settings";
+import UserSettingsModel from "../../models/UserSettings";
 
 interface QueryResult {
   pigActivityDefaults: {
@@ -30,7 +30,7 @@ testUnauthenticated(query);
 test("returns default job when set in user settings", async () => {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  await UserSettings.create(
+  await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: job.No,
@@ -56,7 +56,7 @@ test("returns default job when set in user settings", async () => {
 test("returns default price when set in user settings", async () => {
   const { user } = await mockUser();
   const price = faker.random.number({ min: 30, max: 150 });
-  await UserSettings.create(
+  await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: null,

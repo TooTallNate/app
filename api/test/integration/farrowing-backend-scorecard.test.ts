@@ -11,7 +11,7 @@ import {
 } from "../builders";
 import FarrowingBackendScorecardModel, {
   FarrowingBackendScorecardDocument
-} from "../../models/farrowing-backend-scorecard";
+} from "../../models/FarrowingBackendScorecard";
 import { NavResource, NavJob } from "../../nav";
 import faker from "faker";
 import nock from "nock";

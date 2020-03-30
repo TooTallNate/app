@@ -1,4 +1,4 @@
-import { UserSettingsDocument } from "../models/user-settings";
+import { UserSettingsDocument } from "../models/UserSettings";
 
 export interface PostPigActivityResultMapper {
   success: Boolean;
