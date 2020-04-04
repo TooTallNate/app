@@ -5,12 +5,6 @@ fragment PigActivityDefaultsFragment on PigActivityDefaults {
   price
 }
 
-fragment PostPigActivityResultFragment on PostPigActivityResult {
-  defaults {
-    ...PigActivityDefaultsFragment
-  }
-}
-
 query PigActivity {
   pigActivityJobs {
     number
@@ -21,38 +15,50 @@ query PigActivity {
   }
 }
 
-mutation PostPigMove($input: PigMoveInput!) {
+mutation PostPigMove($input: PostPigMoveInput!) {
   postPigMove(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }
 
-mutation PostPigAdjustment($input: PigAdjustmentInput!) {
+mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
   postPigAdjustment(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }
 
-mutation PostPigGradeOff($input: PigGradeOffInput!) {
+mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
   postPigGradeOff(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }
 
-mutation PostPigWean($input: PigWeanInput!) {
+mutation PostPigWean($input: PostPigWeanInput!) {
   postPigWean(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }
 
-mutation PostPigPurchase($input: PigPurchaseInput!) {
+mutation PostPigPurchase($input: PostPigPurchaseInput!) {
   postPigPurchase(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }
 
-mutation PostPigMortality($input: PigMortalityInput!) {
+mutation PostPigMortality($input: PostPigMortalityInput!) {
   postPigMortality(input: $input) {
-    ...PostPigActivityResultFragment
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
   }
 }

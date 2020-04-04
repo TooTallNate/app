@@ -2,7 +2,7 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigActivityResult,
+  PostPigPurchaseResult,
   MutationPostPigPurchaseArgs
 } from "../../resolvers/types";
 import {
@@ -20,12 +20,23 @@ import {
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
+import PigPurchaseModel from "../../models/PigPurchase";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {
-  return client.request<PostPigActivityResult>(
-    `mutation PostPigPurchase($input: PigPurchaseInput!) {
+  return client.request<PostPigPurchaseResult>(
+    `mutation PostPigPurchase($input: PostPigPurchaseInput!) {
       postPigPurchase(input: $input) {
         success
+        pigPurchase {
+          job {
+            number
+          }
+          animal
+          quantity
+          weight
+          price
+          comments
+        }
         defaults {
           job {
             number
@@ -118,8 +129,8 @@ testUnauthenticated(() =>
   })
 );
 
-test("submits data to NAV and creates new user settings document", async () => {
-  const { input, user } = await mockTestData({
+test("submits data to NAV and creates new user settings and purchase documents", async () => {
+  const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -128,6 +139,16 @@ test("submits data to NAV and creates new user settings document", async () => {
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
       success: true,
+      pigPurchase: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        quantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: null,
         price: input.price
@@ -136,16 +157,33 @@ test("submits data to NAV and creates new user settings document", async () => {
   });
 
   await expect(
-    UserSettingsModel.findOne({
-      username: user.User_Name
-    }).lean()
-  ).resolves.toMatchObject({
+    UserSettingsModel.findOne(
+      {
+        username: user.User_Name
+      },
+      "pigJob price"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
     price: input.price
+  });
+
+  await expect(
+    PigPurchaseModel.findOne(
+      {
+        job: job.No
+      },
+      "-__v -createdAt -updatedAt"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
+    activity: "purchase",
+    job: job.No
   });
 });
 
 test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, user } = await mockTestData({
+  const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -160,6 +198,16 @@ test("submits data to NAV and updates existing user settings document", async ()
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
       success: true,
+      pigPurchase: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        quantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: null,
         price: input.price
@@ -168,15 +216,61 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id).lean()
-  ).resolves.toMatchObject({
+    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
     username: user.User_Name,
+    pigJob: userSettings.pigJob,
     price: input.price
   });
 });
 
+test("submits data to NAV and clears existing purchase document", async () => {
+  const { input, job } = await mockTestData({
+    input: {
+      comments: faker.lorem.words(3)
+    }
+  });
+  const purchaseDoc = await PigPurchaseModel.create({
+    job: job.No,
+    quantity: input.quantity,
+    weight: input.weight
+  });
+
+  await expect(mutation({ input })).resolves.toEqual({
+    postPigPurchase: {
+      success: true,
+      pigPurchase: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        quantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
+      defaults: {
+        job: null,
+        price: input.price
+      }
+    }
+  });
+
+  await expect(
+    PigPurchaseModel.findById(
+      purchaseDoc._id,
+      "-__v -createdAt -updatedAt"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
+    activity: "purchase",
+    job: purchaseDoc.job
+  });
+});
+
 test("sets description to an empty string if there are no comments", async () => {
-  const { input, user } = await mockTestData({
+  const { input, job } = await mockTestData({
     input: {
       comments: undefined
     }
@@ -185,18 +279,20 @@ test("sets description to an empty string if there are no comments", async () =>
   await expect(mutation({ input })).resolves.toEqual({
     postPigPurchase: {
       success: true,
+      pigPurchase: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        quantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: null,
         price: input.price
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne({
-      username: user.User_Name
-    }).lean()
-  ).resolves.toMatchObject({
-    price: input.price
   });
 });

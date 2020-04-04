@@ -1,7 +1,13 @@
 import { GraphQLResolveInfo } from "graphql";
 import { NavUser, NavJob, NavResource } from "../nav";
-import { UserSettingsDocument } from "../models/user-settings";
-import { FarrowingBackendScorecardDocument } from "../models/farrowing-backend-scorecard";
+import { PigAdjustmentDocument } from "../models/PigAdjustment";
+import { PigGradeOffDocument } from "../models/PigGradeOff";
+import { PigMortalityDocument } from "../models/PigMortality";
+import { PigMoveDocument } from "../models/PigMove";
+import { PigPurchaseDocument } from "../models/PigPurchase";
+import { PigWeanDocument } from "../models/PigWean";
+import { UserSettingsDocument } from "../models/UserSettings";
+import { FarrowingBackendScorecardDocument } from "../models/FarrowingBackendScorecard";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -57,12 +63,18 @@ export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postPigAdjustment: PostPigActivityResult;
-  postPigGradeOff: PostPigActivityResult;
-  postPigMortality: PostPigActivityResult;
-  postPigMove: PostPigActivityResult;
-  postPigPurchase: PostPigActivityResult;
-  postPigWean: PostPigActivityResult;
+  postPigAdjustment: PostPigAdjustmentResult;
+  savePigAdjustment: SavePigAdjustmentResult;
+  postPigGradeOff: PostPigGradeOffResult;
+  savePigGradeOff: SavePigGradeOffResult;
+  postPigMortality: PostPigMortalityResult;
+  savePigMortality: SavePigMortalityResult;
+  postPigMove: PostPigMoveResult;
+  savePigMove: SavePigMoveResult;
+  postPigPurchase: PostPigPurchaseResult;
+  savePigPurchase: SavePigPurchaseResult;
+  postPigWean: PostPigWeanResult;
+  savePigWean: SavePigWeanResult;
   postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
   saveFarrowingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
@@ -73,27 +85,51 @@ export type MutationLoginArgs = {
 };
 
 export type MutationPostPigAdjustmentArgs = {
-  input: PigAdjustmentInput;
+  input: PostPigAdjustmentInput;
+};
+
+export type MutationSavePigAdjustmentArgs = {
+  input: SavePigAdjustmentInput;
 };
 
 export type MutationPostPigGradeOffArgs = {
-  input: PigGradeOffInput;
+  input: PostPigGradeOffInput;
+};
+
+export type MutationSavePigGradeOffArgs = {
+  input: SavePigGradeOffInput;
 };
 
 export type MutationPostPigMortalityArgs = {
-  input: PigMortalityInput;
+  input: PostPigMortalityInput;
+};
+
+export type MutationSavePigMortalityArgs = {
+  input: SavePigMortalityInput;
 };
 
 export type MutationPostPigMoveArgs = {
-  input: PigMoveInput;
+  input: PostPigMoveInput;
+};
+
+export type MutationSavePigMoveArgs = {
+  input: SavePigMoveInput;
 };
 
 export type MutationPostPigPurchaseArgs = {
-  input: PigPurchaseInput;
+  input: PostPigPurchaseInput;
+};
+
+export type MutationSavePigPurchaseArgs = {
+  input: SavePigPurchaseInput;
 };
 
 export type MutationPostPigWeanArgs = {
-  input: PigWeanInput;
+  input: PostPigWeanInput;
+};
+
+export type MutationSavePigWeanArgs = {
+  input: SavePigWeanInput;
 };
 
 export type MutationPostFarrowingBackendScorecardArgs = {
@@ -114,60 +150,66 @@ export type PigActivityDefaults = {
   price?: Maybe<Scalars["Float"]>;
 };
 
-export type PigAdjustmentInput = {
-  animal: Scalars["String"];
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigAdjustment = {
+  __typename?: "PigAdjustment";
+  animal?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PigGradeOffInput = {
-  animal: Scalars["String"];
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigGradeOff = {
+  __typename?: "PigGradeOff";
+  animal?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PigMortalityInput = {
-  animal: Scalars["String"];
-  job: Scalars["String"];
-  naturalQuantity: Scalars["Int"];
-  euthanizedQuantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigMortality = {
+  __typename?: "PigMortality";
+  animal?: Maybe<Scalars["String"]>;
+  job: Job;
+  naturalQuantity?: Maybe<Scalars["Int"]>;
+  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PigMoveInput = {
-  fromAnimal: Scalars["String"];
-  toAnimal: Scalars["String"];
-  fromJob: Scalars["String"];
-  toJob: Scalars["String"];
-  quantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigMove = {
+  __typename?: "PigMove";
+  fromAnimal?: Maybe<Scalars["String"]>;
+  toAnimal?: Maybe<Scalars["String"]>;
+  fromJob: Job;
+  toJob?: Maybe<Job>;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PigPurchaseInput = {
-  animal: Scalars["String"];
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigPurchase = {
+  __typename?: "PigPurchase";
+  animal?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PigWeanInput = {
-  animal: Scalars["String"];
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  weight: Scalars["Float"];
-  price: Scalars["Float"];
+export type PigWean = {
+  __typename?: "PigWean";
+  animal?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -188,9 +230,102 @@ export type PostFarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
-export type PostPigActivityResult = {
-  __typename?: "PostPigActivityResult";
+export type PostPigAdjustmentInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigAdjustmentResult = {
+  __typename?: "PostPigAdjustmentResult";
   success: Scalars["Boolean"];
+  pigAdjustment: PigAdjustment;
+  defaults: PigActivityDefaults;
+};
+
+export type PostPigGradeOffInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigGradeOffResult = {
+  __typename?: "PostPigGradeOffResult";
+  success: Scalars["Boolean"];
+  pigGradeOff: PigGradeOff;
+  defaults: PigActivityDefaults;
+};
+
+export type PostPigMortalityInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  naturalQuantity: Scalars["Int"];
+  euthanizedQuantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigMortalityResult = {
+  __typename?: "PostPigMortalityResult";
+  success: Scalars["Boolean"];
+  pigMortality: PigMortality;
+  defaults: PigActivityDefaults;
+};
+
+export type PostPigMoveInput = {
+  fromAnimal: Scalars["String"];
+  toAnimal: Scalars["String"];
+  fromJob: Scalars["String"];
+  toJob: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigMoveResult = {
+  __typename?: "PostPigMoveResult";
+  success: Scalars["Boolean"];
+  pigMove: PigMove;
+  defaults: PigActivityDefaults;
+};
+
+export type PostPigPurchaseInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigPurchaseResult = {
+  __typename?: "PostPigPurchaseResult";
+  success: Scalars["Boolean"];
+  pigPurchase: PigPurchase;
+  defaults: PigActivityDefaults;
+};
+
+export type PostPigWeanInput = {
+  animal: Scalars["String"];
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  weight: Scalars["Float"];
+  price: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostPigWeanResult = {
+  __typename?: "PostPigWeanResult";
+  success: Scalars["Boolean"];
+  pigWean: PigWean;
   defaults: PigActivityDefaults;
 };
 
@@ -199,10 +334,40 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
+  pigAdjustment?: Maybe<PigAdjustment>;
+  pigGradeOff?: Maybe<PigGradeOff>;
+  pigMortality?: Maybe<PigMortality>;
+  pigMove?: Maybe<PigMove>;
+  pigPurchase?: Maybe<PigPurchase>;
+  pigWean?: Maybe<PigWean>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
   farrowingBackendOperators: Array<Resource>;
+};
+
+export type QueryPigAdjustmentArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigGradeOffArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMortalityArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMoveArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigWeanArgs = {
+  job: Scalars["String"];
 };
 
 export type QueryFarrowingBackendScorecardArgs = {
@@ -234,6 +399,105 @@ export type SaveFarrowingBackendScorecardResult = {
   __typename?: "SaveFarrowingBackendScorecardResult";
   success: Scalars["Boolean"];
   scorecard: FarrowingBackendScorecard;
+};
+
+export type SavePigAdjustmentInput = {
+  animal?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigAdjustmentResult = {
+  __typename?: "SavePigAdjustmentResult";
+  success: Scalars["Boolean"];
+  pigAdjustment: PigAdjustment;
+  defaults: PigActivityDefaults;
+};
+
+export type SavePigGradeOffInput = {
+  animal?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigGradeOffResult = {
+  __typename?: "SavePigGradeOffResult";
+  success: Scalars["Boolean"];
+  pigGradeOff: PigGradeOff;
+  defaults: PigActivityDefaults;
+};
+
+export type SavePigMortalityInput = {
+  animal?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  naturalQuantity?: Maybe<Scalars["Int"]>;
+  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigMortalityResult = {
+  __typename?: "SavePigMortalityResult";
+  success: Scalars["Boolean"];
+  pigMortality: PigMortality;
+  defaults: PigActivityDefaults;
+};
+
+export type SavePigMoveInput = {
+  fromAnimal?: Maybe<Scalars["String"]>;
+  toAnimal?: Maybe<Scalars["String"]>;
+  fromJob: Scalars["String"];
+  toJob?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigMoveResult = {
+  __typename?: "SavePigMoveResult";
+  success: Scalars["Boolean"];
+  pigMove: PigMove;
+  defaults: PigActivityDefaults;
+};
+
+export type SavePigPurchaseInput = {
+  animal?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigPurchaseResult = {
+  __typename?: "SavePigPurchaseResult";
+  success: Scalars["Boolean"];
+  pigPurchase: PigPurchase;
+  defaults: PigActivityDefaults;
+};
+
+export type SavePigWeanInput = {
+  animal?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  weight?: Maybe<Scalars["Float"]>;
+  price?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SavePigWeanResult = {
+  __typename?: "SavePigWeanResult";
+  success: Scalars["Boolean"];
+  pigWean: PigWean;
+  defaults: PigActivityDefaults;
 };
 
 export type ScorecardEntry = {
@@ -271,14 +535,6 @@ export type PigActivityDefaultsFragmentFragment = {
     job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
-export type PostPigActivityResultFragmentFragment = {
-  __typename?: "PostPigActivityResult";
-} & {
-  defaults: {
-    __typename?: "PigActivityDefaults";
-  } & PigActivityDefaultsFragmentFragment;
-};
-
 export type PigActivityQueryVariables = {};
 
 export type PigActivityQuery = { __typename?: "Query" } & {
@@ -291,63 +547,75 @@ export type PigActivityQuery = { __typename?: "Query" } & {
 };
 
 export type PostPigMoveMutationVariables = {
-  input: PigMoveInput;
+  input: PostPigMoveInput;
 };
 
 export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigMove: { __typename?: "PostPigMoveResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type PostPigAdjustmentMutationVariables = {
-  input: PigAdjustmentInput;
+  input: PostPigAdjustmentInput;
 };
 
 export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
-  postPigAdjustment: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigAdjustment: { __typename?: "PostPigAdjustmentResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type PostPigGradeOffMutationVariables = {
-  input: PigGradeOffInput;
+  input: PostPigGradeOffInput;
 };
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
-  postPigGradeOff: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigGradeOff: { __typename?: "PostPigGradeOffResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type PostPigWeanMutationVariables = {
-  input: PigWeanInput;
+  input: PostPigWeanInput;
 };
 
 export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigWean: { __typename?: "PostPigWeanResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type PostPigPurchaseMutationVariables = {
-  input: PigPurchaseInput;
+  input: PostPigPurchaseInput;
 };
 
 export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type PostPigMortalityMutationVariables = {
-  input: PigMortalityInput;
+  input: PostPigMortalityInput;
 };
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
-  postPigMortality: {
-    __typename?: "PostPigActivityResult";
-  } & PostPigActivityResultFragmentFragment;
+  postPigMortality: { __typename?: "PostPigMortalityResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+  };
 };
 
 export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
@@ -618,11 +886,17 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
+  PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
+  PigGradeOff: ResolverTypeWrapper<PigGradeOffDocument>;
+  PigMortality: ResolverTypeWrapper<PigMortalityDocument>;
+  PigMove: ResolverTypeWrapper<PigMoveDocument>;
+  PigPurchase: ResolverTypeWrapper<PigPurchaseDocument>;
+  PigWean: ResolverTypeWrapper<PigWeanDocument>;
   FarrowingBackendScorecard: ResolverTypeWrapper<
     FarrowingBackendScorecardDocument
   >;
   ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -630,17 +904,90 @@ export type ResolversTypes = ResolversObject<{
   >;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   LogoutResult: ResolverTypeWrapper<LogoutResult>;
-  PigAdjustmentInput: PigAdjustmentInput;
-  PostPigActivityResult: ResolverTypeWrapper<
-    Omit<PostPigActivityResult, "defaults"> & {
+  PostPigAdjustmentInput: PostPigAdjustmentInput;
+  PostPigAdjustmentResult: ResolverTypeWrapper<
+    Omit<PostPigAdjustmentResult, "pigAdjustment" | "defaults"> & {
+      pigAdjustment: ResolversTypes["PigAdjustment"];
       defaults: ResolversTypes["PigActivityDefaults"];
     }
   >;
-  PigGradeOffInput: PigGradeOffInput;
-  PigMortalityInput: PigMortalityInput;
-  PigMoveInput: PigMoveInput;
-  PigPurchaseInput: PigPurchaseInput;
-  PigWeanInput: PigWeanInput;
+  SavePigAdjustmentInput: SavePigAdjustmentInput;
+  SavePigAdjustmentResult: ResolverTypeWrapper<
+    Omit<SavePigAdjustmentResult, "pigAdjustment" | "defaults"> & {
+      pigAdjustment: ResolversTypes["PigAdjustment"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  PostPigGradeOffInput: PostPigGradeOffInput;
+  PostPigGradeOffResult: ResolverTypeWrapper<
+    Omit<PostPigGradeOffResult, "pigGradeOff" | "defaults"> & {
+      pigGradeOff: ResolversTypes["PigGradeOff"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  SavePigGradeOffInput: SavePigGradeOffInput;
+  SavePigGradeOffResult: ResolverTypeWrapper<
+    Omit<SavePigGradeOffResult, "pigGradeOff" | "defaults"> & {
+      pigGradeOff: ResolversTypes["PigGradeOff"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  PostPigMortalityInput: PostPigMortalityInput;
+  PostPigMortalityResult: ResolverTypeWrapper<
+    Omit<PostPigMortalityResult, "pigMortality" | "defaults"> & {
+      pigMortality: ResolversTypes["PigMortality"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  SavePigMortalityInput: SavePigMortalityInput;
+  SavePigMortalityResult: ResolverTypeWrapper<
+    Omit<SavePigMortalityResult, "pigMortality" | "defaults"> & {
+      pigMortality: ResolversTypes["PigMortality"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  PostPigMoveInput: PostPigMoveInput;
+  PostPigMoveResult: ResolverTypeWrapper<
+    Omit<PostPigMoveResult, "pigMove" | "defaults"> & {
+      pigMove: ResolversTypes["PigMove"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  SavePigMoveInput: SavePigMoveInput;
+  SavePigMoveResult: ResolverTypeWrapper<
+    Omit<SavePigMoveResult, "pigMove" | "defaults"> & {
+      pigMove: ResolversTypes["PigMove"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  PostPigPurchaseInput: PostPigPurchaseInput;
+  PostPigPurchaseResult: ResolverTypeWrapper<
+    Omit<PostPigPurchaseResult, "pigPurchase" | "defaults"> & {
+      pigPurchase: ResolversTypes["PigPurchase"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  SavePigPurchaseInput: SavePigPurchaseInput;
+  SavePigPurchaseResult: ResolverTypeWrapper<
+    Omit<SavePigPurchaseResult, "pigPurchase" | "defaults"> & {
+      pigPurchase: ResolversTypes["PigPurchase"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  PostPigWeanInput: PostPigWeanInput;
+  PostPigWeanResult: ResolverTypeWrapper<
+    Omit<PostPigWeanResult, "pigWean" | "defaults"> & {
+      pigWean: ResolversTypes["PigWean"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
+  SavePigWeanInput: SavePigWeanInput;
+  SavePigWeanResult: ResolverTypeWrapper<
+    Omit<SavePigWeanResult, "pigWean" | "defaults"> & {
+      pigWean: ResolversTypes["PigWean"];
+      defaults: ResolversTypes["PigActivityDefaults"];
+    }
+  >;
   PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: ResolverTypeWrapper<
@@ -669,9 +1016,15 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
+  PigAdjustment: PigAdjustmentDocument;
+  Int: Scalars["Int"];
+  PigGradeOff: PigGradeOffDocument;
+  PigMortality: PigMortalityDocument;
+  PigMove: PigMoveDocument;
+  PigPurchase: PigPurchaseDocument;
+  PigWean: PigWeanDocument;
   FarrowingBackendScorecard: FarrowingBackendScorecardDocument;
   ScorecardEntry: ScorecardEntry;
-  Int: Scalars["Int"];
   Mutation: {};
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -679,15 +1032,90 @@ export type ResolversParentTypes = ResolversObject<{
   };
   Boolean: Scalars["Boolean"];
   LogoutResult: LogoutResult;
-  PigAdjustmentInput: PigAdjustmentInput;
-  PostPigActivityResult: Omit<PostPigActivityResult, "defaults"> & {
+  PostPigAdjustmentInput: PostPigAdjustmentInput;
+  PostPigAdjustmentResult: Omit<
+    PostPigAdjustmentResult,
+    "pigAdjustment" | "defaults"
+  > & {
+    pigAdjustment: ResolversParentTypes["PigAdjustment"];
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
-  PigGradeOffInput: PigGradeOffInput;
-  PigMortalityInput: PigMortalityInput;
-  PigMoveInput: PigMoveInput;
-  PigPurchaseInput: PigPurchaseInput;
-  PigWeanInput: PigWeanInput;
+  SavePigAdjustmentInput: SavePigAdjustmentInput;
+  SavePigAdjustmentResult: Omit<
+    SavePigAdjustmentResult,
+    "pigAdjustment" | "defaults"
+  > & {
+    pigAdjustment: ResolversParentTypes["PigAdjustment"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  PostPigGradeOffInput: PostPigGradeOffInput;
+  PostPigGradeOffResult: Omit<
+    PostPigGradeOffResult,
+    "pigGradeOff" | "defaults"
+  > & {
+    pigGradeOff: ResolversParentTypes["PigGradeOff"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  SavePigGradeOffInput: SavePigGradeOffInput;
+  SavePigGradeOffResult: Omit<
+    SavePigGradeOffResult,
+    "pigGradeOff" | "defaults"
+  > & {
+    pigGradeOff: ResolversParentTypes["PigGradeOff"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  PostPigMortalityInput: PostPigMortalityInput;
+  PostPigMortalityResult: Omit<
+    PostPigMortalityResult,
+    "pigMortality" | "defaults"
+  > & {
+    pigMortality: ResolversParentTypes["PigMortality"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  SavePigMortalityInput: SavePigMortalityInput;
+  SavePigMortalityResult: Omit<
+    SavePigMortalityResult,
+    "pigMortality" | "defaults"
+  > & {
+    pigMortality: ResolversParentTypes["PigMortality"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  PostPigMoveInput: PostPigMoveInput;
+  PostPigMoveResult: Omit<PostPigMoveResult, "pigMove" | "defaults"> & {
+    pigMove: ResolversParentTypes["PigMove"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  SavePigMoveInput: SavePigMoveInput;
+  SavePigMoveResult: Omit<SavePigMoveResult, "pigMove" | "defaults"> & {
+    pigMove: ResolversParentTypes["PigMove"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  PostPigPurchaseInput: PostPigPurchaseInput;
+  PostPigPurchaseResult: Omit<
+    PostPigPurchaseResult,
+    "pigPurchase" | "defaults"
+  > & {
+    pigPurchase: ResolversParentTypes["PigPurchase"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  SavePigPurchaseInput: SavePigPurchaseInput;
+  SavePigPurchaseResult: Omit<
+    SavePigPurchaseResult,
+    "pigPurchase" | "defaults"
+  > & {
+    pigPurchase: ResolversParentTypes["PigPurchase"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  PostPigWeanInput: PostPigWeanInput;
+  PostPigWeanResult: Omit<PostPigWeanResult, "pigWean" | "defaults"> & {
+    pigWean: ResolversParentTypes["PigWean"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
+  SavePigWeanInput: SavePigWeanInput;
+  SavePigWeanResult: Omit<SavePigWeanResult, "pigWean" | "defaults"> & {
+    pigWean: ResolversParentTypes["PigWean"];
+    defaults: ResolversParentTypes["PigActivityDefaults"];
+  };
   PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
   ScorecardEntryInput: ScorecardEntryInput;
   PostFarrowingBackendScorecardResult: Omit<
@@ -767,40 +1195,76 @@ export type MutationResolvers<
   >;
   logout?: Resolver<ResolversTypes["LogoutResult"], ParentType, ContextType>;
   postPigAdjustment?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigAdjustmentResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigAdjustmentArgs, "input">
   >;
+  savePigAdjustment?: Resolver<
+    ResolversTypes["SavePigAdjustmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigAdjustmentArgs, "input">
+  >;
   postPigGradeOff?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigGradeOffResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigGradeOffArgs, "input">
   >;
+  savePigGradeOff?: Resolver<
+    ResolversTypes["SavePigGradeOffResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigGradeOffArgs, "input">
+  >;
   postPigMortality?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigMortalityResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMortalityArgs, "input">
   >;
+  savePigMortality?: Resolver<
+    ResolversTypes["SavePigMortalityResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigMortalityArgs, "input">
+  >;
   postPigMove?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigMoveResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigMoveArgs, "input">
   >;
+  savePigMove?: Resolver<
+    ResolversTypes["SavePigMoveResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigMoveArgs, "input">
+  >;
   postPigPurchase?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigPurchaseResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigPurchaseArgs, "input">
   >;
+  savePigPurchase?: Resolver<
+    ResolversTypes["SavePigPurchaseResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigPurchaseArgs, "input">
+  >;
   postPigWean?: Resolver<
-    ResolversTypes["PostPigActivityResult"],
+    ResolversTypes["PostPigWeanResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostPigWeanArgs, "input">
+  >;
+  savePigWean?: Resolver<
+    ResolversTypes["SavePigWeanResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigWeanArgs, "input">
   >;
   postFarrowingBackendScorecard?: Resolver<
     ResolversTypes["PostFarrowingBackendScorecardResult"],
@@ -831,6 +1295,99 @@ export type PigActivityDefaultsResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type PigAdjustmentResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigAdjustment"] = ResolversParentTypes["PigAdjustment"]
+> = ResolversObject<{
+  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigGradeOffResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigGradeOff"] = ResolversParentTypes["PigGradeOff"]
+> = ResolversObject<{
+  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigMortalityResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigMortality"] = ResolversParentTypes["PigMortality"]
+> = ResolversObject<{
+  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  naturalQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  euthanizedQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigMoveResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigMove"] = ResolversParentTypes["PigMove"]
+> = ResolversObject<{
+  fromAnimal?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  toAnimal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  fromJob?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  toJob?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigPurchaseResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigPurchase"] = ResolversParentTypes["PigPurchase"]
+> = ResolversObject<{
+  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigWeanResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigWean"] = ResolversParentTypes["PigWean"]
+> = ResolversObject<{
+  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type PostFarrowingBackendScorecardResultResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PostFarrowingBackendScorecardResult"] = ResolversParentTypes["PostFarrowingBackendScorecardResult"]
@@ -844,11 +1401,98 @@ export type PostFarrowingBackendScorecardResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type PostPigActivityResultResolvers<
+export type PostPigAdjustmentResultResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PostPigActivityResult"] = ResolversParentTypes["PostPigActivityResult"]
+  ParentType extends ResolversParentTypes["PostPigAdjustmentResult"] = ResolversParentTypes["PostPigAdjustmentResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigAdjustment?: Resolver<
+    ResolversTypes["PigAdjustment"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PostPigGradeOffResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigGradeOffResult"] = ResolversParentTypes["PostPigGradeOffResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigGradeOff?: Resolver<
+    ResolversTypes["PigGradeOff"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PostPigMortalityResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigMortalityResult"] = ResolversParentTypes["PostPigMortalityResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigMortality?: Resolver<
+    ResolversTypes["PigMortality"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PostPigMoveResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigMoveResult"] = ResolversParentTypes["PostPigMoveResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigMove?: Resolver<ResolversTypes["PigMove"], ParentType, ContextType>;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PostPigPurchaseResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigPurchaseResult"] = ResolversParentTypes["PostPigPurchaseResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigPurchase?: Resolver<
+    ResolversTypes["PigPurchase"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PostPigWeanResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PostPigWeanResult"] = ResolversParentTypes["PostPigWeanResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigWean?: Resolver<ResolversTypes["PigWean"], ParentType, ContextType>;
   defaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
     ParentType,
@@ -871,6 +1515,42 @@ export type QueryResolvers<
     ResolversTypes["PigActivityDefaults"],
     ParentType,
     ContextType
+  >;
+  pigAdjustment?: Resolver<
+    Maybe<ResolversTypes["PigAdjustment"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigAdjustmentArgs, "job">
+  >;
+  pigGradeOff?: Resolver<
+    Maybe<ResolversTypes["PigGradeOff"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigGradeOffArgs, "job">
+  >;
+  pigMortality?: Resolver<
+    Maybe<ResolversTypes["PigMortality"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigMortalityArgs, "job">
+  >;
+  pigMove?: Resolver<
+    Maybe<ResolversTypes["PigMove"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigMoveArgs, "job">
+  >;
+  pigPurchase?: Resolver<
+    Maybe<ResolversTypes["PigPurchase"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigPurchaseArgs, "job">
+  >;
+  pigWean?: Resolver<
+    Maybe<ResolversTypes["PigWean"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigWeanArgs, "job">
   >;
   farrowingBackendScorecard?: Resolver<
     Maybe<ResolversTypes["FarrowingBackendScorecard"]>,
@@ -918,6 +1598,106 @@ export type SaveFarrowingBackendScorecardResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type SavePigAdjustmentResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigAdjustmentResult"] = ResolversParentTypes["SavePigAdjustmentResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigAdjustment?: Resolver<
+    ResolversTypes["PigAdjustment"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type SavePigGradeOffResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigGradeOffResult"] = ResolversParentTypes["SavePigGradeOffResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigGradeOff?: Resolver<
+    ResolversTypes["PigGradeOff"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type SavePigMortalityResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigMortalityResult"] = ResolversParentTypes["SavePigMortalityResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigMortality?: Resolver<
+    ResolversTypes["PigMortality"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type SavePigMoveResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigMoveResult"] = ResolversParentTypes["SavePigMoveResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigMove?: Resolver<ResolversTypes["PigMove"], ParentType, ContextType>;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type SavePigPurchaseResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigPurchaseResult"] = ResolversParentTypes["SavePigPurchaseResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigPurchase?: Resolver<
+    ResolversTypes["PigPurchase"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type SavePigWeanResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["SavePigWeanResult"] = ResolversParentTypes["SavePigWeanResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  pigWean?: Resolver<ResolversTypes["PigWean"], ParentType, ContextType>;
+  defaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type ScorecardEntryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["ScorecardEntry"] = ResolversParentTypes["ScorecardEntry"]
@@ -953,15 +1733,32 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LogoutResult?: LogoutResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
+  PigAdjustment?: PigAdjustmentResolvers<ContextType>;
+  PigGradeOff?: PigGradeOffResolvers<ContextType>;
+  PigMortality?: PigMortalityResolvers<ContextType>;
+  PigMove?: PigMoveResolvers<ContextType>;
+  PigPurchase?: PigPurchaseResolvers<ContextType>;
+  PigWean?: PigWeanResolvers<ContextType>;
   PostFarrowingBackendScorecardResult?: PostFarrowingBackendScorecardResultResolvers<
     ContextType
   >;
-  PostPigActivityResult?: PostPigActivityResultResolvers<ContextType>;
+  PostPigAdjustmentResult?: PostPigAdjustmentResultResolvers<ContextType>;
+  PostPigGradeOffResult?: PostPigGradeOffResultResolvers<ContextType>;
+  PostPigMortalityResult?: PostPigMortalityResultResolvers<ContextType>;
+  PostPigMoveResult?: PostPigMoveResultResolvers<ContextType>;
+  PostPigPurchaseResult?: PostPigPurchaseResultResolvers<ContextType>;
+  PostPigWeanResult?: PostPigWeanResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   SaveFarrowingBackendScorecardResult?: SaveFarrowingBackendScorecardResultResolvers<
     ContextType
   >;
+  SavePigAdjustmentResult?: SavePigAdjustmentResultResolvers<ContextType>;
+  SavePigGradeOffResult?: SavePigGradeOffResultResolvers<ContextType>;
+  SavePigMortalityResult?: SavePigMortalityResultResolvers<ContextType>;
+  SavePigMoveResult?: SavePigMoveResultResolvers<ContextType>;
+  SavePigPurchaseResult?: SavePigPurchaseResultResolvers<ContextType>;
+  SavePigWeanResult?: SavePigWeanResultResolvers<ContextType>;
   ScorecardEntry?: ScorecardEntryResolvers<ContextType>;
   SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

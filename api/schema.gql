@@ -20,6 +20,63 @@ type PigActivityDefaults {
   price: Float
 }
 
+type PigAdjustment {
+  animal: String
+  job: Job!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+type PigGradeOff {
+  animal: String
+  job: Job!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+type PigMortality {
+  animal: String
+  job: Job!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+type PigMove {
+  fromAnimal: String
+  toAnimal: String
+  fromJob: Job!
+  toJob: Job
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+type PigPurchase {
+  animal: String
+  job: Job!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+type PigWean {
+  animal: String
+  job: Job!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
 type ScorecardEntry {
   score: Int
   comments: String
@@ -42,7 +99,7 @@ input LoginInput {
   password: String!
 }
 
-input PigAdjustmentInput {
+input PostPigAdjustmentInput {
   animal: String!
   job: String!
   quantity: Int!
@@ -51,7 +108,16 @@ input PigAdjustmentInput {
   comments: String
 }
 
-input PigGradeOffInput {
+input SavePigAdjustmentInput {
+  animal: String
+  job: String!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigGradeOffInput {
   animal: String!
   job: String!
   quantity: Int!
@@ -60,7 +126,16 @@ input PigGradeOffInput {
   comments: String
 }
 
-input PigMortalityInput {
+input SavePigGradeOffInput {
+  animal: String
+  job: String!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigMortalityInput {
   animal: String!
   job: String!
   naturalQuantity: Int!
@@ -70,7 +145,17 @@ input PigMortalityInput {
   comments: String
 }
 
-input PigMoveInput {
+input SavePigMortalityInput {
+  animal: String
+  job: String!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigMoveInput {
   fromAnimal: String!
   toAnimal: String!
   fromJob: String!
@@ -81,7 +166,18 @@ input PigMoveInput {
   comments: String
 }
 
-input PigPurchaseInput {
+input SavePigMoveInput {
+  fromAnimal: String
+  toAnimal: String
+  fromJob: String!
+  toJob: String
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigPurchaseInput {
   animal: String!
   job: String!
   quantity: Int!
@@ -90,12 +186,30 @@ input PigPurchaseInput {
   comments: String
 }
 
-input PigWeanInput {
+input SavePigPurchaseInput {
+  animal: String
+  job: String!
+  quantity: Int
+  weight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigWeanInput {
   animal: String!
   job: String!
   quantity: Int!
   weight: Float!
   price: Float!
+  comments: String
+}
+
+input SavePigWeanInput {
+  animal: String
+  job: String!
+  quantity: Int
+  weight: Float
+  price: Float
   comments: String
 }
 
@@ -141,8 +255,75 @@ type LogoutResult {
   success: Boolean!
 }
 
-type PostPigActivityResult {
+type PostPigAdjustmentResult  {
   success: Boolean!
+  pigAdjustment: PigAdjustment!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigAdjustmentResult {
+  success: Boolean!
+  pigAdjustment: PigAdjustment!
+  defaults: PigActivityDefaults!
+}
+
+type PostPigGradeOffResult {
+  success: Boolean!
+  pigGradeOff: PigGradeOff!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigGradeOffResult {
+  success: Boolean!
+  pigGradeOff: PigGradeOff!
+  defaults: PigActivityDefaults!
+}
+
+type PostPigMortalityResult {
+  success: Boolean!
+  pigMortality: PigMortality!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigMortalityResult {
+  success: Boolean!
+  pigMortality: PigMortality!
+  defaults: PigActivityDefaults!
+}
+
+type PostPigMoveResult {
+  success: Boolean!
+  pigMove: PigMove!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigMoveResult {
+  success: Boolean!
+  pigMove: PigMove!
+  defaults: PigActivityDefaults!
+}
+
+type PostPigPurchaseResult {
+  success: Boolean!
+  pigPurchase: PigPurchase!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigPurchaseResult {
+  success: Boolean!
+  pigPurchase: PigPurchase!
+  defaults: PigActivityDefaults!
+}
+
+type PostPigWeanResult {
+  success: Boolean!
+  pigWean: PigWean!
+  defaults: PigActivityDefaults!
+}
+
+type SavePigWeanResult {
+  success: Boolean!
+  pigWean: PigWean!
   defaults: PigActivityDefaults!
 }
 
@@ -164,8 +345,16 @@ type SetAreaOperatorResult {
 
 type Query {
   user: User
+
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
+  pigAdjustment(job: String!): PigAdjustment
+  pigGradeOff(job: String!): PigGradeOff
+  pigMortality(job: String!): PigMortality
+  pigMove(job: String!): PigMove
+  pigPurchase(job: String!): PigPurchase
+  pigWean(job: String!): PigWean
+
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
@@ -175,12 +364,20 @@ type Query {
 type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
-  postPigAdjustment(input: PigAdjustmentInput!): PostPigActivityResult!
-  postPigGradeOff(input: PigGradeOffInput!): PostPigActivityResult!
-  postPigMortality(input: PigMortalityInput!): PostPigActivityResult!
-  postPigMove(input: PigMoveInput!): PostPigActivityResult!
-  postPigPurchase(input: PigPurchaseInput!): PostPigActivityResult!
-  postPigWean(input: PigWeanInput!): PostPigActivityResult!
+
+  postPigAdjustment(input: PostPigAdjustmentInput!): PostPigAdjustmentResult!
+  savePigAdjustment(input: SavePigAdjustmentInput!): SavePigAdjustmentResult!
+  postPigGradeOff(input: PostPigGradeOffInput!): PostPigGradeOffResult!
+  savePigGradeOff(input: SavePigGradeOffInput!): SavePigGradeOffResult!
+  postPigMortality(input: PostPigMortalityInput!): PostPigMortalityResult!
+  savePigMortality(input: SavePigMortalityInput!): SavePigMortalityResult!
+  postPigMove(input: PostPigMoveInput!): PostPigMoveResult!
+  savePigMove(input: SavePigMoveInput!): SavePigMoveResult!
+  postPigPurchase(input: PostPigPurchaseInput!): PostPigPurchaseResult!
+  savePigPurchase(input: SavePigPurchaseInput!): SavePigPurchaseResult!
+  postPigWean(input: PostPigWeanInput!): PostPigWeanResult!
+  savePigWean(input: SavePigWeanInput!): SavePigWeanResult!
+
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!

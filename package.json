@@ -86,7 +86,7 @@
     "httpntlm": "^1.7.6",
     "interpolate-html-plugin": "3.0.0",
     "mini-css-extract-plugin": "0.8.0",
-    "mongoose": "5.7.3",
+    "mongoose": "5.9.7",
     "normalize.css": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "passport": "^0.4.0",

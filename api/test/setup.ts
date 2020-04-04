@@ -27,24 +27,19 @@ let server: HttpServer | HttpsServer;
 // Connect to mongo and start the server
 // before any tests run.
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useFindAndModify: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true
-  });
   server = await createServer();
 });
 
 // Reset the mongo database before each test.
 beforeEach(async () => {
-  await mongoose.connection.db.dropDatabase();
+  if (mongoose.connection.db) {
+    await mongoose.connection.db.dropDatabase();
+  }
 });
 
 // Disconnect from mongo and stop the server
 //  after all tests run.
 afterAll(async () => {
-  await mongoose.disconnect();
   if (server) {
     server.close();
   }
