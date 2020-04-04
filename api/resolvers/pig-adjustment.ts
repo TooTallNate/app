@@ -32,6 +32,22 @@ export const PigAdjustmentQueries: QueryResolvers = {
 };
 
 export const PigAdjustmentMutations: MutationResolvers = {
+  async savePigAdjustment(_, { input }, { user }) {
+    const doc =
+      (await PigAdjustmentModel.findOne({
+        job: input.job
+      })) || new PigAdjustmentModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      pigJob: input.job,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigAdjustment: doc, defaults: userSettings };
+  },
   async postPigAdjustment(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
       input.job,

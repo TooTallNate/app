@@ -31,6 +31,21 @@ export const PigPurchaseQueries: QueryResolvers = {
 };
 
 export const PigPurchaseMutations: MutationResolvers = {
+  async savePigPurchase(_, { input }, { user }) {
+    const doc =
+      (await PigPurchaseModel.findOne({
+        job: input.job
+      })) || new PigPurchaseModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigPurchase: doc, defaults: userSettings };
+  },
   async postPigPurchase(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
       input.job,

@@ -36,6 +36,22 @@ export const PigMoveQueries: QueryResolvers = {
 };
 
 export const PigMoveMutations: MutationResolvers = {
+  async savePigMove(_, { input }, { user }) {
+    const doc =
+      (await PigMoveModel.findOne({
+        fromJob: input.fromJob
+      })) || new PigMoveModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      pigJob: input.fromJob,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigMove: doc, defaults: userSettings };
+  },
   async postPigMove(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
     const from = await findJob(input.fromJob, navClient);

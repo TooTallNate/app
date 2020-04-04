@@ -32,6 +32,22 @@ export const PigMortalityQueries: QueryResolvers = {
 };
 
 export const PigMortalityMutations: MutationResolvers = {
+  async savePigMortality(_, { input }, { user }) {
+    const doc =
+      (await PigMortalityModel.findOne({
+        job: input.job
+      })) || new PigMortalityModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      pigJob: input.job,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigMortality: doc, defaults: userSettings };
+  },
   async postPigMortality(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MORT", user.name);
     const { job, costCenterDimension, entityDimension } = await findJob(

@@ -25,6 +25,21 @@ export const PigWeanQueries: QueryResolvers = {
 };
 
 export const PigWeanMutations: MutationResolvers = {
+  async savePigWean(_, { input }, { user }) {
+    const doc =
+      (await PigWeanModel.findOne({
+        job: input.job
+      })) || new PigWeanModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigWean: doc, defaults: userSettings };
+  },
   async postPigWean(_, { input }, { user, navClient }) {
     const { job } = await findJob(input.job, navClient);
     await postItemJournal(

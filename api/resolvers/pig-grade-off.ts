@@ -31,6 +31,22 @@ export const PigGradeOffQueries: QueryResolvers = {
 };
 
 export const PigGradeOffMutations: MutationResolvers = {
+  async savePigGradeOff(_, { input }, { user }) {
+    const doc =
+      (await PigGradeOffModel.findOne({
+        job: input.job
+      })) || new PigGradeOffModel();
+    doc.set(input);
+    await doc.save();
+
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      pigJob: input.job,
+      ...(input.price && { price: input.price })
+    });
+
+    return { success: true, pigGradeOff: doc, defaults: userSettings };
+  },
   async postPigGradeOff(_, { input }, { user, navClient }) {
     const { job, costCenterDimension, entityDimension } = await findJob(
       input.job,
