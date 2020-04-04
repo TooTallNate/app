@@ -6,7 +6,7 @@ import {
   MutationPostPigMoveArgs
 } from "../../resolvers/types";
 import {
-  PigMoveInputFactory,
+  PigMoveFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -69,7 +69,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const toCostCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigMoveInputFactory.build({
+  const input = PigMoveFactory.build({
     fromJob: fromJob.No,
     toJob: toJob.No,
     ...inputOverrides
@@ -183,7 +183,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigMoveInputFactory.build()
+    input: PigMoveFactory.build()
   })
 );
 

@@ -6,7 +6,7 @@ import {
   PostPigGradeOffResult
 } from "../../resolvers/types";
 import {
-  PigGradeOffInputFactory,
+  PigGradeOffFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -58,7 +58,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const costCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigGradeOffInputFactory.build({
+  const input = PigGradeOffFactory.build({
     job: job.No,
     ...inputOverrides
   });
@@ -125,7 +125,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigGradeOffInputFactory.build()
+    input: PigGradeOffFactory.build()
   })
 );
 

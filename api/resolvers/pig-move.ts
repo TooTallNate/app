@@ -28,8 +28,10 @@ export const PigMove: PigMoveResolvers = {
 };
 
 export const PigMoveQueries: QueryResolvers = {
-  async pigMove(_, { job }) {
-    return (await PigMoveModel.findOne({ job })) || new PigMoveModel({ job });
+  async pigMove(_, { job: fromJob }) {
+    return (
+      (await PigMoveModel.findOne({ fromJob })) || new PigMoveModel({ fromJob })
+    );
   }
 };
 

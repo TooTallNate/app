@@ -6,7 +6,7 @@ import {
   MutationPostPigWeanArgs
 } from "../../resolvers/types";
 import {
-  PigWeanInputFactory,
+  PigWeanFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -58,7 +58,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const costCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigWeanInputFactory.build({
+  const input = PigWeanFactory.build({
     job: job.No,
     ...inputOverrides
   });
@@ -123,7 +123,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigWeanInputFactory.build()
+    input: PigWeanFactory.build()
   })
 );
 

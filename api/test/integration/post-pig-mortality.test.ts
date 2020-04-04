@@ -6,7 +6,7 @@ import {
   MutationPostPigMortalityArgs
 } from "../../resolvers/types";
 import {
-  PigMortalityInputFactory,
+  PigMortalityFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -59,7 +59,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const costCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigMortalityInputFactory.build({
+  const input = PigMortalityFactory.build({
     job: job.No,
     ...inputOverrides
   });
@@ -144,7 +144,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigMortalityInputFactory.build()
+    input: PigMortalityFactory.build()
   })
 );
 
@@ -258,7 +258,7 @@ test("submits data to NAV and clears existing mortality document", async () => {
   });
   const mortalityDoc = await PigMortalityModel.create({
     job: job.No,
-    naturalQuantity: input.quantity,
+    naturalQuantity: input.naturalQuantity,
     weight: input.weight
   });
 
