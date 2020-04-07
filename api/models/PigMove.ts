@@ -7,6 +7,7 @@ export interface PigMoveDocument extends PigActivityDocument {
   fromAnimal: string;
   toAnimal: string;
   quantity: number;
+  smallPigQuantity: number;
   weight: number;
   price: number;
   comments: string;
@@ -22,6 +23,7 @@ const PigMoveSchema = new Schema({
   fromAnimal: String,
   toAnimal: String,
   quantity: Number,
+  smallPigQuantity: Number,
   weight: Number,
   price: Number,
   comments: String

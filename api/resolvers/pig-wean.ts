@@ -57,7 +57,8 @@ export const PigWeanMutations: MutationResolvers = {
         Job_No: input.job,
         Gen_Prod_Posting_Group: "WEAN PIGS",
         Shortcut_Dimension_1_Code: "2",
-        Shortcut_Dimension_2_Code: "213"
+        Shortcut_Dimension_2_Code: "213",
+        Meta: input.smallPigQuantity
       },
       navClient
     );

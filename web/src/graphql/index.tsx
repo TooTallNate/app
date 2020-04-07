@@ -175,6 +175,7 @@ export type PigMove = {
   fromJob: Job;
   toJob?: Maybe<Job>;
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -195,6 +196,7 @@ export type PigWean = {
   animal?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -272,6 +274,7 @@ export type PostPigMoveInput = {
   fromJob: Scalars["String"];
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
@@ -304,6 +307,7 @@ export type PostPigWeanInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
@@ -443,6 +447,7 @@ export type SavePigMoveInput = {
   fromJob: Scalars["String"];
   toJob?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -475,6 +480,7 @@ export type SavePigWeanInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -683,7 +689,13 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
 
 export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
   PigMove,
-  "fromAnimal" | "toAnimal" | "quantity" | "weight" | "price" | "comments"
+  | "fromAnimal"
+  | "toAnimal"
+  | "quantity"
+  | "smallPigQuantity"
+  | "weight"
+  | "price"
+  | "comments"
 > & {
     fromJob: { __typename?: "Job" } & Pick<Job, "number" | "description">;
     toJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
@@ -775,7 +787,7 @@ export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
 
 export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
-  "animal" | "quantity" | "weight" | "price" | "comments"
+  "animal" | "quantity" | "smallPigQuantity" | "weight" | "price" | "comments"
 > & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
 
 export type PigWeanQueryVariables = {
@@ -1026,6 +1038,7 @@ export const PigMoveFragmentFragmentDoc = gql`
       number
     }
     quantity
+    smallPigQuantity
     weight
     price
     comments
@@ -1052,6 +1065,7 @@ export const PigWeanFragmentFragmentDoc = gql`
       description
     }
     quantity
+    smallPigQuantity
     weight
     price
     comments

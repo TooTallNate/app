@@ -20,6 +20,7 @@ function mutation(variables: MutationPostPigWeanArgs) {
           }
           animal
           quantity
+          smallPigQuantity
           weight
           price
           comments
@@ -75,6 +76,7 @@ test("creates new wean and user settings documents", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -111,6 +113,7 @@ test("creates new wean and user settings documents", async () => {
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
+    smallPigQuantity: input.smallPigQuantity,
     weight: input.weight,
     price: input.price,
     comments: input.comments
@@ -136,6 +139,7 @@ test("updates existing wean document", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -155,6 +159,7 @@ test("updates existing wean document", async () => {
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
+    smallPigQuantity: input.smallPigQuantity,
     weight: input.weight,
     price: input.price,
     comments: input.comments
@@ -183,6 +188,7 @@ test("updates existing user settings document", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -226,6 +232,7 @@ test("does not update price in user settings if not given in input", async () =>
         },
         animal: input.animal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: null,
         comments: input.comments

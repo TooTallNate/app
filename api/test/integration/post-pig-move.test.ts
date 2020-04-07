@@ -37,6 +37,7 @@ function mutation(variables: MutationPostPigMoveArgs) {
             number
           }
           quantity
+          smallPigQuantity
           weight
           price
           comments
@@ -173,7 +174,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: toEntityDimension.Dimension_Value_Code,
       Shortcut_Dimension_2_Code: toCostCenterDimension.Dimension_Value_Code,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Meta: input.smallPigQuantity
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -205,6 +207,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
         fromAnimal: null,
         toAnimal: null,
         quantity: null,
+        smallPigQuantity: null,
         weight: null,
         price: null,
         comments: null
@@ -268,6 +271,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         fromAnimal: null,
         toAnimal: null,
         quantity: null,
+        smallPigQuantity: null,
         weight: null,
         price: null,
         comments: null
@@ -315,6 +319,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         fromAnimal: null,
         toAnimal: null,
         quantity: null,
+        smallPigQuantity: null,
         weight: null,
         price: null,
         comments: null
@@ -355,6 +360,7 @@ test("sets description to an empty string if there are no comments", async () =>
         fromAnimal: null,
         toAnimal: null,
         quantity: null,
+        smallPigQuantity: null,
         weight: null,
         price: null,
         comments: null

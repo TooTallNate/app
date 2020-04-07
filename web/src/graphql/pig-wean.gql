@@ -5,6 +5,7 @@ fragment PigWeanFragment on PigWean {
     description
   }  
   quantity
+  smallPigQuantity
   weight
   price
   comments

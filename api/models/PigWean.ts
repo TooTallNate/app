@@ -5,6 +5,7 @@ export interface PigWeanDocument extends PigActivityDocument {
   job: string;
   animal: string;
   quantity: number;
+  smallPigQuantity: number;
   weight: number;
   price: number;
   comments: string;
@@ -18,6 +19,7 @@ const PigWeanSchema = new Schema({
   },
   animal: String,
   quantity: Number,
+  smallPigQuantity: Number,
   weight: Number,
   price: Number,
   comments: String

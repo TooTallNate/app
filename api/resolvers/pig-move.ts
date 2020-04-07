@@ -88,7 +88,8 @@ export const PigMoveMutations: MutationResolvers = {
         Weight: input.weight,
         Job_No: input.toJob,
         Shortcut_Dimension_1_Code: to.entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: to.costCenterDimension.Dimension_Value_Code
+        Shortcut_Dimension_2_Code: to.costCenterDimension.Dimension_Value_Code,
+        Meta: input.smallPigQuantity
       },
       navClient
     );

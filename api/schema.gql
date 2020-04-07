@@ -54,6 +54,7 @@ type PigMove {
   fromJob: Job!
   toJob: Job
   quantity: Int
+  smallPigQuantity: Int
   weight: Float
   price: Float
   comments: String
@@ -72,6 +73,7 @@ type PigWean {
   animal: String
   job: Job!
   quantity: Int
+  smallPigQuantity: Int
   weight: Float
   price: Float
   comments: String
@@ -161,6 +163,7 @@ input PostPigMoveInput {
   fromJob: String!
   toJob: String!
   quantity: Int!
+  smallPigQuantity: Int
   weight: Float!
   price: Float!
   comments: String
@@ -172,6 +175,7 @@ input SavePigMoveInput {
   fromJob: String!
   toJob: String
   quantity: Int
+  smallPigQuantity: Int
   weight: Float
   price: Float
   comments: String
@@ -199,6 +203,7 @@ input PostPigWeanInput {
   animal: String!
   job: String!
   quantity: Int!
+  smallPigQuantity: Int
   weight: Float!
   price: Float!
   comments: String
@@ -208,6 +213,7 @@ input SavePigWeanInput {
   animal: String
   job: String!
   quantity: Int
+  smallPigQuantity: Int
   weight: Float
   price: Float
   comments: String

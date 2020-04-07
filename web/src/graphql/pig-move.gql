@@ -9,6 +9,7 @@ fragment PigMoveFragment on PigMove {
     number
   }
   quantity
+  smallPigQuantity
   weight
   price
   comments

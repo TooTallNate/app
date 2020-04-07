@@ -19,6 +19,7 @@ function query(variables: QueryPigMoveArgs) {
         fromAnimal
         toAnimal
         quantity
+        smallPigQuantity
         weight
         price
         comments
@@ -64,6 +65,7 @@ test("returns default form if no record in the database", async () => {
       comments: null,
       price: null,
       quantity: null,
+      smallPigQuantity: null,
       weight: null
     }
   });
@@ -92,6 +94,7 @@ test("returns from from the database", async () => {
       comments: doc.comments,
       price: doc.price,
       quantity: doc.quantity,
+      smallPigQuantity: doc.smallPigQuantity,
       weight: doc.weight
     }
   });

@@ -24,6 +24,7 @@ function mutation(variables: MutationPostPigMoveArgs) {
           fromAnimal
           toAnimal
           quantity
+          smallPigQuantity
           weight
           price
           comments
@@ -91,6 +92,7 @@ test("creates new move and user settings documents", async () => {
         fromAnimal: input.fromAnimal,
         toAnimal: input.toAnimal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -132,6 +134,7 @@ test("creates new move and user settings documents", async () => {
     fromAnimal: input.fromAnimal,
     toAnimal: input.toAnimal,
     quantity: input.quantity,
+    smallPigQuantity: input.smallPigQuantity,
     weight: input.weight,
     price: input.price,
     comments: input.comments
@@ -161,6 +164,7 @@ test("updates existing move document", async () => {
         fromAnimal: input.fromAnimal,
         toAnimal: input.toAnimal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -184,6 +188,7 @@ test("updates existing move document", async () => {
     fromAnimal: input.fromAnimal,
     toAnimal: input.toAnimal,
     quantity: input.quantity,
+    smallPigQuantity: input.smallPigQuantity,
     weight: input.weight,
     price: input.price,
     comments: input.comments
@@ -215,6 +220,7 @@ test("updates existing user settings document", async () => {
         fromAnimal: input.fromAnimal,
         toAnimal: input.toAnimal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: input.price,
         comments: input.comments
@@ -264,6 +270,7 @@ test("does not update price in user settings if not given in input", async () =>
         fromAnimal: input.fromAnimal,
         toAnimal: input.toAnimal,
         quantity: input.quantity,
+        smallPigQuantity: input.smallPigQuantity,
         weight: input.weight,
         price: null,
         comments: input.comments

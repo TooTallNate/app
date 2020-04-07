@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormGroup, Output } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
@@ -30,6 +30,7 @@ import Button from "../components/ui/Button";
 interface FormData {
   animal: string;
   quantity: number;
+  smallPigQuantity?: number;
   weight: number;
   price: number;
   comments?: string;
@@ -58,7 +59,7 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
   const [post] = usePostPigWeanMutation();
   const [save] = useSavePigWeanMutation();
   const { setMessage } = useFlash();
-  const { getValues } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -108,6 +109,21 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
     }
   };
 
+  const { quantity = 0, smallPigQuantity = 0 } = watch([
+    "quantity",
+    "smallPigQuantity"
+  ]);
+  const smallPigRatio =
+    100 * Math.min(1, quantity ? smallPigQuantity / quantity : 0);
+  const smallPigPercent = `${smallPigRatio.toFixed(2)}%`;
+
+  // Validate small pig quantity if total quantity changes.
+  useEffect(() => {
+    if (formState.isSubmitted) {
+      triggerValidation("smallPigQuantity");
+    }
+  }, [triggerValidation, quantity, formState.isSubmitted]);
+
   return (
     <View>
       <ViewHeader>
@@ -152,6 +168,23 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <FormFieldInput>
               <NumberInput />
             </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="smallPigQuantity"
+            rules={{
+              validate: (value: number = 0) =>
+                value <= (getValues().quantity || 0) ||
+                "The small pig quantity field must not be more than the total quantity."
+            }}
+          >
+            <FormFieldLabel>Small Pig Quantity</FormFieldLabel>
+            <div className="flex items-center">
+              <FormFieldInput className="flex-grow">
+                <NumberInput />
+              </FormFieldInput>
+              <div className="ml-4">{smallPigPercent}</div>
+            </div>
             <FormFieldErrors />
           </FormField>
           <FormField
