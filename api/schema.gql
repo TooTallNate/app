@@ -76,6 +76,7 @@ input PigMoveInput {
   fromJob: String!
   toJob: String!
   quantity: Int!
+  smallPigQuantity: Int
   weight: Float!
   price: Float!
   comments: String
@@ -94,6 +95,7 @@ input PigWeanInput {
   animal: String!
   job: String!
   quantity: Int!
+  smallPigQuantity: Int
   weight: Float!
   price: Float!
   comments: String

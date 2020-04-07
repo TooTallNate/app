@@ -15,7 +15,7 @@ const FormFieldInput: React.FC<FormFieldInput> = ({ children, ...props }) => {
     throw new Error("FormFieldInput must be a descendant of FormField.");
   }
 
-  const { name, rules, labelId } = fieldConfig;
+  const { name, rules, labelId, errorId } = fieldConfig;
 
   if (formContext) {
     return (
@@ -25,6 +25,7 @@ const FormFieldInput: React.FC<FormFieldInput> = ({ children, ...props }) => {
         name={name}
         rules={rules}
         aria-labelledby={labelId}
+        aria-describedby={errorId}
       />
     );
   } else {

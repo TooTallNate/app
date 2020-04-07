@@ -31,6 +31,7 @@ interface FormData {
   fromJob: string;
   toJob: string;
   quantity: number;
+  smallPigQuantity?: number;
   weight: number;
   price: number;
   comments?: string;
@@ -41,7 +42,13 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
   const { data, loading } = usePigActivityQuery();
   const [post] = usePostPigMoveMutation();
   const { setMessage } = useFlash();
-  const { getValues, setValue } = formContext;
+  const {
+    getValues,
+    setValue,
+    watch,
+    triggerValidation,
+    formState
+  } = formContext;
 
   // Set job with default only if not already set.
   useEffect(() => {
@@ -73,6 +80,21 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
       });
     }
   };
+
+  const { quantity = 0, smallPigQuantity = 0 } = watch([
+    "quantity",
+    "smallPigQuantity"
+  ]);
+  const smallPigRatio =
+    100 * Math.min(1, quantity ? smallPigQuantity / quantity : 0);
+  const smallPigPercent = `${smallPigRatio.toFixed(2)}%`;
+
+  // Validate small pig quantity if total quantity changes.
+  useEffect(() => {
+    if (formState.isSubmitted) {
+      triggerValidation("smallPigQuantity");
+    }
+  }, [triggerValidation, quantity, formState.isSubmitted]);
 
   return (
     <View>
@@ -170,6 +192,23 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldInput>
               <NumberInput />
             </FormFieldInput>
+            <FormFieldErrors />
+          </FormField>
+          <FormField
+            name="smallPigQuantity"
+            rules={{
+              validate: (value: number = 0) =>
+                value <= (getValues().quantity || 0) ||
+                "The small pig quantity field must not be more than the total quantity."
+            }}
+          >
+            <FormFieldLabel>Small Pig Quantity</FormFieldLabel>
+            <div className="flex items-center">
+              <FormFieldInput className="flex-grow">
+                <NumberInput />
+              </FormFieldInput>
+              <div className="ml-4">{smallPigPercent}</div>
+            </div>
             <FormFieldErrors />
           </FormField>
           <FormField
