@@ -1,11 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import {
-  StackedNavLink,
-  StackedNav,
-  Group,
-  FormGroup
-} from "../components/styled";
+import { FormGroup } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
 import ViewHeader from "../components/ui/ViewHeader";
@@ -31,10 +26,15 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
 }) => {
   console.log(match);
   const formContext = useForm<FormData>();
-  const { data, loading } = usePigActivityJobsQuery();
+  const { data, loading } = usePigActivityJobsQuery({
+    onCompleted({ pigActivityDefaults: defaults }) {
+      if (defaults.job) {
+        formContext.setValue("job", defaults.job.number);
+      }
+    }
+  });
 
   const onSubmit: OnSubmit<FormData> = data => {
-    console.log(data);
     history.push(`${match.url}/${data.job}`);
   };
 
