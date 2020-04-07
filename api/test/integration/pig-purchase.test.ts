@@ -24,9 +24,7 @@ function query(variables: QueryPigPurchaseArgs) {
   );
 }
 
-testUnauthenticated(() => query({ job: `job_${faker.random.word()}` }), {
-  pigPurchase: null
-});
+testUnauthenticated(() => query({ job: `job_${faker.random.word()}` }));
 
 async function mockTestData() {
   const { user, auth } = await mockUser();
