@@ -124,8 +124,8 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
       ) : (
         <Form context={formContext} onSubmit={onSubmit}>
           <Group className="flex mt-0">
-            <FormField name="job" className="w-full">
-              <FormFieldLabel>Job</FormFieldLabel>
+            <FormField name="fromJob" className="w-full mr-4">
+              <FormFieldLabel>From Job</FormFieldLabel>
               <FormFieldInput>
                 <Output>
                   {data.pigMove.fromJob.number}{" "}
