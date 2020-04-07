@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FormGroup, Output, Group } from "../components/styled";
+import { FormGroup, Output } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
 import ViewHeader from "../components/ui/ViewHeader";
@@ -139,7 +139,7 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
         <FullPageSpinner />
       ) : (
         <Form context={formContext} onSubmit={onSubmit}>
-          <Group className="flex mt-0">
+          <div className="flex">
             <FormField name="fromJob" className="w-full mr-4">
               <FormFieldLabel>From Job</FormFieldLabel>
               <FormFieldInput>
@@ -167,8 +167,8 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-          </Group>
-          <Group className="flex mt-0">
+          </div>
+          <div className="flex">
             <FormField
               className="w-full mr-4"
               name="fromAnimal"
@@ -207,7 +207,7 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-          </Group>
+          </div>
           <FormField
             name="quantity"
             rules={{

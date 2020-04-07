@@ -21,7 +21,7 @@ function Form<T = Record<string, any>>({
       <form
         onSubmit={onSubmit && handleSubmit(onSubmit)}
         className={`
-          overflow-x-auto min-h-0 flex-grow p-4 pt-0 
+          overflow-x-auto min-h-0 flex-grow p-4 pt-0 child:mt-4
           ${className}
         `}
       >

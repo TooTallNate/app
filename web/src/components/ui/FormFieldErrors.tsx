@@ -22,7 +22,7 @@ const FormFieldErrors: React.FC<FormFieldErrors> = ({ className }) => {
         <div
           id={errorId}
           className={`
-            my-2 text-sm font-bold text-red-700 leading-none
+            py-2 text-sm font-bold text-red-700 leading-none
             ${className}
           `}
         >
