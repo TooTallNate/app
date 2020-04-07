@@ -1,7 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { useEffect } from "react";
-import { Group, FormGroup } from "../components/styled";
+import React from "react";
+import { FormGroup, Output, Group } from "../components/styled";
 import Title from "../components/ui/ViewTitle";
 import View from "../components/ui/View";
 import ViewHeader from "../components/ui/ViewHeader";
@@ -9,7 +7,11 @@ import NumberInput from "../components/ui/NumberInput";
 import MultilineTextInput from "../components/ui/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
-import { usePostPigMoveMutation, usePigActivityQuery } from "../graphql";
+import {
+  usePigMoveQuery,
+  useSavePigMoveMutation,
+  usePostPigMoveMutation
+} from "../graphql";
 import StackedButtonInput, {
   StackedButton
 } from "../components/ui/StackedButtonInput";
@@ -22,13 +24,13 @@ import FormFieldErrors from "../components/ui/FormFieldErrors";
 import FormFieldInput from "../components/ui/FormFieldInput";
 import FormSubmit from "../components/ui/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
+import Button from "../components/ui/Button";
 import TypeaheadInput from "../components/ui/TypeaheadInput";
 import BackButton from "../components/ui/BackButton";
 
 interface FormData {
   fromAnimal: Animal;
   toAnimal: Animal;
-  fromJob: string;
   toJob: string;
   quantity: number;
   weight: number;
@@ -36,32 +38,69 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
+const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
+  history,
+  match
+}) => {
   const formContext = useForm<FormData>();
-  const { data, loading } = usePigActivityQuery();
+  const { loading, data } = usePigMoveQuery({
+    variables: {
+      job: match.params.job
+    },
+    onCompleted({ pigMove, pigActivityDefaults }) {
+      const { setValue } = formContext;
+      if (pigMove.fromAnimal) setValue("fromAnimal", pigMove.fromAnimal as any);
+      if (pigMove.toAnimal) setValue("toAnimal", pigMove.toAnimal as any);
+      if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
+      if (pigMove.quantity) setValue("quantity", pigMove.quantity);
+      if (pigMove.weight) setValue("weight", pigMove.weight);
+      if (pigMove.price) setValue("price", pigMove.price);
+      else if (pigActivityDefaults.price)
+        setValue("price", pigActivityDefaults.price);
+      if (pigMove.comments) setValue("comments", pigMove.comments);
+    }
+  });
   const [post] = usePostPigMoveMutation();
+  const [save] = useSavePigMoveMutation();
   const { setMessage } = useFlash();
-  const { getValues, setValue } = formContext;
-
-  // Set job with default only if not already set.
-  useEffect(() => {
-    if (!getValues().fromJob && data && data.pigActivityDefaults.job) {
-      setValue("fromJob", data.pigActivityDefaults.job.number);
-    }
-  }, [data, getValues, setValue]);
-
-  // Set price with default only if not already set.
-  useEffect(() => {
-    if (!getValues().price && data && data.pigActivityDefaults.price) {
-      setValue("price", data.pigActivityDefaults.price);
-    }
-  }, [data, getValues, setValue]);
+  const { getValues } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
-      await post({ variables: { input: data } });
+      await post({
+        variables: {
+          input: {
+            ...data,
+            fromJob: match.params.job
+          }
+        }
+      });
       setMessage({
         message: "Entry recorded successfully.",
+        level: "success",
+        timeout: 2000
+      });
+      history.push("/");
+    } catch (e) {
+      setMessage({
+        message: e.toString(),
+        level: "error"
+      });
+    }
+  };
+
+  const onSave = async () => {
+    try {
+      await save({
+        variables: {
+          input: {
+            ...getValues(),
+            fromJob: match.params.job
+          }
+        }
+      });
+      setMessage({
+        message: "Entry saved successfully.",
         level: "success",
         timeout: 2000
       });
@@ -84,6 +123,35 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
         <FullPageSpinner />
       ) : (
         <Form context={formContext} onSubmit={onSubmit}>
+          <Group className="flex mt-0">
+            <FormField name="job" className="w-full">
+              <FormFieldLabel>Job</FormFieldLabel>
+              <FormFieldInput>
+                <Output>
+                  {data.pigMove.fromJob.number}{" "}
+                  {data.pigMove.fromJob.description}
+                </Output>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              className="w-full ml-4"
+              name="toJob"
+              rules={{ required: "The to job field is required." }}
+            >
+              <FormFieldLabel>To Job</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  sort="desc"
+                  items={data.pigActivityJobs.map(job => ({
+                    value: job.number,
+                    title: `${job.number} ${job.description}`
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+          </Group>
           <Group className="flex mt-0">
             <FormField
               className="w-full mr-4"
@@ -120,42 +188,6 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
                   </StackedButton>
                   <StackedButton value={Animal.SOWS}>Sows</StackedButton>
                 </StackedButtonInput>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-          </Group>
-          <Group className="flex mt-0">
-            <FormField
-              className="w-full mr-4"
-              name="fromJob"
-              rules={{ required: "The from job field is required." }}
-            >
-              <FormFieldLabel>From Job</FormFieldLabel>
-              <FormFieldInput>
-                <TypeaheadInput
-                  sort="desc"
-                  items={data.pigActivityJobs.map(job => ({
-                    value: job.number,
-                    title: `${job.number} ${job.description}`
-                  }))}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              className="w-full ml-4"
-              name="toJob"
-              rules={{ required: "The to job field is required." }}
-            >
-              <FormFieldLabel>To Job</FormFieldLabel>
-              <FormFieldInput>
-                <TypeaheadInput
-                  sort="desc"
-                  items={data.pigActivityJobs.map(job => ({
-                    value: job.number,
-                    title: `${job.number} ${job.description}`
-                  }))}
-                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
@@ -204,6 +236,9 @@ const ActivityMoveView: React.FC<RouteComponentProps> = ({ history }) => {
             <FormFieldErrors />
           </FormField>
           <FormGroup>
+            <Button className="mr-4 w-full" type="button" onClick={onSave}>
+              Save
+            </Button>
             <FormSubmit />
           </FormGroup>
         </Form>

@@ -1,0 +1,43 @@
+fragment PigMortalityFragment on PigMortality {
+  animal
+  job {
+    number
+    description
+  }  
+  naturalQuantity
+  euthanizedQuantity
+  weight
+  price
+  comments
+}
+
+query PigMortality($job: String!) {
+  pigActivityDefaults {
+    price
+  }
+  pigMortality(job: $job) {
+    ...PigMortalityFragment
+  }
+}
+
+mutation SavePigMortality($input: SavePigMortalityInput!) {
+  savePigMortality(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigMortality {
+      ...PigMortalityFragment
+    }
+  }
+}
+
+mutation PostPigMortality($input: PostPigMortalityInput!) {
+  postPigMortality(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigMortality {
+      ...PigMortalityFragment
+    }
+  }
+}

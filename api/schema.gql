@@ -348,12 +348,12 @@ type Query {
 
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
-  pigAdjustment(job: String!): PigAdjustment
-  pigGradeOff(job: String!): PigGradeOff
-  pigMortality(job: String!): PigMortality
-  pigMove(job: String!): PigMove
-  pigPurchase(job: String!): PigPurchase
-  pigWean(job: String!): PigWean
+  pigAdjustment(job: String!): PigAdjustment!
+  pigGradeOff(job: String!): PigGradeOff!
+  pigMortality(job: String!): PigMortality!
+  pigMove(job: String!): PigMove!
+  pigPurchase(job: String!): PigPurchase!
+  pigWean(job: String!): PigWean!
 
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!

@@ -321,12 +321,12 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  pigAdjustment?: Maybe<PigAdjustment>;
-  pigGradeOff?: Maybe<PigGradeOff>;
-  pigMortality?: Maybe<PigMortality>;
-  pigMove?: Maybe<PigMove>;
-  pigPurchase?: Maybe<PigPurchase>;
-  pigWean?: Maybe<PigWean>;
+  pigAdjustment: PigAdjustment;
+  pigGradeOff: PigGradeOff;
+  pigMortality: PigMortality;
+  pigMove: PigMove;
+  pigPurchase: PigPurchase;
+  pigWean: PigWean;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
@@ -522,26 +522,50 @@ export type PigActivityDefaultsFragmentFragment = {
     job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
-export type PigActivityQueryVariables = {};
+export type PigActivityJobsQueryVariables = {};
 
-export type PigActivityQuery = { __typename?: "Query" } & {
+export type PigActivityJobsQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
-  pigActivityDefaults: {
-    __typename?: "PigActivityDefaults";
-  } & PigActivityDefaultsFragmentFragment;
 };
 
-export type PostPigMoveMutationVariables = {
-  input: PostPigMoveInput;
+export type PigAdjustmentFragmentFragment = {
+  __typename?: "PigAdjustment";
+} & Pick<
+  PigAdjustment,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigAdjustmentQueryVariables = {
+  job: Scalars["String"];
 };
 
-export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PostPigMoveResult" } & {
+export type PigAdjustmentQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigAdjustment: {
+    __typename?: "PigAdjustment";
+  } & PigAdjustmentFragmentFragment;
+};
+
+export type SavePigAdjustmentMutationVariables = {
+  input: SavePigAdjustmentInput;
+};
+
+export type SavePigAdjustmentMutation = { __typename?: "Mutation" } & {
+  savePigAdjustment: { __typename?: "SavePigAdjustmentResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigAdjustment: {
+      __typename?: "PigAdjustment";
+    } & PigAdjustmentFragmentFragment;
   };
 };
 
@@ -554,6 +578,39 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigAdjustment: {
+      __typename?: "PigAdjustment";
+    } & PigAdjustmentFragmentFragment;
+  };
+};
+
+export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
+  PigGradeOff,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigGradeOffQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigGradeOffQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
+};
+
+export type SavePigGradeOffMutationVariables = {
+  input: SavePigGradeOffInput;
+};
+
+export type SavePigGradeOffMutation = { __typename?: "Mutation" } & {
+  savePigGradeOff: { __typename?: "SavePigGradeOffResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
 
@@ -566,30 +623,46 @@ export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
 
-export type PostPigWeanMutationVariables = {
-  input: PostPigWeanInput;
+export type PigMortalityFragmentFragment = {
+  __typename?: "PigMortality";
+} & Pick<
+  PigMortality,
+  | "animal"
+  | "naturalQuantity"
+  | "euthanizedQuantity"
+  | "weight"
+  | "price"
+  | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigMortalityQueryVariables = {
+  job: Scalars["String"];
 };
 
-export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PostPigWeanResult" } & {
+export type PigMortalityQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
+};
+
+export type SavePigMortalityMutationVariables = {
+  input: SavePigMortalityInput;
+};
+
+export type SavePigMortalityMutation = { __typename?: "Mutation" } & {
+  savePigMortality: { __typename?: "SavePigMortalityResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
-  };
-};
-
-export type PostPigPurchaseMutationVariables = {
-  input: PostPigPurchaseInput;
-};
-
-export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
+    pigMortality: {
+      __typename?: "PigMortality";
+    } & PigMortalityFragmentFragment;
   };
 };
 
@@ -602,6 +675,144 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigMortality: {
+      __typename?: "PigMortality";
+    } & PigMortalityFragmentFragment;
+  };
+};
+
+export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
+  PigMove,
+  "fromAnimal" | "toAnimal" | "quantity" | "weight" | "price" | "comments"
+> & {
+    fromJob: { __typename?: "Job" } & Pick<Job, "number" | "description">;
+    toJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
+
+export type PigMoveQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigMoveQuery = { __typename?: "Query" } & {
+  pigActivityJobs: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description">
+  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+};
+
+export type SavePigMoveMutationVariables = {
+  input: SavePigMoveInput;
+};
+
+export type SavePigMoveMutation = { __typename?: "Mutation" } & {
+  savePigMove: { __typename?: "SavePigMoveResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+  };
+};
+
+export type PostPigMoveMutationVariables = {
+  input: PostPigMoveInput;
+};
+
+export type PostPigMoveMutation = { __typename?: "Mutation" } & {
+  postPigMove: { __typename?: "PostPigMoveResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+  };
+};
+
+export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
+  PigPurchase,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigPurchaseQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigPurchaseQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+};
+
+export type SavePigPurchaseMutationVariables = {
+  input: SavePigPurchaseInput;
+};
+
+export type SavePigPurchaseMutation = { __typename?: "Mutation" } & {
+  savePigPurchase: { __typename?: "SavePigPurchaseResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+  };
+};
+
+export type PostPigPurchaseMutationVariables = {
+  input: PostPigPurchaseInput;
+};
+
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
+  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+  };
+};
+
+export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
+  PigWean,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigWeanQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigWeanQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
+};
+
+export type SavePigWeanMutationVariables = {
+  input: SavePigWeanInput;
+};
+
+export type SavePigWeanMutation = { __typename?: "Mutation" } & {
+  savePigWean: { __typename?: "SavePigWeanResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
+  };
+};
+
+export type PostPigWeanMutationVariables = {
+  input: PostPigWeanInput;
+};
+
+export type PostPigWeanMutation = { __typename?: "Mutation" } & {
+  postPigWean: { __typename?: "PostPigWeanResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
   };
 };
 
@@ -763,6 +974,89 @@ export const PigActivityDefaultsFragmentFragmentDoc = gql`
     price
   }
 `;
+export const PigAdjustmentFragmentFragmentDoc = gql`
+  fragment PigAdjustmentFragment on PigAdjustment {
+    animal
+    job {
+      number
+      description
+    }
+    quantity
+    weight
+    price
+    comments
+  }
+`;
+export const PigGradeOffFragmentFragmentDoc = gql`
+  fragment PigGradeOffFragment on PigGradeOff {
+    animal
+    job {
+      number
+      description
+    }
+    quantity
+    weight
+    price
+    comments
+  }
+`;
+export const PigMortalityFragmentFragmentDoc = gql`
+  fragment PigMortalityFragment on PigMortality {
+    animal
+    job {
+      number
+      description
+    }
+    naturalQuantity
+    euthanizedQuantity
+    weight
+    price
+    comments
+  }
+`;
+export const PigMoveFragmentFragmentDoc = gql`
+  fragment PigMoveFragment on PigMove {
+    fromAnimal
+    toAnimal
+    fromJob {
+      number
+      description
+    }
+    toJob {
+      number
+    }
+    quantity
+    weight
+    price
+    comments
+  }
+`;
+export const PigPurchaseFragmentFragmentDoc = gql`
+  fragment PigPurchaseFragment on PigPurchase {
+    animal
+    job {
+      number
+      description
+    }
+    quantity
+    weight
+    price
+    comments
+  }
+`;
+export const PigWeanFragmentFragmentDoc = gql`
+  fragment PigWeanFragment on PigWean {
+    animal
+    job {
+      number
+      description
+    }
+    quantity
+    weight
+    price
+    comments
+  }
+`;
 export const FarrowingBackendAreaFieldsFragmentDoc = gql`
   fragment FarrowingBackendAreaFields on Job {
     number
@@ -813,116 +1107,183 @@ export const UserPartsFragmentDoc = gql`
     name
   }
 `;
-export const PigActivityDocument = gql`
-  query PigActivity {
+export const PigActivityJobsDocument = gql`
+  query PigActivityJobs {
+    pigActivityDefaults {
+      job {
+        number
+      }
+    }
     pigActivityJobs {
       number
       description
     }
-    pigActivityDefaults {
-      ...PigActivityDefaultsFragment
-    }
   }
-  ${PigActivityDefaultsFragmentFragmentDoc}
 `;
 
 /**
- * __usePigActivityQuery__
+ * __usePigActivityJobsQuery__
  *
- * To run a query within a React component, call `usePigActivityQuery` and pass it any options that fit your needs.
- * When your component renders, `usePigActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePigActivityJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigActivityJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePigActivityQuery({
+ * const { data, loading, error } = usePigActivityJobsQuery({
  *   variables: {
  *   },
  * });
  */
-export function usePigActivityQuery(
+export function usePigActivityJobsQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    PigActivityQuery,
-    PigActivityQueryVariables
+    PigActivityJobsQuery,
+    PigActivityJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<PigActivityQuery, PigActivityQueryVariables>(
-    PigActivityDocument,
-    baseOptions
-  );
+  return ApolloReactHooks.useQuery<
+    PigActivityJobsQuery,
+    PigActivityJobsQueryVariables
+  >(PigActivityJobsDocument, baseOptions);
 }
-export function usePigActivityLazyQuery(
+export function usePigActivityJobsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    PigActivityQuery,
-    PigActivityQueryVariables
+    PigActivityJobsQuery,
+    PigActivityJobsQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    PigActivityQuery,
-    PigActivityQueryVariables
-  >(PigActivityDocument, baseOptions);
+    PigActivityJobsQuery,
+    PigActivityJobsQueryVariables
+  >(PigActivityJobsDocument, baseOptions);
 }
-export type PigActivityQueryHookResult = ReturnType<typeof usePigActivityQuery>;
-export type PigActivityLazyQueryHookResult = ReturnType<
-  typeof usePigActivityLazyQuery
+export type PigActivityJobsQueryHookResult = ReturnType<
+  typeof usePigActivityJobsQuery
 >;
-export type PigActivityQueryResult = ApolloReactCommon.QueryResult<
-  PigActivityQuery,
-  PigActivityQueryVariables
+export type PigActivityJobsLazyQueryHookResult = ReturnType<
+  typeof usePigActivityJobsLazyQuery
 >;
-export const PostPigMoveDocument = gql`
-  mutation PostPigMove($input: PostPigMoveInput!) {
-    postPigMove(input: $input) {
+export type PigActivityJobsQueryResult = ApolloReactCommon.QueryResult<
+  PigActivityJobsQuery,
+  PigActivityJobsQueryVariables
+>;
+export const PigAdjustmentDocument = gql`
+  query PigAdjustment($job: String!) {
+    pigActivityDefaults {
+      price
+    }
+    pigAdjustment(job: $job) {
+      ...PigAdjustmentFragment
+    }
+  }
+  ${PigAdjustmentFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigAdjustmentQuery__
+ *
+ * To run a query within a React component, call `usePigAdjustmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigAdjustmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigAdjustmentQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigAdjustmentQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigAdjustmentQuery,
+    PigAdjustmentQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    PigAdjustmentQuery,
+    PigAdjustmentQueryVariables
+  >(PigAdjustmentDocument, baseOptions);
+}
+export function usePigAdjustmentLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigAdjustmentQuery,
+    PigAdjustmentQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    PigAdjustmentQuery,
+    PigAdjustmentQueryVariables
+  >(PigAdjustmentDocument, baseOptions);
+}
+export type PigAdjustmentQueryHookResult = ReturnType<
+  typeof usePigAdjustmentQuery
+>;
+export type PigAdjustmentLazyQueryHookResult = ReturnType<
+  typeof usePigAdjustmentLazyQuery
+>;
+export type PigAdjustmentQueryResult = ApolloReactCommon.QueryResult<
+  PigAdjustmentQuery,
+  PigAdjustmentQueryVariables
+>;
+export const SavePigAdjustmentDocument = gql`
+  mutation SavePigAdjustment($input: SavePigAdjustmentInput!) {
+    savePigAdjustment(input: $input) {
       defaults {
         ...PigActivityDefaultsFragment
+      }
+      pigAdjustment {
+        ...PigAdjustmentFragment
       }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigAdjustmentFragmentFragmentDoc}
 `;
-export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
-  PostPigMoveMutation,
-  PostPigMoveMutationVariables
+export type SavePigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigAdjustmentMutation,
+  SavePigAdjustmentMutationVariables
 >;
 
 /**
- * __usePostPigMoveMutation__
+ * __useSavePigAdjustmentMutation__
  *
- * To run a mutation, you first call `usePostPigMoveMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostPigMoveMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSavePigAdjustmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigAdjustmentMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [postPigMoveMutation, { data, loading, error }] = usePostPigMoveMutation({
+ * const [savePigAdjustmentMutation, { data, loading, error }] = useSavePigAdjustmentMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function usePostPigMoveMutation(
+export function useSavePigAdjustmentMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PostPigMoveMutation,
-    PostPigMoveMutationVariables
+    SavePigAdjustmentMutation,
+    SavePigAdjustmentMutationVariables
   >
 ) {
   return ApolloReactHooks.useMutation<
-    PostPigMoveMutation,
-    PostPigMoveMutationVariables
-  >(PostPigMoveDocument, baseOptions);
+    SavePigAdjustmentMutation,
+    SavePigAdjustmentMutationVariables
+  >(SavePigAdjustmentDocument, baseOptions);
 }
-export type PostPigMoveMutationHookResult = ReturnType<
-  typeof usePostPigMoveMutation
+export type SavePigAdjustmentMutationHookResult = ReturnType<
+  typeof useSavePigAdjustmentMutation
 >;
-export type PostPigMoveMutationResult = ApolloReactCommon.MutationResult<
-  PostPigMoveMutation
+export type SavePigAdjustmentMutationResult = ApolloReactCommon.MutationResult<
+  SavePigAdjustmentMutation
 >;
-export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PostPigMoveMutation,
-  PostPigMoveMutationVariables
+export type SavePigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigAdjustmentMutation,
+  SavePigAdjustmentMutationVariables
 >;
 export const PostPigAdjustmentDocument = gql`
   mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
@@ -930,9 +1291,13 @@ export const PostPigAdjustmentDocument = gql`
       defaults {
         ...PigActivityDefaultsFragment
       }
+      pigAdjustment {
+        ...PigAdjustmentFragment
+      }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigAdjustmentFragmentFragmentDoc}
 `;
 export type PostPigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
   PostPigAdjustmentMutation,
@@ -977,15 +1342,134 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
   PostPigAdjustmentMutation,
   PostPigAdjustmentMutationVariables
 >;
+export const PigGradeOffDocument = gql`
+  query PigGradeOff($job: String!) {
+    pigActivityDefaults {
+      price
+    }
+    pigGradeOff(job: $job) {
+      ...PigGradeOffFragment
+    }
+  }
+  ${PigGradeOffFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigGradeOffQuery__
+ *
+ * To run a query within a React component, call `usePigGradeOffQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigGradeOffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigGradeOffQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigGradeOffQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigGradeOffQuery,
+    PigGradeOffQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<PigGradeOffQuery, PigGradeOffQueryVariables>(
+    PigGradeOffDocument,
+    baseOptions
+  );
+}
+export function usePigGradeOffLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigGradeOffQuery,
+    PigGradeOffQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    PigGradeOffQuery,
+    PigGradeOffQueryVariables
+  >(PigGradeOffDocument, baseOptions);
+}
+export type PigGradeOffQueryHookResult = ReturnType<typeof usePigGradeOffQuery>;
+export type PigGradeOffLazyQueryHookResult = ReturnType<
+  typeof usePigGradeOffLazyQuery
+>;
+export type PigGradeOffQueryResult = ApolloReactCommon.QueryResult<
+  PigGradeOffQuery,
+  PigGradeOffQueryVariables
+>;
+export const SavePigGradeOffDocument = gql`
+  mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
+    savePigGradeOff(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigGradeOff {
+        ...PigGradeOffFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigGradeOffFragmentFragmentDoc}
+`;
+export type SavePigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigGradeOffMutation,
+  SavePigGradeOffMutationVariables
+>;
+
+/**
+ * __useSavePigGradeOffMutation__
+ *
+ * To run a mutation, you first call `useSavePigGradeOffMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigGradeOffMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePigGradeOffMutation, { data, loading, error }] = useSavePigGradeOffMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSavePigGradeOffMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SavePigGradeOffMutation,
+    SavePigGradeOffMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SavePigGradeOffMutation,
+    SavePigGradeOffMutationVariables
+  >(SavePigGradeOffDocument, baseOptions);
+}
+export type SavePigGradeOffMutationHookResult = ReturnType<
+  typeof useSavePigGradeOffMutation
+>;
+export type SavePigGradeOffMutationResult = ApolloReactCommon.MutationResult<
+  SavePigGradeOffMutation
+>;
+export type SavePigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigGradeOffMutation,
+  SavePigGradeOffMutationVariables
+>;
 export const PostPigGradeOffDocument = gql`
   mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
     postPigGradeOff(input: $input) {
       defaults {
         ...PigActivityDefaultsFragment
       }
+      pigGradeOff {
+        ...PigGradeOffFragment
+      }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigGradeOffFragmentFragmentDoc}
 `;
 export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
   PostPigGradeOffMutation,
@@ -1030,58 +1514,468 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
   PostPigGradeOffMutation,
   PostPigGradeOffMutationVariables
 >;
-export const PostPigWeanDocument = gql`
-  mutation PostPigWean($input: PostPigWeanInput!) {
-    postPigWean(input: $input) {
+export const PigMortalityDocument = gql`
+  query PigMortality($job: String!) {
+    pigActivityDefaults {
+      price
+    }
+    pigMortality(job: $job) {
+      ...PigMortalityFragment
+    }
+  }
+  ${PigMortalityFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigMortalityQuery__
+ *
+ * To run a query within a React component, call `usePigMortalityQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigMortalityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigMortalityQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigMortalityQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigMortalityQuery,
+    PigMortalityQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    PigMortalityQuery,
+    PigMortalityQueryVariables
+  >(PigMortalityDocument, baseOptions);
+}
+export function usePigMortalityLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigMortalityQuery,
+    PigMortalityQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    PigMortalityQuery,
+    PigMortalityQueryVariables
+  >(PigMortalityDocument, baseOptions);
+}
+export type PigMortalityQueryHookResult = ReturnType<
+  typeof usePigMortalityQuery
+>;
+export type PigMortalityLazyQueryHookResult = ReturnType<
+  typeof usePigMortalityLazyQuery
+>;
+export type PigMortalityQueryResult = ApolloReactCommon.QueryResult<
+  PigMortalityQuery,
+  PigMortalityQueryVariables
+>;
+export const SavePigMortalityDocument = gql`
+  mutation SavePigMortality($input: SavePigMortalityInput!) {
+    savePigMortality(input: $input) {
       defaults {
         ...PigActivityDefaultsFragment
+      }
+      pigMortality {
+        ...PigMortalityFragment
       }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigMortalityFragmentFragmentDoc}
 `;
-export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
-  PostPigWeanMutation,
-  PostPigWeanMutationVariables
+export type SavePigMortalityMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigMortalityMutation,
+  SavePigMortalityMutationVariables
 >;
 
 /**
- * __usePostPigWeanMutation__
+ * __useSavePigMortalityMutation__
  *
- * To run a mutation, you first call `usePostPigWeanMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostPigWeanMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSavePigMortalityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigMortalityMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [postPigWeanMutation, { data, loading, error }] = usePostPigWeanMutation({
+ * const [savePigMortalityMutation, { data, loading, error }] = useSavePigMortalityMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function usePostPigWeanMutation(
+export function useSavePigMortalityMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PostPigWeanMutation,
-    PostPigWeanMutationVariables
+    SavePigMortalityMutation,
+    SavePigMortalityMutationVariables
   >
 ) {
   return ApolloReactHooks.useMutation<
-    PostPigWeanMutation,
-    PostPigWeanMutationVariables
-  >(PostPigWeanDocument, baseOptions);
+    SavePigMortalityMutation,
+    SavePigMortalityMutationVariables
+  >(SavePigMortalityDocument, baseOptions);
 }
-export type PostPigWeanMutationHookResult = ReturnType<
-  typeof usePostPigWeanMutation
+export type SavePigMortalityMutationHookResult = ReturnType<
+  typeof useSavePigMortalityMutation
 >;
-export type PostPigWeanMutationResult = ApolloReactCommon.MutationResult<
-  PostPigWeanMutation
+export type SavePigMortalityMutationResult = ApolloReactCommon.MutationResult<
+  SavePigMortalityMutation
 >;
-export type PostPigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PostPigWeanMutation,
-  PostPigWeanMutationVariables
+export type SavePigMortalityMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigMortalityMutation,
+  SavePigMortalityMutationVariables
+>;
+export const PostPigMortalityDocument = gql`
+  mutation PostPigMortality($input: PostPigMortalityInput!) {
+    postPigMortality(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigMortality {
+        ...PigMortalityFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigMortalityFragmentFragmentDoc}
+`;
+export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<
+  PostPigMortalityMutation,
+  PostPigMortalityMutationVariables
+>;
+
+/**
+ * __usePostPigMortalityMutation__
+ *
+ * To run a mutation, you first call `usePostPigMortalityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostPigMortalityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postPigMortalityMutation, { data, loading, error }] = usePostPigMortalityMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostPigMortalityMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostPigMortalityMutation,
+    PostPigMortalityMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostPigMortalityMutation,
+    PostPigMortalityMutationVariables
+  >(PostPigMortalityDocument, baseOptions);
+}
+export type PostPigMortalityMutationHookResult = ReturnType<
+  typeof usePostPigMortalityMutation
+>;
+export type PostPigMortalityMutationResult = ApolloReactCommon.MutationResult<
+  PostPigMortalityMutation
+>;
+export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostPigMortalityMutation,
+  PostPigMortalityMutationVariables
+>;
+export const PigMoveDocument = gql`
+  query PigMove($job: String!) {
+    pigActivityJobs {
+      number
+      description
+    }
+    pigActivityDefaults {
+      price
+    }
+    pigMove(job: $job) {
+      ...PigMoveFragment
+    }
+  }
+  ${PigMoveFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigMoveQuery__
+ *
+ * To run a query within a React component, call `usePigMoveQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigMoveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigMoveQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigMoveQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigMoveQuery,
+    PigMoveQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<PigMoveQuery, PigMoveQueryVariables>(
+    PigMoveDocument,
+    baseOptions
+  );
+}
+export function usePigMoveLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigMoveQuery,
+    PigMoveQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<PigMoveQuery, PigMoveQueryVariables>(
+    PigMoveDocument,
+    baseOptions
+  );
+}
+export type PigMoveQueryHookResult = ReturnType<typeof usePigMoveQuery>;
+export type PigMoveLazyQueryHookResult = ReturnType<typeof usePigMoveLazyQuery>;
+export type PigMoveQueryResult = ApolloReactCommon.QueryResult<
+  PigMoveQuery,
+  PigMoveQueryVariables
+>;
+export const SavePigMoveDocument = gql`
+  mutation SavePigMove($input: SavePigMoveInput!) {
+    savePigMove(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigMove {
+        ...PigMoveFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigMoveFragmentFragmentDoc}
+`;
+export type SavePigMoveMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigMoveMutation,
+  SavePigMoveMutationVariables
+>;
+
+/**
+ * __useSavePigMoveMutation__
+ *
+ * To run a mutation, you first call `useSavePigMoveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigMoveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePigMoveMutation, { data, loading, error }] = useSavePigMoveMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSavePigMoveMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SavePigMoveMutation,
+    SavePigMoveMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SavePigMoveMutation,
+    SavePigMoveMutationVariables
+  >(SavePigMoveDocument, baseOptions);
+}
+export type SavePigMoveMutationHookResult = ReturnType<
+  typeof useSavePigMoveMutation
+>;
+export type SavePigMoveMutationResult = ApolloReactCommon.MutationResult<
+  SavePigMoveMutation
+>;
+export type SavePigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigMoveMutation,
+  SavePigMoveMutationVariables
+>;
+export const PostPigMoveDocument = gql`
+  mutation PostPigMove($input: PostPigMoveInput!) {
+    postPigMove(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigMove {
+        ...PigMoveFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigMoveFragmentFragmentDoc}
+`;
+export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
+  PostPigMoveMutation,
+  PostPigMoveMutationVariables
+>;
+
+/**
+ * __usePostPigMoveMutation__
+ *
+ * To run a mutation, you first call `usePostPigMoveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostPigMoveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postPigMoveMutation, { data, loading, error }] = usePostPigMoveMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostPigMoveMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostPigMoveMutation,
+    PostPigMoveMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostPigMoveMutation,
+    PostPigMoveMutationVariables
+  >(PostPigMoveDocument, baseOptions);
+}
+export type PostPigMoveMutationHookResult = ReturnType<
+  typeof usePostPigMoveMutation
+>;
+export type PostPigMoveMutationResult = ApolloReactCommon.MutationResult<
+  PostPigMoveMutation
+>;
+export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostPigMoveMutation,
+  PostPigMoveMutationVariables
+>;
+export const PigPurchaseDocument = gql`
+  query PigPurchase($job: String!) {
+    pigActivityDefaults {
+      price
+    }
+    pigPurchase(job: $job) {
+      ...PigPurchaseFragment
+    }
+  }
+  ${PigPurchaseFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigPurchaseQuery__
+ *
+ * To run a query within a React component, call `usePigPurchaseQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigPurchaseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigPurchaseQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigPurchaseQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigPurchaseQuery,
+    PigPurchaseQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<PigPurchaseQuery, PigPurchaseQueryVariables>(
+    PigPurchaseDocument,
+    baseOptions
+  );
+}
+export function usePigPurchaseLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigPurchaseQuery,
+    PigPurchaseQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    PigPurchaseQuery,
+    PigPurchaseQueryVariables
+  >(PigPurchaseDocument, baseOptions);
+}
+export type PigPurchaseQueryHookResult = ReturnType<typeof usePigPurchaseQuery>;
+export type PigPurchaseLazyQueryHookResult = ReturnType<
+  typeof usePigPurchaseLazyQuery
+>;
+export type PigPurchaseQueryResult = ApolloReactCommon.QueryResult<
+  PigPurchaseQuery,
+  PigPurchaseQueryVariables
+>;
+export const SavePigPurchaseDocument = gql`
+  mutation SavePigPurchase($input: SavePigPurchaseInput!) {
+    savePigPurchase(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigPurchase {
+        ...PigPurchaseFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigPurchaseFragmentFragmentDoc}
+`;
+export type SavePigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigPurchaseMutation,
+  SavePigPurchaseMutationVariables
+>;
+
+/**
+ * __useSavePigPurchaseMutation__
+ *
+ * To run a mutation, you first call `useSavePigPurchaseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigPurchaseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePigPurchaseMutation, { data, loading, error }] = useSavePigPurchaseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSavePigPurchaseMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SavePigPurchaseMutation,
+    SavePigPurchaseMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SavePigPurchaseMutation,
+    SavePigPurchaseMutationVariables
+  >(SavePigPurchaseDocument, baseOptions);
+}
+export type SavePigPurchaseMutationHookResult = ReturnType<
+  typeof useSavePigPurchaseMutation
+>;
+export type SavePigPurchaseMutationResult = ApolloReactCommon.MutationResult<
+  SavePigPurchaseMutation
+>;
+export type SavePigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigPurchaseMutation,
+  SavePigPurchaseMutationVariables
 >;
 export const PostPigPurchaseDocument = gql`
   mutation PostPigPurchase($input: PostPigPurchaseInput!) {
@@ -1089,9 +1983,13 @@ export const PostPigPurchaseDocument = gql`
       defaults {
         ...PigActivityDefaultsFragment
       }
+      pigPurchase {
+        ...PigPurchaseFragment
+      }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigPurchaseFragmentFragmentDoc}
 `;
 export type PostPigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
   PostPigPurchaseMutation,
@@ -1136,58 +2034,175 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
   PostPigPurchaseMutation,
   PostPigPurchaseMutationVariables
 >;
-export const PostPigMortalityDocument = gql`
-  mutation PostPigMortality($input: PostPigMortalityInput!) {
-    postPigMortality(input: $input) {
+export const PigWeanDocument = gql`
+  query PigWean($job: String!) {
+    pigActivityDefaults {
+      price
+    }
+    pigWean(job: $job) {
+      ...PigWeanFragment
+    }
+  }
+  ${PigWeanFragmentFragmentDoc}
+`;
+
+/**
+ * __usePigWeanQuery__
+ *
+ * To run a query within a React component, call `usePigWeanQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigWeanQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigWeanQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigWeanQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PigWeanQuery,
+    PigWeanQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<PigWeanQuery, PigWeanQueryVariables>(
+    PigWeanDocument,
+    baseOptions
+  );
+}
+export function usePigWeanLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PigWeanQuery,
+    PigWeanQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<PigWeanQuery, PigWeanQueryVariables>(
+    PigWeanDocument,
+    baseOptions
+  );
+}
+export type PigWeanQueryHookResult = ReturnType<typeof usePigWeanQuery>;
+export type PigWeanLazyQueryHookResult = ReturnType<typeof usePigWeanLazyQuery>;
+export type PigWeanQueryResult = ApolloReactCommon.QueryResult<
+  PigWeanQuery,
+  PigWeanQueryVariables
+>;
+export const SavePigWeanDocument = gql`
+  mutation SavePigWean($input: SavePigWeanInput!) {
+    savePigWean(input: $input) {
       defaults {
         ...PigActivityDefaultsFragment
+      }
+      pigWean {
+        ...PigWeanFragment
       }
     }
   }
   ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigWeanFragmentFragmentDoc}
 `;
-export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<
-  PostPigMortalityMutation,
-  PostPigMortalityMutationVariables
+export type SavePigWeanMutationFn = ApolloReactCommon.MutationFunction<
+  SavePigWeanMutation,
+  SavePigWeanMutationVariables
 >;
 
 /**
- * __usePostPigMortalityMutation__
+ * __useSavePigWeanMutation__
  *
- * To run a mutation, you first call `usePostPigMortalityMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostPigMortalityMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSavePigWeanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePigWeanMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [postPigMortalityMutation, { data, loading, error }] = usePostPigMortalityMutation({
+ * const [savePigWeanMutation, { data, loading, error }] = useSavePigWeanMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function usePostPigMortalityMutation(
+export function useSavePigWeanMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PostPigMortalityMutation,
-    PostPigMortalityMutationVariables
+    SavePigWeanMutation,
+    SavePigWeanMutationVariables
   >
 ) {
   return ApolloReactHooks.useMutation<
-    PostPigMortalityMutation,
-    PostPigMortalityMutationVariables
-  >(PostPigMortalityDocument, baseOptions);
+    SavePigWeanMutation,
+    SavePigWeanMutationVariables
+  >(SavePigWeanDocument, baseOptions);
 }
-export type PostPigMortalityMutationHookResult = ReturnType<
-  typeof usePostPigMortalityMutation
+export type SavePigWeanMutationHookResult = ReturnType<
+  typeof useSavePigWeanMutation
 >;
-export type PostPigMortalityMutationResult = ApolloReactCommon.MutationResult<
-  PostPigMortalityMutation
+export type SavePigWeanMutationResult = ApolloReactCommon.MutationResult<
+  SavePigWeanMutation
 >;
-export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PostPigMortalityMutation,
-  PostPigMortalityMutationVariables
+export type SavePigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePigWeanMutation,
+  SavePigWeanMutationVariables
+>;
+export const PostPigWeanDocument = gql`
+  mutation PostPigWean($input: PostPigWeanInput!) {
+    postPigWean(input: $input) {
+      defaults {
+        ...PigActivityDefaultsFragment
+      }
+      pigWean {
+        ...PigWeanFragment
+      }
+    }
+  }
+  ${PigActivityDefaultsFragmentFragmentDoc}
+  ${PigWeanFragmentFragmentDoc}
+`;
+export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
+  PostPigWeanMutation,
+  PostPigWeanMutationVariables
+>;
+
+/**
+ * __usePostPigWeanMutation__
+ *
+ * To run a mutation, you first call `usePostPigWeanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostPigWeanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postPigWeanMutation, { data, loading, error }] = usePostPigWeanMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostPigWeanMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostPigWeanMutation,
+    PostPigWeanMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostPigWeanMutation,
+    PostPigWeanMutationVariables
+  >(PostPigWeanDocument, baseOptions);
+}
+export type PostPigWeanMutationHookResult = ReturnType<
+  typeof usePostPigWeanMutation
+>;
+export type PostPigWeanMutationResult = ApolloReactCommon.MutationResult<
+  PostPigWeanMutation
+>;
+export type PostPigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostPigWeanMutation,
+  PostPigWeanMutationVariables
 >;
 export const FarrowingBackendScorecardAreasDocument = gql`
   query FarrowingBackendScorecardAreas {

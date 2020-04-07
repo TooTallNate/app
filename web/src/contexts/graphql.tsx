@@ -2,7 +2,18 @@ import React from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import { InMemoryCache, defaultDataIdFromObject } from "apollo-cache-inmemory";
-import { Job, User, Resource, FarrowingBackendScorecard } from "../graphql";
+import {
+  Job,
+  User,
+  Resource,
+  FarrowingBackendScorecard,
+  PigWean,
+  PigAdjustment,
+  PigGradeOff,
+  PigMortality,
+  PigMove,
+  PigPurchase
+} from "../graphql";
 
 const cache = new InMemoryCache({
   dataIdFromObject: object => {
@@ -19,6 +30,18 @@ const cache = new InMemoryCache({
         return `FarrowingBackendScorecard:${
           (object as FarrowingBackendScorecard).area.number
         }`;
+      case "PigAdjustment":
+        return `PigAdjustment:${(object as PigAdjustment).job.number}`;
+      case "PigGradeOff":
+        return `PigGradeOff:${(object as PigGradeOff).job.number}`;
+      case "PigMortality":
+        return `PigMortality:${(object as PigMortality).job.number}`;
+      case "PigMove":
+        return `PigMove:${(object as PigMove).fromJob.number}`;
+      case "PigPurchase":
+        return `PigPurchase:${(object as PigPurchase).job.number}`;
+      case "PigWean":
+        return `PigWean:${(object as PigWean).job.number}`;
       default:
         return defaultDataIdFromObject(object); // fall back to default handling
     }

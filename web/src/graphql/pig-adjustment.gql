@@ -1,0 +1,42 @@
+fragment PigAdjustmentFragment on PigAdjustment {
+  animal
+  job {
+    number
+    description
+  }  
+  quantity
+  weight
+  price
+  comments
+}
+
+query PigAdjustment($job: String!) {
+  pigActivityDefaults {
+    price
+  }
+  pigAdjustment(job: $job) {
+    ...PigAdjustmentFragment
+  }
+}
+
+mutation SavePigAdjustment($input: SavePigAdjustmentInput!) {
+  savePigAdjustment(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigAdjustment {
+      ...PigAdjustmentFragment
+    }
+  }
+}
+
+mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
+  postPigAdjustment(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigAdjustment {
+      ...PigAdjustmentFragment
+    }
+  }
+}

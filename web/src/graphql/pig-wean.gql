@@ -1,0 +1,42 @@
+fragment PigWeanFragment on PigWean {
+  animal
+  job {
+    number
+    description
+  }  
+  quantity
+  weight
+  price
+  comments
+}
+
+query PigWean($job: String!) {
+  pigActivityDefaults {
+    price
+  }
+  pigWean(job: $job) {
+    ...PigWeanFragment
+  }
+}
+
+mutation SavePigWean($input: SavePigWeanInput!) {
+  savePigWean(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigWean {
+      ...PigWeanFragment
+    }
+  }
+}
+
+mutation PostPigWean($input: PostPigWeanInput!) {
+  postPigWean(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigWean {
+      ...PigWeanFragment
+    }
+  }
+}

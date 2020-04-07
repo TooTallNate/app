@@ -334,12 +334,12 @@ export type Query = {
   user?: Maybe<User>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
-  pigAdjustment?: Maybe<PigAdjustment>;
-  pigGradeOff?: Maybe<PigGradeOff>;
-  pigMortality?: Maybe<PigMortality>;
-  pigMove?: Maybe<PigMove>;
-  pigPurchase?: Maybe<PigPurchase>;
-  pigWean?: Maybe<PigWean>;
+  pigAdjustment: PigAdjustment;
+  pigGradeOff: PigGradeOff;
+  pigMortality: PigMortality;
+  pigMove: PigMove;
+  pigPurchase: PigPurchase;
+  pigWean: PigWean;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   farrowingBackendAreas: Array<Job>;
   farrowingBackendArea?: Maybe<Job>;
@@ -535,26 +535,50 @@ export type PigActivityDefaultsFragmentFragment = {
     job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
-export type PigActivityQueryVariables = {};
+export type PigActivityJobsQueryVariables = {};
 
-export type PigActivityQuery = { __typename?: "Query" } & {
+export type PigActivityJobsQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
-  pigActivityDefaults: {
-    __typename?: "PigActivityDefaults";
-  } & PigActivityDefaultsFragmentFragment;
 };
 
-export type PostPigMoveMutationVariables = {
-  input: PostPigMoveInput;
+export type PigAdjustmentFragmentFragment = {
+  __typename?: "PigAdjustment";
+} & Pick<
+  PigAdjustment,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigAdjustmentQueryVariables = {
+  job: Scalars["String"];
 };
 
-export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PostPigMoveResult" } & {
+export type PigAdjustmentQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigAdjustment: {
+    __typename?: "PigAdjustment";
+  } & PigAdjustmentFragmentFragment;
+};
+
+export type SavePigAdjustmentMutationVariables = {
+  input: SavePigAdjustmentInput;
+};
+
+export type SavePigAdjustmentMutation = { __typename?: "Mutation" } & {
+  savePigAdjustment: { __typename?: "SavePigAdjustmentResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigAdjustment: {
+      __typename?: "PigAdjustment";
+    } & PigAdjustmentFragmentFragment;
   };
 };
 
@@ -567,6 +591,39 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigAdjustment: {
+      __typename?: "PigAdjustment";
+    } & PigAdjustmentFragmentFragment;
+  };
+};
+
+export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
+  PigGradeOff,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigGradeOffQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigGradeOffQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
+};
+
+export type SavePigGradeOffMutationVariables = {
+  input: SavePigGradeOffInput;
+};
+
+export type SavePigGradeOffMutation = { __typename?: "Mutation" } & {
+  savePigGradeOff: { __typename?: "SavePigGradeOffResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
 
@@ -579,30 +636,46 @@ export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
 
-export type PostPigWeanMutationVariables = {
-  input: PostPigWeanInput;
+export type PigMortalityFragmentFragment = {
+  __typename?: "PigMortality";
+} & Pick<
+  PigMortality,
+  | "animal"
+  | "naturalQuantity"
+  | "euthanizedQuantity"
+  | "weight"
+  | "price"
+  | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigMortalityQueryVariables = {
+  job: Scalars["String"];
 };
 
-export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PostPigWeanResult" } & {
+export type PigMortalityQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
+};
+
+export type SavePigMortalityMutationVariables = {
+  input: SavePigMortalityInput;
+};
+
+export type SavePigMortalityMutation = { __typename?: "Mutation" } & {
+  savePigMortality: { __typename?: "SavePigMortalityResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
-  };
-};
-
-export type PostPigPurchaseMutationVariables = {
-  input: PostPigPurchaseInput;
-};
-
-export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
+    pigMortality: {
+      __typename?: "PigMortality";
+    } & PigMortalityFragmentFragment;
   };
 };
 
@@ -615,6 +688,144 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
+    pigMortality: {
+      __typename?: "PigMortality";
+    } & PigMortalityFragmentFragment;
+  };
+};
+
+export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
+  PigMove,
+  "fromAnimal" | "toAnimal" | "quantity" | "weight" | "price" | "comments"
+> & {
+    fromJob: { __typename?: "Job" } & Pick<Job, "number" | "description">;
+    toJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  };
+
+export type PigMoveQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigMoveQuery = { __typename?: "Query" } & {
+  pigActivityJobs: Array<
+    { __typename?: "Job" } & Pick<Job, "number" | "description">
+  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+};
+
+export type SavePigMoveMutationVariables = {
+  input: SavePigMoveInput;
+};
+
+export type SavePigMoveMutation = { __typename?: "Mutation" } & {
+  savePigMove: { __typename?: "SavePigMoveResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+  };
+};
+
+export type PostPigMoveMutationVariables = {
+  input: PostPigMoveInput;
+};
+
+export type PostPigMoveMutation = { __typename?: "Mutation" } & {
+  postPigMove: { __typename?: "PostPigMoveResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+  };
+};
+
+export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
+  PigPurchase,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigPurchaseQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigPurchaseQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+};
+
+export type SavePigPurchaseMutationVariables = {
+  input: SavePigPurchaseInput;
+};
+
+export type SavePigPurchaseMutation = { __typename?: "Mutation" } & {
+  savePigPurchase: { __typename?: "SavePigPurchaseResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+  };
+};
+
+export type PostPigPurchaseMutationVariables = {
+  input: PostPigPurchaseInput;
+};
+
+export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
+  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
+  };
+};
+
+export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
+  PigWean,
+  "animal" | "quantity" | "weight" | "price" | "comments"
+> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+
+export type PigWeanQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigWeanQuery = { __typename?: "Query" } & {
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
+    PigActivityDefaults,
+    "price"
+  >;
+  pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
+};
+
+export type SavePigWeanMutationVariables = {
+  input: SavePigWeanInput;
+};
+
+export type SavePigWeanMutation = { __typename?: "Mutation" } & {
+  savePigWean: { __typename?: "SavePigWeanResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
+  };
+};
+
+export type PostPigWeanMutationVariables = {
+  input: PostPigWeanInput;
+};
+
+export type PostPigWeanMutation = { __typename?: "Mutation" } & {
+  postPigWean: { __typename?: "PostPigWeanResult" } & {
+    defaults: {
+      __typename?: "PigActivityDefaults";
+    } & PigActivityDefaultsFragmentFragment;
+    pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
   };
 };
 
@@ -1517,37 +1728,37 @@ export type QueryResolvers<
     ContextType
   >;
   pigAdjustment?: Resolver<
-    Maybe<ResolversTypes["PigAdjustment"]>,
+    ResolversTypes["PigAdjustment"],
     ParentType,
     ContextType,
     RequireFields<QueryPigAdjustmentArgs, "job">
   >;
   pigGradeOff?: Resolver<
-    Maybe<ResolversTypes["PigGradeOff"]>,
+    ResolversTypes["PigGradeOff"],
     ParentType,
     ContextType,
     RequireFields<QueryPigGradeOffArgs, "job">
   >;
   pigMortality?: Resolver<
-    Maybe<ResolversTypes["PigMortality"]>,
+    ResolversTypes["PigMortality"],
     ParentType,
     ContextType,
     RequireFields<QueryPigMortalityArgs, "job">
   >;
   pigMove?: Resolver<
-    Maybe<ResolversTypes["PigMove"]>,
+    ResolversTypes["PigMove"],
     ParentType,
     ContextType,
     RequireFields<QueryPigMoveArgs, "job">
   >;
   pigPurchase?: Resolver<
-    Maybe<ResolversTypes["PigPurchase"]>,
+    ResolversTypes["PigPurchase"],
     ParentType,
     ContextType,
     RequireFields<QueryPigPurchaseArgs, "job">
   >;
   pigWean?: Resolver<
-    Maybe<ResolversTypes["PigWean"]>,
+    ResolversTypes["PigWean"],
     ParentType,
     ContextType,
     RequireFields<QueryPigWeanArgs, "job">

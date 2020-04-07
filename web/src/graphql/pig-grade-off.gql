@@ -1,0 +1,43 @@
+fragment PigGradeOffFragment on PigGradeOff {
+  animal
+  job {
+    number
+    description
+  }  
+  quantity
+  weight
+  price
+  comments
+}
+
+query PigGradeOff($job: String!) {
+  pigActivityDefaults {
+    price
+  }
+  pigGradeOff(job: $job) {
+    ...PigGradeOffFragment
+  }
+}
+
+mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
+  savePigGradeOff(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigGradeOff {
+      ...PigGradeOffFragment
+    }
+  }
+}
+
+mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
+  postPigGradeOff(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigGradeOff {
+      ...PigGradeOffFragment
+    }
+  }
+}
+

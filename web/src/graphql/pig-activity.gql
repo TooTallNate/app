@@ -5,60 +5,14 @@ fragment PigActivityDefaultsFragment on PigActivityDefaults {
   price
 }
 
-query PigActivity {
+query PigActivityJobs {
+  pigActivityDefaults {
+    job {
+      number
+    }
+  }
   pigActivityJobs {
     number
     description
-  }
-  pigActivityDefaults {
-    ...PigActivityDefaultsFragment
-  }
-}
-
-mutation PostPigMove($input: PostPigMoveInput!) {
-  postPigMove(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
-  }
-}
-
-mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
-  postPigAdjustment(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
-  }
-}
-
-mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
-  postPigGradeOff(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
-  }
-}
-
-mutation PostPigWean($input: PostPigWeanInput!) {
-  postPigWean(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
-  }
-}
-
-mutation PostPigPurchase($input: PostPigPurchaseInput!) {
-  postPigPurchase(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
-  }
-}
-
-mutation PostPigMortality($input: PostPigMortalityInput!) {
-  postPigMortality(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
   }
 }
