@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { useField } from "./FormField";
+import { useField } from "../form/FormField";
 
 interface TextInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {

@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import Button from "../ui/Button";
-import Spinner from "./Spinner";
+import Button from "../input/Button";
+import Spinner from "../Spinner";
 
 const FormSubmit: React.FC = ({ children }) => {
   const { formState } = useFormContext();
@@ -14,10 +14,10 @@ const FormSubmit: React.FC = ({ children }) => {
       }
     >
       {formState.isSubmitting ? (
-        <Fragment>
+        <>
           <span className="mr-2">Loading</span>
           <Spinner size={22} color="white" className="align-middle" />
-        </Fragment>
+        </>
       ) : (
         children || "Submit"
       )}

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { FormGroup, Output } from "../components/styled";
-import Title from "../components/ui/ViewTitle";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
-import NumberInput from "../components/ui/NumberInput";
-import MultilineTextInput from "../components/ui/MultilineTextInput";
+import Title from "../components/view/ViewTitle";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
+import NumberInput from "../components/input/NumberInput";
+import MultilineTextInput from "../components/input/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import {
@@ -14,19 +14,19 @@ import {
 } from "../graphql";
 import StackedButtonInput, {
   StackedButton
-} from "../components/ui/StackedButtonInput";
-import FullPageSpinner from "../components/FullPageSpinner";
+} from "../components/input/StackedButtonInput";
 import { useFlash } from "../contexts/flash";
-import Form from "../components/ui/Form";
-import FormField from "../components/ui/FormField";
-import FormFieldLabel from "../components/ui/FormFieldLabel";
-import FormFieldErrors from "../components/ui/FormFieldErrors";
-import FormFieldInput from "../components/ui/FormFieldInput";
-import FormSubmit from "../components/ui/FormSubmit";
+import Form from "../components/form/Form";
+import FormField from "../components/form/FormField";
+import FormFieldLabel from "../components/form/FormFieldLabel";
+import FormFieldErrors from "../components/form/FormFieldErrors";
+import FormFieldInput from "../components/form/FormFieldInput";
+import FormSubmit from "../components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../components/ui/Button";
-import TypeaheadInput from "../components/ui/TypeaheadInput";
-import BackButton from "../components/ui/BackButton";
+import Button from "../components/input/Button";
+import TypeaheadInput from "../components/input/TypeaheadInput";
+import BackButton from "../components/view/BackButton";
+import ViewContent from "../components/view/ViewContent";
 
 interface FormData {
   fromAnimal: Animal;
@@ -135,147 +135,149 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
         <BackButton />
         <Title>Move</Title>
       </ViewHeader>
-      {loading || !data ? (
-        <FullPageSpinner />
-      ) : (
-        <Form context={formContext} onSubmit={onSubmit}>
-          <div className="flex">
-            <FormField name="fromJob" className="w-full mr-4">
-              <FormFieldLabel>From Job</FormFieldLabel>
-              <FormFieldInput>
-                <Output>
-                  {data.pigMove.fromJob.number}{" "}
-                  {data.pigMove.fromJob.description}
-                </Output>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+      <ViewContent loading={loading}>
+        {data && (
+          <Form context={formContext} onSubmit={onSubmit}>
+            <div className="flex">
+              <FormField name="fromJob" className="w-full mr-4">
+                <FormFieldLabel>From Job</FormFieldLabel>
+                <FormFieldInput>
+                  <Output>
+                    {data.pigMove.fromJob.number}{" "}
+                    {data.pigMove.fromJob.description}
+                  </Output>
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField
+                className="w-full ml-4"
+                name="toJob"
+                rules={{ required: "The to job field is required." }}
+              >
+                <FormFieldLabel>To Job</FormFieldLabel>
+                <FormFieldInput>
+                  <TypeaheadInput
+                    sort="desc"
+                    items={data.pigActivityJobs.map(job => ({
+                      value: job.number,
+                      title: `${job.number} ${job.description}`
+                    }))}
+                  />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+            </div>
+            <div className="flex">
+              <FormField
+                className="w-full mr-4"
+                name="fromAnimal"
+                rules={{ required: "The from animal field is required." }}
+              >
+                <FormFieldLabel>From Animal</FormFieldLabel>
+                <FormFieldInput>
+                  <StackedButtonInput orientation="vertical">
+                    <StackedButton value={Animal.MARKET_PIGS}>
+                      Market Pigs
+                    </StackedButton>
+                    <StackedButton value={Animal.GDU_PIGS}>
+                      GDU Pigs
+                    </StackedButton>
+                    <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                  </StackedButtonInput>
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField
+                className="w-full ml-4"
+                name="toAnimal"
+                rules={{ required: "The to animal field is required." }}
+              >
+                <FormFieldLabel>To Animal</FormFieldLabel>
+                <FormFieldInput>
+                  <StackedButtonInput orientation="vertical">
+                    <StackedButton value={Animal.MARKET_PIGS}>
+                      Market Pigs
+                    </StackedButton>
+                    <StackedButton value={Animal.GDU_PIGS}>
+                      GDU Pigs
+                    </StackedButton>
+                    <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                  </StackedButtonInput>
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+            </div>
             <FormField
-              className="w-full ml-4"
-              name="toJob"
-              rules={{ required: "The to job field is required." }}
+              name="quantity"
+              rules={{
+                required: "The quantity field is required."
+              }}
             >
-              <FormFieldLabel>To Job</FormFieldLabel>
+              <FormFieldLabel>Quantity</FormFieldLabel>
               <FormFieldInput>
-                <TypeaheadInput
-                  sort="desc"
-                  items={data.pigActivityJobs.map(job => ({
-                    value: job.number,
-                    title: `${job.number} ${job.description}`
-                  }))}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-          </div>
-          <div className="flex">
-            <FormField
-              className="w-full mr-4"
-              name="fromAnimal"
-              rules={{ required: "The from animal field is required." }}
-            >
-              <FormFieldLabel>From Animal</FormFieldLabel>
-              <FormFieldInput>
-                <StackedButtonInput orientation="vertical">
-                  <StackedButton value={Animal.MARKET_PIGS}>
-                    Market Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.GDU_PIGS}>
-                    GDU Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-                </StackedButtonInput>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              className="w-full ml-4"
-              name="toAnimal"
-              rules={{ required: "The to animal field is required." }}
-            >
-              <FormFieldLabel>To Animal</FormFieldLabel>
-              <FormFieldInput>
-                <StackedButtonInput orientation="vertical">
-                  <StackedButton value={Animal.MARKET_PIGS}>
-                    Market Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.GDU_PIGS}>
-                    GDU Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-                </StackedButtonInput>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-          </div>
-          <FormField
-            name="quantity"
-            rules={{
-              required: "The quantity field is required."
-            }}
-          >
-            <FormFieldLabel>Quantity</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="smallPigQuantity"
-            rules={{
-              validate: (value: number = 0) =>
-                value <= (getValues().quantity || 0) ||
-                "The small pig quantity field must not be more than the total quantity."
-            }}
-          >
-            <FormFieldLabel>Small Pig Quantity</FormFieldLabel>
-            <div className="flex items-center">
-              <FormFieldInput className="flex-grow">
                 <NumberInput />
               </FormFieldInput>
-              <div className="ml-4">{smallPigPercent}</div>
-            </div>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="weight"
-            rules={{
-              required: "The total weight field is required."
-            }}
-          >
-            <FormFieldLabel>Total Weight</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="price"
-            rules={{
-              required: "The price field is required."
-            }}
-          >
-            <FormFieldLabel>Price/pig</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField name="comments">
-            <FormFieldLabel>Comments</FormFieldLabel>
-            <FormFieldInput>
-              <MultilineTextInput maxLength={50} />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormGroup>
-            <Button className="mr-4 w-full" type="button" onClick={onSave}>
-              Save
-            </Button>
-            <FormSubmit />
-          </FormGroup>
-        </Form>
-      )}
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="smallPigQuantity"
+              rules={{
+                validate: (value: number = 0) =>
+                  value <= (getValues().quantity || 0) ||
+                  "The small pig quantity field must not be more than the total quantity."
+              }}
+            >
+              <FormFieldLabel>Small Pig Quantity</FormFieldLabel>
+              <div className="flex items-center">
+                <FormFieldInput className="flex-grow">
+                  <NumberInput />
+                </FormFieldInput>
+                <div className="ml-4">
+                  <span className="sr-only">
+                    Small Pig Percent of Total Quantity
+                  </span>
+                  <span>{smallPigPercent}</span>
+                </div>
+              </div>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="weight"
+              rules={{
+                required: "The total weight field is required."
+              }}
+            >
+              <FormFieldLabel>Total Weight</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="price"
+              rules={{
+                required: "The price field is required."
+              }}
+            >
+              <FormFieldLabel>Price/pig</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="comments">
+              <FormFieldLabel>Comments</FormFieldLabel>
+              <FormFieldInput>
+                <MultilineTextInput maxLength={50} />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormGroup>
+              <FormSubmit />
+            </FormGroup>
+          </Form>
+        )}
+      </ViewContent>
     </View>
   );
 };

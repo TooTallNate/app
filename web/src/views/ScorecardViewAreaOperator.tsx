@@ -1,26 +1,26 @@
 import React from "react";
 import { Output, FormGroup } from "../components/styled";
-import Title from "../components/ui/ViewTitle";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
-import BackButton from "../components/ui/BackButton";
+import Title from "../components/view/ViewTitle";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
+import BackButton from "../components/view/BackButton";
 import { RouteComponentProps, Redirect } from "react-router-dom";
-import Form from "../components/ui/Form";
+import Form from "../components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormField from "../components/ui/FormField";
-import FormFieldLabel from "../components/ui/FormFieldLabel";
-import FormFieldInput from "../components/ui/FormFieldInput";
-import FormFieldErrors from "../components/ui/FormFieldErrors";
-import FormSubmit from "../components/ui/FormSubmit";
+import FormField from "../components/form/FormField";
+import FormFieldLabel from "../components/form/FormFieldLabel";
+import FormFieldInput from "../components/form/FormFieldInput";
+import FormFieldErrors from "../components/form/FormFieldErrors";
+import FormSubmit from "../components/form/FormSubmit";
 import {
   useFarrowingBackendOperatorsQuery,
   useSetAreaOperatorMutation
 } from "../graphql";
-import FullPageSpinner from "../components/FullPageSpinner";
 import { useFlash } from "../contexts/flash";
 import StackedButtonInput, {
   StackedButton
-} from "../components/ui/StackedButtonInput";
+} from "../components/input/StackedButtonInput";
+import ViewContent from "../components/view/ViewContent";
 
 interface FormData {
   operator: string;
@@ -54,67 +54,70 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
         <BackButton />
         <Title>Scorecard Area Operator</Title>
       </ViewHeader>
-      {(() => {
-        if (loading || !data) {
-          return <FullPageSpinner />;
-        } else if (!data.area) {
-          return <Redirect to="/scorecard" />;
-        } else {
-          const { area, operators } = data;
+      <ViewContent loading={loading}>
+        {data &&
+          (() => {
+            if (!data.area) {
+              return <Redirect to="/scorecard" />;
+            } else {
+              const { area, operators } = data;
 
-          const onSubmit: OnSubmit<FormData> = async data => {
-            await post({
-              variables: {
-                input: {
-                  area: match.params.area,
-                  operator: data.operator
+              const onSubmit: OnSubmit<FormData> = async data => {
+                await post({
+                  variables: {
+                    input: {
+                      area: match.params.area,
+                      operator: data.operator
+                    }
+                  }
+                });
+                const operator = operators.find(
+                  o => o.number === data.operator
+                );
+                if (operator) {
+                  setMessage({
+                    level: "success",
+                    message: `${area.description} operator updated to ${operator.name}.`
+                  });
                 }
-              }
-            });
-            const operator = operators.find(o => o.number === data.operator);
-            if (operator) {
-              setMessage({
-                level: "success",
-                message: `${area.description} operator updated to ${operator.name}.`
-              });
-            }
-            history.push(`/scorecard/areas/${area.number}`);
-          };
+                history.push(`/scorecard/areas/${area.number}`);
+              };
 
-          return (
-            <Form context={formContext} onSubmit={onSubmit}>
-              <FormField name="area">
-                <FormFieldLabel>Area</FormFieldLabel>
-                <FormFieldInput>
-                  <Output>{area.description}</Output>
-                </FormFieldInput>
-              </FormField>
-              <FormField
-                name="operator"
-                rules={{ required: "The operator field is required." }}
-              >
-                <FormFieldLabel>Operator</FormFieldLabel>
-                <FormFieldInput>
-                  <StackedButtonInput orientation="vertical">
-                    {operators.map(operator => (
-                      <StackedButton
-                        value={operator.number}
-                        key={operator.number}
-                      >
-                        {operator.name}
-                      </StackedButton>
-                    ))}
-                  </StackedButtonInput>
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormGroup>
-                <FormSubmit>Save</FormSubmit>
-              </FormGroup>
-            </Form>
-          );
-        }
-      })()}
+              return (
+                <Form context={formContext} onSubmit={onSubmit}>
+                  <FormField name="area">
+                    <FormFieldLabel>Area</FormFieldLabel>
+                    <FormFieldInput>
+                      <Output>{area.description}</Output>
+                    </FormFieldInput>
+                  </FormField>
+                  <FormField
+                    name="operator"
+                    rules={{ required: "The operator field is required." }}
+                  >
+                    <FormFieldLabel>Operator</FormFieldLabel>
+                    <FormFieldInput>
+                      <StackedButtonInput orientation="vertical">
+                        {operators.map(operator => (
+                          <StackedButton
+                            value={operator.number}
+                            key={operator.number}
+                          >
+                            {operator.name}
+                          </StackedButton>
+                        ))}
+                      </StackedButtonInput>
+                    </FormFieldInput>
+                    <FormFieldErrors />
+                  </FormField>
+                  <FormGroup>
+                    <FormSubmit>Save</FormSubmit>
+                  </FormGroup>
+                </Form>
+              );
+            }
+          })()}
+      </ViewContent>
     </View>
   );
 };

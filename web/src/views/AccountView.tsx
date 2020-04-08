@@ -1,11 +1,11 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
 import { RouteComponentProps } from "react-router";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
-import Button from "../components/ui/Button";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
+import Button from "../components/input/Button";
 import { useAuth } from "../contexts/auth";
-import Title from "../components/ui/ViewTitle";
+import Title from "../components/view/ViewTitle";
+import ViewContent from "../components/view/ViewContent";
 
 const AccountView: React.FC<RouteComponentProps> = () => {
   const { logout } = useAuth();
@@ -15,23 +15,10 @@ const AccountView: React.FC<RouteComponentProps> = () => {
       <ViewHeader>
         <Title>Account</Title>
       </ViewHeader>
-      <div
-        css={{
-          flexGrow: 1,
-          padding: "0 16px",
-          display: "flex",
-          flexDirection: "column-reverse"
-        }}
-      >
-        <Button
-          css={{
-            marginBottom: 32
-          }}
-          onClick={logout}
-        >
-          Log Out
-        </Button>
-      </div>
+      <ViewContent>
+        <div className="flex-grow" />
+        <Button onClick={logout}>Log Out</Button>
+      </ViewContent>
     </View>
   );
 };

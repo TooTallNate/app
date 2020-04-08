@@ -12,10 +12,7 @@ const BackButton: React.FC<BackButtonProps> = ({ className }) => {
   return (
     <button
       type="button"
-      className={`
-        h-11 w-11 -ml-4
-        ${className}
-      `}
+      className={`h-11 w-11 -ml-4 ${className || ""}`}
       aria-label="Back"
       onClick={() => history.goBack()}
     >

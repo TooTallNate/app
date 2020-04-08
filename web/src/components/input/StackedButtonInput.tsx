@@ -1,4 +1,10 @@
-import React, { useContext, createContext } from "react";
+import React, {
+  useContext,
+  createContext,
+  useImperativeHandle,
+  useCallback,
+  useRef
+} from "react";
 
 type StackedButtonOrientation = "vertical" | "horizontal";
 
@@ -19,8 +25,13 @@ interface StackedButtonInputProps {
   className?: string;
   name?: string;
   value?: any;
+  children?: React.ReactNode;
   onChange?(value: any): void;
   "aria-labelledby"?: string;
+}
+
+interface StackedButtonInputRef {
+  focus(): void;
 }
 
 const StackedButtonContext = createContext<StackedButtonContextValue>({
@@ -29,10 +40,10 @@ const StackedButtonContext = createContext<StackedButtonContextValue>({
   selected: null
 });
 
-export const StackedButton: React.FC<StackedButtonProps> = ({
-  value,
-  children
-}) => {
+export const StackedButton = React.forwardRef<
+  HTMLInputElement,
+  StackedButtonProps
+>(({ value, children }, ref) => {
   const context = useContext(StackedButtonContext);
 
   if (!context) {
@@ -53,6 +64,7 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
       `}
     >
       <input
+        ref={ref}
         className="absolute opacity-0"
         type="radio"
         value={value}
@@ -65,40 +77,70 @@ export const StackedButton: React.FC<StackedButtonProps> = ({
       </div>
     </label>
   );
-};
+});
+StackedButton.displayName = "StackedButton";
 
-const StackedButtonInput: React.FC<StackedButtonInputProps> = ({
-  className,
-  orientation,
-  children,
-  name = "stacked-button",
-  onChange,
-  value,
-  ...props
-}) => {
-  return (
-    <div
-      aria-labelledby={props["aria-labelledby"]}
-      role="group"
-      className={`
+const StackedButtonInput = React.forwardRef<
+  StackedButtonInputRef,
+  StackedButtonInputProps
+>(
+  (
+    {
+      className,
+      orientation,
+      children,
+      name = "stacked-button",
+      onChange,
+      value,
+      ...props
+    },
+    ref
+  ) => {
+    const inputRefs = useRef<HTMLInputElement[]>([]);
+    useCallback(() => {}, []);
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus() {
+          const input = inputRefs.current[0];
+          if (input) {
+            input.focus();
+          }
+        }
+      }),
+      []
+    );
+
+    return (
+      <div
+        aria-labelledby={props["aria-labelledby"]}
+        role="group"
+        className={`
         flex rounded-lg border border-gray-500 overflow-hidden
         focus-within:shadow-outline
         ${orientation === "vertical" ? "flex-col" : ""}
         ${className}
       `}
-    >
-      <StackedButtonContext.Provider
-        value={{
-          orientation,
-          name,
-          onChange,
-          selected: value
-        }}
       >
-        {children}
-      </StackedButtonContext.Provider>
-    </div>
-  );
-};
+        <StackedButtonContext.Provider
+          value={{
+            orientation,
+            name,
+            onChange,
+            selected: value
+          }}
+        >
+          {React.Children.map(children, child => {
+            if (React.isValidElement(child)) {
+              return React.cloneElement(child, {
+                ref: (value: any) => inputRefs.current.push(value)
+              });
+            }
+          })}
+        </StackedButtonContext.Provider>
+      </div>
+    );
+  }
+);
 
 export default StackedButtonInput;
