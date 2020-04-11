@@ -1,20 +1,20 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { FormGroup } from "../components/styled";
-import Title from "../components/ui/ViewTitle";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
+import Title from "../components/view/ViewTitle";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
 import { usePigActivityJobsQuery } from "../graphql";
 import FullPageSpinner from "../components/FullPageSpinner";
-import FormField from "../components/ui/FormField";
-import FormFieldLabel from "../components/ui/FormFieldLabel";
-import FormFieldInput from "../components/ui/FormFieldInput";
-import BackButton from "../components/ui/BackButton";
-import TypeaheadInput from "../components/ui/TypeaheadInput";
-import Form from "../components/ui/Form";
+import FormField from "../components/form/FormField";
+import FormFieldLabel from "../components/form/FormFieldLabel";
+import FormFieldInput from "../components/form/FormFieldInput";
+import BackButton from "../components/view/BackButton";
+import TypeaheadInput from "../components/input/TypeaheadInput";
+import Form from "../components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormSubmit from "../components/ui/FormSubmit";
-import FormFieldErrors from "../components/ui/FormFieldErrors";
+import FormSubmit from "../components/form/FormSubmit";
+import FormFieldErrors from "../components/form/FormFieldErrors";
 
 interface FormData {
   job: string;
