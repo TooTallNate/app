@@ -16,10 +16,10 @@ import {
 } from "../nav";
 import UserSettingsModel, {
   UserSettingsDocument
-} from "../models/user-settings";
+} from "../models/UserSettings";
 import { navDate, getDocumentNumber } from "./utils";
 
-function postItemJournal(
+export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
   navClient: ODataClient
 ): Promise<NavItemJournalEntry> {
@@ -33,7 +33,7 @@ function postItemJournal(
     .post(entry);
 }
 
-async function findJob(no: string, navClient: ODataClient) {
+export async function findJob(no: string, navClient: ODataClient) {
   const job = await navClient
     .resource("Company", process.env.NAV_COMPANY)
     .resource("Jobs", no)
@@ -57,7 +57,7 @@ async function findJob(no: string, navClient: ODataClient) {
   return { job, costCenterDimension, entityDimension };
 }
 
-async function updateUserSettings({
+export async function updateUserSettings({
   username,
   ...doc
 }: {
@@ -105,241 +105,11 @@ export const PigActivityQueries: QueryResolvers = {
         )
       );
   },
-  async pigActivityDefaults(_, __, { navClient, user }) {
+  async pigActivityDefaults(_, __, { user }) {
     return (
       (await UserSettingsModel.findOne({
         username: user.username
       })) || new UserSettingsModel({ username: user.username })
     );
-  }
-};
-
-export const PigActivityMutations: MutationResolvers = {
-  async postPigAdjustment(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Adjustment,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type:
-          input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
-        Document_No: getDocumentNumber("ADJ", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: Math.abs(input.quantity),
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.job,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
-  },
-  async postPigGradeOff(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.GradeOff,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: getDocumentNumber("GRDOFF", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.job,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
-  },
-  async postPigMortality(_, { input }, { user, navClient }) {
-    const docNo = getDocumentNumber("MORT", user.name);
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.naturalQuantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.euthanizedQuantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.job,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
-  },
-  async postPigMove(_, { input }, { user, navClient }) {
-    const docNo = getDocumentNumber("MOVE", user.name);
-    const from = await findJob(input.fromJob, navClient);
-    const to = await findJob(input.toJob, navClient);
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Move,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.fromAnimal,
-        Description: input.comments,
-        Location_Code: from.job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.fromJob,
-        Shortcut_Dimension_1_Code: from.entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: from.costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Move,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
-        Document_No: docNo,
-        Item_No: input.toAnimal,
-        Description: input.comments,
-        Location_Code: to.job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.toJob,
-        Shortcut_Dimension_1_Code: to.entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: to.costCenterDimension.Dimension_Value_Code,
-        Meta: input.smallPigQuantity
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.fromJob,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
-  },
-  async postPigPurchase(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Wean,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
-        Document_No: getDocumentNumber("PURCH", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
-  },
-  async postPigWean(_, { input }, { user, navClient }) {
-    const { job } = await findJob(input.job, navClient);
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Wean,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
-        Document_No: getDocumentNumber("WEAN", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Gen_Prod_Posting_Group: "WEAN PIGS",
-        Shortcut_Dimension_1_Code: "2",
-        Shortcut_Dimension_2_Code: "213",
-        Meta: input.smallPigQuantity
-      },
-      navClient
-    );
-
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      price: input.price
-    });
-
-    return { success: true, defaults: userSettings };
   }
 };

@@ -2,11 +2,11 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import {
-  PostPigActivityResult,
+  PostPigMortalityResult,
   MutationPostPigMortalityArgs
 } from "../../resolvers/types";
 import {
-  PigMortalityInputFactory,
+  PigMortalityFactory,
   JobFactory,
   DimensionFactory,
   UserSettingsFactory
@@ -19,13 +19,25 @@ import {
   NavTableID
 } from "../../nav";
 import { format } from "date-fns";
-import UserSettings from "../../models/user-settings";
+import UserSettingsModel from "../../models/UserSettings";
+import PigMortalityModel from "../../models/PigMortality";
 
 function mutation(variables: MutationPostPigMortalityArgs) {
-  return client.request<PostPigActivityResult>(
-    `mutation PostPigMortality($input: PigMortalityInput!) {
+  return client.request<PostPigMortalityResult>(
+    `mutation PostPigMortality($input: PostPigMortalityInput!) {
       postPigMortality(input: $input) {
         success
+        pigMortality {
+          job {
+            number
+          }
+          animal
+          naturalQuantity
+          euthanizedQuantity
+          weight
+          price
+          comments
+        }
         defaults {
           job {
             number
@@ -47,7 +59,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const costCenterDimension = DimensionFactory.build({
     Dimension_Code: NavDimensionCode.CostCenter
   });
-  const input = PigMortalityInputFactory.build({
+  const input = PigMortalityFactory.build({
     job: job.No,
     ...inputOverrides
   });
@@ -132,11 +144,11 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigMortalityInputFactory.build()
+    input: PigMortalityFactory.build()
   })
 );
 
-test("submits data to NAV and creates new user settings document", async () => {
+test("submits data to NAV and creates new user settings and mortality documents", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -146,6 +158,17 @@ test("submits data to NAV and creates new user settings document", async () => {
   await expect(mutation({ input })).resolves.toEqual({
     postPigMortality: {
       success: true,
+      pigMortality: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        naturalQuantity: null,
+        euthanizedQuantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: {
           number: job.No
@@ -156,12 +179,29 @@ test("submits data to NAV and creates new user settings document", async () => {
   });
 
   await expect(
-    UserSettings.findOne({
-      username: user.User_Name
-    }).lean()
-  ).resolves.toMatchObject({
+    UserSettingsModel.findOne(
+      {
+        username: user.User_Name
+      },
+      "pigJob price"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
     pigJob: job.No,
     price: input.price
+  });
+
+  await expect(
+    PigMortalityModel.findOne(
+      {
+        job: job.No
+      },
+      "-__v -createdAt -updatedAt"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
+    activity: "mortality",
+    job: job.No
   });
 });
 
@@ -171,7 +211,7 @@ test("submits data to NAV and updates existing user settings document", async ()
       comments: faker.lorem.words(3)
     }
   });
-  const userSettings = await UserSettings.create(
+  const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name
     })
@@ -180,6 +220,17 @@ test("submits data to NAV and updates existing user settings document", async ()
   await expect(mutation({ input })).resolves.toEqual({
     postPigMortality: {
       success: true,
+      pigMortality: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        naturalQuantity: null,
+        euthanizedQuantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: {
           number: job.No
@@ -190,16 +241,64 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
 
   await expect(
-    UserSettings.findById(userSettings._id).lean()
-  ).resolves.toMatchObject({
+    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
     price: input.price
   });
 });
 
+test("submits data to NAV and clears existing mortality document", async () => {
+  const { input, job } = await mockTestData({
+    input: {
+      comments: faker.lorem.words(3)
+    }
+  });
+  const mortalityDoc = await PigMortalityModel.create({
+    job: job.No,
+    naturalQuantity: input.naturalQuantity,
+    weight: input.weight
+  });
+
+  await expect(mutation({ input })).resolves.toEqual({
+    postPigMortality: {
+      success: true,
+      pigMortality: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        naturalQuantity: null,
+        euthanizedQuantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: input.price
+      }
+    }
+  });
+
+  await expect(
+    PigMortalityModel.findById(
+      mortalityDoc._id,
+      "-__v -createdAt -updatedAt"
+    ).lean()
+  ).resolves.toEqual({
+    _id: expect.anything(),
+    activity: "mortality",
+    job: job.No
+  });
+});
+
 test("sets description to an empty string if there are no comments", async () => {
-  const { input, job, user } = await mockTestData({
+  const { input, job } = await mockTestData({
     input: {
       comments: undefined
     }
@@ -208,6 +307,17 @@ test("sets description to an empty string if there are no comments", async () =>
   await expect(mutation({ input })).resolves.toEqual({
     postPigMortality: {
       success: true,
+      pigMortality: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        naturalQuantity: null,
+        euthanizedQuantity: null,
+        weight: null,
+        price: null,
+        comments: null
+      },
       defaults: {
         job: {
           number: job.No
@@ -215,14 +325,5 @@ test("sets description to an empty string if there are no comments", async () =>
         price: input.price
       }
     }
-  });
-
-  await expect(
-    UserSettings.findOne({
-      username: user.User_Name
-    }).lean()
-  ).resolves.toMatchObject({
-    pigJob: job.No,
-    price: input.price
   });
 });

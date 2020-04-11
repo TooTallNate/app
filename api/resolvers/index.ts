@@ -1,11 +1,29 @@
 import { User, UserMutations, UserQueries } from "./user";
 import { Job } from "./jobs";
 import { Resource } from "./resource";
+import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
 import {
-  PigActivityMutations,
-  PigActivityDefaults,
-  PigActivityQueries
-} from "./pig-activity";
+  PigAdjustment,
+  PigAdjustmentQueries,
+  PigAdjustmentMutations
+} from "./pig-adjustment";
+import {
+  PigGradeOff,
+  PigGradeOffQueries,
+  PigGradeOffMutations
+} from "./pig-grade-off";
+import {
+  PigMortality,
+  PigMortalityQueries,
+  PigMortalityMutations
+} from "./pig-mortality";
+import { PigMove, PigMoveQueries, PigMoveMutations } from "./pig-move";
+import {
+  PigPurchase,
+  PigPurchaseQueries,
+  PigPurchaseMutations
+} from "./pig-purchase";
+import { PigWean, PigWeanQueries, PigWeanMutations } from "./pig-wean";
 import {
   FarrowingBackendScorecard,
   ScorecardQueries,
@@ -16,16 +34,33 @@ export default {
   Query: {
     ...UserQueries,
     ...PigActivityQueries,
+    ...PigAdjustmentQueries,
+    ...PigGradeOffQueries,
+    ...PigMortalityQueries,
+    ...PigMoveQueries,
+    ...PigPurchaseQueries,
+    ...PigWeanQueries,
     ...ScorecardQueries
   },
   Mutation: {
     ...UserMutations,
-    ...PigActivityMutations,
+    ...PigAdjustmentMutations,
+    ...PigGradeOffMutations,
+    ...PigMortalityMutations,
+    ...PigMoveMutations,
+    ...PigPurchaseMutations,
+    ...PigWeanMutations,
     ...ScorecardMutations
   },
   User,
   Job,
   Resource,
   PigActivityDefaults,
+  PigAdjustment,
+  PigGradeOff,
+  PigMortality,
+  PigMove,
+  PigPurchase,
+  PigWean,
   FarrowingBackendScorecard
 };

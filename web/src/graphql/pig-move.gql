@@ -1,0 +1,51 @@
+fragment PigMoveFragment on PigMove {
+  fromAnimal
+  toAnimal
+  fromJob {
+    number
+    description
+  }
+  toJob {
+    number
+  }
+  quantity
+  smallPigQuantity
+  weight
+  price
+  comments
+}
+
+query PigMove($job: String!) {
+  pigActivityJobs {
+    number
+    description
+  }
+  pigActivityDefaults {
+    price
+  }
+  pigMove(job: $job) {
+    ...PigMoveFragment
+  }
+}
+
+mutation SavePigMove($input: SavePigMoveInput!) {
+  savePigMove(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigMove {
+      ...PigMoveFragment
+    }
+  }
+}
+
+mutation PostPigMove($input: PostPigMoveInput!) {
+  postPigMove(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigMove {
+      ...PigMoveFragment
+    }
+  }
+}

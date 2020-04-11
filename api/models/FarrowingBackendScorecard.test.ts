@@ -1,7 +1,7 @@
-import FarrowingBackendScorecard from "./farrowing-backend-scorecard";
+import FarrowingBackendScorecardModel from "./FarrowingBackendScorecard";
 
 test("area is required", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   scorecard.area = null;
   expect(scorecard).toHaveValidationError("area", "Path `area` is required.");
   scorecard.area = "area";
@@ -9,12 +9,12 @@ test("area is required", () => {
 });
 
 test("sows.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().sows).toEqual({});
 });
 
 test("sows.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ sows: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ sows: {} });
   scorecard.sows.score = -1;
   expect(scorecard).toHaveValidationError(
     "sows.score",
@@ -28,12 +28,12 @@ test("sows.score is an integer between 0 and 10", () => {
 });
 
 test("piglets.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().piglets).toEqual({});
 });
 
 test("piglets.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ piglets: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ piglets: {} });
   scorecard.piglets.score = -1;
   expect(scorecard).toHaveValidationError(
     "piglets.score",
@@ -47,12 +47,12 @@ test("piglets.score is an integer between 0 and 10", () => {
 });
 
 test("feed.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().feed).toEqual({});
 });
 
 test("feed.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ feed: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ feed: {} });
   scorecard.feed.score = -1;
   expect(scorecard).toHaveValidationError(
     "feed.score",
@@ -66,12 +66,12 @@ test("feed.score is an integer between 0 and 10", () => {
 });
 
 test("water.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().water).toEqual({});
 });
 
 test("water.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ water: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ water: {} });
   scorecard.water.score = -1;
   expect(scorecard).toHaveValidationError(
     "water.score",
@@ -85,12 +85,12 @@ test("water.score is an integer between 0 and 10", () => {
 });
 
 test("crate.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().crate).toEqual({});
 });
 
 test("crate.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ crate: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ crate: {} });
   scorecard.crate.score = -1;
   expect(scorecard).toHaveValidationError(
     "crate.score",
@@ -104,12 +104,12 @@ test("crate.score is an integer between 0 and 10", () => {
 });
 
 test("room.score defaults to an empty object", () => {
-  const scorecard = new FarrowingBackendScorecard();
+  const scorecard = new FarrowingBackendScorecardModel();
   expect(scorecard.toObject().room).toEqual({});
 });
 
 test("room.score is an integer between 0 and 10", () => {
-  const scorecard = new FarrowingBackendScorecard({ room: {} });
+  const scorecard = new FarrowingBackendScorecardModel({ room: {} });
   scorecard.room.score = -1;
   expect(scorecard).toHaveValidationError(
     "room.score",

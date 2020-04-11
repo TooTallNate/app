@@ -17,8 +17,14 @@ generates:
         User: "../nav#NavUser"
         Job: "../nav#NavJob"
         Resource: "../nav#NavResource"
-        PigActivityDefaults: "../models/user-settings#UserSettingsDocument"
-        FarrowingBackendScorecard: "../models/farrowing-backend-scorecard#FarrowingBackendScorecardDocument"
+        PigAdjustment: "../models/PigAdjustment#PigAdjustmentDocument"
+        PigGradeOff: "../models/PigGradeOff#PigGradeOffDocument"
+        PigMortality: "../models/PigMortality#PigMortalityDocument"
+        PigMove: "../models/PigMove#PigMoveDocument"
+        PigPurchase: "../models/PigPurchase#PigPurchaseDocument"
+        PigWean: "../models/PigWean#PigWeanDocument"
+        PigActivityDefaults: "../models/UserSettings#UserSettingsDocument"
+        FarrowingBackendScorecard: "../models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
   web/src/graphql/index.tsx:
     plugins:
       - "typescript"

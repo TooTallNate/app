@@ -1,0 +1,42 @@
+fragment PigPurchaseFragment on PigPurchase {
+  animal
+  job {
+    number
+    description
+  }  
+  quantity
+  weight
+  price
+  comments
+}
+
+query PigPurchase($job: String!) {
+  pigActivityDefaults {
+    price
+  }
+  pigPurchase(job: $job) {
+    ...PigPurchaseFragment
+  }
+}
+
+mutation SavePigPurchase($input: SavePigPurchaseInput!) {
+  savePigPurchase(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigPurchase {
+      ...PigPurchaseFragment
+    }
+  }
+}
+
+mutation PostPigPurchase($input: PostPigPurchaseInput!) {
+  postPigPurchase(input: $input) {
+    defaults {
+      ...PigActivityDefaultsFragment
+    }
+    pigPurchase {
+      ...PigPurchaseFragment
+    }
+  }
+}
