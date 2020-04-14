@@ -4,13 +4,18 @@ import { Controller, ControllerProps, useFormContext } from "react-hook-form";
 
 interface FormFieldInput extends Omit<ControllerProps<any>, "as"> {
   className?: string;
+  noRegister?: boolean;
   children:
     | React.ReactElement
     | React.ComponentType<any>
     | keyof JSX.IntrinsicElements;
 }
 
-const FormFieldInput: React.FC<FormFieldInput> = ({ children, ...props }) => {
+const FormFieldInput: React.FC<FormFieldInput> = ({
+  children,
+  noRegister = false,
+  ...props
+}) => {
   const inputRef = useRef<any>();
   const formContext = useFormContext();
   const fieldConfig = useField();
@@ -21,7 +26,7 @@ const FormFieldInput: React.FC<FormFieldInput> = ({ children, ...props }) => {
 
   const { name, rules, labelId, errorId } = fieldConfig;
 
-  if (formContext) {
+  if (formContext && !noRegister) {
     const input = React.Children.only(children);
     if (!React.isValidElement(input)) {
       throw new Error("Child of FormFieldInput must be a ReactElement.");

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FormGroup, Output } from "../components/styled";
+import { FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
@@ -26,6 +26,7 @@ import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../components/input/Button";
 import BackButton from "../components/view/BackButton";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   animal: string;
@@ -135,10 +136,10 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="job">
               <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput>
-                <Output>
-                  {data.pigWean.job.number} {data.pigWean.job.description}
-                </Output>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigWean.job.number} ${data.pigWean.job.description}`}
+                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Output } from "../components/styled";
+import { FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
@@ -26,6 +26,7 @@ import { OnSubmit, useForm } from "react-hook-form";
 import BackButton from "../components/view/BackButton";
 import Button from "../components/input/Button";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   animal: string;
@@ -119,11 +120,10 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="job">
               <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput>
-                <Output>
-                  {data.pigGradeOff.job.number}{" "}
-                  {data.pigGradeOff.job.description}
-                </Output>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigGradeOff.job.number} ${data.pigGradeOff.job.description}`}
+                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Output, FormGroup } from "../components/styled";
+import { FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
@@ -21,6 +21,7 @@ import StackedButtonInput, {
   StackedButton
 } from "../components/input/StackedButtonInput";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   operator: string;
@@ -87,8 +88,8 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
                 <Form context={formContext} onSubmit={onSubmit}>
                   <FormField name="area">
                     <FormFieldLabel>Area</FormFieldLabel>
-                    <FormFieldInput>
-                      <Output>{area.description}</Output>
+                    <FormFieldInput noRegister>
+                      <StaticValue value={area.description} />
                     </FormFieldInput>
                   </FormField>
                   <FormField

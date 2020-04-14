@@ -5,7 +5,6 @@ import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import { usePigActivityJobsQuery } from "../graphql";
-import FullPageSpinner from "../components/FullPageSpinner";
 import FormField from "../components/form/FormField";
 import FormFieldLabel from "../components/form/FormFieldLabel";
 import FormFieldInput from "../components/form/FormFieldInput";

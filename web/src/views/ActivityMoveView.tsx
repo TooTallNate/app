@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FormGroup, Output } from "../components/styled";
+import { FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
@@ -27,6 +27,7 @@ import Button from "../components/input/Button";
 import TypeaheadInput from "../components/input/TypeaheadInput";
 import BackButton from "../components/view/BackButton";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   fromAnimal: Animal;
@@ -141,11 +142,10 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <div className="flex">
               <FormField name="fromJob" className="w-full mr-4">
                 <FormFieldLabel>From Job</FormFieldLabel>
-                <FormFieldInput>
-                  <Output>
-                    {data.pigMove.fromJob.number}{" "}
-                    {data.pigMove.fromJob.description}
-                  </Output>
+                <FormFieldInput noRegister>
+                  <StaticValue
+                    value={`${data.pigMove.fromJob.number} ${data.pigMove.fromJob.description}`}
+                  />
                 </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
@@ -273,6 +273,9 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldErrors />
             </FormField>
             <FormGroup>
+              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+                Save
+              </Button>
               <FormSubmit />
             </FormGroup>
           </Form>

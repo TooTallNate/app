@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Output } from "../components/styled";
+import { FormGroup } from "../components/styled";
 import View from "../components/view/View";
 import Title from "../components/view/ViewTitle";
 import ViewHeader from "../components/view/ViewHeader";
@@ -26,6 +26,7 @@ import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../components/input/Button";
 import BackButton from "../components/view/BackButton";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   animal: string;
@@ -118,11 +119,10 @@ const ActivityAdjustmentView: React.FC<
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="job">
               <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput>
-                <Output>
-                  {data.pigAdjustment.job.number}{" "}
-                  {data.pigAdjustment.job.description}
-                </Output>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigAdjustment.job.number} ${data.pigAdjustment.job.description}`}
+                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

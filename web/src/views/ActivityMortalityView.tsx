@@ -26,6 +26,7 @@ import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../components/input/Button";
 import BackButton from "../components/view/BackButton";
 import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   animal: string;
@@ -129,11 +130,10 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="job">
               <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput>
-                <Output>
-                  {data.pigMortality.job.number}{" "}
-                  {data.pigMortality.job.description}
-                </Output>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigMortality.job.number} ${data.pigMortality.job.description}`}
+                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
