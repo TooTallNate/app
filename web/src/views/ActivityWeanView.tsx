@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormGroup, Output } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";

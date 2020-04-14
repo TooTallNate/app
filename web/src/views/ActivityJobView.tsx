@@ -15,6 +15,7 @@ import Form from "../components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
 import FormSubmit from "../components/form/FormSubmit";
 import FormFieldErrors from "../components/form/FormFieldErrors";
+import ViewContent from "../components/view/ViewContent";
 
 interface FormData {
   job: string;
@@ -24,7 +25,6 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
   history,
   match
 }) => {
-  console.log(match);
   const formContext = useForm<FormData>();
   const { data, loading } = usePigActivityJobsQuery({
     onCompleted({ pigActivityDefaults: defaults }) {
@@ -44,33 +44,33 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
         <BackButton />
         <Title>Job Selection</Title>
       </ViewHeader>
-      {loading || !data ? (
-        <FullPageSpinner />
-      ) : (
-        <Form context={formContext} onSubmit={onSubmit}>
-          <FormField
-            name="job"
-            rules={{
-              required: "The job field is required."
-            }}
-          >
-            <FormFieldLabel>Job</FormFieldLabel>
-            <FormFieldInput>
-              <TypeaheadInput
-                sort="desc"
-                items={data.pigActivityJobs.map(job => ({
-                  value: job.number,
-                  title: `${job.number} ${job.description}`
-                }))}
-              />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormGroup>
-            <FormSubmit>Continue</FormSubmit>
-          </FormGroup>
-        </Form>
-      )}
+      <ViewContent loading={loading}>
+        {data && (
+          <Form context={formContext} onSubmit={onSubmit}>
+            <FormField
+              name="job"
+              rules={{
+                required: "The job field is required."
+              }}
+            >
+              <FormFieldLabel>Job</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  sort="desc"
+                  items={data.pigActivityJobs.map(job => ({
+                    value: job.number,
+                    title: `${job.number} ${job.description}`
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormGroup>
+              <FormSubmit>Continue</FormSubmit>
+            </FormGroup>
+          </Form>
+        )}
+      </ViewContent>
     </View>
   );
 };
