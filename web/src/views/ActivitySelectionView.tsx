@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { StackedNav, StackedNavLink } from "../components/styled";
 import Title from "../components/view/ViewTitle";

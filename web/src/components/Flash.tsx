@@ -61,7 +61,7 @@ const Flash: React.FC<FlashProps> = ({ messages, onClose }) => {
   }, [msg]);
 
   return (
-    <div className="fixed top-0 left-0 right-0 flex justify-center">
+    <div className="z-10 fixed top-0 left-0 right-0 flex justify-center">
       <CSSTransition
         mountOnEnter
         unmountOnExit
