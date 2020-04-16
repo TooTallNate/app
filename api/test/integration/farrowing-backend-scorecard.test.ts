@@ -98,10 +98,20 @@ function mapScorecard(
   };
 }
 
-test("returns null if no scorecard is saved", async () => {
-  await mockUser();
-  await expect(query({ area: faker.random.word() })).resolves.toEqual({
-    farrowingBackendScorecard: null
+test("returns empty scorecard if no scorecard is saved", async () => {
+  const { auth } = await mockUser();
+
+  const area = JobFactory.build();
+  nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
+    .basicAuth(auth)
+    .reply(200, area);
+
+  await expect(query({ area: area.No })).resolves.toEqual({
+    farrowingBackendScorecard: mapScorecard(
+      new FarrowingBackendScorecardModel({ area: area.No }),
+      area
+    )
   });
 });
 

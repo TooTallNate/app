@@ -55,7 +55,10 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
 
 export const ScorecardQueries: QueryResolvers = {
   async farrowingBackendScorecard(_, { area }) {
-    return await FarrowingBackendScorecardModel.findOne({ area });
+    return (
+      (await FarrowingBackendScorecardModel.findOne({ area })) ||
+      new FarrowingBackendScorecardModel({ area })
+    );
   },
   farrowingBackendAreas(_, __, { navClient }) {
     return navClient
@@ -129,9 +132,10 @@ export const ScorecardMutations: MutationResolvers = {
     await postScore(JobTaskNumber.SowFeed, input.feed);
     await postScore(JobTaskNumber.Water, input.water);
 
-    const doc = await FarrowingBackendScorecardModel.findOne({
-      area: input.area
-    });
+    const doc =
+      (await FarrowingBackendScorecardModel.findOne({
+        area: input.area
+      })) || new FarrowingBackendScorecardModel();
     if (doc) {
       doc.overwrite({
         area: input.area
