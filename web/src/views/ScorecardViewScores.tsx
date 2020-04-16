@@ -1,28 +1,31 @@
 import { RouteComponentProps } from "react-router-dom";
-import { ButtonLink, FormGroup, Output } from "../components/styled";
-import Title from "../components/ui/ViewTitle";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
-import Button from "../components/ui/Button";
-import SliderInput from "../components/ui/SliderInput";
+import { ButtonLink, FormGroup } from "../components/styled";
+import Title from "../components/view/ViewTitle";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
+import Button from "../components/input/Button";
+import SliderInput from "../components/input/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
   useSaveFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import MultilineTextInput from "../components/ui/MultilineTextInput";
+import MultilineTextInput from "../components/input/MultilineTextInput";
 import { useFlash } from "../contexts/flash";
-import FullPageSpinner from "../components/FullPageSpinner";
 import { useForm, OnSubmit, FormContextValues } from "react-hook-form";
-import Form from "../components/ui/Form";
-import FormField from "../components/ui/FormField";
-import FormFieldLabel from "../components/ui/FormFieldLabel";
-import FormFieldInput from "../components/ui/FormFieldInput";
-import FormFieldErrors from "../components/ui/FormFieldErrors";
-import FormSubmit from "../components/ui/FormSubmit";
-import TypeaheadInput, { TypeaheadItem } from "../components/ui/TypeaheadInput";
+import Form from "../components/form/Form";
+import FormField from "../components/form/FormField";
+import FormFieldLabel from "../components/form/FormFieldLabel";
+import FormFieldInput from "../components/form/FormFieldInput";
+import FormFieldErrors from "../components/form/FormFieldErrors";
+import FormSubmit from "../components/form/FormSubmit";
+import TypeaheadInput, {
+  TypeaheadItem
+} from "../components/input/TypeaheadInput";
 import React, { useMemo } from "react";
-import BackButton from "../components/ui/BackButton";
+import BackButton from "../components/view/BackButton";
+import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   operator: string;
@@ -253,50 +256,50 @@ const ScorecardViewScores: React.FC<RouteComponentProps<{ area: string }>> = ({
           <span className="hidden xs:inline">{percent.toFixed(2)}%</span>
         </div>
       </ViewHeader>
-      {loading || !data ? (
-        <FullPageSpinner />
-      ) : (
-        <Form context={formContext} onSubmit={onSubmit}>
-          <FormField name="area">
-            <FormFieldLabel>Area</FormFieldLabel>
-            <FormFieldInput>
-              <Output>{data.area && data.area.description}</Output>
-            </FormFieldInput>
-          </FormField>
-          <FormField
-            name="operator"
-            rules={{ required: "The operator field is required." }}
-          >
-            <FormFieldLabel>Operator</FormFieldLabel>
-            <div className="flex">
-              <div className="flex-grow">
-                <FormFieldInput>
-                  <TypeaheadInput items={operators} />
-                </FormFieldInput>
-                <FormFieldErrors />
+      <ViewContent loading={loading}>
+        {data && (
+          <Form context={formContext} onSubmit={onSubmit}>
+            <FormField name="area">
+              <FormFieldLabel>Area</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue value={data.area ? data.area.description : ""} />
+              </FormFieldInput>
+            </FormField>
+            <FormField
+              name="operator"
+              rules={{ required: "The operator field is required." }}
+            >
+              <FormFieldLabel>Operator</FormFieldLabel>
+              <div className="flex">
+                <div className="flex-grow">
+                  <FormFieldInput>
+                    <TypeaheadInput items={operators} />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </div>
+                <ButtonLink
+                  className="ml-4"
+                  to={`/scorecard/areas/${match.params.area}/operator`}
+                >
+                  Change
+                </ButtonLink>
               </div>
-              <ButtonLink
-                className="ml-4"
-                to={`/scorecard/areas/${match.params.area}/operator`}
-              >
-                Change
-              </ButtonLink>
-            </div>
-          </FormField>
-          <ScoreEntry name="sowCare" label="Sow Care" />
-          <ScoreEntry name="pigletCare" label="Piglet Care" />
-          <ScoreEntry name="feed" label="Feed" />
-          <ScoreEntry name="water" label="Water" />
-          <ScoreEntry name="crate" label="Crate" />
-          <ScoreEntry name="generalRoom" label="General Room" />
-          <FormGroup>
-            <Button className="mr-4 w-full" type="button" onClick={onSave}>
-              Save
-            </Button>
-            <FormSubmit />
-          </FormGroup>
-        </Form>
-      )}
+            </FormField>
+            <ScoreEntry name="sowCare" label="Sow Care" />
+            <ScoreEntry name="pigletCare" label="Piglet Care" />
+            <ScoreEntry name="feed" label="Feed" />
+            <ScoreEntry name="water" label="Water" />
+            <ScoreEntry name="crate" label="Crate" />
+            <ScoreEntry name="generalRoom" label="General Room" />
+            <FormGroup>
+              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+                Save
+              </Button>
+              <FormSubmit />
+            </FormGroup>
+          </Form>
+        )}
+      </ViewContent>
     </View>
   );
 };

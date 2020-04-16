@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
+import React from "react";
 import { RouteComponentProps, Route, Switch, Redirect } from "react-router-dom";
 import ActivitySelectionView from "./ActivitySelectionView";
 import ActivityPurchaseView from "./ActivityPurchaseView";

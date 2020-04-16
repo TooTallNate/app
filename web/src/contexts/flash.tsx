@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
 import React, { createContext, useState, useContext, useCallback } from "react";
 import Flash, { FlashMessage } from "../components/Flash";
 

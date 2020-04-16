@@ -30,12 +30,7 @@ const FormField: React.FC<FormFieldProps> = ({
   const errorId = `${name}-error`;
 
   return (
-    <div
-      className={`
-        p-0 m-0 mt-4
-        ${className}
-      `}
-    >
+    <div className={className}>
       <FormFieldContext.Provider value={{ name, rules, labelId, errorId }}>
         {children}
       </FormFieldContext.Provider>

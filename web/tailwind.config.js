@@ -199,6 +199,7 @@ module.exports = {
       "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
       inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
       outline: "0 0 0 2px #a0aec0",
+      "outline-b": "0 3px 0 0 #a0aec0",
       none: "none"
     },
     container: {},
@@ -460,7 +461,7 @@ module.exports = {
     lineHeight: ["responsive"],
     listStylePosition: ["responsive"],
     listStyleType: ["responsive"],
-    margin: ["responsive", "first"],
+    margin: ["responsive", "first", "child"],
     maxHeight: ["responsive"],
     maxWidth: ["responsive"],
     minHeight: ["responsive"],
@@ -493,11 +494,18 @@ module.exports = {
   corePlugins: {},
   plugins: [
     function({ addVariant, e }) {
-      // Add checked:<class> variant which applys the style if element or any of its previous siblings are checked.
+      // Add checked:<class> variant which applies the style if element or any of its previous siblings are checked.
       addVariant("checked", ({ modifySelectors, separator }) => {
         modifySelectors(({ className }) => {
           const c = `.${e(`checked${separator}${className}`)}`;
           return `${c}:checked, :checked + ${c}`;
+        });
+      });
+      // Add child:<class> variant which applies the style to children elements
+      addVariant("child", ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) => {
+          const c = `.${e(`child${separator}${className}`)}`;
+          return `${c} > *`;
         });
       });
     }

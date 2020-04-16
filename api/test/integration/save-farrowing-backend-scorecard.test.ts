@@ -22,7 +22,7 @@ testUnauthenticated(() =>
   mutation({ input: SaveFarrowingBackendScorecardInputFactory.build() })
 );
 
-test("submits scores to database", async () => {
+test("saves scores to existing document", async () => {
   await mockUser();
   const input = SaveFarrowingBackendScorecardInputFactory.build();
 

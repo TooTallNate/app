@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { useField } from "./FormField";
+import { useField } from "../form/FormField";
 
 interface MultilineTextInputProps
   extends Omit<ComponentProps<"textarea">, "value" | "onChange"> {

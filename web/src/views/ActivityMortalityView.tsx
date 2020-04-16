@@ -1,10 +1,10 @@
 import React from "react";
-import { FormGroup, Output } from "../components/styled";
-import Title from "../components/ui/ViewTitle";
-import View from "../components/ui/View";
-import ViewHeader from "../components/ui/ViewHeader";
-import NumberInput from "../components/ui/NumberInput";
-import MultilineTextInput from "../components/ui/MultilineTextInput";
+import { Output, FormGroup } from "../components/styled";
+import Title from "../components/view/ViewTitle";
+import View from "../components/view/View";
+import ViewHeader from "../components/view/ViewHeader";
+import NumberInput from "../components/input/NumberInput";
+import MultilineTextInput from "../components/input/MultilineTextInput";
 import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import {
@@ -14,18 +14,19 @@ import {
 } from "../graphql";
 import StackedButtonInput, {
   StackedButton
-} from "../components/ui/StackedButtonInput";
-import FullPageSpinner from "../components/FullPageSpinner";
+} from "../components/input/StackedButtonInput";
 import { useFlash } from "../contexts/flash";
-import Form from "../components/ui/Form";
-import FormField from "../components/ui/FormField";
-import FormFieldLabel from "../components/ui/FormFieldLabel";
-import FormFieldErrors from "../components/ui/FormFieldErrors";
-import FormFieldInput from "../components/ui/FormFieldInput";
-import FormSubmit from "../components/ui/FormSubmit";
+import Form from "../components/form/Form";
+import FormField from "../components/form/FormField";
+import FormFieldLabel from "../components/form/FormFieldLabel";
+import FormFieldErrors from "../components/form/FormFieldErrors";
+import FormFieldInput from "../components/form/FormFieldInput";
+import FormSubmit from "../components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import BackButton from "../components/ui/BackButton";
-import Button from "../components/ui/Button";
+import Button from "../components/input/Button";
+import BackButton from "../components/view/BackButton";
+import ViewContent from "../components/view/ViewContent";
+import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
   animal: string;
@@ -124,106 +125,107 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
         <BackButton />
         <Title>Mortality</Title>
       </ViewHeader>
-      {loading || !data ? (
-        <FullPageSpinner />
-      ) : (
-        <Form context={formContext} onSubmit={onSubmit}>
-          <FormField name="job">
-            <FormFieldLabel>Job</FormFieldLabel>
-            <FormFieldInput>
-              <Output>
-                {data.pigMortality.job.number}{" "}
-                {data.pigMortality.job.description}
-              </Output>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="animal"
-            rules={{ required: "The animal field is required." }}
-          >
-            <FormFieldLabel>Animal</FormFieldLabel>
-            <FormFieldInput>
-              <StackedButtonInput orientation="vertical">
-                <StackedButton value={Animal.MARKET_PIGS}>
-                  Market Pigs
-                </StackedButton>
-                <StackedButton value={Animal.GDU_PIGS}>GDU Pigs</StackedButton>
-                <StackedButton value={Animal.SOWS}>Sows</StackedButton>
-              </StackedButtonInput>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="naturalQuantity"
-            rules={{
-              required: "The natural quantity field is required."
-            }}
-          >
-            <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="euthanizedQuantity"
-            rules={{
-              required: "The euthanized quantity field is required."
-            }}
-          >
-            <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField name="total-quantity">
-            <FormFieldLabel>Total Quantity</FormFieldLabel>
-            <FormFieldInput>
-              <Output>{totalQuantity}</Output>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="weight"
-            rules={{
-              required: "The total weight field is required."
-            }}
-          >
-            <FormFieldLabel>Total Weight</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="price"
-            rules={{
-              required: "The price field is required."
-            }}
-          >
-            <FormFieldLabel>Price/pig</FormFieldLabel>
-            <FormFieldInput>
-              <NumberInput />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField name="comments">
-            <FormFieldLabel>Comments</FormFieldLabel>
-            <FormFieldInput>
-              <MultilineTextInput maxLength={50} />
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormGroup>
-            <Button className="mr-4 w-full" type="button" onClick={onSave}>
-              Save
-            </Button>
-            <FormSubmit />
-          </FormGroup>
-        </Form>
-      )}
+      <ViewContent loading={loading}>
+        {data && (
+          <Form context={formContext} onSubmit={onSubmit}>
+            <FormField name="job">
+              <FormFieldLabel>Job</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigMortality.job.number} ${data.pigMortality.job.description}`}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="animal"
+              rules={{ required: "The animal field is required." }}
+            >
+              <FormFieldLabel>Animal</FormFieldLabel>
+              <FormFieldInput>
+                <StackedButtonInput orientation="vertical">
+                  <StackedButton value={Animal.MARKET_PIGS}>
+                    Market Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.GDU_PIGS}>
+                    GDU Pigs
+                  </StackedButton>
+                  <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                </StackedButtonInput>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="naturalQuantity"
+              rules={{
+                required: "The natural quantity field is required."
+              }}
+            >
+              <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="euthanizedQuantity"
+              rules={{
+                required: "The euthanized quantity field is required."
+              }}
+            >
+              <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="total-quantity">
+              <FormFieldLabel>Total Quantity</FormFieldLabel>
+              <FormFieldInput>
+                <Output>{totalQuantity}</Output>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="weight"
+              rules={{
+                required: "The total weight field is required."
+              }}
+            >
+              <FormFieldLabel>Total Weight</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="price"
+              rules={{
+                required: "The price field is required."
+              }}
+            >
+              <FormFieldLabel>Price/pig</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="comments">
+              <FormFieldLabel>Comments</FormFieldLabel>
+              <FormFieldInput>
+                <MultilineTextInput maxLength={50} />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormGroup>
+              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+                Save
+              </Button>
+              <FormSubmit />
+            </FormGroup>
+          </Form>
+        )}
+      </ViewContent>
     </View>
   );
 };
