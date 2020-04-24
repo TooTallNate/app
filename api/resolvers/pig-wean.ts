@@ -13,7 +13,7 @@ export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigWean.job)
+      .resource("Jobs2", pigWean.job)
       .get<NavJob>();
   }
 };
@@ -43,7 +43,7 @@ export const PigWeanMutations: MutationResolvers = {
   async postPigWean(_, { input }, { user, navClient }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
+      .resource("Jobs2", input.job)
       .get<NavJob>();
     await postItemJournal(
       {

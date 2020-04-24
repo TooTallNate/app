@@ -41,7 +41,7 @@ test("submits scores to NAV", async () => {
   });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 
@@ -93,7 +93,7 @@ test("saves new empty scorecard to database", async () => {
   });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 
@@ -152,7 +152,7 @@ test("clears scorecard from database", async () => {
   const scorecard = await FarrowingBackendScorecardModel.create(input);
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 

@@ -32,7 +32,7 @@ async function mockTestData() {
   const job = JobFactory.build();
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${job.No}%27)`)
     .basicAuth(auth)
     .reply(200, job)
     .persist();

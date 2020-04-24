@@ -13,7 +13,7 @@ export const PigMove: PigMoveResolvers = {
   fromJob(pigMove, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigMove.fromJob)
+      .resource("Jobs2", pigMove.fromJob)
       .get<NavJob>();
   },
   toJob(pigMove, _, { navClient }) {
@@ -21,7 +21,7 @@ export const PigMove: PigMoveResolvers = {
       pigMove.toJob &&
       navClient
         .resource("Company", process.env.NAV_COMPANY)
-        .resource("Jobs", pigMove.toJob)
+        .resource("Jobs2", pigMove.toJob)
         .get<NavJob>()
     );
   }
@@ -56,11 +56,11 @@ export const PigMoveMutations: MutationResolvers = {
     const docNo = getDocumentNumber("MOVE", user.name);
     const fromJob = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.fromJob)
+      .resource("Jobs2", input.fromJob)
       .get<NavJob>();
     const toJob = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.toJob)
+      .resource("Jobs2", input.toJob)
       .get<NavJob>();
     await postItemJournal(
       {

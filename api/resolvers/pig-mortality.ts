@@ -17,7 +17,7 @@ export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigMortality.job)
+      .resource("Jobs2", pigMortality.job)
       .get<NavJob>();
   }
 };
@@ -52,7 +52,7 @@ export const PigMortalityMutations: MutationResolvers = {
     const docNo = getDocumentNumber("MORT", user.name);
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
+      .resource("Jobs2", input.job)
       .get<NavJob>();
     await postItemJournal(
       {

@@ -17,7 +17,7 @@ export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeoff, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigGradeoff.job)
+      .resource("Jobs2", pigGradeoff.job)
       .get<NavJob>();
   }
 };
@@ -50,7 +50,7 @@ export const PigGradeOffMutations: MutationResolvers = {
   async postPigGradeOff(_, { input }, { user, navClient }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
+      .resource("Jobs2", input.job)
       .get<NavJob>();
     await postItemJournal(
       {

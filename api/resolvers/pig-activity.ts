@@ -36,7 +36,7 @@ export function postItemJournal(
 export async function findJob(no: string, navClient: ODataClient) {
   const job = await navClient
     .resource("Company", process.env.NAV_COMPANY)
-    .resource("Jobs", no)
+    .resource("Jobs2", no)
     .get<NavJob>();
   const costCenterDimension = await navClient
     .resource("Company", process.env.NAV_COMPANY)
@@ -79,7 +79,7 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
     if (userSettings && userSettings.pigJob) {
       return navClient
         .resource("Company", process.env.NAV_COMPANY)
-        .resource("Jobs", userSettings.pigJob)
+        .resource("Jobs2", userSettings.pigJob)
         .get<NavJob>();
     } else {
       return null;
@@ -92,7 +92,7 @@ export const PigActivityQueries: QueryResolvers = {
   async pigActivityJobs(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs")
+      .resource("Jobs2")
       .get<NavJob[]>()
       .filter(f =>
         f.and(

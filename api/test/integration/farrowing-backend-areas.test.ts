@@ -40,7 +40,7 @@ test("returns areas for the farrowing backend", async () => {
   );
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2`)
     .query({
       $filter: `((Status eq 'Open') and (Job_Posting_Group eq 'FARROW-BE'))`
     })

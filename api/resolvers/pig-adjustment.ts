@@ -17,7 +17,7 @@ export const PigAdjustment: PigAdjustmentResolvers = {
   job(pigAdjustment, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigAdjustment.job)
+      .resource("Jobs2", pigAdjustment.job)
       .get<NavJob>();
   }
 };
@@ -51,7 +51,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
   async postPigAdjustment(_, { input }, { user, navClient }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
+      .resource("Jobs2", input.job)
       .get<NavJob>();
 
     await postItemJournal(

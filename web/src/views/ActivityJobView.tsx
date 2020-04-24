@@ -43,9 +43,6 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
     ? data.pigActivityJobs.find(job => job.number === jobNumber)
     : undefined;
 
-  console.log(jobNumber);
-  console.log(job);
-
   return (
     <View>
       <ViewHeader>
