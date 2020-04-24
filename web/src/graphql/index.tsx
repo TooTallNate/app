@@ -28,6 +28,8 @@ export type Job = {
   number: Scalars["String"];
   description: Scalars["String"];
   personResponsible: Resource;
+  inventory?: Maybe<Scalars["Int"]>;
+  deadQuantity?: Maybe<Scalars["Int"]>;
 };
 
 export type LoginInput = {

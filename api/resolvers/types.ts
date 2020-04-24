@@ -41,6 +41,8 @@ export type Job = {
   number: Scalars["String"];
   description: Scalars["String"];
   personResponsible: Resource;
+  inventory?: Maybe<Scalars["Int"]>;
+  deadQuantity?: Maybe<Scalars["Int"]>;
 };
 
 export type LoginInput = {
@@ -1107,10 +1109,10 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars["String"]>;
   Job: ResolverTypeWrapper<NavJob>;
   Resource: ResolverTypeWrapper<NavResource>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   PigGradeOff: ResolverTypeWrapper<PigGradeOffDocument>;
   PigMortality: ResolverTypeWrapper<PigMortalityDocument>;
   PigMove: ResolverTypeWrapper<PigMoveDocument>;
@@ -1237,10 +1239,10 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars["String"];
   Job: NavJob;
   Resource: NavResource;
+  Int: Scalars["Int"];
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
   PigAdjustment: PigAdjustmentDocument;
-  Int: Scalars["Int"];
   PigGradeOff: PigGradeOffDocument;
   PigMortality: PigMortalityDocument;
   PigMove: PigMoveDocument;
@@ -1383,6 +1385,12 @@ export type JobResolvers<
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   personResponsible?: Resolver<
     ResolversTypes["Resource"],
+    ParentType,
+    ContextType
+  >;
+  inventory?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  deadQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
     ParentType,
     ContextType
   >;

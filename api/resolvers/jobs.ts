@@ -9,5 +9,7 @@ export const Job: JobResolvers = {
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Resources", job.Person_Responsible)
       .get<NavResource>();
-  }
+  },
+  inventory: job => job.Inventory_Left,
+  deadQuantity: job => job.Dead_Quantity
 };

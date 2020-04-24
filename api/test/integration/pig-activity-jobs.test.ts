@@ -14,6 +14,8 @@ function query() {
       pigActivityJobs {
         number
         description
+        inventory
+        deadQuantity
       }
     }`
   );
@@ -36,7 +38,9 @@ test("returns jobs for pig activity", async () => {
   await expect(query()).resolves.toEqual({
     pigActivityJobs: jobs.map(job => ({
       number: job.No,
-      description: job.Description
+      description: job.Description,
+      inventory: job.Inventory_Left,
+      deadQuantity: job.Dead_Quantity
     }))
   });
 });
