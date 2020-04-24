@@ -79,7 +79,7 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
                   </FormFieldInput>
                 </FormField>
                 <FormField name="deadQuantity">
-                  <FormFieldLabel>Dead Quantity</FormFieldLabel>
+                  <FormFieldLabel>Total Dead</FormFieldLabel>
                   <FormFieldInput noRegister>
                     <StaticValue value={job.deadQuantity || 0} />
                   </FormFieldInput>
