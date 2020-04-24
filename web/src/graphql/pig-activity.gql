@@ -14,5 +14,7 @@ query PigActivityJobs {
   pigActivityJobs {
     number
     description
+    inventory
+    deadQuantity
   }
 }

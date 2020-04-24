@@ -537,7 +537,10 @@ export type PigActivityJobsQuery = { __typename?: "Query" } & {
     job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
   pigActivityJobs: Array<
-    { __typename?: "Job" } & Pick<Job, "number" | "description">
+    { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >
   >;
 };
 
@@ -1133,6 +1136,8 @@ export const PigActivityJobsDocument = gql`
     pigActivityJobs {
       number
       description
+      inventory
+      deadQuantity
     }
   }
 `;
