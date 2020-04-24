@@ -5,18 +5,11 @@ import {
   PostPigWeanResult,
   MutationPostPigWeanArgs
 } from "../../resolvers/types";
-import {
-  PigWeanFactory,
-  JobFactory,
-  DimensionFactory,
-  UserSettingsFactory
-} from "../builders";
+import { PigWeanFactory, JobFactory, UserSettingsFactory } from "../builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType,
-  NavDimensionCode,
-  NavTableID
+  NavEntryType
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
@@ -53,12 +46,6 @@ function mutation(variables: MutationPostPigWeanArgs) {
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  const entityDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.Entity
-  });
-  const costCenterDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.CostCenter
-  });
   const input = PigWeanFactory.build({
     job: job.No,
     ...inputOverrides
@@ -74,28 +61,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .basicAuth(auth)
     .reply(200, job)
     .persist();
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${job.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.Entity
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, entityDimension);
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${job.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.CostCenter
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, costCenterDimension);
 
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
@@ -120,7 +85,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .basicAuth(auth)
     .reply(200, {});
 
-  return { user, job, entityDimension, costCenterDimension, input };
+  return { user, job, input };
 }
 
 testUnauthenticated(() =>

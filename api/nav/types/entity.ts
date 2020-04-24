@@ -17,6 +17,10 @@ export interface NavJob {
   Description: string;
   Person_Responsible: string;
   Site: string;
+  Entity: string;
+  Cost_Center: string;
+  Inventory_Left: number;
+  Dead_Quantity: number;
 }
 
 export interface NavDimension {

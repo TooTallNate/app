@@ -8,15 +8,12 @@ import {
 import {
   PigAdjustmentFactory,
   JobFactory,
-  DimensionFactory,
   UserSettingsFactory
 } from "../builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType,
-  NavDimensionCode,
-  NavTableID
+  NavEntryType
 } from "../../nav";
 import { format } from "date-fns";
 import PigAdjustmentModel from "../../models/PigAdjustment";
@@ -52,12 +49,6 @@ function mutation(variables: MutationPostPigAdjustmentArgs) {
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  const entityDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.Entity
-  });
-  const costCenterDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.CostCenter
-  });
   const input = PigAdjustmentFactory.build({
     job: job.No,
     ...inputOverrides
@@ -75,28 +66,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .persist();
 
   nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${job.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.Entity
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, entityDimension);
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${job.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.CostCenter
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, costCenterDimension);
-
-  nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Adjustment,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
@@ -110,15 +79,15 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.job,
-      Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-      Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code,
+      Shortcut_Dimension_1_Code: job.Entity,
+      Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
       Document_Date: date
     })
     .basicAuth(auth)
     .reply(200, {});
 
-  return { user, job, entityDimension, costCenterDimension, input };
+  return { user, job, input };
 }
 
 testUnauthenticated(() =>

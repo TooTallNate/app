@@ -32,7 +32,15 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
   Person_Responsible: Factory.each(() => faker.name.firstName().toUpperCase()),
   Site: Factory.each(() =>
     faker.random.number({ min: 10, max: 999 }).toString()
-  )
+  ),
+  Entity: Factory.each(() => oneOf("01", "02", "03")),
+  Cost_Center: Factory.each(() =>
+    faker.random.number({ min: 100, max: 299 }).toString()
+  ),
+  Inventory_Left: Factory.each(() =>
+    faker.random.number({ min: 0, max: 4000 })
+  ),
+  Dead_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 }))
 });
 
 export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({

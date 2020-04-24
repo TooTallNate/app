@@ -47,10 +47,10 @@ export const PigPurchaseMutations: MutationResolvers = {
     return { success: true, pigPurchase: doc, defaults: userSettings };
   },
   async postPigPurchase(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
+    const job = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.job)
+      .get<NavJob>();
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,
@@ -64,8 +64,8 @@ export const PigPurchaseMutations: MutationResolvers = {
         Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center
       },
       navClient
     );
