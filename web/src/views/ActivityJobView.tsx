@@ -75,13 +75,10 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
                 <FormField name="inventory">
                   <FormFieldLabel>Inventory</FormFieldLabel>
                   <FormFieldInput noRegister>
-                    <StaticValue value={job.inventory || 0} />
-                  </FormFieldInput>
-                </FormField>
-                <FormField name="deadQuantity">
-                  <FormFieldLabel>Total Dead</FormFieldLabel>
-                  <FormFieldInput noRegister>
-                    <StaticValue value={job.deadQuantity || 0} />
+                    <StaticValue
+                      value={`${job.inventory || 0} alive, ${job.deadQuantity ||
+                        0} dead`}
+                    />
                   </FormFieldInput>
                 </FormField>
               </>

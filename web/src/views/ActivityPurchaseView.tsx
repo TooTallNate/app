@@ -127,6 +127,15 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <FormField name="inventory">
+              <FormFieldLabel>Inventory</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigPurchase.job.inventory || 0} alive, ${data
+                    .pigPurchase.job.deadQuantity || 0} dead`}
+                />
+              </FormFieldInput>
+            </FormField>
             <FormField
               name="animal"
               rules={{ required: "The animal field is required." }}

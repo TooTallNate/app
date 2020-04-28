@@ -137,6 +137,15 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <FormField name="inventory">
+              <FormFieldLabel>Inventory</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigMortality.job.inventory || 0} alive, ${data
+                    .pigMortality.job.deadQuantity || 0} dead`}
+                />
+              </FormFieldInput>
+            </FormField>
             <FormField
               name="animal"
               rules={{ required: "The animal field is required." }}

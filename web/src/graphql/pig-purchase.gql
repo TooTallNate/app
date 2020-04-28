@@ -3,6 +3,8 @@ fragment PigPurchaseFragment on PigPurchase {
   job {
     number
     description
+    inventory
+    deadQuantity
   }  
   quantity
   weight

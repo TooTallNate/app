@@ -14,8 +14,8 @@ const StaticValue = React.forwardRef<HTMLInputElement, StaticValueProps>(
         readOnly
         {...props}
         className={`
-          flex items-center px-4 h-11 w-full text-base relative
-          focus:outline-none focus:shadow-outline-b
+          flex items-center px-4 h-6 w-full text-base relative border-4 border-transparent
+          focus:outline-none focus:border-blue-300
           ${className}
         `}
         ref={ref}

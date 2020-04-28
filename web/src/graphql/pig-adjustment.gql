@@ -3,6 +3,8 @@ fragment PigAdjustmentFragment on PigAdjustment {
   job {
     number
     description
+    inventory
+    deadQuantity
   }  
   quantity
   weight

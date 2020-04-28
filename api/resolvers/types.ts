@@ -562,7 +562,12 @@ export type PigAdjustmentFragmentFragment = {
 } & Pick<
   PigAdjustment,
   "animal" | "quantity" | "weight" | "price" | "comments"
-> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+> & {
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
 
 export type PigAdjustmentQueryVariables = {
   job: Scalars["String"];
@@ -611,7 +616,12 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
   "animal" | "quantity" | "weight" | "price" | "comments"
-> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+> & {
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
 
 export type PigGradeOffQueryVariables = {
   job: Scalars["String"];
@@ -661,7 +671,12 @@ export type PigMortalityFragmentFragment = {
   | "weight"
   | "price"
   | "comments"
-> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+> & {
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
 
 export type PigMortalityQueryVariables = {
   job: Scalars["String"];
@@ -715,7 +730,10 @@ export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
   | "price"
   | "comments"
 > & {
-    fromJob: { __typename?: "Job" } & Pick<Job, "number" | "description">;
+    fromJob: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
     toJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
@@ -763,7 +781,12 @@ export type PostPigMoveMutation = { __typename?: "Mutation" } & {
 export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
   PigPurchase,
   "animal" | "quantity" | "weight" | "price" | "comments"
-> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+> & {
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
 
 export type PigPurchaseQueryVariables = {
   job: Scalars["String"];
@@ -806,7 +829,12 @@ export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
 export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
   "animal" | "quantity" | "smallPigQuantity" | "weight" | "price" | "comments"
-> & { job: { __typename?: "Job" } & Pick<Job, "number" | "description"> };
+> & {
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
 
 export type PigWeanQueryVariables = {
   job: Scalars["String"];

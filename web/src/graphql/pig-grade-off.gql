@@ -3,6 +3,8 @@ fragment PigGradeOffFragment on PigGradeOff {
   job {
     number
     description
+    inventory
+    deadQuantity
   }  
   quantity
   weight
