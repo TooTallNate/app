@@ -127,11 +127,11 @@ const ActivityAdjustmentView: React.FC<
               <FormFieldErrors />
             </FormField>
             <FormField name="inventory">
-              <FormFieldLabel>Inventory</FormFieldLabel>
+              <FormFieldLabel>Current Inventory</FormFieldLabel>
               <FormFieldInput noRegister>
                 <StaticValue
-                  value={`${data.pigAdjustment.job.inventory || 0} alive, ${data
-                    .pigAdjustment.job.deadQuantity || 0} dead`}
+                  value={`${data.pigAdjustment.job.inventory || 0}, ${data
+                    .pigAdjustment.job.deadQuantity || 0} deads`}
                 />
               </FormFieldInput>
             </FormField>

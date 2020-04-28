@@ -128,11 +128,11 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldErrors />
             </FormField>
             <FormField name="inventory">
-              <FormFieldLabel>Inventory</FormFieldLabel>
+              <FormFieldLabel>Current Inventory</FormFieldLabel>
               <FormFieldInput noRegister>
                 <StaticValue
-                  value={`${data.pigGradeOff.job.inventory || 0} alive, ${data
-                    .pigGradeOff.job.deadQuantity || 0} dead`}
+                  value={`${data.pigGradeOff.job.inventory || 0}, ${data
+                    .pigGradeOff.job.deadQuantity || 0} deads`}
                 />
               </FormFieldInput>
             </FormField>

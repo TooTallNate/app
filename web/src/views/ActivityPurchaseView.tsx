@@ -128,11 +128,11 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldErrors />
             </FormField>
             <FormField name="inventory">
-              <FormFieldLabel>Inventory</FormFieldLabel>
+              <FormFieldLabel>Current Inventory</FormFieldLabel>
               <FormFieldInput noRegister>
                 <StaticValue
-                  value={`${data.pigPurchase.job.inventory || 0} alive, ${data
-                    .pigPurchase.job.deadQuantity || 0} dead`}
+                  value={`${data.pigPurchase.job.inventory || 0}, ${data
+                    .pigPurchase.job.deadQuantity || 0} deads`}
                 />
               </FormFieldInput>
             </FormField>
