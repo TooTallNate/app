@@ -3,6 +3,8 @@ fragment PigWeanFragment on PigWean {
   job {
     number
     description
+    inventory
+    deadQuantity
   }  
   quantity
   smallPigQuantity

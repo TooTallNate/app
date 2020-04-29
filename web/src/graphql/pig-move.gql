@@ -4,6 +4,8 @@ fragment PigMoveFragment on PigMove {
   fromJob {
     number
     description
+    inventory
+    deadQuantity
   }
   toJob {
     number

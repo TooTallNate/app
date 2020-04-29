@@ -146,7 +146,7 @@ class ODataQuery<T extends {}> implements Promise<T> {
           else {
             navError = new ODataError(
               NavErrorCode.Unknown,
-              `${response.statusCode}`
+              `${response.statusCode} ${body.Message || JSON.stringify(body)}`
             );
           }
 

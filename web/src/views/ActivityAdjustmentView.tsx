@@ -126,6 +126,15 @@ const ActivityAdjustmentView: React.FC<
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <FormField name="inventory">
+              <FormFieldLabel>Current Inventory</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigAdjustment.job.inventory || 0}, ${data
+                    .pigAdjustment.job.deadQuantity || 0} deads`}
+                />
+              </FormFieldInput>
+            </FormField>
             <FormField
               name="animal"
               rules={{ required: "The animal field is required." }}

@@ -168,6 +168,18 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormField>
             </div>
             <div className="flex">
+              <FormField name="inventory" className="w-full mr-4">
+                <FormFieldLabel>Current Inventory</FormFieldLabel>
+                <FormFieldInput noRegister>
+                  <StaticValue
+                    value={`${data.pigMove.fromJob.inventory || 0}, ${data
+                      .pigMove.fromJob.deadQuantity || 0} deads`}
+                  />
+                </FormFieldInput>
+              </FormField>
+              <div className="w-full ml-4" />
+            </div>
+            <div className="flex">
               <FormField
                 className="w-full mr-4"
                 name="fromAnimal"

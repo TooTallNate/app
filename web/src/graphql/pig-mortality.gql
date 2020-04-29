@@ -3,6 +3,8 @@ fragment PigMortalityFragment on PigMortality {
   job {
     number
     description
+    inventory
+    deadQuantity
   }  
   naturalQuantity
   euthanizedQuantity

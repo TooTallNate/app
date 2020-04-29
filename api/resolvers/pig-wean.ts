@@ -7,7 +7,7 @@ import {
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigWeanModel from "../models/PigWean";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { navClient }) {
@@ -41,7 +41,10 @@ export const PigWeanMutations: MutationResolvers = {
     return { success: true, pigWean: doc, defaults: userSettings };
   },
   async postPigWean(_, { input }, { user, navClient }) {
-    const { job } = await findJob(input.job, navClient);
+    const job = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.job)
+      .get<NavJob>();
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,

@@ -8,6 +8,8 @@ type Job {
   number: String!
   description: String!
   personResponsible: Resource!
+  inventory: Int
+  deadQuantity: Int
 }
 
 type Resource {

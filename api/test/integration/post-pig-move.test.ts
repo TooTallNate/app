@@ -5,18 +5,11 @@ import {
   PostPigMoveResult,
   MutationPostPigMoveArgs
 } from "../../resolvers/types";
-import {
-  PigMoveFactory,
-  JobFactory,
-  DimensionFactory,
-  UserSettingsFactory
-} from "../builders";
+import { PigMoveFactory, JobFactory, UserSettingsFactory } from "../builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType,
-  NavDimensionCode,
-  NavTableID
+  NavEntryType
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
@@ -58,18 +51,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const fromJob = JobFactory.build();
   const toJob = JobFactory.build();
-  const fromEntityDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.Entity
-  });
-  const fromCostCenterDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.CostCenter
-  });
-  const toEntityDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.Entity
-  });
-  const toCostCenterDimension = DimensionFactory.build({
-    Dimension_Code: NavDimensionCode.CostCenter
-  });
   const input = PigMoveFactory.build({
     fromJob: fromJob.No,
     toJob: toJob.No,
@@ -94,50 +75,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .persist();
 
   nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${fromJob.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.Entity
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, fromEntityDimension);
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${toJob.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.Entity
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, toEntityDimension);
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${fromJob.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.CostCenter
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, fromCostCenterDimension);
-
-  nock(process.env.NAV_BASE_URL)
-    .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Dimensions(Table_ID=${
-        NavTableID.Job
-      },No=%27${toJob.No}%27,Dimension_Code=%27${encodeURIComponent(
-        NavDimensionCode.CostCenter
-      )}%27)`
-    )
-    .basicAuth(auth)
-    .reply(200, toCostCenterDimension);
-
-  nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
       Journal_Template_Name: NavItemJournalTemplate.Move,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
@@ -150,8 +87,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.fromJob,
-      Shortcut_Dimension_1_Code: fromEntityDimension.Dimension_Value_Code,
-      Shortcut_Dimension_2_Code: fromCostCenterDimension.Dimension_Value_Code,
+      Shortcut_Dimension_1_Code: fromJob.Entity,
+      Shortcut_Dimension_2_Code: fromJob.Cost_Center,
       Posting_Date: date,
       Document_Date: date
     })
@@ -171,8 +108,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.toJob,
-      Shortcut_Dimension_1_Code: toEntityDimension.Dimension_Value_Code,
-      Shortcut_Dimension_2_Code: toCostCenterDimension.Dimension_Value_Code,
+      Shortcut_Dimension_1_Code: toJob.Entity,
+      Shortcut_Dimension_2_Code: toJob.Cost_Center,
       Posting_Date: date,
       Document_Date: date,
       Meta: input.smallPigQuantity

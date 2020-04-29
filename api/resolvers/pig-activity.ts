@@ -17,7 +17,7 @@ import {
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../models/UserSettings";
-import { navDate, getDocumentNumber } from "./utils";
+import { navDate } from "./utils";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,

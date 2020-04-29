@@ -54,8 +54,14 @@ export const PigMoveMutations: MutationResolvers = {
   },
   async postPigMove(_, { input }, { user, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
-    const from = await findJob(input.fromJob, navClient);
-    const to = await findJob(input.toJob, navClient);
+    const fromJob = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.fromJob)
+      .get<NavJob>();
+    const toJob = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.toJob)
+      .get<NavJob>();
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
@@ -64,13 +70,13 @@ export const PigMoveMutations: MutationResolvers = {
         Document_No: docNo,
         Item_No: input.fromAnimal,
         Description: input.comments,
-        Location_Code: from.job.Site,
+        Location_Code: fromJob.Site,
         Quantity: input.quantity,
         Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.fromJob,
-        Shortcut_Dimension_1_Code: from.entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: from.costCenterDimension.Dimension_Value_Code
+        Shortcut_Dimension_1_Code: fromJob.Entity,
+        Shortcut_Dimension_2_Code: fromJob.Cost_Center
       },
       navClient
     );
@@ -82,13 +88,13 @@ export const PigMoveMutations: MutationResolvers = {
         Document_No: docNo,
         Item_No: input.toAnimal,
         Description: input.comments,
-        Location_Code: to.job.Site,
+        Location_Code: toJob.Site,
         Quantity: input.quantity,
         Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.toJob,
-        Shortcut_Dimension_1_Code: to.entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: to.costCenterDimension.Dimension_Value_Code,
+        Shortcut_Dimension_1_Code: toJob.Entity,
+        Shortcut_Dimension_2_Code: toJob.Cost_Center,
         Meta: input.smallPigQuantity
       },
       navClient

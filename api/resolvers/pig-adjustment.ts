@@ -11,7 +11,7 @@ import {
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigAdjustmentModel from "../models/PigAdjustment";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigAdjustment: PigAdjustmentResolvers = {
   job(pigAdjustment, _, { navClient }) {
@@ -49,10 +49,11 @@ export const PigAdjustmentMutations: MutationResolvers = {
     return { success: true, pigAdjustment: doc, defaults: userSettings };
   },
   async postPigAdjustment(_, { input }, { user, navClient }) {
-    const { job, costCenterDimension, entityDimension } = await findJob(
-      input.job,
-      navClient
-    );
+    const job = await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Jobs", input.job)
+      .get<NavJob>();
+
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Adjustment,
@@ -67,8 +68,8 @@ export const PigAdjustmentMutations: MutationResolvers = {
         Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.job,
-        Shortcut_Dimension_1_Code: entityDimension.Dimension_Value_Code,
-        Shortcut_Dimension_2_Code: costCenterDimension.Dimension_Value_Code
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center
       },
       navClient
     );

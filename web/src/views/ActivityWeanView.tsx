@@ -143,6 +143,15 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <FormField name="inventory">
+              <FormFieldLabel>Current Inventory</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigWean.job.inventory || 0}, ${data.pigWean.job
+                    .deadQuantity || 0} deads`}
+                />
+              </FormFieldInput>
+            </FormField>
             <FormField
               name="animal"
               rules={{ required: "The animal field is required." }}
