@@ -17,7 +17,7 @@ export const PigPurchase: PigPurchaseResolvers = {
   job(pigPurchase, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", pigPurchase.job)
+      .resource("Jobs", pigPurchase.job)
       .get<NavJob>();
   }
 };
@@ -49,7 +49,7 @@ export const PigPurchaseMutations: MutationResolvers = {
   async postPigPurchase(_, { input }, { user, navClient }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", input.job)
+      .resource("Jobs", input.job)
       .get<NavJob>();
     await postItemJournal(
       {

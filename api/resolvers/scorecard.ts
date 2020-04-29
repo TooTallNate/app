@@ -34,7 +34,7 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
   area(scorecard, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", scorecard.area)
+      .resource("Jobs", scorecard.area)
       .get<NavJob>();
   },
   operator(scorecard, _, { navClient }) {
@@ -63,7 +63,7 @@ export const ScorecardQueries: QueryResolvers = {
   farrowingBackendAreas(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2")
+      .resource("Jobs")
       .get<NavJob[]>()
       .filter(f =>
         f.and(
@@ -75,7 +75,7 @@ export const ScorecardQueries: QueryResolvers = {
   farrowingBackendArea(_, { number }, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", number)
+      .resource("Jobs", number)
       .get<NavJob>();
   },
   farrowingBackendOperators(_, __, { navClient }) {
@@ -103,7 +103,7 @@ export const ScorecardMutations: MutationResolvers = {
   async postFarrowingBackendScorecard(_, { input }, { navClient, user }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", input.area)
+      .resource("Jobs", input.area)
       .get<NavJob>();
     const docNo = getDocumentNumber("FBE", user.name);
 
@@ -148,7 +148,7 @@ export const ScorecardMutations: MutationResolvers = {
   async setAreaOperator(_, { input }, { navClient }) {
     const area = await navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs2", input.area)
+      .resource("Jobs", input.area)
       .patch<NavJob>({
         Person_Responsible: input.operator
       });

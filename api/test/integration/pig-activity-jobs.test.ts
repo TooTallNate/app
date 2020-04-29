@@ -28,7 +28,7 @@ test("returns jobs for pig activity", async () => {
   const jobs = JobFactory.buildList(3);
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
     .query({
       $filter: `((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU')))`
     })

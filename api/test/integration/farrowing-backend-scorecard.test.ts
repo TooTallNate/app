@@ -103,7 +103,7 @@ test("returns empty scorecard if no scorecard is saved", async () => {
 
   const area = JobFactory.build();
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 
@@ -120,7 +120,7 @@ test("returns scorecard", async () => {
 
   const area = JobFactory.build();
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 
@@ -149,7 +149,7 @@ test("returns scorecard without operator", async () => {
 
   const area = JobFactory.build();
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 
@@ -170,7 +170,7 @@ test("returns scorecard without scores", async () => {
 
   const area = JobFactory.build();
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, area);
 

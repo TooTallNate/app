@@ -52,13 +52,13 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${fromJob.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${fromJob.No}%27)`)
     .basicAuth(auth)
     .reply(200, fromJob)
     .persist();
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${toJob.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${toJob.No}%27)`)
     .basicAuth(auth)
     .reply(200, toJob)
     .persist();

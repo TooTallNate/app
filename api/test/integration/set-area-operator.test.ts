@@ -47,7 +47,7 @@ test("returns updated area", async () => {
   const etag = `etag_${faker.random.alphaNumeric(12)}`;
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
     .reply(200, {
       "@odata.etag": etag,
@@ -55,7 +55,7 @@ test("returns updated area", async () => {
     });
   nock(process.env.NAV_BASE_URL)
     .patch(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/Jobs2(%27${area.No}%27)`,
+      `/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`,
       { Person_Responsible: operator.No }
     )
     .matchHeader("if-match", etag)
