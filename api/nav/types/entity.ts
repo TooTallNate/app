@@ -2,7 +2,8 @@ import {
   NavDimensionCode,
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType
+  NavEntryType,
+  NavReasonCode
 } from "./enum";
 
 export interface NavUser {
@@ -74,7 +75,7 @@ export interface NavItemJournalEntry {
   Transaction_Type: string;
   Transport_Method: string;
   Country_Region_Code: string;
-  Reason_Code: string;
+  Reason_Code: NavReasonCode;
   Weight: number;
   Meta: number;
   Job_No: string;

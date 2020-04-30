@@ -18,6 +18,11 @@ export enum NavJobJournalBatch {
   FarrowBackend = "FARROW-BE"
 }
 
+export enum NavReasonCode {
+  NaturalDeath = "DEAD-NAT",
+  Euthanized = "DEAD-EUTH"
+}
+
 export enum WorkTypeCode {
   FarrowBackend = "FARROW-BE"
 }

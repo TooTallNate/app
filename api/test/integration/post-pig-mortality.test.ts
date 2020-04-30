@@ -13,7 +13,8 @@ import {
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType
+  NavEntryType,
+  NavReasonCode
 } from "../../nav";
 import { format, differenceInDays } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
@@ -89,7 +90,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Reason_Code: NavReasonCode.Euthanized
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -110,7 +112,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Reason_Code: NavReasonCode.NaturalDeath
     })
     .basicAuth(auth)
     .reply(200, {});

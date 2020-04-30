@@ -7,7 +7,8 @@ import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
-  NavJob
+  NavJob,
+  NavReasonCode
 } from "../nav";
 import { getDocumentNumber, parseNavDate } from "./utils";
 import PigMortalityModel from "../models/PigMortality";
@@ -73,7 +74,8 @@ export const PigMortalityMutations: MutationResolvers = {
         Weight: input.naturalQuantity * weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Reason_Code: NavReasonCode.NaturalDeath
       },
       navClient
     );
@@ -91,7 +93,8 @@ export const PigMortalityMutations: MutationResolvers = {
         Weight: input.euthanizedQuantity * weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Reason_Code: NavReasonCode.Euthanized
       },
       navClient
     );
