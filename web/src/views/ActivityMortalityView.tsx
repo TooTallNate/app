@@ -44,7 +44,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
     variables: {
       job: match.params.job
     },
-    onCompleted({ pigMortality, pigActivityDefaults }) {
+    onCompleted({ pigMortality }) {
       const { setValue } = formContext;
       if (pigMortality.animal) setValue("animal", pigMortality.animal);
       if (pigMortality.naturalQuantity)

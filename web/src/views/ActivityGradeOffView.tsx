@@ -44,7 +44,7 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
     variables: {
       job: match.params.job
     },
-    onCompleted({ pigGradeOff, pigActivityDefaults }) {
+    onCompleted({ pigGradeOff }) {
       const { setValue } = formContext;
       if (pigGradeOff.animal) setValue("animal", pigGradeOff.animal);
       if (pigGradeOff.quantity) setValue("quantity", pigGradeOff.quantity);
