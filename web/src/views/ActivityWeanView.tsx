@@ -165,6 +165,9 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
                   <StackedButton value={Animal.GDU_PIGS}>
                     GDU Pigs
                   </StackedButton>
+                  <StackedButton value={Animal.ZLINE_GILTS}>
+                    Z-Line Gilts
+                  </StackedButton>
                 </StackedButtonInput>
               </FormFieldInput>
               <FormFieldErrors />
