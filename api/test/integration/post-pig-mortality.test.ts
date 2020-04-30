@@ -15,9 +15,10 @@ import {
   NavItemJournalBatch,
   NavEntryType
 } from "../../nav";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
 import PigMortalityModel from "../../models/PigMortality";
+import { parseNavDate } from "../../resolvers/utils";
 
 function mutation(variables: MutationPostPigMortalityArgs) {
   return client.request<PostPigMortalityResult>(
@@ -31,7 +32,6 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           animal
           naturalQuantity
           euthanizedQuantity
-          weight
           price
           comments
         }
@@ -54,6 +54,13 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     job: job.No,
     ...inputOverrides
   });
+  const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
+  const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
+  const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
+  const euthanizedWeight =
+    input.euthanizedQuantity * (startWeight + growthFactor * barnDays);
+  const naturalWeight =
+    input.naturalQuantity * (startWeight + growthFactor * barnDays);
 
   const documentNumberRegex = new RegExp(
     `^MORT${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
@@ -77,7 +84,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Location_Code: job.Site,
       Quantity: input.euthanizedQuantity,
       Unit_Amount: input.price,
-      Weight: input.weight,
+      Weight: euthanizedWeight,
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -98,7 +105,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Location_Code: job.Site,
       Quantity: input.naturalQuantity,
       Unit_Amount: input.price,
-      Weight: input.weight,
+      Weight: naturalWeight,
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -134,7 +141,6 @@ test("submits data to NAV and creates new user settings and mortality documents"
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        weight: null,
         price: null,
         comments: null
       },
@@ -196,7 +202,6 @@ test("submits data to NAV and updates existing user settings document", async ()
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        weight: null,
         price: null,
         comments: null
       },
@@ -227,8 +232,7 @@ test("submits data to NAV and clears existing mortality document", async () => {
   });
   const mortalityDoc = await PigMortalityModel.create({
     job: job.No,
-    naturalQuantity: input.naturalQuantity,
-    weight: input.weight
+    naturalQuantity: input.naturalQuantity
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -241,7 +245,6 @@ test("submits data to NAV and clears existing mortality document", async () => {
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        weight: null,
         price: null,
         comments: null
       },
@@ -283,7 +286,6 @@ test("sets description to an empty string if there are no comments", async () =>
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        weight: null,
         price: null,
         comments: null
       },

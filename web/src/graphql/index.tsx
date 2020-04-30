@@ -165,7 +165,6 @@ export type PigMortality = {
   job: Job;
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -258,7 +257,6 @@ export type PostPigMortalityInput = {
   job: Scalars["String"];
   naturalQuantity: Scalars["Int"];
   euthanizedQuantity: Scalars["Int"];
-  weight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -431,7 +429,6 @@ export type SavePigMortalityInput = {
   job: Scalars["String"];
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -652,12 +649,7 @@ export type PigMortalityFragmentFragment = {
   __typename?: "PigMortality";
 } & Pick<
   PigMortality,
-  | "animal"
-  | "naturalQuantity"
-  | "euthanizedQuantity"
-  | "weight"
-  | "price"
-  | "comments"
+  "animal" | "naturalQuantity" | "euthanizedQuantity" | "price" | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -1060,7 +1052,6 @@ export const PigMortalityFragmentFragmentDoc = gql`
     }
     naturalQuantity
     euthanizedQuantity
-    weight
     price
     comments
   }

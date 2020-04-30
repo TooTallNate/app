@@ -25,7 +25,6 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           animal
           naturalQuantity
           euthanizedQuantity
-          weight
           price
           comments
         }
@@ -81,7 +80,6 @@ test("creates new mortality and user settings documents", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        weight: input.weight,
         price: input.price,
         comments: input.comments
       },
@@ -121,7 +119,6 @@ test("creates new mortality and user settings documents", async () => {
     animal: input.animal,
     naturalQuantity: input.naturalQuantity,
     euthanizedQuantity: input.euthanizedQuantity,
-    weight: input.weight,
     price: input.price,
     comments: input.comments
   });
@@ -147,7 +144,6 @@ test("updates existing mortality document", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        weight: input.weight,
         price: input.price,
         comments: input.comments
       },
@@ -172,7 +168,6 @@ test("updates existing mortality document", async () => {
     animal: input.animal,
     naturalQuantity: input.naturalQuantity,
     euthanizedQuantity: input.euthanizedQuantity,
-    weight: input.weight,
     price: input.price,
     comments: input.comments
   });
@@ -200,7 +195,6 @@ test("updates existing user settings document", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        weight: input.weight,
         price: input.price,
         comments: input.comments
       },
@@ -246,7 +240,6 @@ test("does not update price in user settings if not given in input", async () =>
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        weight: input.weight,
         price: null,
         comments: input.comments
       },

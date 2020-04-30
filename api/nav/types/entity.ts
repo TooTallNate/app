@@ -16,11 +16,15 @@ export interface NavJob {
   No: string;
   Description: string;
   Person_Responsible: string;
+  Barn_Type: string;
   Site: string;
   Entity: string;
   Cost_Center: string;
   Inventory_Left: number;
   Dead_Quantity: number;
+  Start_Quantity: number;
+  Start_Weight: number;
+  Start_Date: string;
 }
 
 export interface NavDimension {

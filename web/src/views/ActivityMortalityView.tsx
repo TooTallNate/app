@@ -32,7 +32,6 @@ interface FormData {
   animal: string;
   naturalQuantity: number;
   euthanizedQuantity: number;
-  weight: number;
   price: number;
   comments?: string;
 }
@@ -53,7 +52,6 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
         setValue("naturalQuantity", pigMortality.naturalQuantity);
       if (pigMortality.euthanizedQuantity)
         setValue("euthanizedQuantity", pigMortality.euthanizedQuantity);
-      if (pigMortality.weight) setValue("weight", pigMortality.weight);
       if (pigMortality.price) setValue("price", pigMortality.price);
       else if (pigActivityDefaults.price)
         setValue("price", pigActivityDefaults.price);
@@ -192,18 +190,6 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldLabel>Total Quantity</FormFieldLabel>
               <FormFieldInput>
                 <Output>{totalQuantity}</Output>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="weight"
-              rules={{
-                required: "The total weight field is required."
-              }}
-            >
-              <FormFieldLabel>Total Weight</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

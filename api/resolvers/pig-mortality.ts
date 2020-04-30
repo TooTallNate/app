@@ -9,9 +9,10 @@ import {
   NavEntryType,
   NavJob
 } from "../nav";
-import { getDocumentNumber } from "./utils";
+import { getDocumentNumber, parseNavDate } from "./utils";
 import PigMortalityModel from "../models/PigMortality";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
+import { differenceInDays } from "date-fns";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { navClient }) {
@@ -54,6 +55,10 @@ export const PigMortalityMutations: MutationResolvers = {
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", input.job)
       .get<NavJob>();
+    const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
+    const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
+    const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
+    const weight = startWeight + growthFactor * barnDays;
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Mortality,
@@ -65,7 +70,7 @@ export const PigMortalityMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: input.naturalQuantity,
         Unit_Amount: input.price,
-        Weight: input.weight,
+        Weight: input.naturalQuantity * weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
         Shortcut_Dimension_2_Code: job.Cost_Center
@@ -83,7 +88,7 @@ export const PigMortalityMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: input.euthanizedQuantity,
         Unit_Amount: input.price,
-        Weight: input.weight,
+        Weight: input.euthanizedQuantity * weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
         Shortcut_Dimension_2_Code: job.Cost_Center

@@ -8,7 +8,6 @@ fragment PigMortalityFragment on PigMortality {
   }  
   naturalQuantity
   euthanizedQuantity
-  weight
   price
   comments
 }

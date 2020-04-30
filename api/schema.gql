@@ -45,7 +45,6 @@ type PigMortality {
   job: Job!
   naturalQuantity: Int
   euthanizedQuantity: Int
-  weight: Float
   price: Float
   comments: String
 }
@@ -144,7 +143,6 @@ input PostPigMortalityInput {
   job: String!
   naturalQuantity: Int!
   euthanizedQuantity: Int!
-  weight: Float!
   price: Float!
   comments: String
 }
@@ -154,7 +152,6 @@ input SavePigMortalityInput {
   job: String!
   naturalQuantity: Int
   euthanizedQuantity: Int
-  weight: Float
   price: Float
   comments: String
 }

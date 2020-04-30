@@ -14,6 +14,7 @@ import {
   PostFarrowingBackendScorecardInput,
   ScorecardEntryInput
 } from "../resolvers/types";
+import { format } from "date-fns";
 
 function oneOf<T>(...list: T[]) {
   return list[faker.random.number({ min: 0, max: list.length - 1 })];
@@ -30,6 +31,7 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
   No: Factory.each(() => `job_${faker.random.alphaNumeric(8)}`),
   Description: Factory.each(() => faker.lorem.words(2)),
   Person_Responsible: Factory.each(() => faker.name.firstName().toUpperCase()),
+  Barn_Type: Factory.each(() => oneOf("Nursery", "Finisher")),
   Site: Factory.each(() =>
     faker.random.number({ min: 10, max: 999 }).toString()
   ),
@@ -40,7 +42,10 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
   Inventory_Left: Factory.each(() =>
     faker.random.number({ min: 0, max: 4000 })
   ),
-  Dead_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 }))
+  Dead_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
+  Start_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
+  Start_Weight: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
+  Start_Date: Factory.each(() => format(faker.date.past(), "yyyy-MM-dd"))
 });
 
 export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
@@ -115,7 +120,6 @@ export const PigMortalityFactory = Factory.Sync.makeFactory({
   naturalQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 500 })
   ),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });

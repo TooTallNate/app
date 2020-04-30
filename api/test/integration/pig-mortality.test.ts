@@ -16,7 +16,6 @@ function query(variables: QueryPigMortalityArgs) {
         animal
         euthanizedQuantity
         naturalQuantity
-        weight
         price
         comments
       }
@@ -52,8 +51,7 @@ test("returns default form if no record in the database", async () => {
       comments: null,
       price: null,
       euthanizedQuantity: null,
-      naturalQuantity: null,
-      weight: null
+      naturalQuantity: null
     }
   });
 });
@@ -76,8 +74,7 @@ test("returns from from the database", async () => {
       comments: doc.comments,
       price: doc.price,
       euthanizedQuantity: doc.euthanizedQuantity,
-      naturalQuantity: doc.naturalQuantity,
-      weight: doc.weight
+      naturalQuantity: doc.naturalQuantity
     }
   });
 });
