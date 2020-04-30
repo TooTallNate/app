@@ -60,44 +60,48 @@ export const PigMortalityMutations: MutationResolvers = {
     const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
     const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
     const weight = startWeight + growthFactor * barnDays;
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.naturalQuantity,
-        Unit_Amount: input.price,
-        Weight: input.naturalQuantity * weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        Reason_Code: NavReasonCode.NaturalDeath
-      },
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.euthanizedQuantity,
-        Unit_Amount: input.price,
-        Weight: input.euthanizedQuantity * weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        Reason_Code: NavReasonCode.Euthanized
-      },
-      navClient
-    );
+    if (input.naturalQuantity > 0) {
+      await postItemJournal(
+        {
+          Journal_Template_Name: NavItemJournalTemplate.Mortality,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Entry_Type: NavEntryType.Negative,
+          Document_No: docNo,
+          Item_No: input.animal,
+          Description: input.comments,
+          Location_Code: job.Site,
+          Quantity: input.naturalQuantity,
+          Unit_Amount: input.price,
+          Weight: input.naturalQuantity * weight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Reason_Code: NavReasonCode.NaturalDeath
+        },
+        navClient
+      );
+    }
+    if (input.euthanizedQuantity > 0) {
+      await postItemJournal(
+        {
+          Journal_Template_Name: NavItemJournalTemplate.Mortality,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Entry_Type: NavEntryType.Negative,
+          Document_No: docNo,
+          Item_No: input.animal,
+          Description: input.comments,
+          Location_Code: job.Site,
+          Quantity: input.euthanizedQuantity,
+          Unit_Amount: input.price,
+          Weight: input.euthanizedQuantity * weight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Reason_Code: NavReasonCode.Euthanized
+        },
+        navClient
+      );
+    }
 
     const userSettings = await updateUserSettings({
       username: user.username,

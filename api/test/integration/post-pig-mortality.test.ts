@@ -74,49 +74,53 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .reply(200, job)
     .persist();
 
-  nock(process.env.NAV_BASE_URL)
-    .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Mortality,
-      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Negative,
-      Document_No: documentNumberRegex,
-      Item_No: input.animal,
-      Description: input.comments || " ",
-      Location_Code: job.Site,
-      Quantity: input.euthanizedQuantity,
-      Unit_Amount: input.price,
-      Weight: euthanizedWeight,
-      Job_No: input.job,
-      Shortcut_Dimension_1_Code: job.Entity,
-      Shortcut_Dimension_2_Code: job.Cost_Center,
-      Posting_Date: date,
-      Document_Date: date,
-      Reason_Code: NavReasonCode.Euthanized
-    })
-    .basicAuth(auth)
-    .reply(200, {});
+  if (input.euthanizedQuantity > 0) {
+    nock(process.env.NAV_BASE_URL)
+      .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
+        Journal_Template_Name: NavItemJournalTemplate.Mortality,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+        Entry_Type: NavEntryType.Negative,
+        Document_No: documentNumberRegex,
+        Item_No: input.animal,
+        Description: input.comments || " ",
+        Location_Code: job.Site,
+        Quantity: input.euthanizedQuantity,
+        Unit_Amount: input.price,
+        Weight: euthanizedWeight,
+        Job_No: input.job,
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Posting_Date: date,
+        Document_Date: date,
+        Reason_Code: NavReasonCode.Euthanized
+      })
+      .basicAuth(auth)
+      .reply(200, {});
+  }
 
-  nock(process.env.NAV_BASE_URL)
-    .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Mortality,
-      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Negative,
-      Document_No: documentNumberRegex,
-      Item_No: input.animal,
-      Description: input.comments || " ",
-      Location_Code: job.Site,
-      Quantity: input.naturalQuantity,
-      Unit_Amount: input.price,
-      Weight: naturalWeight,
-      Job_No: input.job,
-      Shortcut_Dimension_1_Code: job.Entity,
-      Shortcut_Dimension_2_Code: job.Cost_Center,
-      Posting_Date: date,
-      Document_Date: date,
-      Reason_Code: NavReasonCode.NaturalDeath
-    })
-    .basicAuth(auth)
-    .reply(200, {});
+  if (input.naturalQuantity > 0) {
+    nock(process.env.NAV_BASE_URL)
+      .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
+        Journal_Template_Name: NavItemJournalTemplate.Mortality,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+        Entry_Type: NavEntryType.Negative,
+        Document_No: documentNumberRegex,
+        Item_No: input.animal,
+        Description: input.comments || " ",
+        Location_Code: job.Site,
+        Quantity: input.naturalQuantity,
+        Unit_Amount: input.price,
+        Weight: naturalWeight,
+        Job_No: input.job,
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Posting_Date: date,
+        Document_Date: date,
+        Reason_Code: NavReasonCode.NaturalDeath
+      })
+      .basicAuth(auth)
+      .reply(200, {});
+  }
 
   return { user, job, input };
 }
@@ -269,6 +273,36 @@ test("submits data to NAV and clears existing mortality document", async () => {
     _id: expect.anything(),
     activity: "mortality",
     job: job.No
+  });
+});
+
+test("does not submit euthanized quantity if 0", async () => {
+  const { input } = await mockTestData({
+    input: {
+      comments: faker.lorem.words(3),
+      euthanizedQuantity: 0
+    }
+  });
+
+  await expect(mutation({ input })).resolves.toMatchObject({
+    postPigMortality: {
+      success: true
+    }
+  });
+});
+
+test("does not submit natural quantity if 0", async () => {
+  const { input } = await mockTestData({
+    input: {
+      comments: faker.lorem.words(3),
+      naturalQuantity: 0
+    }
+  });
+
+  await expect(mutation({ input })).resolves.toMatchObject({
+    postPigMortality: {
+      success: true
+    }
   });
 });
 
