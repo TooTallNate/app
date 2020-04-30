@@ -155,7 +155,6 @@ export type PigGradeOff = {
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -165,7 +164,6 @@ export type PigMortality = {
   job: Job;
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -225,7 +223,7 @@ export type PostPigAdjustmentInput = {
   job: Scalars["String"];
   quantity: Scalars["Int"];
   weight: Scalars["Float"];
-  price: Scalars["Float"];
+  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -241,7 +239,6 @@ export type PostPigGradeOffInput = {
   job: Scalars["String"];
   quantity: Scalars["Int"];
   weight: Scalars["Float"];
-  price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -257,7 +254,6 @@ export type PostPigMortalityInput = {
   job: Scalars["String"];
   naturalQuantity: Scalars["Int"];
   euthanizedQuantity: Scalars["Int"];
-  price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -413,7 +409,6 @@ export type SavePigGradeOffInput = {
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -429,7 +424,6 @@ export type SavePigMortalityInput = {
   job: Scalars["String"];
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -599,7 +593,7 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
-  "animal" | "quantity" | "weight" | "price" | "comments"
+  "animal" | "quantity" | "weight" | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -612,10 +606,6 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
 
@@ -625,9 +615,6 @@ export type SavePigGradeOffMutationVariables = {
 
 export type SavePigGradeOffMutation = { __typename?: "Mutation" } & {
   savePigGradeOff: { __typename?: "SavePigGradeOffResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
     pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
@@ -638,9 +625,6 @@ export type PostPigGradeOffMutationVariables = {
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
   postPigGradeOff: { __typename?: "PostPigGradeOffResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
     pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
@@ -649,7 +633,7 @@ export type PigMortalityFragmentFragment = {
   __typename?: "PigMortality";
 } & Pick<
   PigMortality,
-  "animal" | "naturalQuantity" | "euthanizedQuantity" | "price" | "comments"
+  "animal" | "naturalQuantity" | "euthanizedQuantity" | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -662,10 +646,6 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
 
@@ -675,9 +655,6 @@ export type SavePigMortalityMutationVariables = {
 
 export type SavePigMortalityMutation = { __typename?: "Mutation" } & {
   savePigMortality: { __typename?: "SavePigMortalityResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
     pigMortality: {
       __typename?: "PigMortality";
     } & PigMortalityFragmentFragment;
@@ -690,9 +667,6 @@ export type PostPigMortalityMutationVariables = {
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
   postPigMortality: { __typename?: "PostPigMortalityResult" } & {
-    defaults: {
-      __typename?: "PigActivityDefaults";
-    } & PigActivityDefaultsFragmentFragment;
     pigMortality: {
       __typename?: "PigMortality";
     } & PigMortalityFragmentFragment;
@@ -1037,7 +1011,6 @@ export const PigGradeOffFragmentFragmentDoc = gql`
     }
     quantity
     weight
-    price
     comments
   }
 `;
@@ -1052,7 +1025,6 @@ export const PigMortalityFragmentFragmentDoc = gql`
     }
     naturalQuantity
     euthanizedQuantity
-    price
     comments
   }
 `;
@@ -1396,9 +1368,6 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
-    pigActivityDefaults {
-      price
-    }
     pigGradeOff(job: $job) {
       ...PigGradeOffFragment
     }
@@ -1455,15 +1424,11 @@ export type PigGradeOffQueryResult = ApolloReactCommon.QueryResult<
 export const SavePigGradeOffDocument = gql`
   mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
     savePigGradeOff(input: $input) {
-      defaults {
-        ...PigActivityDefaultsFragment
-      }
       pigGradeOff {
         ...PigGradeOffFragment
       }
     }
   }
-  ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigGradeOffFragmentFragmentDoc}
 `;
 export type SavePigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
@@ -1512,15 +1477,11 @@ export type SavePigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 export const PostPigGradeOffDocument = gql`
   mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
     postPigGradeOff(input: $input) {
-      defaults {
-        ...PigActivityDefaultsFragment
-      }
       pigGradeOff {
         ...PigGradeOffFragment
       }
     }
   }
-  ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigGradeOffFragmentFragmentDoc}
 `;
 export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
@@ -1568,9 +1529,6 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigMortalityDocument = gql`
   query PigMortality($job: String!) {
-    pigActivityDefaults {
-      price
-    }
     pigMortality(job: $job) {
       ...PigMortalityFragment
     }
@@ -1629,15 +1587,11 @@ export type PigMortalityQueryResult = ApolloReactCommon.QueryResult<
 export const SavePigMortalityDocument = gql`
   mutation SavePigMortality($input: SavePigMortalityInput!) {
     savePigMortality(input: $input) {
-      defaults {
-        ...PigActivityDefaultsFragment
-      }
       pigMortality {
         ...PigMortalityFragment
       }
     }
   }
-  ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigMortalityFragmentFragmentDoc}
 `;
 export type SavePigMortalityMutationFn = ApolloReactCommon.MutationFunction<
@@ -1686,15 +1640,11 @@ export type SavePigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
 export const PostPigMortalityDocument = gql`
   mutation PostPigMortality($input: PostPigMortalityInput!) {
     postPigMortality(input: $input) {
-      defaults {
-        ...PigActivityDefaultsFragment
-      }
       pigMortality {
         ...PigMortalityFragment
       }
     }
   }
-  ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigMortalityFragmentFragmentDoc}
 `;
 export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<

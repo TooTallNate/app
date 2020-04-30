@@ -8,14 +8,10 @@ fragment PigGradeOffFragment on PigGradeOff {
   }  
   quantity
   weight
-  price
   comments
 }
 
 query PigGradeOff($job: String!) {
-  pigActivityDefaults {
-    price
-  }
   pigGradeOff(job: $job) {
     ...PigGradeOffFragment
   }
@@ -23,9 +19,6 @@ query PigGradeOff($job: String!) {
 
 mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
   savePigGradeOff(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
     pigGradeOff {
       ...PigGradeOffFragment
     }
@@ -34,9 +27,6 @@ mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
 
 mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
   postPigGradeOff(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
     pigGradeOff {
       ...PigGradeOffFragment
     }

@@ -25,7 +25,6 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           animal
           naturalQuantity
           euthanizedQuantity
-          price
           comments
         }
         defaults { 
@@ -80,14 +79,13 @@ test("creates new mortality and user settings documents", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        price: input.price,
         comments: input.comments
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -101,8 +99,7 @@ test("creates new mortality and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    price: input.price
+    pigJob: job.No
   });
 
   await expect(
@@ -119,7 +116,6 @@ test("creates new mortality and user settings documents", async () => {
     animal: input.animal,
     naturalQuantity: input.naturalQuantity,
     euthanizedQuantity: input.euthanizedQuantity,
-    price: input.price,
     comments: input.comments
   });
 });
@@ -144,14 +140,13 @@ test("updates existing mortality document", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        price: input.price,
         comments: input.comments
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -168,7 +163,6 @@ test("updates existing mortality document", async () => {
     animal: input.animal,
     naturalQuantity: input.naturalQuantity,
     euthanizedQuantity: input.euthanizedQuantity,
-    price: input.price,
     comments: input.comments
   });
 });
@@ -195,52 +189,6 @@ test("updates existing user settings document", async () => {
         animal: input.animal,
         naturalQuantity: input.naturalQuantity,
         euthanizedQuantity: input.euthanizedQuantity,
-        price: input.price,
-        comments: input.comments
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: input.price
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    pigJob: job.No,
-    price: input.price
-  });
-});
-
-test("does not update price in user settings if not given in input", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      price: undefined,
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    savePigMortality: {
-      success: true,
-      pigMortality: {
-        job: {
-          number: job.No
-        },
-        animal: input.animal,
-        naturalQuantity: input.naturalQuantity,
-        euthanizedQuantity: input.euthanizedQuantity,
-        price: null,
         comments: input.comments
       },
       defaults: {

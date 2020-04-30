@@ -76,13 +76,13 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Description: input.comments || " ",
       Location_Code: job.Site,
       Quantity: Math.abs(input.quantity),
-      Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      ...(input.quantity > 0 && { Unit_Amount: input.price })
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -160,7 +160,8 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      price: faker.random.number({ min: 1, max: 50 })
     })
   );
 
@@ -266,7 +267,7 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });

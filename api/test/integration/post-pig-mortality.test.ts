@@ -33,7 +33,6 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           animal
           naturalQuantity
           euthanizedQuantity
-          price
           comments
         }
         defaults {
@@ -55,13 +54,11 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     job: job.No,
     ...inputOverrides
   });
+
   const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
   const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
   const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
-  const euthanizedWeight =
-    input.euthanizedQuantity * (startWeight + growthFactor * barnDays);
-  const naturalWeight =
-    input.naturalQuantity * (startWeight + growthFactor * barnDays);
+  const pigWeight = startWeight + growthFactor * barnDays;
 
   const documentNumberRegex = new RegExp(
     `^MORT${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
@@ -85,8 +82,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
         Description: input.comments || " ",
         Location_Code: job.Site,
         Quantity: input.euthanizedQuantity,
-        Unit_Amount: input.price,
-        Weight: euthanizedWeight,
+        Weight: input.euthanizedQuantity * pigWeight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
         Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -109,8 +105,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
         Description: input.comments || " ",
         Location_Code: job.Site,
         Quantity: input.naturalQuantity,
-        Unit_Amount: input.price,
-        Weight: naturalWeight,
+        Weight: input.naturalQuantity * pigWeight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
         Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -148,14 +143,13 @@ test("submits data to NAV and creates new user settings and mortality documents"
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -169,8 +163,7 @@ test("submits data to NAV and creates new user settings and mortality documents"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    price: input.price
+    pigJob: job.No
   });
 
   await expect(
@@ -209,14 +202,13 @@ test("submits data to NAV and updates existing user settings document", async ()
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: userSettings.price
       }
     }
   });
@@ -227,7 +219,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: input.price
+    price: userSettings.price
   });
 });
 
@@ -252,14 +244,13 @@ test("submits data to NAV and clears existing mortality document", async () => {
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -323,14 +314,13 @@ test("sets description to an empty string if there are no comments", async () =>
         animal: null,
         naturalQuantity: null,
         euthanizedQuantity: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });

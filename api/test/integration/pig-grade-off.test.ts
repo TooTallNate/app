@@ -16,7 +16,6 @@ function query(variables: QueryPigGradeOffArgs) {
         animal
         quantity
         weight
-        price
         comments
       }
     }`,
@@ -49,7 +48,6 @@ test("returns default form if no record in the database", async () => {
       },
       animal: null,
       comments: null,
-      price: null,
       quantity: null,
       weight: null
     }
@@ -72,7 +70,6 @@ test("returns from from the database", async () => {
       },
       animal: doc.animal,
       comments: doc.comments,
-      price: doc.price,
       quantity: doc.quantity,
       weight: doc.weight
     }

@@ -11,7 +11,7 @@ import {
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigGradeOffModel from "../models/PigGradeOff";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeoff, _, { navClient }) {
@@ -41,8 +41,7 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      ...(input.price && { price: input.price })
+      pigJob: input.job
     });
 
     return { success: true, pigGradeOff: doc, defaults: userSettings };
@@ -62,7 +61,6 @@ export const PigGradeOffMutations: MutationResolvers = {
         Description: input.comments,
         Location_Code: job.Site,
         Quantity: input.quantity,
-        Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
@@ -73,8 +71,7 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      price: input.price
+      pigJob: input.job
     });
 
     const doc =

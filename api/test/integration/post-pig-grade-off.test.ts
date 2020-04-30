@@ -8,15 +8,12 @@ import {
 import {
   PigGradeOffFactory,
   JobFactory,
-  DimensionFactory,
   UserSettingsFactory
 } from "../builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
-  NavEntryType,
-  NavDimensionCode,
-  NavTableID
+  NavEntryType
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
@@ -34,7 +31,6 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           animal
           quantity
           weight
-          price
           comments
         }
         defaults { 
@@ -81,7 +77,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Description: input.comments || " ",
       Location_Code: job.Site,
       Quantity: input.quantity,
-      Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
@@ -118,14 +113,13 @@ test("submits data to NAV and creates new user settings and grade off documents"
         animal: null,
         quantity: null,
         weight: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -139,8 +133,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    price: input.price
+    pigJob: job.No
   });
 
   await expect(
@@ -179,14 +172,13 @@ test("submits data to NAV and updates existing user settings document", async ()
         animal: null,
         quantity: null,
         weight: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: userSettings.price
       }
     }
   });
@@ -197,7 +189,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: input.price
+    price: userSettings.price
   });
 });
 
@@ -223,14 +215,13 @@ test("submits data to NAV and clears existing grade off document", async () => {
         animal: null,
         quantity: null,
         weight: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });
@@ -264,14 +255,13 @@ test("sets description to an empty string if there are no comments", async () =>
         animal: null,
         quantity: null,
         weight: null,
-        price: null,
         comments: null
       },
       defaults: {
         job: {
           number: job.No
         },
-        price: input.price
+        price: null
       }
     }
   });

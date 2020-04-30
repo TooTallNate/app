@@ -32,7 +32,6 @@ interface FormData {
   animal: string;
   quantity: number;
   weight: number;
-  price: number;
   comments?: string;
 }
 
@@ -50,9 +49,6 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
       if (pigGradeOff.animal) setValue("animal", pigGradeOff.animal);
       if (pigGradeOff.quantity) setValue("quantity", pigGradeOff.quantity);
       if (pigGradeOff.weight) setValue("weight", pigGradeOff.weight);
-      if (pigGradeOff.price) setValue("price", pigGradeOff.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
     }
   });
@@ -172,18 +168,6 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
               }}
             >
               <FormFieldLabel>Total Weight</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="price"
-              rules={{
-                required: "The price field is required."
-              }}
-            >
-              <FormFieldLabel>Price/pig</FormFieldLabel>
               <FormFieldInput>
                 <NumberInput />
               </FormFieldInput>

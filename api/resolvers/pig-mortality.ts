@@ -44,8 +44,7 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      ...(input.price && { price: input.price })
+      pigJob: input.job
     });
 
     return { success: true, pigMortality: doc, defaults: userSettings };
@@ -71,7 +70,6 @@ export const PigMortalityMutations: MutationResolvers = {
           Description: input.comments,
           Location_Code: job.Site,
           Quantity: input.naturalQuantity,
-          Unit_Amount: input.price,
           Weight: input.naturalQuantity * weight,
           Job_No: input.job,
           Shortcut_Dimension_1_Code: job.Entity,
@@ -92,7 +90,6 @@ export const PigMortalityMutations: MutationResolvers = {
           Description: input.comments,
           Location_Code: job.Site,
           Quantity: input.euthanizedQuantity,
-          Unit_Amount: input.price,
           Weight: input.euthanizedQuantity * weight,
           Job_No: input.job,
           Shortcut_Dimension_1_Code: job.Entity,
@@ -105,8 +102,7 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      price: input.price
+      pigJob: input.job
     });
 
     const doc =
