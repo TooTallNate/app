@@ -1,14 +1,7 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import {
-  NavUser,
-  NavJob,
-  NavDimension,
-  NavDimensionCode,
-  NavResource,
-  NavAnimal
-} from "../nav/types";
+import { NavUser, NavJob, NavResource } from "../nav/types";
 import uuid from "uuid/v4";
 import {
   SaveFarrowingBackendScorecardInput,

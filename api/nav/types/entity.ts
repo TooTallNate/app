@@ -1,5 +1,4 @@
 import {
-  NavDimensionCode,
   NavItemJournalTemplate,
   NavItemJournalBatch,
   NavEntryType,
@@ -31,11 +30,6 @@ export interface NavJob {
 export interface NavAnimal {
   No: string;
   Description: string;
-}
-
-export interface NavDimension {
-  Dimension_Code: NavDimensionCode;
-  Dimension_Value_Code: any;
 }
 
 export interface NavResource {
