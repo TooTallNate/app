@@ -1,19 +1,5 @@
-import {
-  MutationResolvers,
-  QueryResolvers,
-  PigActivityDefaultsResolvers
-} from "./types";
-import {
-  NavItemJournalEntry,
-  ODataClient,
-  NavJob,
-  NavDimension,
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavEntryType,
-  NavTableID,
-  NavDimensionCode
-} from "../nav";
+import { QueryResolvers, PigActivityDefaultsResolvers } from "./types";
+import { NavItemJournalEntry, ODataClient, NavJob } from "../nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../models/UserSettings";
@@ -31,30 +17,6 @@ export function postItemJournal(
     .resource("Company", process.env.NAV_COMPANY)
     .resource("ItemJournal")
     .post(entry);
-}
-
-export async function findJob(no: string, navClient: ODataClient) {
-  const job = await navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("Jobs", no)
-    .get<NavJob>();
-  const costCenterDimension = await navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("Dimensions", {
-      Table_ID: NavTableID.Job,
-      No: no,
-      Dimension_Code: NavDimensionCode.CostCenter
-    })
-    .get<NavDimension>();
-  const entityDimension = await navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("Dimensions", {
-      Table_ID: NavTableID.Job,
-      No: no,
-      Dimension_Code: NavDimensionCode.Entity
-    })
-    .get<NavDimension>();
-  return { job, costCenterDimension, entityDimension };
 }
 
 export async function updateUserSettings({

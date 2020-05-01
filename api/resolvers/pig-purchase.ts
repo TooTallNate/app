@@ -11,7 +11,7 @@ import {
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigPurchaseModel from "../models/PigPurchase";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigPurchase: PigPurchaseResolvers = {
   job(pigPurchase, _, { navClient }) {

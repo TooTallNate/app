@@ -7,7 +7,7 @@ import {
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigMoveModel from "../models/PigMove";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigMove: PigMoveResolvers = {
   fromJob(pigMove, _, { navClient }) {
