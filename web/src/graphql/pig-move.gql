@@ -18,6 +18,10 @@ fragment PigMoveFragment on PigMove {
 }
 
 query PigMove($job: String!) {
+  pigTypes {
+    number
+    description
+  }
   pigActivityJobs {
     number
     description

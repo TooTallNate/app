@@ -5,7 +5,6 @@ import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import NumberInput from "../components/input/NumberInput";
 import MultilineTextInput from "../components/input/MultilineTextInput";
-import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import {
   usePigGradeOffQuery,
@@ -139,15 +138,13 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldLabel>Animal</FormFieldLabel>
               <FormFieldInput>
                 <StackedButtonInput orientation="vertical">
-                  <StackedButton value={Animal.MARKET_PIGS}>
-                    Market Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.GDU_PIGS}>
-                    GDU Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.ZLINE_GILTS}>
-                    Z-Line Gilts
-                  </StackedButton>
+                  {data.pigTypes
+                    .filter(type => ["01", "02"].includes(type.number))
+                    .map(type => (
+                      <StackedButton value={type.number} key={type.number}>
+                        {type.description}
+                      </StackedButton>
+                    ))}
                 </StackedButtonInput>
               </FormFieldInput>
               <FormFieldErrors />

@@ -5,7 +5,6 @@ import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import NumberInput from "../components/input/NumberInput";
 import MultilineTextInput from "../components/input/MultilineTextInput";
-import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import {
   usePigMoveQuery,
@@ -30,8 +29,8 @@ import ViewContent from "../components/view/ViewContent";
 import StaticValue from "../components/input/StaticValue";
 
 interface FormData {
-  fromAnimal: Animal;
-  toAnimal: Animal;
+  fromAnimal: string;
+  toAnimal: string;
   toJob: string;
   quantity: number;
   smallPigQuantity?: number;
@@ -188,16 +187,11 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
                 <FormFieldLabel>From Animal</FormFieldLabel>
                 <FormFieldInput>
                   <StackedButtonInput orientation="vertical">
-                    <StackedButton value={Animal.MARKET_PIGS}>
-                      Market Pigs
-                    </StackedButton>
-                    <StackedButton value={Animal.GDU_PIGS}>
-                      GDU Pigs
-                    </StackedButton>
-                    <StackedButton value={Animal.ZLINE_GILTS}>
-                      Z-Line Gilts
-                    </StackedButton>
-                    <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                    {data.pigTypes.map(type => (
+                      <StackedButton value={type.number} key={type.number}>
+                        {type.description}
+                      </StackedButton>
+                    ))}
                   </StackedButtonInput>
                 </FormFieldInput>
                 <FormFieldErrors />
@@ -210,13 +204,11 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
                 <FormFieldLabel>To Animal</FormFieldLabel>
                 <FormFieldInput>
                   <StackedButtonInput orientation="vertical">
-                    <StackedButton value={Animal.MARKET_PIGS}>
-                      Market Pigs
-                    </StackedButton>
-                    <StackedButton value={Animal.GDU_PIGS}>
-                      GDU Pigs
-                    </StackedButton>
-                    <StackedButton value={Animal.SOWS}>Sows</StackedButton>
+                    {data.pigTypes.map(type => (
+                      <StackedButton value={type.number} key={type.number}>
+                        {type.description}
+                      </StackedButton>
+                    ))}
                   </StackedButtonInput>
                 </FormFieldInput>
                 <FormFieldErrors />

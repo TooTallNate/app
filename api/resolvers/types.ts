@@ -572,6 +572,9 @@ export type PigAdjustmentQueryVariables = {
 };
 
 export type PigAdjustmentQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -626,6 +629,9 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
 
@@ -666,6 +672,9 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
 
@@ -715,6 +724,9 @@ export type PigMoveQueryVariables = {
 };
 
 export type PigMoveQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
@@ -766,6 +778,9 @@ export type PigPurchaseQueryVariables = {
 };
 
 export type PigPurchaseQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -814,6 +829,9 @@ export type PigWeanQueryVariables = {
 };
 
 export type PigWeanQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
