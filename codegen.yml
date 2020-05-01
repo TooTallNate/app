@@ -16,6 +16,7 @@ generates:
       mappers:
         User: "../nav#NavUser"
         Job: "../nav#NavJob"
+        Animal: "../nav#NavAnimal"
         Resource: "../nav#NavResource"
         PigAdjustment: "../models/PigAdjustment#PigAdjustmentDocument"
         PigGradeOff: "../models/PigGradeOff#PigGradeOffDocument"

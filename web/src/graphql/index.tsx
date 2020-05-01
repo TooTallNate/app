@@ -11,6 +11,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type Animal = {
+  __typename?: "Animal";
+  number: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
   area: Job;
@@ -319,6 +325,7 @@ export type PostPigWeanResult = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  pigTypes: Array<Animal>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
   pigAdjustment: PigAdjustment;

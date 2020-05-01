@@ -1,4 +1,3 @@
-import faker from "faker";
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { Job } from "../../resolvers/types";

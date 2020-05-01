@@ -1,5 +1,5 @@
 import { QueryResolvers, PigActivityDefaultsResolvers } from "./types";
-import { NavItemJournalEntry, ODataClient, NavJob } from "../nav";
+import { NavItemJournalEntry, ODataClient, NavJob, NavAnimal } from "../nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../models/UserSettings";
@@ -51,6 +51,12 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
 };
 
 export const PigActivityQueries: QueryResolvers = {
+  async pigTypes(_, __, { navClient }) {
+    return navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("PigTypes")
+      .get<NavAnimal[]>();
+  },
   async pigActivityJobs(_, __, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
