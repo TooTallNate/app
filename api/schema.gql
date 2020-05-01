@@ -137,8 +137,8 @@ input SavePigGradeOffInput {
 input PostPigMortalityInput {
   animal: String!
   job: String!
-  naturalQuantity: Int!
-  euthanizedQuantity: Int!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
   comments: String
 }
 

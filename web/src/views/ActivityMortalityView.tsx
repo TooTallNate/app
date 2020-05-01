@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Output, FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
@@ -57,13 +57,28 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
   const [post] = usePostPigMortalityMutation();
   const [save] = useSavePigMortalityMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
   const { euthanizedQuantity, naturalQuantity } = watch([
     "euthanizedQuantity",
     "naturalQuantity"
   ]);
+  const hasEuthanizedQuantity = typeof euthanizedQuantity === "number";
+  const hasNaturalQuantity = typeof naturalQuantity === "number";
   const totalQuantity = (euthanizedQuantity || 0) + (naturalQuantity || 0);
+
+  // Validate quantities if one changes.
+  useEffect(() => {
+    if (formState.isSubmitted) {
+      triggerValidation("euthanizedQuantity");
+      triggerValidation("naturalQuantity");
+    }
+  }, [
+    triggerValidation,
+    formState.isSubmitted,
+    naturalQuantity,
+    euthanizedQuantity
+  ]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -161,7 +176,10 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <FormField
               name="naturalQuantity"
               rules={{
-                required: "The natural quantity field is required."
+                required:
+                  !hasEuthanizedQuantity &&
+                  !hasNaturalQuantity &&
+                  "Either the natural quantity or euthanized quantity fields are required."
               }}
             >
               <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
@@ -173,7 +191,10 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <FormField
               name="euthanizedQuantity"
               rules={{
-                required: "The euthanized quantity field is required."
+                required:
+                  !hasEuthanizedQuantity &&
+                  !hasNaturalQuantity &&
+                  "Either the natural quantity or euthanized quantity fields are required."
               }}
             >
               <FormFieldLabel>Euthanized Quantity</FormFieldLabel>

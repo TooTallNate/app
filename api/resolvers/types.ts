@@ -265,8 +265,8 @@ export type PostPigGradeOffResult = {
 export type PostPigMortalityInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
-  naturalQuantity: Scalars["Int"];
-  euthanizedQuantity: Scalars["Int"];
+  naturalQuantity?: Maybe<Scalars["Int"]>;
+  euthanizedQuantity?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
