@@ -65,11 +65,11 @@ export const PigAdjustmentMutations: MutationResolvers = {
         Description: input.comments,
         Location_Code: job.Site,
         Quantity: Math.abs(input.quantity),
-        Unit_Amount: input.price,
         Weight: input.weight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        ...(input.quantity > 0 && { Unit_Amount: input.price })
       },
       navClient
     );
@@ -77,7 +77,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
     const userSettings = await updateUserSettings({
       username: user.username,
       pigJob: input.job,
-      price: input.price
+      ...(input.quantity > 0 && { price: input.price })
     });
 
     const doc =

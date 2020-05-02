@@ -7,11 +7,13 @@ import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
-  NavJob
+  NavJob,
+  NavReasonCode
 } from "../nav";
-import { getDocumentNumber } from "./utils";
+import { getDocumentNumber, parseNavDate } from "./utils";
 import PigMortalityModel from "../models/PigMortality";
-import { findJob, postItemJournal, updateUserSettings } from "./pig-activity";
+import { postItemJournal, updateUserSettings } from "./pig-activity";
+import { differenceInDays } from "date-fns";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { navClient }) {
@@ -42,8 +44,7 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      ...(input.price && { price: input.price })
+      pigJob: input.job
     });
 
     return { success: true, pigMortality: doc, defaults: userSettings };
@@ -54,47 +55,54 @@ export const PigMortalityMutations: MutationResolvers = {
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", input.job)
       .get<NavJob>();
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.naturalQuantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
-      },
-      navClient
-    );
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: docNo,
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.euthanizedQuantity,
-        Unit_Amount: input.price,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
-      },
-      navClient
-    );
+    const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
+    const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
+    const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
+    const weight = startWeight + growthFactor * barnDays;
+    if (input.naturalQuantity > 0) {
+      await postItemJournal(
+        {
+          Journal_Template_Name: NavItemJournalTemplate.Mortality,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Entry_Type: NavEntryType.Negative,
+          Document_No: docNo,
+          Item_No: input.animal,
+          Description: input.comments,
+          Location_Code: job.Site,
+          Quantity: input.naturalQuantity,
+          Weight: input.naturalQuantity * weight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Reason_Code: NavReasonCode.NaturalDeath
+        },
+        navClient
+      );
+    }
+    if (input.euthanizedQuantity > 0) {
+      await postItemJournal(
+        {
+          Journal_Template_Name: NavItemJournalTemplate.Mortality,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Entry_Type: NavEntryType.Negative,
+          Document_No: docNo,
+          Item_No: input.animal,
+          Description: input.comments,
+          Location_Code: job.Site,
+          Quantity: input.euthanizedQuantity,
+          Weight: input.euthanizedQuantity * weight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Reason_Code: NavReasonCode.Euthanized
+        },
+        navClient
+      );
+    }
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job,
-      price: input.price
+      pigJob: input.job
     });
 
     const doc =

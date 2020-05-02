@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormGroup } from "../components/styled";
 import View from "../components/view/View";
 import Title from "../components/view/ViewTitle";
@@ -39,6 +39,7 @@ interface FormData {
 const ActivityAdjustmentView: React.FC<
   RouteComponentProps<{ job: string }>
 > = ({ history, match }) => {
+  const [quantitySign, setQuantitySign] = useState(1);
   const formContext = useForm<FormData>();
   const { loading, data } = usePigAdjustmentQuery({
     variables: {
@@ -47,7 +48,10 @@ const ActivityAdjustmentView: React.FC<
     onCompleted({ pigAdjustment, pigActivityDefaults }) {
       const { setValue } = formContext;
       if (pigAdjustment.animal) setValue("animal", pigAdjustment.animal);
-      if (pigAdjustment.quantity) setValue("quantity", pigAdjustment.quantity);
+      if (pigAdjustment.quantity) {
+        setValue("quantity", Math.abs(pigAdjustment.quantity));
+        setQuantitySign(pigAdjustment.quantity >= 0 ? 1 : -1);
+      }
       if (pigAdjustment.weight) setValue("weight", pigAdjustment.weight);
       if (pigAdjustment.price) setValue("price", pigAdjustment.price);
       else if (pigActivityDefaults.price)
@@ -66,6 +70,7 @@ const ActivityAdjustmentView: React.FC<
         variables: {
           input: {
             ...data,
+            quantity: quantitySign * data.quantity,
             job: match.params.job
           }
         }
@@ -159,9 +164,19 @@ const ActivityAdjustmentView: React.FC<
               }}
             >
               <FormFieldLabel>Quantity</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
+              <div className="flex">
+                <Button
+                  id="quantity-sign"
+                  className="mr-4 w-11"
+                  onClick={() => setQuantitySign(sign => -1 * sign)}
+                  aria-label={quantitySign > 0 ? "Positive" : "Negative"}
+                >
+                  {quantitySign > 0 ? "+" : "-"}
+                </Button>
+                <FormFieldInput>
+                  <NumberInput aria-describedby="quantity-sign" />
+                </FormFieldInput>
+              </div>
               <FormFieldErrors />
             </FormField>
             <FormField
@@ -176,18 +191,20 @@ const ActivityAdjustmentView: React.FC<
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <FormField
-              name="price"
-              rules={{
-                required: "The price field is required."
-              }}
-            >
-              <FormFieldLabel>Price/pig</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            {quantitySign > 0 && (
+              <FormField
+                name="price"
+                rules={{
+                  required: "The price field is required."
+                }}
+              >
+                <FormFieldLabel>Price/pig</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+            )}
             <FormField name="comments">
               <FormFieldLabel>Comments</FormFieldLabel>
               <FormFieldInput>

@@ -84,7 +84,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Description: input.comments || " ",
       Location_Code: fromJob.Site,
       Quantity: input.quantity,
-      Unit_Amount: input.price,
       Weight: input.weight,
       Job_No: input.fromJob,
       Shortcut_Dimension_1_Code: fromJob.Entity,

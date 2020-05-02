@@ -6,7 +6,6 @@ export interface PigGradeOffDocument extends PigActivityDocument {
   animal: string;
   quantity: number;
   weight: number;
-  price: number;
   comments: string;
 }
 
@@ -19,7 +18,6 @@ const PigGradeOffSchema = new Schema({
   animal: String,
   quantity: Number,
   weight: Number,
-  price: Number,
   comments: String
 });
 

@@ -8,15 +8,10 @@ fragment PigMortalityFragment on PigMortality {
   }  
   naturalQuantity
   euthanizedQuantity
-  weight
-  price
   comments
 }
 
 query PigMortality($job: String!) {
-  pigActivityDefaults {
-    price
-  }
   pigMortality(job: $job) {
     ...PigMortalityFragment
   }
@@ -24,9 +19,6 @@ query PigMortality($job: String!) {
 
 mutation SavePigMortality($input: SavePigMortalityInput!) {
   savePigMortality(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
     pigMortality {
       ...PigMortalityFragment
     }
@@ -35,9 +27,6 @@ mutation SavePigMortality($input: SavePigMortalityInput!) {
 
 mutation PostPigMortality($input: PostPigMortalityInput!) {
   postPigMortality(input: $input) {
-    defaults {
-      ...PigActivityDefaultsFragment
-    }
     pigMortality {
       ...PigMortalityFragment
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Output, FormGroup } from "../components/styled";
 import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
@@ -32,8 +32,6 @@ interface FormData {
   animal: string;
   naturalQuantity: number;
   euthanizedQuantity: number;
-  weight: number;
-  price: number;
   comments?: string;
 }
 
@@ -46,30 +44,41 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
     variables: {
       job: match.params.job
     },
-    onCompleted({ pigMortality, pigActivityDefaults }) {
+    onCompleted({ pigMortality }) {
       const { setValue } = formContext;
       if (pigMortality.animal) setValue("animal", pigMortality.animal);
       if (pigMortality.naturalQuantity)
         setValue("naturalQuantity", pigMortality.naturalQuantity);
       if (pigMortality.euthanizedQuantity)
         setValue("euthanizedQuantity", pigMortality.euthanizedQuantity);
-      if (pigMortality.weight) setValue("weight", pigMortality.weight);
-      if (pigMortality.price) setValue("price", pigMortality.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
     }
   });
   const [post] = usePostPigMortalityMutation();
   const [save] = useSavePigMortalityMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
   const { euthanizedQuantity, naturalQuantity } = watch([
     "euthanizedQuantity",
     "naturalQuantity"
   ]);
+  const hasEuthanizedQuantity = typeof euthanizedQuantity === "number";
+  const hasNaturalQuantity = typeof naturalQuantity === "number";
   const totalQuantity = (euthanizedQuantity || 0) + (naturalQuantity || 0);
+
+  // Validate quantities if one changes.
+  useEffect(() => {
+    if (formState.isSubmitted) {
+      triggerValidation("euthanizedQuantity");
+      triggerValidation("naturalQuantity");
+    }
+  }, [
+    triggerValidation,
+    formState.isSubmitted,
+    naturalQuantity,
+    euthanizedQuantity
+  ]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -167,7 +176,10 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <FormField
               name="naturalQuantity"
               rules={{
-                required: "The natural quantity field is required."
+                required:
+                  !hasEuthanizedQuantity &&
+                  !hasNaturalQuantity &&
+                  "Either the natural quantity or euthanized quantity fields are required."
               }}
             >
               <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
@@ -179,7 +191,10 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
             <FormField
               name="euthanizedQuantity"
               rules={{
-                required: "The euthanized quantity field is required."
+                required:
+                  !hasEuthanizedQuantity &&
+                  !hasNaturalQuantity &&
+                  "Either the natural quantity or euthanized quantity fields are required."
               }}
             >
               <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
@@ -192,30 +207,6 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldLabel>Total Quantity</FormFieldLabel>
               <FormFieldInput>
                 <Output>{totalQuantity}</Output>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="weight"
-              rules={{
-                required: "The total weight field is required."
-              }}
-            >
-              <FormFieldLabel>Total Weight</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="price"
-              rules={{
-                required: "The price field is required."
-              }}
-            >
-              <FormFieldLabel>Price/pig</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

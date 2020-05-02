@@ -10,6 +10,15 @@ export function navDate(date: Date) {
   return format(date, "YYY-MM-dd");
 }
 
+export function parseNavDate(dateStr: string) {
+  const parts = dateStr.split("-");
+  return new Date(
+    parseInt(parts[0]),
+    parseInt(parts[1]) - 1,
+    parseInt(parts[2])
+  );
+}
+
 export enum ErrorCode {
   Unauthorized = "UNAUTHORIZED",
   InvalidCredentials = "INVALID_CREDENTIALS",
