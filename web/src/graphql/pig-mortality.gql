@@ -12,6 +12,10 @@ fragment PigMortalityFragment on PigMortality {
 }
 
 query PigMortality($job: String!) {
+  pigTypes {
+    number
+    description
+  }
   pigMortality(job: $job) {
     ...PigMortalityFragment
   }

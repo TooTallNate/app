@@ -12,6 +12,11 @@ type Job {
   deadQuantity: Int
 }
 
+type Animal {
+  number: String!
+  description: String!
+}
+
 type Resource {
   number: String!
   name: String!
@@ -345,6 +350,7 @@ type SetAreaOperatorResult {
 type Query {
   user: User
 
+  pigTypes: [Animal!]!
   pigActivityJobs: [Job!]!
   pigActivityDefaults: PigActivityDefaults!
   pigAdjustment(job: String!): PigAdjustment!

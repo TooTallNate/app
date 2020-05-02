@@ -11,6 +11,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type Animal = {
+  __typename?: "Animal";
+  number: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type FarrowingBackendScorecard = {
   __typename?: "FarrowingBackendScorecard";
   area: Job;
@@ -319,6 +325,7 @@ export type PostPigWeanResult = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  pigTypes: Array<Animal>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
   pigAdjustment: PigAdjustment;
@@ -552,6 +559,9 @@ export type PigAdjustmentQueryVariables = {
 };
 
 export type PigAdjustmentQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -606,6 +616,9 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
 
@@ -646,6 +659,9 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
 
@@ -695,6 +711,9 @@ export type PigMoveQueryVariables = {
 };
 
 export type PigMoveQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
@@ -746,6 +765,9 @@ export type PigPurchaseQueryVariables = {
 };
 
 export type PigPurchaseQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -794,6 +816,9 @@ export type PigWeanQueryVariables = {
 };
 
 export type PigWeanQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -1194,6 +1219,10 @@ export type PigActivityJobsQueryResult = ApolloReactCommon.QueryResult<
 >;
 export const PigAdjustmentDocument = gql`
   query PigAdjustment($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigActivityDefaults {
       price
     }
@@ -1368,6 +1397,10 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigGradeOff(job: $job) {
       ...PigGradeOffFragment
     }
@@ -1529,6 +1562,10 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigMortalityDocument = gql`
   query PigMortality($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigMortality(job: $job) {
       ...PigMortalityFragment
     }
@@ -1692,6 +1729,10 @@ export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
 >;
 export const PigMoveDocument = gql`
   query PigMove($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigActivityJobs {
       number
       description
@@ -1866,6 +1907,10 @@ export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >;
 export const PigPurchaseDocument = gql`
   query PigPurchase($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigActivityDefaults {
       price
     }
@@ -2038,6 +2083,10 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigWeanDocument = gql`
   query PigWean($job: String!) {
+    pigTypes {
+      number
+      description
+    }
     pigActivityDefaults {
       price
     }

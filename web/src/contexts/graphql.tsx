@@ -12,7 +12,8 @@ import {
   PigGradeOff,
   PigMortality,
   PigMove,
-  PigPurchase
+  PigPurchase,
+  Animal
 } from "../graphql";
 
 const cache = new InMemoryCache({
@@ -22,6 +23,8 @@ const cache = new InMemoryCache({
         return object.__typename;
       case "Job":
         return `Job:${(object as Job).number}`;
+      case "Animal":
+        return `Animal:${(object as Animal).number}`;
       case "User":
         return `User:${(object as User).username}`;
       case "Resource":

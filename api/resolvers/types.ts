@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob, NavResource } from "../nav";
+import { NavUser, NavJob, NavAnimal, NavResource } from "../nav";
 import { PigAdjustmentDocument } from "../models/PigAdjustment";
 import { PigGradeOffDocument } from "../models/PigGradeOff";
 import { PigMortalityDocument } from "../models/PigMortality";
@@ -22,6 +22,12 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+};
+
+export type Animal = {
+  __typename?: "Animal";
+  number: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type FarrowingBackendScorecard = {
@@ -332,6 +338,7 @@ export type PostPigWeanResult = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  pigTypes: Array<Animal>;
   pigActivityJobs: Array<Job>;
   pigActivityDefaults: PigActivityDefaults;
   pigAdjustment: PigAdjustment;
@@ -565,6 +572,9 @@ export type PigAdjustmentQueryVariables = {
 };
 
 export type PigAdjustmentQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -619,6 +629,9 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
 
@@ -659,6 +672,9 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
 
@@ -708,6 +724,9 @@ export type PigMoveQueryVariables = {
 };
 
 export type PigMoveQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
@@ -759,6 +778,9 @@ export type PigPurchaseQueryVariables = {
 };
 
 export type PigPurchaseQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -807,6 +829,9 @@ export type PigWeanQueryVariables = {
 };
 
 export type PigWeanQuery = { __typename?: "Query" } & {
+  pigTypes: Array<
+    { __typename?: "Animal" } & Pick<Animal, "number" | "description">
+  >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
     PigActivityDefaults,
     "price"
@@ -1104,6 +1129,7 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<NavUser>;
   String: ResolverTypeWrapper<Scalars["String"]>;
+  Animal: ResolverTypeWrapper<NavAnimal>;
   Job: ResolverTypeWrapper<NavJob>;
   Resource: ResolverTypeWrapper<NavResource>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
@@ -1234,6 +1260,7 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: NavUser;
   String: Scalars["String"];
+  Animal: NavAnimal;
   Job: NavJob;
   Resource: NavResource;
   Int: Scalars["Int"];
@@ -1353,6 +1380,15 @@ export type ResolversParentTypes = ResolversObject<{
   SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
     area: ResolversParentTypes["Job"];
   };
+}>;
+
+export type AnimalResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Animal"] = ResolversParentTypes["Animal"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type FarrowingBackendScorecardResolvers<
@@ -1741,6 +1777,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  pigTypes?: Resolver<Array<ResolversTypes["Animal"]>, ParentType, ContextType>;
   pigActivityJobs?: Resolver<
     Array<ResolversTypes["Job"]>,
     ParentType,
@@ -1962,6 +1999,7 @@ export type UserResolvers<
 }>;
 
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
+  Animal?: AnimalResolvers<ContextType>;
   FarrowingBackendScorecard?: FarrowingBackendScorecardResolvers<ContextType>;
   Job?: JobResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;

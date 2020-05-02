@@ -14,6 +14,10 @@ fragment PigWeanFragment on PigWean {
 }
 
 query PigWean($job: String!) {
+  pigTypes {
+    number
+    description
+  }
   pigActivityDefaults {
     price
   }

@@ -5,7 +5,6 @@ import Title from "../components/view/ViewTitle";
 import ViewHeader from "../components/view/ViewHeader";
 import NumberInput from "../components/input/NumberInput";
 import MultilineTextInput from "../components/input/MultilineTextInput";
-import { Animal } from "../entities";
 import { RouteComponentProps } from "react-router";
 import {
   usePigAdjustmentQuery,
@@ -147,12 +146,11 @@ const ActivityAdjustmentView: React.FC<
               <FormFieldLabel>Animal</FormFieldLabel>
               <FormFieldInput>
                 <StackedButtonInput orientation="vertical">
-                  <StackedButton value={Animal.MARKET_PIGS}>
-                    Market Pigs
-                  </StackedButton>
-                  <StackedButton value={Animal.GDU_PIGS}>
-                    GDU Pigs
-                  </StackedButton>
+                  {data.pigTypes.map(type => (
+                    <StackedButton value={type.number} key={type.number}>
+                      {type.description}
+                    </StackedButton>
+                  ))}
                 </StackedButtonInput>
               </FormFieldInput>
               <FormFieldErrors />

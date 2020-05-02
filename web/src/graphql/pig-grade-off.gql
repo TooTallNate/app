@@ -12,6 +12,10 @@ fragment PigGradeOffFragment on PigGradeOff {
 }
 
 query PigGradeOff($job: String!) {
+  pigTypes {
+    number
+    description
+  }
   pigGradeOff(job: $job) {
     ...PigGradeOffFragment
   }

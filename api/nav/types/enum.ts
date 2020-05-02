@@ -36,11 +36,6 @@ export enum NavTableID {
   Job = 167
 }
 
-export enum NavDimensionCode {
-  CostCenter = "COST CENTER",
-  Entity = "ENTITY"
-}
-
 export enum JobTaskNumber {
   SowCare = "SOW CARE",
   PigletCare = "PIGLET CARE",
