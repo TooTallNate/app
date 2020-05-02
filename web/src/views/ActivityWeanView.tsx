@@ -159,7 +159,7 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldInput>
                 <StackedButtonInput orientation="vertical">
                   {data.pigTypes
-                    .filter(type => ["01", "02"].includes(type.number))
+                    .filter(type => ["01", "02", "04"].includes(type.number))
                     .map(type => (
                       <StackedButton value={type.number} key={type.number}>
                         {type.description}

@@ -142,13 +142,11 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
               <FormFieldLabel>Animal</FormFieldLabel>
               <FormFieldInput>
                 <StackedButtonInput orientation="vertical">
-                  {data.pigTypes
-                    .filter(type => ["01", "02"].includes(type.number))
-                    .map(type => (
-                      <StackedButton value={type.number} key={type.number}>
-                        {type.description}
-                      </StackedButton>
-                    ))}
+                  {data.pigTypes.map(type => (
+                    <StackedButton value={type.number} key={type.number}>
+                      {type.description}
+                    </StackedButton>
+                  ))}
                 </StackedButtonInput>
               </FormFieldInput>
               <FormFieldErrors />
