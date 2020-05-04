@@ -3,7 +3,7 @@ import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigWeanQuery,
   useSavePigWeanMutation,
@@ -34,18 +34,25 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityWeanView: React.FC = () => {
+  const history = useHistory();
+  const params = useParams<ViewParams>();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const formContext = useForm<FormData>();
   const { loading, data } = usePigWeanQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigWean, pigActivityDefaults }) {
       const { setValue } = formContext;
-      if (pigWean.animal) setValue("animal", pigWean.animal);
+      if (isSowFarm && pigWean.animal) setValue("animal", pigWean.animal);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.weight) setValue("weight", pigWean.weight);
       if (pigWean.price) setValue("price", pigWean.price);
@@ -65,7 +72,8 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...data,
-            job: match.params.job
+            ...(isNurseryFinisher && { animal: "01" }),
+            job: params.job
           }
         }
       });
@@ -89,7 +97,7 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...getValues(),
-            job: match.params.job
+            job: params.job
           }
         }
       });
@@ -136,9 +144,11 @@ const ActivityWeanView: React.FC<RouteComponentProps<{ job: string }>> = ({
               inventory={data.pigWean.job.inventory || 0}
               deadQuantity={data.pigWean.job.deadQuantity || 0}
             />
-            <AnimalField
-              animals={data.pigTypes.filter(type => type.number !== "03")}
-            />
+            {isSowFarm && (
+              <AnimalField
+                animals={data.pigTypes.filter(type => type.number !== "03")}
+              />
+            )}
             <QuantityField />
             <SmallPigField
               totalQuantity={quantity}

@@ -3,7 +3,7 @@ import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigMoveQuery,
   useSavePigMoveMutation,
@@ -43,19 +43,28 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityMoveView: React.FC = () => {
+  const history = useHistory();
+  const params = useParams<ViewParams>();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const formContext = useForm<FormData>();
   const { loading, data } = usePigMoveQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigMove, pigActivityDefaults }) {
       const { setValue } = formContext;
-      if (pigMove.fromAnimal) setValue("fromAnimal", pigMove.fromAnimal as any);
-      if (pigMove.toAnimal) setValue("toAnimal", pigMove.toAnimal as any);
+      if (isSowFarm && pigMove.fromAnimal)
+        setValue("fromAnimal", pigMove.fromAnimal as any);
+      if (isSowFarm && pigMove.toAnimal)
+        setValue("toAnimal", pigMove.toAnimal as any);
       if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
       if (pigMove.weight) setValue("weight", pigMove.weight);
@@ -76,7 +85,8 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...data,
-            fromJob: match.params.job
+            ...(isNurseryFinisher && { fromAnimal: "01", toAnimal: "01" }),
+            fromJob: params.job
           }
         }
       });
@@ -100,7 +110,7 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...getValues(),
-            fromJob: match.params.job
+            fromJob: params.job
           }
         }
       });
@@ -175,42 +185,44 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               />
               <div className="w-full ml-4" />
             </div>
-            <div className="flex">
-              <FormField
-                className="w-full mr-4"
-                name="fromAnimal"
-                rules={{ required: "The from animal field is required." }}
-              >
-                <FormFieldLabel>From Animal</FormFieldLabel>
-                <FormFieldInput>
-                  <StackedButtonInput orientation="vertical">
-                    {data.pigTypes.map(type => (
-                      <StackedButton value={type.number} key={type.number}>
-                        {type.description}
-                      </StackedButton>
-                    ))}
-                  </StackedButtonInput>
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField
-                className="w-full ml-4"
-                name="toAnimal"
-                rules={{ required: "The to animal field is required." }}
-              >
-                <FormFieldLabel>To Animal</FormFieldLabel>
-                <FormFieldInput>
-                  <StackedButtonInput orientation="vertical">
-                    {data.pigTypes.map(type => (
-                      <StackedButton value={type.number} key={type.number}>
-                        {type.description}
-                      </StackedButton>
-                    ))}
-                  </StackedButtonInput>
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-            </div>
+            {isSowFarm && (
+              <div className="flex">
+                <FormField
+                  className="w-full mr-4"
+                  name="fromAnimal"
+                  rules={{ required: "The from animal field is required." }}
+                >
+                  <FormFieldLabel>From Animal</FormFieldLabel>
+                  <FormFieldInput>
+                    <StackedButtonInput orientation="vertical">
+                      {data.pigTypes.map(type => (
+                        <StackedButton value={type.number} key={type.number}>
+                          {type.description}
+                        </StackedButton>
+                      ))}
+                    </StackedButtonInput>
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField
+                  className="w-full ml-4"
+                  name="toAnimal"
+                  rules={{ required: "The to animal field is required." }}
+                >
+                  <FormFieldLabel>To Animal</FormFieldLabel>
+                  <FormFieldInput>
+                    <StackedButtonInput orientation="vertical">
+                      {data.pigTypes.map(type => (
+                        <StackedButton value={type.number} key={type.number}>
+                          {type.description}
+                        </StackedButton>
+                      ))}
+                    </StackedButtonInput>
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+              </div>
+            )}
             <QuantityField />
             <SmallPigField
               totalQuantity={quantity}

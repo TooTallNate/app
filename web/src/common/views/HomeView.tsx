@@ -21,7 +21,12 @@ const HomeView: React.FC = () => {
             <FormFieldLabel>Select Form</FormFieldLabel>
             <FormFieldInput>
               <StackedNav>
-                <StackedNavLink to="/pigs">Pig Activity</StackedNavLink>
+                <StackedNavLink to="/pigs/sow-farm">
+                  Sow Farm Pig Activity
+                </StackedNavLink>
+                <StackedNavLink to="/pigs/nursery-finisher">
+                  Nursery/Finisher Pig Activity
+                </StackedNavLink>
                 <StackedNavLink to="/scorecard">Scorecard</StackedNavLink>
               </StackedNav>
             </FormFieldInput>

@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useParams, useRouteMatch } from "react-router-dom";
 import { StackedNav, StackedNavLink } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
@@ -11,12 +11,22 @@ import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import Form from "../../common/components/form/Form";
 
-const ActivitySelectionView: React.FC<RouteComponentProps> = ({ match }) => {
+interface ViewParams {
+  barnType: string;
+}
+
+const ActivitySelectionView: React.FC = () => {
+  const match = useRouteMatch();
+  const params = useParams<ViewParams>();
+
   return (
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Activity</Title>
+        <Title>
+          {params.barnType === "sow-farm" ? "Sow Farm " : "Nursery/Finisher "}
+          Activity
+        </Title>
       </ViewHeader>
       <ViewContent>
         <Form>

@@ -4,7 +4,7 @@ import View from "../../common/components/view/View";
 import Title from "../../common/components/view/ViewTitle";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import NumberInput from "../../common/components/input/NumberInput";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigAdjustmentQuery,
   useSavePigAdjustmentMutation,
@@ -36,18 +36,27 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityAdjustmentView: React.FC<
-  RouteComponentProps<{ job: string }>
-> = ({ history, match }) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityAdjustmentView: React.FC = () => {
+  const history = useHistory();
+  const params = useParams<ViewParams>();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const [quantitySign, setQuantitySign] = useState(1);
   const formContext = useForm<FormData>();
   const { loading, data } = usePigAdjustmentQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigAdjustment, pigActivityDefaults }) {
       const { setValue } = formContext;
-      if (pigAdjustment.animal) setValue("animal", pigAdjustment.animal);
+      if (isSowFarm && pigAdjustment.animal)
+        setValue("animal", pigAdjustment.animal);
       if (pigAdjustment.quantity) {
         setValue("quantity", Math.abs(pigAdjustment.quantity));
         setQuantitySign(pigAdjustment.quantity >= 0 ? 1 : -1);
@@ -70,8 +79,9 @@ const ActivityAdjustmentView: React.FC<
         variables: {
           input: {
             ...data,
+            ...(isNurseryFinisher && { animal: "01" }),
             quantity: quantitySign * data.quantity,
-            job: match.params.job
+            job: params.job
           }
         }
       });
@@ -95,7 +105,7 @@ const ActivityAdjustmentView: React.FC<
         variables: {
           input: {
             ...getValues(),
-            job: match.params.job
+            job: params.job
           }
         }
       });
@@ -130,7 +140,7 @@ const ActivityAdjustmentView: React.FC<
               inventory={data.pigAdjustment.job.inventory || 0}
               deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
             />
-            <AnimalField animals={data.pigTypes} />
+            {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <FormField
               name="quantity"
               rules={{

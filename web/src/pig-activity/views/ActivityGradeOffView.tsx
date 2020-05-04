@@ -3,7 +3,7 @@ import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigGradeOffQuery,
   useSavePigGradeOffMutation,
@@ -30,18 +30,26 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityGradeOffView: React.FC = () => {
+  const params = useParams<ViewParams>();
+  const history = useHistory();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const formContext = useForm<FormData>();
   const { loading, data } = usePigGradeOffQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigGradeOff }) {
       const { setValue } = formContext;
-      if (pigGradeOff.animal) setValue("animal", pigGradeOff.animal);
+      if (isSowFarm && pigGradeOff.animal)
+        setValue("animal", pigGradeOff.animal);
       if (pigGradeOff.quantity) setValue("quantity", pigGradeOff.quantity);
       if (pigGradeOff.weight) setValue("weight", pigGradeOff.weight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
@@ -58,7 +66,8 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...data,
-            job: match.params.job
+            ...(isNurseryFinisher && { animal: "01" }),
+            job: params.job
           }
         }
       });
@@ -117,7 +126,7 @@ const ActivityGradeOffView: React.FC<RouteComponentProps<{ job: string }>> = ({
               inventory={data.pigGradeOff.job.inventory || 0}
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
-            <AnimalField animals={data.pigTypes} />
+            {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <QuantityField />
             <WeightField />
             <CommentsField />

@@ -3,7 +3,7 @@ import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigPurchaseQuery,
   useSavePigPurchaseMutation,
@@ -32,18 +32,26 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityPurchaseView: React.FC = () => {
+  const history = useHistory();
+  const params = useParams<ViewParams>();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const formContext = useForm<FormData>();
   const { loading, data } = usePigPurchaseQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigPurchase, pigActivityDefaults }) {
       const { setValue } = formContext;
-      if (pigPurchase.animal) setValue("animal", pigPurchase.animal);
+      if (isSowFarm && pigPurchase.animal)
+        setValue("animal", pigPurchase.animal);
       if (pigPurchase.quantity) setValue("quantity", pigPurchase.quantity);
       if (pigPurchase.weight) setValue("weight", pigPurchase.weight);
       if (pigPurchase.price) setValue("price", pigPurchase.price);
@@ -63,7 +71,8 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...data,
-            job: match.params.job
+            ...(isNurseryFinisher && { animal: "01" }),
+            job: params.job
           }
         }
       });
@@ -87,7 +96,7 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...getValues(),
-            job: match.params.job
+            job: params.job
           }
         }
       });
@@ -122,7 +131,7 @@ const ActivityPurchaseView: React.FC<RouteComponentProps<{ job: string }>> = ({
               inventory={data.pigPurchase.job.inventory || 0}
               deadQuantity={data.pigPurchase.job.deadQuantity || 0}
             />
-            <AnimalField animals={data.pigTypes} />
+            {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <QuantityField />
             <WeightField />
             <PriceField />

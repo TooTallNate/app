@@ -4,7 +4,7 @@ import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import NumberInput from "../../common/components/input/NumberInput";
-import { RouteComponentProps } from "react-router";
+import { useParams, useHistory } from "react-router";
 import {
   usePigMortalityQuery,
   useSavePigMortalityMutation,
@@ -33,18 +33,26 @@ interface FormData {
   comments?: string;
 }
 
-const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  job: string;
+  barnType: string;
+}
+
+const ActivityMortalityView: React.FC = () => {
+  const history = useHistory();
+  const params = useParams<ViewParams>();
+  const isSowFarm = params.barnType === "sow-farm";
+  const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const formContext = useForm<FormData>();
   const { loading, data } = usePigMortalityQuery({
     variables: {
-      job: match.params.job
+      job: params.job
     },
     onCompleted({ pigMortality }) {
       const { setValue } = formContext;
-      if (pigMortality.animal) setValue("animal", pigMortality.animal);
+      if (isSowFarm && pigMortality.animal)
+        setValue("animal", pigMortality.animal);
       if (pigMortality.naturalQuantity)
         setValue("naturalQuantity", pigMortality.naturalQuantity);
       if (pigMortality.euthanizedQuantity)
@@ -84,7 +92,8 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
         variables: {
           input: {
             ...data,
-            job: match.params.job
+            ...(isNurseryFinisher && { animal: "01" }),
+            job: params.job
           }
         }
       });
@@ -143,7 +152,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
               inventory={data.pigMortality.job.inventory || 0}
               deadQuantity={data.pigMortality.job.deadQuantity || 0}
             />
-            <AnimalField animals={data.pigTypes} />
+            {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <FormField
               name="naturalQuantity"
               rules={{
