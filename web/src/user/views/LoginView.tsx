@@ -4,21 +4,21 @@ import {
   InvalidCredentialsError,
   NoAvailableLicenseError
 } from "../contexts/auth";
-import { FormGroup } from "../components/styled";
-import Title from "../components/view/ViewTitle";
-import View from "../components/view/View";
-import ViewHeader from "../components/view/ViewHeader";
-import TextInput from "../components/input/TextInput";
+import { FormGroup } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import TextInput from "../../common/components/input/TextInput";
 import { useForm, OnSubmit } from "react-hook-form";
-import Form from "../components/form/Form";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldInput from "../components/form/FormFieldInput";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import FormSubmit from "../components/form/FormSubmit";
+import Form from "../../common/components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import { useHistory } from "react-router-dom";
-import { useFlash } from "../contexts/flash";
-import ViewContent from "../components/view/ViewContent";
+import { useFlash } from "../../common/contexts/flash";
+import ViewContent from "../../common/components/view/ViewContent";
 
 interface FormData {
   username: string;

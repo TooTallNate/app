@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "./contexts/auth";
-import { GraphqlProvider } from "./contexts/graphql";
-import { FlashProvider } from "./contexts/flash";
+import { AuthProvider } from "../../user/contexts/auth";
+import { GraphqlProvider } from "../contexts/graphql";
+import { FlashProvider } from "../contexts/flash";
 
 const Providers: React.FC = ({ children }) => (
   <Router>

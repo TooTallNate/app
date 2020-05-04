@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import { FormGroup } from "../../components/styled";
-import View from "../../components/view/View";
-import Title from "../../components/view/ViewTitle";
-import ViewHeader from "../../components/view/ViewHeader";
-import NumberInput from "../../components/input/NumberInput";
+import { FormGroup } from "../../common/components/styled";
+import View from "../../common/components/view/View";
+import Title from "../../common/components/view/ViewTitle";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import NumberInput from "../../common/components/input/NumberInput";
 import { RouteComponentProps } from "react-router";
 import {
   usePigAdjustmentQuery,
   useSavePigAdjustmentMutation,
   usePostPigAdjustmentMutation
 } from "../graphql";
-import { useFlash } from "../../contexts/flash";
-import Form from "../../components/form/Form";
-import FormField from "../../components/form/FormField";
-import FormFieldLabel from "../../components/form/FormFieldLabel";
-import FormFieldErrors from "../../components/form/FormFieldErrors";
-import FormFieldInput from "../../components/form/FormFieldInput";
-import FormSubmit from "../../components/form/FormSubmit";
+import { useFlash } from "../../common/contexts/flash";
+import Form from "../../common/components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../../components/input/Button";
-import BackButton from "../../components/view/BackButton";
-import ViewContent from "../../components/view/ViewContent";
+import Button from "../../common/components/input/Button";
+import BackButton from "../../common/components/view/BackButton";
+import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";

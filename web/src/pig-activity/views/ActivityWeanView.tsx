@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
-import { FormGroup } from "../../components/styled";
-import Title from "../../components/view/ViewTitle";
-import View from "../../components/view/View";
-import ViewHeader from "../../components/view/ViewHeader";
+import { FormGroup } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
 import { RouteComponentProps } from "react-router";
 import {
   usePigWeanQuery,
   useSavePigWeanMutation,
   usePostPigWeanMutation
 } from "../graphql";
-import { useFlash } from "../../contexts/flash";
-import Form from "../../components/form/Form";
-import FormSubmit from "../../components/form/FormSubmit";
+import { useFlash } from "../../common/contexts/flash";
+import Form from "../../common/components/form/Form";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../../components/input/Button";
-import BackButton from "../../components/view/BackButton";
-import ViewContent from "../../components/view/ViewContent";
+import Button from "../../common/components/input/Button";
+import BackButton from "../../common/components/view/BackButton";
+import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";

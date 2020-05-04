@@ -1,20 +1,20 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { FormGroup } from "../../components/styled";
-import Title from "../../components/view/ViewTitle";
-import View from "../../components/view/View";
-import ViewHeader from "../../components/view/ViewHeader";
+import { FormGroup } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
 import { usePigActivityJobsQuery } from "../graphql";
-import FormField from "../../components/form/FormField";
-import FormFieldLabel from "../../components/form/FormFieldLabel";
-import FormFieldInput from "../../components/form/FormFieldInput";
-import BackButton from "../../components/view/BackButton";
-import TypeaheadInput from "../../components/input/TypeaheadInput";
-import Form from "../../components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import BackButton from "../../common/components/view/BackButton";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import Form from "../../common/components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormSubmit from "../../components/form/FormSubmit";
-import FormFieldErrors from "../../components/form/FormFieldErrors";
-import ViewContent from "../../components/view/ViewContent";
+import FormSubmit from "../../common/components/form/FormSubmit";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import ViewContent from "../../common/components/view/ViewContent";
 import InventoryField from "../components/InventoryField";
 
 interface FormData {

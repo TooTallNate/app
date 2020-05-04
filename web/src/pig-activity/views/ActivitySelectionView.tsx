@@ -1,15 +1,15 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { StackedNav, StackedNavLink } from "../../components/styled";
-import Title from "../../components/view/ViewTitle";
-import View from "../../components/view/View";
-import ViewHeader from "../../components/view/ViewHeader";
-import FormField from "../../components/form/FormField";
-import FormFieldInput from "../../components/form/FormFieldInput";
-import FormFieldLabel from "../../components/form/FormFieldLabel";
-import BackButton from "../../components/view/BackButton";
-import ViewContent from "../../components/view/ViewContent";
-import Form from "../../components/form/Form";
+import { StackedNav, StackedNavLink } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import FormField from "../../common/components/form/FormField";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import BackButton from "../../common/components/view/BackButton";
+import ViewContent from "../../common/components/view/ViewContent";
+import Form from "../../common/components/form/Form";
 
 const ActivitySelectionView: React.FC<RouteComponentProps> = ({ match }) => {
   return (

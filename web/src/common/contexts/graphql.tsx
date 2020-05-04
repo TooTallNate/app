@@ -14,7 +14,7 @@ import {
   PigMove,
   PigPurchase,
   Animal
-} from "../graphql";
+} from "../../user/graphql";
 
 const cache = new InMemoryCache({
   dataIdFromObject: object => {

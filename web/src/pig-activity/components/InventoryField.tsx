@@ -1,8 +1,8 @@
 import React from "react";
-import FormField from "../../components/form/FormField";
-import FormFieldLabel from "../../components/form/FormFieldLabel";
-import FormFieldInput from "../../components/form/FormFieldInput";
-import StaticValue from "../../components/input/StaticValue";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import StaticValue from "../../common/components/input/StaticValue";
 
 export interface InventoryFieldProps {
   className?: string;

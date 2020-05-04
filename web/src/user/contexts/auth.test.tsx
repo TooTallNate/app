@@ -1,7 +1,7 @@
 import React from "react";
 import faker from "faker";
 import { MockedResponse } from "@apollo/react-testing";
-import { renderHook, act } from "../../test/utils";
+import { renderHook, act } from "../../../test/utils";
 import {
   AuthProvider,
   useAuth,

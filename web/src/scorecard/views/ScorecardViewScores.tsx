@@ -1,31 +1,31 @@
 import { RouteComponentProps } from "react-router-dom";
-import { ButtonLink, FormGroup } from "../components/styled";
-import Title from "../components/view/ViewTitle";
-import View from "../components/view/View";
-import ViewHeader from "../components/view/ViewHeader";
-import Button from "../components/input/Button";
-import SliderInput from "../components/input/SliderInput";
+import { ButtonLink, FormGroup } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import Button from "../../common/components/input/Button";
+import SliderInput from "../../common/components/input/SliderInput";
 import {
   usePostFarrowingBackendScorecardMutation,
   useSaveFarrowingBackendScorecardMutation,
   useFarrowingBackendScorecardQuery
 } from "../graphql";
-import MultilineTextInput from "../components/input/MultilineTextInput";
-import { useFlash } from "../contexts/flash";
+import MultilineTextInput from "../../common/components/input/MultilineTextInput";
+import { useFlash } from "../../common/contexts/flash";
 import { useForm, OnSubmit, FormContextValues } from "react-hook-form";
-import Form from "../components/form/Form";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldInput from "../components/form/FormFieldInput";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import FormSubmit from "../components/form/FormSubmit";
+import Form from "../../common/components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import TypeaheadInput, {
   TypeaheadItem
-} from "../components/input/TypeaheadInput";
+} from "../../common/components/input/TypeaheadInput";
 import React, { useMemo } from "react";
-import BackButton from "../components/view/BackButton";
-import ViewContent from "../components/view/ViewContent";
-import StaticValue from "../components/input/StaticValue";
+import BackButton from "../../common/components/view/BackButton";
+import ViewContent from "../../common/components/view/ViewContent";
+import StaticValue from "../../common/components/input/StaticValue";
 
 interface FormData {
   operator: string;

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { FormGroup } from "../../components/styled";
-import Title from "../../components/view/ViewTitle";
-import View from "../../components/view/View";
-import ViewHeader from "../../components/view/ViewHeader";
+import { FormGroup } from "../../common/components/styled";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
 import { RouteComponentProps } from "react-router";
 import {
   usePigMoveQuery,
@@ -11,20 +11,20 @@ import {
 } from "../graphql";
 import StackedButtonInput, {
   StackedButton
-} from "../../components/input/StackedButtonInput";
-import { useFlash } from "../../contexts/flash";
-import Form from "../../components/form/Form";
-import FormField from "../../components/form/FormField";
-import FormFieldLabel from "../../components/form/FormFieldLabel";
-import FormFieldErrors from "../../components/form/FormFieldErrors";
-import FormFieldInput from "../../components/form/FormFieldInput";
-import FormSubmit from "../../components/form/FormSubmit";
+} from "../../common/components/input/StackedButtonInput";
+import { useFlash } from "../../common/contexts/flash";
+import Form from "../../common/components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../../components/input/Button";
-import TypeaheadInput from "../../components/input/TypeaheadInput";
-import BackButton from "../../components/view/BackButton";
-import ViewContent from "../../components/view/ViewContent";
-import StaticValue from "../../components/input/StaticValue";
+import Button from "../../common/components/input/Button";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import BackButton from "../../common/components/view/BackButton";
+import ViewContent from "../../common/components/view/ViewContent";
+import StaticValue from "../../common/components/input/StaticValue";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import PriceField from "../components/PriceField";

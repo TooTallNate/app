@@ -8,7 +8,7 @@ import {
   UserQuery,
   UserQueryVariables
 } from "../graphql";
-import FullPageSpinner from "../components/FullPageSpinner";
+import FullPageSpinner from "../../common/components/FullPageSpinner";
 
 type AuthUser = Pick<User, "name" | "username">;
 
