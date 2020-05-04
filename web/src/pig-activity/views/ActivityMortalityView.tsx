@@ -1,31 +1,30 @@
 import React, { useEffect } from "react";
-import { Output, FormGroup } from "../components/styled";
-import Title from "../components/view/ViewTitle";
-import View from "../components/view/View";
-import ViewHeader from "../components/view/ViewHeader";
-import NumberInput from "../components/input/NumberInput";
-import MultilineTextInput from "../components/input/MultilineTextInput";
+import { Output, FormGroup } from "../../components/styled";
+import Title from "../../components/view/ViewTitle";
+import View from "../../components/view/View";
+import ViewHeader from "../../components/view/ViewHeader";
+import NumberInput from "../../components/input/NumberInput";
 import { RouteComponentProps } from "react-router";
 import {
   usePigMortalityQuery,
   useSavePigMortalityMutation,
   usePostPigMortalityMutation
 } from "../graphql";
-import StackedButtonInput, {
-  StackedButton
-} from "../components/input/StackedButtonInput";
-import { useFlash } from "../contexts/flash";
-import Form from "../components/form/Form";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import FormFieldInput from "../components/form/FormFieldInput";
-import FormSubmit from "../components/form/FormSubmit";
+import { useFlash } from "../../contexts/flash";
+import Form from "../../components/form/Form";
+import FormField from "../../components/form/FormField";
+import FormFieldLabel from "../../components/form/FormFieldLabel";
+import FormFieldErrors from "../../components/form/FormFieldErrors";
+import FormFieldInput from "../../components/form/FormFieldInput";
+import FormSubmit from "../../components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../components/input/Button";
-import BackButton from "../components/view/BackButton";
-import ViewContent from "../components/view/ViewContent";
-import StaticValue from "../components/input/StaticValue";
+import Button from "../../components/input/Button";
+import BackButton from "../../components/view/BackButton";
+import ViewContent from "../../components/view/ViewContent";
+import CommentsField from "../components/CommentsField";
+import InventoryField from "../components/InventoryField";
+import AnimalField from "../components/AnimalField";
+import JobField from "../components/JobField";
 
 interface FormData {
   animal: string;
@@ -136,40 +135,15 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <FormField name="job">
-              <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={`${data.pigMortality.job.number} ${data.pigMortality.job.description}`}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField name="inventory">
-              <FormFieldLabel>Current Inventory</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={`${data.pigMortality.job.inventory || 0}, ${data
-                    .pigMortality.job.deadQuantity || 0} deads`}
-                />
-              </FormFieldInput>
-            </FormField>
-            <FormField
-              name="animal"
-              rules={{ required: "The animal field is required." }}
-            >
-              <FormFieldLabel>Animal</FormFieldLabel>
-              <FormFieldInput>
-                <StackedButtonInput orientation="vertical">
-                  {data.pigTypes.map(type => (
-                    <StackedButton value={type.number} key={type.number}>
-                      {type.description}
-                    </StackedButton>
-                  ))}
-                </StackedButtonInput>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            <JobField
+              number={data.pigMortality.job.number}
+              description={data.pigMortality.job.description}
+            />
+            <InventoryField
+              inventory={data.pigMortality.job.inventory || 0}
+              deadQuantity={data.pigMortality.job.deadQuantity || 0}
+            />
+            <AnimalField animals={data.pigTypes} />
             <FormField
               name="naturalQuantity"
               rules={{
@@ -207,13 +181,7 @@ const ActivityMortalityView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <FormField name="comments">
-              <FormFieldLabel>Comments</FormFieldLabel>
-              <FormFieldInput>
-                <MultilineTextInput maxLength={50} />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            <CommentsField />
             <FormGroup>
               <Button className="mr-4 w-full" type="button" onClick={onSave}>
                 Save

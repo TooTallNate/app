@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
-import { FormGroup } from "../components/styled";
-import Title from "../components/view/ViewTitle";
-import View from "../components/view/View";
-import ViewHeader from "../components/view/ViewHeader";
-import NumberInput from "../components/input/NumberInput";
-import MultilineTextInput from "../components/input/MultilineTextInput";
+import { FormGroup } from "../../components/styled";
+import Title from "../../components/view/ViewTitle";
+import View from "../../components/view/View";
+import ViewHeader from "../../components/view/ViewHeader";
 import { RouteComponentProps } from "react-router";
 import {
   usePigMoveQuery,
@@ -13,20 +11,26 @@ import {
 } from "../graphql";
 import StackedButtonInput, {
   StackedButton
-} from "../components/input/StackedButtonInput";
-import { useFlash } from "../contexts/flash";
-import Form from "../components/form/Form";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import FormFieldInput from "../components/form/FormFieldInput";
-import FormSubmit from "../components/form/FormSubmit";
+} from "../../components/input/StackedButtonInput";
+import { useFlash } from "../../contexts/flash";
+import Form from "../../components/form/Form";
+import FormField from "../../components/form/FormField";
+import FormFieldLabel from "../../components/form/FormFieldLabel";
+import FormFieldErrors from "../../components/form/FormFieldErrors";
+import FormFieldInput from "../../components/form/FormFieldInput";
+import FormSubmit from "../../components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../components/input/Button";
-import TypeaheadInput from "../components/input/TypeaheadInput";
-import BackButton from "../components/view/BackButton";
-import ViewContent from "../components/view/ViewContent";
-import StaticValue from "../components/input/StaticValue";
+import Button from "../../components/input/Button";
+import TypeaheadInput from "../../components/input/TypeaheadInput";
+import BackButton from "../../components/view/BackButton";
+import ViewContent from "../../components/view/ViewContent";
+import StaticValue from "../../components/input/StaticValue";
+import CommentsField from "../components/CommentsField";
+import InventoryField from "../components/InventoryField";
+import PriceField from "../components/PriceField";
+import WeightField from "../components/WeightField";
+import QuantityField from "../components/QuantityField";
+import SmallPigField from "../components/SmallPigField";
 
 interface FormData {
   fromAnimal: string;
@@ -118,9 +122,6 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
     "quantity",
     "smallPigQuantity"
   ]);
-  const smallPigRatio =
-    100 * Math.min(1, quantity ? smallPigQuantity / quantity : 0);
-  const smallPigPercent = `${smallPigRatio.toFixed(2)}%`;
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {
@@ -167,15 +168,11 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
               </FormField>
             </div>
             <div className="flex">
-              <FormField name="inventory" className="w-full mr-4">
-                <FormFieldLabel>Current Inventory</FormFieldLabel>
-                <FormFieldInput noRegister>
-                  <StaticValue
-                    value={`${data.pigMove.fromJob.inventory || 0}, ${data
-                      .pigMove.fromJob.deadQuantity || 0} deads`}
-                  />
-                </FormFieldInput>
-              </FormField>
+              <InventoryField
+                className="w-full mr-4"
+                inventory={data.pigMove.fromJob.inventory || 0}
+                deadQuantity={data.pigMove.fromJob.deadQuantity || 0}
+              />
               <div className="w-full ml-4" />
             </div>
             <div className="flex">
@@ -214,71 +211,14 @@ const ActivityMoveView: React.FC<RouteComponentProps<{ job: string }>> = ({
                 <FormFieldErrors />
               </FormField>
             </div>
-            <FormField
-              name="quantity"
-              rules={{
-                required: "The quantity field is required."
-              }}
-            >
-              <FormFieldLabel>Quantity</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="smallPigQuantity"
-              rules={{
-                validate: (value: number = 0) =>
-                  value <= (getValues().quantity || 0) ||
-                  "The small pig quantity field must not be more than the total quantity."
-              }}
-            >
-              <FormFieldLabel>Small Pig Quantity</FormFieldLabel>
-              <div className="flex items-center">
-                <FormFieldInput className="flex-grow">
-                  <NumberInput />
-                </FormFieldInput>
-                <div className="ml-4">
-                  <span className="sr-only">
-                    Small Pig Percent of Total Quantity
-                  </span>
-                  <span>{smallPigPercent}</span>
-                </div>
-              </div>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="weight"
-              rules={{
-                required: "The total weight field is required."
-              }}
-            >
-              <FormFieldLabel>Total Weight</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="price"
-              rules={{
-                required: "The price field is required."
-              }}
-            >
-              <FormFieldLabel>Price/pig</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField name="comments">
-              <FormFieldLabel>Comments</FormFieldLabel>
-              <FormFieldInput>
-                <MultilineTextInput maxLength={50} />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            <QuantityField />
+            <SmallPigField
+              totalQuantity={quantity}
+              smallPigQuantity={smallPigQuantity}
+            />
+            <WeightField />
+            <PriceField />
+            <CommentsField />
             <FormGroup>
               <Button className="mr-4 w-full" type="button" onClick={onSave}>
                 Save

@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import ActivityView from "./views/ActivityView";
+import ActivityView from "./pig-activity/views/ActivityView";
 import AccountView from "./views/AccountView";
 import ScorecardView from "./views/ScorecardView";
 import HomeView from "./views/HomeView";

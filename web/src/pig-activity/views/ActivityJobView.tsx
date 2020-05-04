@@ -1,21 +1,21 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { FormGroup } from "../components/styled";
-import Title from "../components/view/ViewTitle";
-import View from "../components/view/View";
-import ViewHeader from "../components/view/ViewHeader";
+import { FormGroup } from "../../components/styled";
+import Title from "../../components/view/ViewTitle";
+import View from "../../components/view/View";
+import ViewHeader from "../../components/view/ViewHeader";
 import { usePigActivityJobsQuery } from "../graphql";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldInput from "../components/form/FormFieldInput";
-import BackButton from "../components/view/BackButton";
-import TypeaheadInput from "../components/input/TypeaheadInput";
-import Form from "../components/form/Form";
+import FormField from "../../components/form/FormField";
+import FormFieldLabel from "../../components/form/FormFieldLabel";
+import FormFieldInput from "../../components/form/FormFieldInput";
+import BackButton from "../../components/view/BackButton";
+import TypeaheadInput from "../../components/input/TypeaheadInput";
+import Form from "../../components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormSubmit from "../components/form/FormSubmit";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import ViewContent from "../components/view/ViewContent";
-import StaticValue from "../components/input/StaticValue";
+import FormSubmit from "../../components/form/FormSubmit";
+import FormFieldErrors from "../../components/form/FormFieldErrors";
+import ViewContent from "../../components/view/ViewContent";
+import InventoryField from "../components/InventoryField";
 
 interface FormData {
   job: string;
@@ -71,17 +71,10 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
               <FormFieldErrors />
             </FormField>
             {job && (
-              <>
-                <FormField name="inventory">
-                  <FormFieldLabel>Current Inventory</FormFieldLabel>
-                  <FormFieldInput noRegister>
-                    <StaticValue
-                      value={`${job.inventory || 0}, ${job.deadQuantity ||
-                        0} deads`}
-                    />
-                  </FormFieldInput>
-                </FormField>
-              </>
+              <InventoryField
+                inventory={job.inventory || 0}
+                deadQuantity={job.deadQuantity || 0}
+              />
             )}
             <FormGroup>
               <FormSubmit>Continue</FormSubmit>

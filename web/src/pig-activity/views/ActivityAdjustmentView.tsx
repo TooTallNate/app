@@ -1,31 +1,32 @@
 import React, { useState } from "react";
-import { FormGroup } from "../components/styled";
-import View from "../components/view/View";
-import Title from "../components/view/ViewTitle";
-import ViewHeader from "../components/view/ViewHeader";
-import NumberInput from "../components/input/NumberInput";
-import MultilineTextInput from "../components/input/MultilineTextInput";
+import { FormGroup } from "../../components/styled";
+import View from "../../components/view/View";
+import Title from "../../components/view/ViewTitle";
+import ViewHeader from "../../components/view/ViewHeader";
+import NumberInput from "../../components/input/NumberInput";
 import { RouteComponentProps } from "react-router";
 import {
   usePigAdjustmentQuery,
   useSavePigAdjustmentMutation,
   usePostPigAdjustmentMutation
 } from "../graphql";
-import StackedButtonInput, {
-  StackedButton
-} from "../components/input/StackedButtonInput";
-import { useFlash } from "../contexts/flash";
-import Form from "../components/form/Form";
-import FormField from "../components/form/FormField";
-import FormFieldLabel from "../components/form/FormFieldLabel";
-import FormFieldErrors from "../components/form/FormFieldErrors";
-import FormFieldInput from "../components/form/FormFieldInput";
-import FormSubmit from "../components/form/FormSubmit";
+import { useFlash } from "../../contexts/flash";
+import Form from "../../components/form/Form";
+import FormField from "../../components/form/FormField";
+import FormFieldLabel from "../../components/form/FormFieldLabel";
+import FormFieldErrors from "../../components/form/FormFieldErrors";
+import FormFieldInput from "../../components/form/FormFieldInput";
+import FormSubmit from "../../components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
-import Button from "../components/input/Button";
-import BackButton from "../components/view/BackButton";
-import ViewContent from "../components/view/ViewContent";
-import StaticValue from "../components/input/StaticValue";
+import Button from "../../components/input/Button";
+import BackButton from "../../components/view/BackButton";
+import ViewContent from "../../components/view/ViewContent";
+import CommentsField from "../components/CommentsField";
+import InventoryField from "../components/InventoryField";
+import AnimalField from "../components/AnimalField";
+import PriceField from "../components/PriceField";
+import WeightField from "../components/WeightField";
+import JobField from "../components/JobField";
 
 interface FormData {
   animal: string;
@@ -121,40 +122,15 @@ const ActivityAdjustmentView: React.FC<
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <FormField name="job">
-              <FormFieldLabel>Job</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={`${data.pigAdjustment.job.number} ${data.pigAdjustment.job.description}`}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField name="inventory">
-              <FormFieldLabel>Current Inventory</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={`${data.pigAdjustment.job.inventory || 0}, ${data
-                    .pigAdjustment.job.deadQuantity || 0} deads`}
-                />
-              </FormFieldInput>
-            </FormField>
-            <FormField
-              name="animal"
-              rules={{ required: "The animal field is required." }}
-            >
-              <FormFieldLabel>Animal</FormFieldLabel>
-              <FormFieldInput>
-                <StackedButtonInput orientation="vertical">
-                  {data.pigTypes.map(type => (
-                    <StackedButton value={type.number} key={type.number}>
-                      {type.description}
-                    </StackedButton>
-                  ))}
-                </StackedButtonInput>
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            <JobField
+              number={data.pigAdjustment.job.number}
+              description={data.pigAdjustment.job.description}
+            />
+            <InventoryField
+              inventory={data.pigAdjustment.job.inventory || 0}
+              deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
+            />
+            <AnimalField animals={data.pigTypes} />
             <FormField
               name="quantity"
               rules={{
@@ -177,39 +153,9 @@ const ActivityAdjustmentView: React.FC<
               </div>
               <FormFieldErrors />
             </FormField>
-            <FormField
-              name="weight"
-              rules={{
-                required: "The total weight field is required."
-              }}
-            >
-              <FormFieldLabel>Total Weight</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            {quantitySign > 0 && (
-              <FormField
-                name="price"
-                rules={{
-                  required: "The price field is required."
-                }}
-              >
-                <FormFieldLabel>Price/pig</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-            )}
-            <FormField name="comments">
-              <FormFieldLabel>Comments</FormFieldLabel>
-              <FormFieldInput>
-                <MultilineTextInput maxLength={50} />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            <WeightField />
+            {quantitySign > 0 && <PriceField />}
+            <CommentsField />
             <FormGroup>
               <Button className="mr-4 w-full" type="button" onClick={onSave}>
                 Save
