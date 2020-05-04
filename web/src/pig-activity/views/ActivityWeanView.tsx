@@ -115,10 +115,7 @@ const ActivityWeanView: React.FC = () => {
     }
   };
 
-  const { quantity = 0, smallPigQuantity = 0 } = watch([
-    "quantity",
-    "smallPigQuantity"
-  ]);
+  const quantity = watch("quantity") || 0;
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {
@@ -150,10 +147,7 @@ const ActivityWeanView: React.FC = () => {
               />
             )}
             <QuantityField />
-            <SmallPigField
-              totalQuantity={quantity}
-              smallPigQuantity={smallPigQuantity}
-            />
+            <SmallPigField />
             <WeightField />
             <PriceField />
             <CommentsField />
