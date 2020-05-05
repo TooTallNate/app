@@ -91,7 +91,7 @@ const ActivityGradeOffView: React.FC = () => {
         variables: {
           input: {
             ...getValues(),
-            job: match.params.job
+            job: params.job
           }
         }
       });
