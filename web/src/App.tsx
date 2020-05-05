@@ -1,12 +1,12 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import ActivityView from "./views/ActivityView";
-import AccountView from "./views/AccountView";
-import ScorecardView from "./views/ScorecardView";
-import HomeView from "./views/HomeView";
-import LoginView from "./views/LoginView";
-import MainNav from "./components/view/MainNav";
-import { useAuth } from "./contexts/auth";
+import ActivityView from "./pig-activity/views/ActivityView";
+import AccountView from "./user/views/AccountView";
+import ScorecardView from "./scorecard/views/ScorecardView";
+import HomeView from "./common/views/HomeView";
+import LoginView from "./user/views/LoginView";
+import MainNav from "./common/components/view/MainNav";
+import { useAuth } from "./user/contexts/auth";
 
 const UnauthenticatedApp: React.FC = () => {
   return (

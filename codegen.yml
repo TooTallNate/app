@@ -1,6 +1,5 @@
 overwrite: true
 schema: "api/schema.gql"
-documents: "web/**/*.gql"
 hooks:
   afterAllFileWrite:
     - eslint --fix
@@ -26,7 +25,28 @@ generates:
         PigWean: "../models/PigWean#PigWeanDocument"
         PigActivityDefaults: "../models/UserSettings#UserSettingsDocument"
         FarrowingBackendScorecard: "../models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
-  web/src/graphql/index.tsx:
+  web/src/user/graphql/index.tsx:
+    documents: "web/src/user/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+  web/src/pig-activity/graphql/index.tsx:
+    documents: "web/src/pig-activity/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+  web/src/scorecard/graphql/index.tsx:
+    documents: "web/src/scorecard/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"
