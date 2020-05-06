@@ -21,7 +21,7 @@ function query(variables: QueryPigGradeOffArgs) {
         scoursQuantity
         smallQuantity
         unthriftyQuantity
-        weight
+        pigWeight
         comments
       }
     }`,
@@ -61,7 +61,7 @@ test("returns default form if no record in the database", async () => {
       scoursQuantity: null,
       smallQuantity: null,
       unthriftyQuantity: null,
-      weight: null
+      pigWeight: null
     }
   });
 });
@@ -89,7 +89,7 @@ test("returns from from the database", async () => {
       scoursQuantity: doc.scoursQuantity,
       smallQuantity: doc.smallQuantity,
       unthriftyQuantity: doc.unthriftyQuantity,
-      weight: doc.weight
+      pigWeight: doc.pigWeight
     }
   });
 });

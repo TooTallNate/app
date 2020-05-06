@@ -5,10 +5,10 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import NumberInput from "../../common/components/input/NumberInput";
 
-const WeightField: React.FC = () => {
+const TotalWeightField: React.FC = () => {
   return (
     <FormField
-      name="weight"
+      name="totalWeight"
       rules={{
         required: "The total weight field is required."
       }}
@@ -22,4 +22,4 @@ const WeightField: React.FC = () => {
   );
 };
 
-export default WeightField;
+export default TotalWeightField;

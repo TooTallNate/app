@@ -20,14 +20,14 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
-import WeightField from "../components/WeightField";
+import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
 
 interface FormData {
   animal: string;
   quantity: number;
-  weight: number;
+  totalWeight: number;
   price: number;
   comments?: string;
 }
@@ -53,7 +53,8 @@ const ActivityPurchaseView: React.FC = () => {
       if (isSowFarm && pigPurchase.animal)
         setValue("animal", pigPurchase.animal);
       if (pigPurchase.quantity) setValue("quantity", pigPurchase.quantity);
-      if (pigPurchase.weight) setValue("weight", pigPurchase.weight);
+      if (pigPurchase.totalWeight)
+        setValue("totalWeight", pigPurchase.totalWeight);
       if (pigPurchase.price) setValue("price", pigPurchase.price);
       else if (pigActivityDefaults.price)
         setValue("price", pigActivityDefaults.price);
@@ -133,7 +134,7 @@ const ActivityPurchaseView: React.FC = () => {
             />
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <QuantityField />
-            <WeightField />
+            <TotalWeightField />
             <PriceField />
             <CommentsField />
             <FormGroup>

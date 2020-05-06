@@ -5,7 +5,7 @@ export interface PigPurchaseDocument extends PigActivityDocument {
   job: string;
   animal: string;
   quantity: number;
-  weight: number;
+  totalWeight: number;
   price: number;
   comments: string;
 }
@@ -18,7 +18,7 @@ const PigPurchaseSchema = new Schema({
   },
   animal: String,
   quantity: Number,
-  weight: Number,
+  totalWeight: Number,
   price: Number,
   comments: String
 });

@@ -84,7 +84,7 @@ export const PigAdjustmentFactory = Factory.Sync.makeFactory({
   animal: Factory.each(() => oneOf("01", "02", "03")),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: undefined as number | undefined,
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 }).withDerivation1(["quantity"], "price", quantity =>
@@ -109,7 +109,7 @@ export const PigGradeOffFactory = Factory.Sync.makeFactory({
   unthriftyQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 20 })
   ),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  pigWeight: Factory.each(() => faker.random.number({ min: 50, max: 200 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
@@ -134,7 +134,7 @@ export const PigMoveFactory = Factory.Sync.makeFactory({
   smallPigQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 50 })
   ),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
@@ -143,7 +143,7 @@ export const PigPurchaseFactory = Factory.Sync.makeFactory({
   animal: Factory.each(() => oneOf("01", "02", "03")),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
@@ -155,7 +155,7 @@ export const PigWeanFactory = Factory.Sync.makeFactory({
   smallPigQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 50 })
   ),
-  weight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
+  totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });

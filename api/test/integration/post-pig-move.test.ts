@@ -31,7 +31,7 @@ function mutation(variables: MutationPostPigMoveArgs) {
           }
           quantity
           smallPigQuantity
-          weight
+          totalWeight
           price
           comments
         }
@@ -84,7 +84,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Description: input.comments || " ",
       Location_Code: fromJob.Site,
       Quantity: input.quantity,
-      Weight: input.weight,
+      Weight: input.totalWeight,
       Job_No: input.fromJob,
       Shortcut_Dimension_1_Code: fromJob.Entity,
       Shortcut_Dimension_2_Code: fromJob.Cost_Center,
@@ -105,7 +105,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Location_Code: toJob.Site,
       Quantity: input.quantity,
       Unit_Amount: input.price,
-      Weight: input.weight,
+      Weight: input.totalWeight,
       Job_No: input.toJob,
       Shortcut_Dimension_1_Code: toJob.Entity,
       Shortcut_Dimension_2_Code: toJob.Cost_Center,
@@ -144,7 +144,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
         toAnimal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -208,7 +208,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         toAnimal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -241,7 +241,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
     fromJob: fromJob.No,
     toJob: toJob.No,
     quantity: input.quantity,
-    weight: input.weight
+    totalWeight: input.totalWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -256,7 +256,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         toAnimal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -297,7 +297,7 @@ test("sets description to an empty string if there are no comments", async () =>
         toAnimal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },

@@ -69,7 +69,7 @@ export const PigGradeOffMutations: MutationResolvers = {
             Location_Code: job.Site,
             Reason_Code: reason,
             Quantity: quantity,
-            Weight: input.weight,
+            Weight: input.pigWeight * quantity,
             Job_No: input.job,
             Shortcut_Dimension_1_Code: job.Entity,
             Shortcut_Dimension_2_Code: job.Cost_Center
@@ -79,21 +79,25 @@ export const PigGradeOffMutations: MutationResolvers = {
       }
     }
 
-    await Promise.all([
-      postGradeOff(
-        NavReasonCode.GradeOffBellyRupture,
-        input.bellyRuptureQuantity
-      ),
-      postGradeOff(NavReasonCode.GradeOffLame, input.lameQuantity),
-      postGradeOff(NavReasonCode.GradeOffRespitory, input.respitoryQuantity),
-      postGradeOff(NavReasonCode.GradeOffScours, input.scoursQuantity),
-      postGradeOff(
-        NavReasonCode.GradeOffScrotumRupture,
-        input.scrotumRuptureQuantity
-      ),
-      postGradeOff(NavReasonCode.GradeOffSmall, input.smallQuantity),
-      postGradeOff(NavReasonCode.GradeOffUnthrifty, input.unthriftyQuantity)
-    ]);
+    await postGradeOff(
+      NavReasonCode.GradeOffBellyRupture,
+      input.bellyRuptureQuantity
+    );
+    await postGradeOff(NavReasonCode.GradeOffLame, input.lameQuantity);
+    await postGradeOff(
+      NavReasonCode.GradeOffRespitory,
+      input.respitoryQuantity
+    );
+    await postGradeOff(NavReasonCode.GradeOffScours, input.scoursQuantity);
+    await postGradeOff(
+      NavReasonCode.GradeOffScrotumRupture,
+      input.scrotumRuptureQuantity
+    );
+    await postGradeOff(NavReasonCode.GradeOffSmall, input.smallQuantity);
+    await postGradeOff(
+      NavReasonCode.GradeOffUnthrifty,
+      input.unthriftyQuantity
+    );
 
     const userSettings = await updateUserSettings({
       username: user.username,

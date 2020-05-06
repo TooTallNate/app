@@ -20,7 +20,7 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
-import WeightField from "../components/WeightField";
+import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
 import SmallPigField from "../components/SmallPigField";
@@ -29,7 +29,7 @@ interface FormData {
   animal: string;
   quantity: number;
   smallPigQuantity?: number;
-  weight: number;
+  totalWeight: number;
   price: number;
   comments?: string;
 }
@@ -54,7 +54,7 @@ const ActivityWeanView: React.FC = () => {
       const { setValue } = formContext;
       if (isSowFarm && pigWean.animal) setValue("animal", pigWean.animal);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
-      if (pigWean.weight) setValue("weight", pigWean.weight);
+      if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
       if (pigWean.price) setValue("price", pigWean.price);
       else if (pigActivityDefaults.price)
         setValue("price", pigActivityDefaults.price);
@@ -148,7 +148,7 @@ const ActivityWeanView: React.FC = () => {
             )}
             <QuantityField />
             <SmallPigField />
-            <WeightField />
+            <TotalWeightField />
             <PriceField />
             <CommentsField />
             <FormGroup>

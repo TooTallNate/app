@@ -11,7 +11,7 @@ export interface PigGradeOffDocument extends PigActivityDocument {
   scoursQuantity: number;
   smallQuantity: number;
   unthriftyQuantity: number;
-  weight: number;
+  pigWeight: number;
   comments: string;
 }
 
@@ -29,7 +29,7 @@ const PigGradeOffSchema = new Schema({
   scoursQuantity: Number,
   smallQuantity: Number,
   unthriftyQuantity: Number,
-  weight: Number,
+  pigWeight: Number,
   comments: String
 });
 

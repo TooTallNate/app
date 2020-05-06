@@ -31,7 +31,7 @@ type PigAdjustment {
   animal: String
   job: Job!
   quantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -46,7 +46,7 @@ type PigGradeOff {
   scoursQuantity: Int
   smallQuantity: Int
   unthriftyQuantity: Int
-  weight: Float
+  pigWeight: Float
   comments: String
 }
 
@@ -65,7 +65,7 @@ type PigMove {
   toJob: Job
   quantity: Int
   smallPigQuantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -74,7 +74,7 @@ type PigPurchase {
   animal: String
   job: Job!
   quantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -84,7 +84,7 @@ type PigWean {
   job: Job!
   quantity: Int
   smallPigQuantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -115,7 +115,7 @@ input PostPigAdjustmentInput {
   animal: String!
   job: String!
   quantity: Int!
-  weight: Float!
+  totalWeight: Float!
   price: Float
   comments: String
 }
@@ -124,7 +124,7 @@ input SavePigAdjustmentInput {
   animal: String
   job: String!
   quantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -139,7 +139,7 @@ input PostPigGradeOffInput {
   scoursQuantity: Int
   smallQuantity: Int
   unthriftyQuantity: Int
-  weight: Float!
+  pigWeight: Float!
   comments: String
 }
 
@@ -153,7 +153,7 @@ input SavePigGradeOffInput {
   scoursQuantity: Int
   smallQuantity: Int
   unthriftyQuantity: Int
-  weight: Float
+  pigWeight: Float
   comments: String
 }
 
@@ -180,7 +180,7 @@ input PostPigMoveInput {
   toJob: String!
   quantity: Int!
   smallPigQuantity: Int
-  weight: Float!
+  totalWeight: Float!
   price: Float!
   comments: String
 }
@@ -192,7 +192,7 @@ input SavePigMoveInput {
   toJob: String
   quantity: Int
   smallPigQuantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -201,7 +201,7 @@ input PostPigPurchaseInput {
   animal: String!
   job: String!
   quantity: Int!
-  weight: Float!
+  totalWeight: Float!
   price: Float!
   comments: String
 }
@@ -210,7 +210,7 @@ input SavePigPurchaseInput {
   animal: String
   job: String!
   quantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }
@@ -220,7 +220,7 @@ input PostPigWeanInput {
   job: String!
   quantity: Int!
   smallPigQuantity: Int
-  weight: Float!
+  totalWeight: Float!
   price: Float!
   comments: String
 }
@@ -230,7 +230,7 @@ input SavePigWeanInput {
   job: String!
   quantity: Int
   smallPigQuantity: Int
-  weight: Float
+  totalWeight: Float
   price: Float
   comments: String
 }

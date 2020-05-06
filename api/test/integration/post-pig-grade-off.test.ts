@@ -37,7 +37,7 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           scoursQuantity
           smallQuantity
           unthriftyQuantity
-          weight
+          pigWeight
           comments
         }
         defaults { 
@@ -74,17 +74,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .reply(200, job)
     .persist();
 
-  const journalPosts = [
-    [NavReasonCode.GradeOffBellyRupture, input.bellyRuptureQuantity],
-    [NavReasonCode.GradeOffLame, input.lameQuantity],
-    [NavReasonCode.GradeOffRespitory, input.respitoryQuantity],
-    [NavReasonCode.GradeOffScours, input.scoursQuantity],
-    [NavReasonCode.GradeOffScrotumRupture, input.scrotumRuptureQuantity],
-    [NavReasonCode.GradeOffSmall, input.smallQuantity],
-    [NavReasonCode.GradeOffUnthrifty, input.unthriftyQuantity]
-  ];
-
-  journalPosts.forEach(([reason, quantity]) => {
+  function postItemJournal(reason: NavReasonCode, quantity?: number) {
     if (quantity > 0) {
       nock(process.env.NAV_BASE_URL)
         .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
@@ -97,7 +87,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
           Location_Code: job.Site,
           Reason_Code: reason,
           Quantity: quantity,
-          Weight: input.weight,
+          Weight: input.pigWeight * quantity,
           Job_No: input.job,
           Shortcut_Dimension_1_Code: job.Entity,
           Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -107,7 +97,21 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
         .basicAuth(auth)
         .reply(200, {});
     }
-  });
+  }
+
+  postItemJournal(
+    NavReasonCode.GradeOffBellyRupture,
+    input.bellyRuptureQuantity
+  );
+  postItemJournal(NavReasonCode.GradeOffLame, input.lameQuantity);
+  postItemJournal(NavReasonCode.GradeOffRespitory, input.respitoryQuantity);
+  postItemJournal(NavReasonCode.GradeOffScours, input.scoursQuantity);
+  postItemJournal(
+    NavReasonCode.GradeOffScrotumRupture,
+    input.scrotumRuptureQuantity
+  );
+  postItemJournal(NavReasonCode.GradeOffSmall, input.smallQuantity);
+  postItemJournal(NavReasonCode.GradeOffUnthrifty, input.unthriftyQuantity);
 
   return { user, job, input };
 }
@@ -140,7 +144,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -201,7 +205,7 @@ test("does not submit belly rupture quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -262,7 +266,7 @@ test("does not submit lame quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -323,7 +327,7 @@ test("does not submit respitory quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -384,7 +388,7 @@ test("does not submit scours quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -445,7 +449,7 @@ test("does not submit scrotum rupture quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -506,7 +510,7 @@ test("does not submit small quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -567,7 +571,7 @@ test("does not submit unthrifty quantity if not positive", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -632,7 +636,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -662,7 +666,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
   });
   const adjustmentDoc = await PigGradeOffModel.create({
     job: job.No,
-    weight: input.weight
+    pigWeight: input.pigWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -680,7 +684,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {
@@ -726,7 +730,7 @@ test("sets description to an empty string if there are no comments", async () =>
         scoursQuantity: null,
         smallQuantity: null,
         unthriftyQuantity: null,
-        weight: null,
+        pigWeight: null,
         comments: null
       },
       defaults: {

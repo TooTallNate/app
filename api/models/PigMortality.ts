@@ -6,7 +6,7 @@ export interface PigMortalityDocument extends PigActivityDocument {
   animal: string;
   naturalQuantity: number;
   euthanizedQuantity: number;
-  weight: number;
+  totalWeight: number;
   comments: string;
 }
 
@@ -19,7 +19,7 @@ const PigMortalitySchema = new Schema({
   animal: String,
   naturalQuantity: Number,
   euthanizedQuantity: Number,
-  weight: Number,
+  totalWeight: Number,
   comments: String
 });
 

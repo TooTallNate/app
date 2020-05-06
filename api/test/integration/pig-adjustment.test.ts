@@ -15,7 +15,7 @@ function query(variables: QueryPigAdjustmentArgs) {
         }
         animal
         quantity
-        weight
+        totalWeight
         price
         comments
       }
@@ -51,7 +51,7 @@ test("returns default form if no record in the database", async () => {
       comments: null,
       price: null,
       quantity: null,
-      weight: null
+      totalWeight: null
     }
   });
 });
@@ -74,7 +74,7 @@ test("returns from from the database", async () => {
       comments: doc.comments,
       price: doc.price,
       quantity: doc.quantity,
-      weight: doc.weight
+      totalWeight: doc.totalWeight
     }
   });
 });

@@ -150,7 +150,7 @@ export type PigAdjustment = {
   animal?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -166,7 +166,7 @@ export type PigGradeOff = {
   scoursQuantity?: Maybe<Scalars["Int"]>;
   smallQuantity?: Maybe<Scalars["Int"]>;
   unthriftyQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -187,7 +187,7 @@ export type PigMove = {
   toJob?: Maybe<Job>;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -197,7 +197,7 @@ export type PigPurchase = {
   animal?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -208,7 +208,7 @@ export type PigWean = {
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -234,7 +234,7 @@ export type PostPigAdjustmentInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
-  weight: Scalars["Float"];
+  totalWeight: Scalars["Float"];
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -256,7 +256,7 @@ export type PostPigGradeOffInput = {
   scoursQuantity?: Maybe<Scalars["Int"]>;
   smallQuantity?: Maybe<Scalars["Int"]>;
   unthriftyQuantity?: Maybe<Scalars["Int"]>;
-  weight: Scalars["Float"];
+  pigWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -289,7 +289,7 @@ export type PostPigMoveInput = {
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight: Scalars["Float"];
+  totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -305,7 +305,7 @@ export type PostPigPurchaseInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
-  weight: Scalars["Float"];
+  totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -322,7 +322,7 @@ export type PostPigWeanInput = {
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight: Scalars["Float"];
+  totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -411,7 +411,7 @@ export type SavePigAdjustmentInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -433,7 +433,7 @@ export type SavePigGradeOffInput = {
   scoursQuantity?: Maybe<Scalars["Int"]>;
   smallQuantity?: Maybe<Scalars["Int"]>;
   unthriftyQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -466,7 +466,7 @@ export type SavePigMoveInput = {
   toJob?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -482,7 +482,7 @@ export type SavePigPurchaseInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -499,7 +499,7 @@ export type SavePigWeanInput = {
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
-  weight?: Maybe<Scalars["Float"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -564,7 +564,7 @@ export type PigAdjustmentFragmentFragment = {
   __typename?: "PigAdjustment";
 } & Pick<
   PigAdjustment,
-  "animal" | "quantity" | "weight" | "price" | "comments"
+  "animal" | "quantity" | "totalWeight" | "price" | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -629,7 +629,7 @@ export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   | "scoursQuantity"
   | "smallQuantity"
   | "unthriftyQuantity"
-  | "weight"
+  | "pigWeight"
   | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
@@ -722,7 +722,7 @@ export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
   | "toAnimal"
   | "quantity"
   | "smallPigQuantity"
-  | "weight"
+  | "totalWeight"
   | "price"
   | "comments"
 > & {
@@ -779,7 +779,7 @@ export type PostPigMoveMutation = { __typename?: "Mutation" } & {
 
 export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
   PigPurchase,
-  "animal" | "quantity" | "weight" | "price" | "comments"
+  "animal" | "quantity" | "totalWeight" | "price" | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -830,7 +830,12 @@ export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
 
 export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
-  "animal" | "quantity" | "smallPigQuantity" | "weight" | "price" | "comments"
+  | "animal"
+  | "quantity"
+  | "smallPigQuantity"
+  | "totalWeight"
+  | "price"
+  | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -897,7 +902,7 @@ export const PigAdjustmentFragmentFragmentDoc = gql`
       deadQuantity
     }
     quantity
-    weight
+    totalWeight
     price
     comments
   }
@@ -918,7 +923,7 @@ export const PigGradeOffFragmentFragmentDoc = gql`
     scoursQuantity
     smallQuantity
     unthriftyQuantity
-    weight
+    pigWeight
     comments
   }
 `;
@@ -951,7 +956,7 @@ export const PigMoveFragmentFragmentDoc = gql`
     }
     quantity
     smallPigQuantity
-    weight
+    totalWeight
     price
     comments
   }
@@ -966,7 +971,7 @@ export const PigPurchaseFragmentFragmentDoc = gql`
       deadQuantity
     }
     quantity
-    weight
+    totalWeight
     price
     comments
   }
@@ -982,7 +987,7 @@ export const PigWeanFragmentFragmentDoc = gql`
     }
     quantity
     smallPigQuantity
-    weight
+    totalWeight
     price
     comments
   }

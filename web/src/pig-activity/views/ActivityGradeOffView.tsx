@@ -19,7 +19,6 @@ import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
-import WeightField from "../components/WeightField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
@@ -38,7 +37,7 @@ interface FormData {
   scoursQuantity: number;
   smallQuantity: number;
   unthriftyQuantity: number;
-  weight: number;
+  pigWeight: number;
   comments?: string;
 }
 
@@ -76,7 +75,7 @@ const ActivityGradeOffView: React.FC = () => {
         setValue("smallQuantity", pigGradeOff.smallQuantity);
       if (pigGradeOff.unthriftyQuantity)
         setValue("unthriftyQuantity", pigGradeOff.unthriftyQuantity);
-      if (pigGradeOff.weight) setValue("weight", pigGradeOff.weight);
+      if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
     }
   });
@@ -274,7 +273,18 @@ const ActivityGradeOffView: React.FC = () => {
                 <FormFieldErrors />
               </FormField>
             </FormGroup>
-            <WeightField />
+            <FormField
+              name="pigWeight"
+              rules={{
+                required: "The weight field is required."
+              }}
+            >
+              <FormFieldLabel>Weight/Pig</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <CommentsField />
             <div className="flex">
               <Button className="mr-4 w-full" type="button" onClick={onSave}>

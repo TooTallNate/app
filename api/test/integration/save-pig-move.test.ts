@@ -25,7 +25,7 @@ function mutation(variables: MutationPostPigMoveArgs) {
           toAnimal
           quantity
           smallPigQuantity
-          weight
+          totalWeight
           price
           comments
         }
@@ -93,7 +93,7 @@ test("creates new move and user settings documents", async () => {
         toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -135,7 +135,7 @@ test("creates new move and user settings documents", async () => {
     toAnimal: input.toAnimal,
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
-    weight: input.weight,
+    totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
   });
@@ -165,7 +165,7 @@ test("updates existing move document", async () => {
         toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -189,7 +189,7 @@ test("updates existing move document", async () => {
     toAnimal: input.toAnimal,
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
-    weight: input.weight,
+    totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
   });
@@ -221,7 +221,7 @@ test("updates existing user settings document", async () => {
         toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -271,7 +271,7 @@ test("does not update price in user settings if not given in input", async () =>
         toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: null,
         comments: input.comments
       },

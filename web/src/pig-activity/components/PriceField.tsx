@@ -13,7 +13,7 @@ const PriceField: React.FC = () => {
         required: "The price field is required."
       }}
     >
-      <FormFieldLabel>Price/pig</FormFieldLabel>
+      <FormFieldLabel>Price/Pig</FormFieldLabel>
       <FormFieldInput>
         <NumberInput />
       </FormFieldInput>

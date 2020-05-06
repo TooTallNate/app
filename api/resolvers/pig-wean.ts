@@ -56,7 +56,7 @@ export const PigWeanMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: input.quantity,
         Unit_Amount: input.price,
-        Weight: input.weight,
+        Weight: input.totalWeight,
         Job_No: input.job,
         Gen_Prod_Posting_Group: "WEAN PIGS",
         Shortcut_Dimension_1_Code: "2",

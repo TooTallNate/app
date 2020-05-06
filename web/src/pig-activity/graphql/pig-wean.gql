@@ -8,7 +8,7 @@ fragment PigWeanFragment on PigWean {
   }  
   quantity
   smallPigQuantity
-  weight
+  totalWeight
   price
   comments
 }

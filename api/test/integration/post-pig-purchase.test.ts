@@ -30,7 +30,7 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           }
           animal
           quantity
-          weight
+          totalWeight
           price
           comments
         }
@@ -79,7 +79,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Location_Code: job.Site,
       Quantity: input.quantity,
       Unit_Amount: input.price,
-      Weight: input.weight,
+      Weight: input.totalWeight,
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
@@ -114,7 +114,7 @@ test("submits data to NAV and creates new user settings and purchase documents",
         },
         animal: null,
         quantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -173,7 +173,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         },
         animal: null,
         quantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -203,7 +203,7 @@ test("submits data to NAV and clears existing purchase document", async () => {
   const purchaseDoc = await PigPurchaseModel.create({
     job: job.No,
     quantity: input.quantity,
-    weight: input.weight
+    totalWeight: input.totalWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -215,7 +215,7 @@ test("submits data to NAV and clears existing purchase document", async () => {
         },
         animal: null,
         quantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -254,7 +254,7 @@ test("sets description to an empty string if there are no comments", async () =>
         },
         animal: null,
         quantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },

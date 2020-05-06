@@ -28,7 +28,7 @@ import StaticValue from "../../common/components/input/StaticValue";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import PriceField from "../components/PriceField";
-import WeightField from "../components/WeightField";
+import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import SmallPigField from "../components/SmallPigField";
 
@@ -38,7 +38,7 @@ interface FormData {
   toJob: string;
   quantity: number;
   smallPigQuantity?: number;
-  weight: number;
+  totalWeight: number;
   price: number;
   comments?: string;
 }
@@ -67,7 +67,7 @@ const ActivityMoveView: React.FC = () => {
         setValue("toAnimal", pigMove.toAnimal as any);
       if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
-      if (pigMove.weight) setValue("weight", pigMove.weight);
+      if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
       if (pigMove.price) setValue("price", pigMove.price);
       else if (pigActivityDefaults.price)
         setValue("price", pigActivityDefaults.price);
@@ -216,7 +216,7 @@ const ActivityMoveView: React.FC = () => {
             )}
             <QuantityField />
             <SmallPigField />
-            <WeightField />
+            <TotalWeightField />
             <PriceField />
             <CommentsField />
             <FormGroup>

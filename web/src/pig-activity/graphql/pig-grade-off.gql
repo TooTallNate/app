@@ -13,7 +13,7 @@ fragment PigGradeOffFragment on PigGradeOff {
   scoursQuantity
   smallQuantity
   unthriftyQuantity
-  weight
+  pigWeight
   comments
 }
 

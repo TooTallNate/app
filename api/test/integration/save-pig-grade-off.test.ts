@@ -30,7 +30,7 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           scoursQuantity
           smallQuantity
           unthriftyQuantity
-          weight
+          pigWeight
           comments
         }
         defaults { 
@@ -90,7 +90,7 @@ test("creates new gradeOff and user settings documents", async () => {
         scoursQuantity: input.scoursQuantity,
         smallQuantity: input.smallQuantity,
         unthriftyQuantity: input.unthriftyQuantity,
-        weight: input.weight,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {
@@ -133,7 +133,7 @@ test("creates new gradeOff and user settings documents", async () => {
     scoursQuantity: input.scoursQuantity,
     smallQuantity: input.smallQuantity,
     unthriftyQuantity: input.unthriftyQuantity,
-    weight: input.weight,
+    pigWeight: input.pigWeight,
     comments: input.comments
   });
 });
@@ -163,7 +163,7 @@ test("updates existing gradeOff document", async () => {
         scoursQuantity: input.scoursQuantity,
         smallQuantity: input.smallQuantity,
         unthriftyQuantity: input.unthriftyQuantity,
-        weight: input.weight,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {
@@ -192,7 +192,7 @@ test("updates existing gradeOff document", async () => {
     scoursQuantity: input.scoursQuantity,
     smallQuantity: input.smallQuantity,
     unthriftyQuantity: input.unthriftyQuantity,
-    weight: input.weight,
+    pigWeight: input.pigWeight,
     comments: input.comments
   });
 });
@@ -224,7 +224,7 @@ test("updates existing user settings document", async () => {
         scoursQuantity: input.scoursQuantity,
         smallQuantity: input.smallQuantity,
         unthriftyQuantity: input.unthriftyQuantity,
-        weight: input.weight,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {

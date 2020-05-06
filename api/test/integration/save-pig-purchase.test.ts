@@ -24,7 +24,7 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           }
           animal
           quantity
-          weight
+          totalWeight
           price
           comments
         }
@@ -79,7 +79,7 @@ test("creates new purchase and user settings documents", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -115,7 +115,7 @@ test("creates new purchase and user settings documents", async () => {
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
-    weight: input.weight,
+    totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
   });
@@ -140,7 +140,7 @@ test("updates existing purchase document", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -162,7 +162,7 @@ test("updates existing purchase document", async () => {
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
-    weight: input.weight,
+    totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
   });
@@ -190,7 +190,7 @@ test("updates existing user settings document", async () => {
         },
         animal: input.animal,
         quantity: input.quantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
@@ -233,7 +233,7 @@ test("does not update price in user settings if not given in input", async () =>
         },
         animal: input.animal,
         quantity: input.quantity,
-        weight: input.weight,
+        totalWeight: input.totalWeight,
         price: null,
         comments: input.comments
       },

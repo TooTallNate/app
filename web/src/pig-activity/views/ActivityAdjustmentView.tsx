@@ -25,13 +25,13 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
-import WeightField from "../components/WeightField";
+import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 
 interface FormData {
   animal: string;
   quantity: number;
-  weight: number;
+  totalWeight: number;
   price: number;
   comments?: string;
 }
@@ -61,7 +61,8 @@ const ActivityAdjustmentView: React.FC = () => {
         setValue("quantity", Math.abs(pigAdjustment.quantity));
         setQuantitySign(pigAdjustment.quantity >= 0 ? 1 : -1);
       }
-      if (pigAdjustment.weight) setValue("weight", pigAdjustment.weight);
+      if (pigAdjustment.totalWeight)
+        setValue("totalWeight", pigAdjustment.totalWeight);
       if (pigAdjustment.price) setValue("price", pigAdjustment.price);
       else if (pigActivityDefaults.price)
         setValue("price", pigActivityDefaults.price);
@@ -163,7 +164,7 @@ const ActivityAdjustmentView: React.FC = () => {
               </div>
               <FormFieldErrors />
             </FormField>
-            <WeightField />
+            <TotalWeightField />
             {quantitySign > 0 && <PriceField />}
             <CommentsField />
             <FormGroup>

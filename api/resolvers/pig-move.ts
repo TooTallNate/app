@@ -72,7 +72,7 @@ export const PigMoveMutations: MutationResolvers = {
         Description: input.comments,
         Location_Code: fromJob.Site,
         Quantity: input.quantity,
-        Weight: input.weight,
+        Weight: input.totalWeight,
         Job_No: input.fromJob,
         Shortcut_Dimension_1_Code: fromJob.Entity,
         Shortcut_Dimension_2_Code: fromJob.Cost_Center
@@ -90,7 +90,7 @@ export const PigMoveMutations: MutationResolvers = {
         Location_Code: toJob.Site,
         Quantity: input.quantity,
         Unit_Amount: input.price,
-        Weight: input.weight,
+        Weight: input.totalWeight,
         Job_No: input.toJob,
         Shortcut_Dimension_1_Code: toJob.Entity,
         Shortcut_Dimension_2_Code: toJob.Cost_Center,

@@ -27,7 +27,7 @@ function mutation(variables: MutationPostPigWeanArgs) {
           animal
           quantity
           smallPigQuantity
-          weight
+          totalWeight
           price
           comments
         }
@@ -73,7 +73,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Location_Code: job.Site,
       Quantity: input.quantity,
       Unit_Amount: input.price,
-      Weight: input.weight,
+      Weight: input.totalWeight,
       Job_No: input.job,
       Gen_Prod_Posting_Group: "WEAN PIGS",
       Shortcut_Dimension_1_Code: "2",
@@ -111,7 +111,7 @@ test("submits data to NAV and creates new user settings and wean documents", asy
         animal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -171,7 +171,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         animal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -200,7 +200,7 @@ test("submits data to NAV and clears existing wean document", async () => {
   const weanDoc = await PigWeanModel.create({
     job: job.No,
     quantity: input.quantity,
-    weight: input.weight
+    totalWeight: input.totalWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -213,7 +213,7 @@ test("submits data to NAV and clears existing wean document", async () => {
         animal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },
@@ -250,7 +250,7 @@ test("sets description to an empty string if there are no comments", async () =>
         animal: null,
         quantity: null,
         smallPigQuantity: null,
-        weight: null,
+        totalWeight: null,
         price: null,
         comments: null
       },

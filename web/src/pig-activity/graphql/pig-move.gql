@@ -12,7 +12,7 @@ fragment PigMoveFragment on PigMove {
   }
   quantity
   smallPigQuantity
-  weight
+  totalWeight
   price
   comments
 }
