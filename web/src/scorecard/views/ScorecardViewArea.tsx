@@ -10,6 +10,7 @@ import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
+import Form from "../../common/components/form/Form";
 
 const ScorecardViewArea: React.FC<RouteComponentProps> = ({
   history,
@@ -25,7 +26,7 @@ const ScorecardViewArea: React.FC<RouteComponentProps> = ({
       </ViewHeader>
       <ViewContent loading={loading}>
         {data && (
-          <div className="overflow-x-auto min-h-0 flex-grow p-4 pt-0">
+          <Form>
             <FormField name="area">
               <FormFieldLabel>Area</FormFieldLabel>
               <FormFieldInput>
@@ -41,7 +42,7 @@ const ScorecardViewArea: React.FC<RouteComponentProps> = ({
                 </StackedNav>
               </FormFieldInput>
             </FormField>
-          </div>
+          </Form>
         )}
       </ViewContent>
     </View>

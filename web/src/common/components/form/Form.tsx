@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { FormContext, OnSubmit, FormContextValues } from "react-hook-form";
 import { useFlash } from "../../contexts/flash";
+import Stack from "../layout/Stack";
+import { Spacing } from "../layout/spacing";
 
 interface FormProps<T> {
   className?: string;
@@ -37,7 +39,7 @@ function Form<T = Record<string, any>>({
           onSubmit={onSubmit && handleSubmit(onSubmit)}
           className={`child:mb-4 ${className}`}
         >
-          {children}
+          <Stack spacing={Spacing.S}>{children}</Stack>
         </form>
       </FormContext>
     );

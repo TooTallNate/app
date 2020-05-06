@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -31,6 +30,7 @@ import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import SmallPigField from "../components/SmallPigField";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   fromAnimal: string;
@@ -179,7 +179,7 @@ const ActivityMoveView: React.FC = () => {
             {isSowFarm && (
               <div className="flex">
                 <FormField
-                  className="w-full mr-4"
+                  className="w-full"
                   name="fromAnimal"
                   rules={{ required: "The from animal field is required." }}
                 >
@@ -195,8 +195,9 @@ const ActivityMoveView: React.FC = () => {
                   </FormFieldInput>
                   <FormFieldErrors />
                 </FormField>
+                <HorizontalSpacer />
                 <FormField
-                  className="w-full ml-4"
+                  className="w-full"
                   name="toAnimal"
                   rules={{ required: "The to animal field is required." }}
                 >
@@ -219,12 +220,13 @@ const ActivityMoveView: React.FC = () => {
             <TotalWeightField />
             <PriceField />
             <CommentsField />
-            <FormGroup>
-              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
                 Save
               </Button>
+              <HorizontalSpacer />
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>

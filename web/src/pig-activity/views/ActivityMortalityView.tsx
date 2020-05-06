@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Output, FormGroup } from "../../common/components/styled";
+import { Output } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -25,6 +25,7 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import JobField from "../components/JobField";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   animal: string;
@@ -191,12 +192,13 @@ const ActivityMortalityView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <CommentsField />
-            <FormGroup>
-              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
                 Save
               </Button>
+              <HorizontalSpacer />
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>

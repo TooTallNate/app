@@ -4,7 +4,6 @@ import {
   InvalidCredentialsError,
   NoAvailableLicenseError
 } from "../contexts/auth";
-import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -87,9 +86,7 @@ const LoginView: React.FC = () => {
             </FormFieldInput>
             <FormFieldErrors />
           </FormField>
-          <FormGroup>
-            <FormSubmit>Log In</FormSubmit>
-          </FormGroup>
+          <FormSubmit>Log In</FormSubmit>
         </Form>
       </ViewContent>
     </View>

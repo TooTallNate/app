@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FormGroup } from "../../common/components/styled";
 import View from "../../common/components/view/View";
 import Title from "../../common/components/view/ViewTitle";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -27,6 +26,7 @@ import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   animal: string;
@@ -167,12 +167,13 @@ const ActivityAdjustmentView: React.FC = () => {
             <TotalWeightField />
             {quantitySign > 0 && <PriceField />}
             <CommentsField />
-            <FormGroup>
-              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
                 Save
               </Button>
+              <HorizontalSpacer />
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>

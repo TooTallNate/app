@@ -1,5 +1,5 @@
 import { RouteComponentProps } from "react-router-dom";
-import { ButtonLink, FormGroup } from "../../common/components/styled";
+import { ButtonLink } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -26,6 +26,9 @@ import React, { useMemo } from "react";
 import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import StaticValue from "../../common/components/input/StaticValue";
+import VerticalSpacer from "../../common/components/layout/VerticalSpacer";
+import { Spacing } from "../../common/components/layout/spacing";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   operator: string;
@@ -93,6 +96,7 @@ const ScoreEntry: React.FC<ScoreEntryProps> = ({ name, label }) => {
         </FormFieldInput>
         <FormFieldErrors />
       </FormField>
+      <VerticalSpacer spacing={Spacing.S} />
       <FormField name={`${name}Comments`}>
         <FormFieldLabel>Comments</FormFieldLabel>
         <FormFieldInput>
@@ -291,12 +295,13 @@ const ScorecardViewScores: React.FC<RouteComponentProps<{ area: string }>> = ({
             <ScoreEntry name="water" label="Water" />
             <ScoreEntry name="crate" label="Crate" />
             <ScoreEntry name="generalRoom" label="General Room" />
-            <FormGroup>
-              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
                 Save
               </Button>
+              <HorizontalSpacer />
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>

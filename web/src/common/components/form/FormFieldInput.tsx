@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useField } from "./FormField";
 import { Controller, ControllerProps, useFormContext } from "react-hook-form";
 
-interface FormFieldInput extends Omit<ControllerProps<any>, "as"> {
+interface FormFieldInput extends Omit<ControllerProps, "as"> {
   className?: string;
   noRegister?: boolean;
   children:

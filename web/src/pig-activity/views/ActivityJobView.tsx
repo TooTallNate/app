@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  RouteComponentProps,
-  useHistory,
-  useParams,
-  useRouteMatch
-} from "react-router-dom";
-import { FormGroup } from "../../common/components/styled";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -87,9 +81,7 @@ const ActivityJobView: React.FC = () => {
                 deadQuantity={job.deadQuantity || 0}
               />
             )}
-            <FormGroup>
-              <FormSubmit>Continue</FormSubmit>
-            </FormGroup>
+            <FormSubmit>Continue</FormSubmit>
           </Form>
         )}
       </ViewContent>

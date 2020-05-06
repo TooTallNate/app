@@ -1,5 +1,4 @@
 import React from "react";
-import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -111,9 +110,7 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
                     </FormFieldInput>
                     <FormFieldErrors />
                   </FormField>
-                  <FormGroup>
-                    <FormSubmit>Save</FormSubmit>
-                  </FormGroup>
+                  <FormSubmit>Save</FormSubmit>
                 </Form>
               );
             }

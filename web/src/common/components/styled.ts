@@ -12,23 +12,7 @@ export const ButtonLink = tw.styled(FocusTarget.withComponent(Link))`
   border border-black rounded-lg active:border-gray-500
 `;
 
-export const Label = tw.label`h-6 pt-2 mb-3 leading-none block text-base font-bold`;
-
 export const Output = tw.output`flex items-center px-4 h-11 text-base`;
-
-export const Group = styled.div([
-  tw`p-0 m-0`,
-  {
-    "&:first-of-type": tw`mt-0`
-  }
-]);
-
-export const FormGroup = styled.div([
-  tw`p-0 m-0 mt-10 flex`,
-  {
-    "&:first-of-type": tw`mt-0`
-  }
-]);
 
 export const StackedContainer = tw.styled(
   FocusInTarget

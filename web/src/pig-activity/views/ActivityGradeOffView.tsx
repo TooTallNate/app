@@ -27,6 +27,7 @@ import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
 import FormGroupLabel from "../../common/components/form/FormGroupLabel";
+import FormGroupContent from "../../common/components/form/FormGroupContent";
 
 interface FormData {
   animal: string;
@@ -213,65 +214,70 @@ const ActivityGradeOffView: React.FC = () => {
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <FormGroup>
               <FormGroupLabel>Quantity</FormGroupLabel>
-              <FormField name="lameQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Lame</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="respitoryQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Respitory</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="bellyRuptureQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Belly Rupture</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField
-                name="scrotumRuptureQuantity"
-                rules={quantityValidation}
-              >
-                <FormFieldLabel>Scrotum Rupture</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="scoursQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Scours</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="smallQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Small</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="unthriftyQuantity" rules={quantityValidation}>
-                <FormFieldLabel>Unthrifty</FormFieldLabel>
-                <FormFieldInput>
-                  <NumberInput />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField name="totalQuantity">
-                <FormFieldLabel>Total</FormFieldLabel>
-                <FormFieldInput noRegister>
-                  <StaticValue value={totalQuantity} />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
+              <FormGroupContent>
+                <FormField name="lameQuantity" rules={quantityValidation}>
+                  <FormFieldLabel>Lame</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField name="respitoryQuantity" rules={quantityValidation}>
+                  <FormFieldLabel>Respitory</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField
+                  name="bellyRuptureQuantity"
+                  rules={quantityValidation}
+                >
+                  <FormFieldLabel>Belly Rupture</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField
+                  name="scrotumRuptureQuantity"
+                  rules={quantityValidation}
+                >
+                  <FormFieldLabel>Scrotum Rupture</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField name="scoursQuantity" rules={quantityValidation}>
+                  <FormFieldLabel>Scours</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField name="smallQuantity" rules={quantityValidation}>
+                  <FormFieldLabel>Small</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField name="unthriftyQuantity" rules={quantityValidation}>
+                  <FormFieldLabel>Unthrifty</FormFieldLabel>
+                  <FormFieldInput>
+                    <NumberInput />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField name="totalQuantity">
+                  <FormFieldLabel>Total</FormFieldLabel>
+                  <FormFieldInput noRegister>
+                    <StaticValue value={totalQuantity} />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+              </FormGroupContent>
             </FormGroup>
             <FormField
               name="pigWeight"

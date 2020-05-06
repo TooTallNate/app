@@ -11,7 +11,7 @@ const FormGroupLabel: React.FC<FormGroupLabelProps> = ({
   return (
     <legend
       className={`
-        pt-2 pb-3 -ml-8 leading-none inline-block text-base font-bold
+        pt-2 pb-3 leading-none inline-block text-base font-bold
         ${className}
       `}
     >

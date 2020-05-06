@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -24,6 +23,7 @@ import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
 import SmallPigField from "../components/SmallPigField";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   animal: string;
@@ -151,12 +151,13 @@ const ActivityWeanView: React.FC = () => {
             <TotalWeightField />
             <PriceField />
             <CommentsField />
-            <FormGroup>
-              <Button className="mr-4 w-full" type="button" onClick={onSave}>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
                 Save
               </Button>
+              <HorizontalSpacer />
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>
