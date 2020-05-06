@@ -159,7 +159,13 @@ export type PigGradeOff = {
   __typename?: "PigGradeOff";
   animal?: Maybe<Scalars["String"]>;
   job: Job;
-  quantity?: Maybe<Scalars["Int"]>;
+  lameQuantity?: Maybe<Scalars["Int"]>;
+  respitoryQuantity?: Maybe<Scalars["Int"]>;
+  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scoursQuantity?: Maybe<Scalars["Int"]>;
+  smallQuantity?: Maybe<Scalars["Int"]>;
+  unthriftyQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -243,7 +249,13 @@ export type PostPigAdjustmentResult = {
 export type PostPigGradeOffInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
-  quantity: Scalars["Int"];
+  lameQuantity?: Maybe<Scalars["Int"]>;
+  respitoryQuantity?: Maybe<Scalars["Int"]>;
+  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scoursQuantity?: Maybe<Scalars["Int"]>;
+  smallQuantity?: Maybe<Scalars["Int"]>;
+  unthriftyQuantity?: Maybe<Scalars["Int"]>;
   weight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -414,7 +426,13 @@ export type SavePigAdjustmentResult = {
 export type SavePigGradeOffInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
+  lameQuantity?: Maybe<Scalars["Int"]>;
+  respitoryQuantity?: Maybe<Scalars["Int"]>;
+  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
+  scoursQuantity?: Maybe<Scalars["Int"]>;
+  smallQuantity?: Maybe<Scalars["Int"]>;
+  unthriftyQuantity?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -603,7 +621,16 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
-  "animal" | "quantity" | "weight" | "comments"
+  | "animal"
+  | "lameQuantity"
+  | "respitoryQuantity"
+  | "bellyRuptureQuantity"
+  | "scrotumRuptureQuantity"
+  | "scoursQuantity"
+  | "smallQuantity"
+  | "unthriftyQuantity"
+  | "weight"
+  | "comments"
 > & {
     job: { __typename?: "Job" } & Pick<
       Job,
@@ -884,7 +911,13 @@ export const PigGradeOffFragmentFragmentDoc = gql`
       inventory
       deadQuantity
     }
-    quantity
+    lameQuantity
+    respitoryQuantity
+    bellyRuptureQuantity
+    scrotumRuptureQuantity
+    scoursQuantity
+    smallQuantity
+    unthriftyQuantity
     weight
     comments
   }

@@ -14,7 +14,13 @@ function query(variables: QueryPigGradeOffArgs) {
           number
         }
         animal
-        quantity
+        lameQuantity
+        respitoryQuantity
+        bellyRuptureQuantity
+        scrotumRuptureQuantity
+        scoursQuantity
+        smallQuantity
+        unthriftyQuantity
         weight
         comments
       }
@@ -48,7 +54,13 @@ test("returns default form if no record in the database", async () => {
       },
       animal: null,
       comments: null,
-      quantity: null,
+      lameQuantity: null,
+      respitoryQuantity: null,
+      bellyRuptureQuantity: null,
+      scrotumRuptureQuantity: null,
+      scoursQuantity: null,
+      smallQuantity: null,
+      unthriftyQuantity: null,
       weight: null
     }
   });
@@ -70,7 +82,13 @@ test("returns from from the database", async () => {
       },
       animal: doc.animal,
       comments: doc.comments,
-      quantity: doc.quantity,
+      lameQuantity: doc.lameQuantity,
+      respitoryQuantity: doc.respitoryQuantity,
+      bellyRuptureQuantity: doc.bellyRuptureQuantity,
+      scrotumRuptureQuantity: doc.scrotumRuptureQuantity,
+      scoursQuantity: doc.scoursQuantity,
+      smallQuantity: doc.smallQuantity,
+      unthriftyQuantity: doc.unthriftyQuantity,
       weight: doc.weight
     }
   });

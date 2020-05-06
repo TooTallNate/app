@@ -7,7 +7,8 @@ import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
-  NavJob
+  NavJob,
+  NavReasonCode
 } from "../nav";
 import { getDocumentNumber } from "./utils";
 import PigGradeOffModel from "../models/PigGradeOff";
@@ -51,23 +52,48 @@ export const PigGradeOffMutations: MutationResolvers = {
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", input.job)
       .get<NavJob>();
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.GradeOff,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: getDocumentNumber("GRDOFF", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.quantity,
-        Weight: input.weight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
-      },
-      navClient
-    );
+
+    async function postGradeOff(
+      reason: NavReasonCode,
+      quantity?: number
+    ): Promise<void> {
+      if (quantity > 0) {
+        await postItemJournal(
+          {
+            Journal_Template_Name: NavItemJournalTemplate.GradeOff,
+            Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+            Entry_Type: NavEntryType.Negative,
+            Document_No: getDocumentNumber("GRDOFF", user.name),
+            Item_No: input.animal,
+            Description: input.comments,
+            Location_Code: job.Site,
+            Reason_Code: reason,
+            Quantity: quantity,
+            Weight: input.weight,
+            Job_No: input.job,
+            Shortcut_Dimension_1_Code: job.Entity,
+            Shortcut_Dimension_2_Code: job.Cost_Center
+          },
+          navClient
+        );
+      }
+    }
+
+    await Promise.all([
+      postGradeOff(
+        NavReasonCode.GradeOffBellyRupture,
+        input.bellyRuptureQuantity
+      ),
+      postGradeOff(NavReasonCode.GradeOffLame, input.lameQuantity),
+      postGradeOff(NavReasonCode.GradeOffRespitory, input.respitoryQuantity),
+      postGradeOff(NavReasonCode.GradeOffScours, input.scoursQuantity),
+      postGradeOff(
+        NavReasonCode.GradeOffScrotumRupture,
+        input.scrotumRuptureQuantity
+      ),
+      postGradeOff(NavReasonCode.GradeOffSmall, input.smallQuantity),
+      postGradeOff(NavReasonCode.GradeOffUnthrifty, input.unthriftyQuantity)
+    ]);
 
     const userSettings = await updateUserSettings({
       username: user.username,

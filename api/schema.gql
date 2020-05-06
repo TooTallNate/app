@@ -39,7 +39,13 @@ type PigAdjustment {
 type PigGradeOff {
   animal: String
   job: Job!
-  quantity: Int
+  lameQuantity: Int
+  respitoryQuantity: Int
+  bellyRuptureQuantity: Int
+  scrotumRuptureQuantity: Int
+  scoursQuantity: Int
+  smallQuantity: Int
+  unthriftyQuantity: Int
   weight: Float
   comments: String
 }
@@ -126,7 +132,13 @@ input SavePigAdjustmentInput {
 input PostPigGradeOffInput {
   animal: String!
   job: String!
-  quantity: Int!
+  lameQuantity: Int
+  respitoryQuantity: Int
+  bellyRuptureQuantity: Int
+  scrotumRuptureQuantity: Int
+  scoursQuantity: Int
+  smallQuantity: Int
+  unthriftyQuantity: Int
   weight: Float!
   comments: String
 }
@@ -134,7 +146,13 @@ input PostPigGradeOffInput {
 input SavePigGradeOffInput {
   animal: String
   job: String!
-  quantity: Int
+  lameQuantity: Int
+  respitoryQuantity: Int
+  bellyRuptureQuantity: Int
+  scrotumRuptureQuantity: Int
+  scoursQuantity: Int
+  smallQuantity: Int
+  unthriftyQuantity: Int
   weight: Float
   comments: String
 }

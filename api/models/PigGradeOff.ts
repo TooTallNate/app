@@ -4,7 +4,13 @@ import { Schema } from "mongoose";
 export interface PigGradeOffDocument extends PigActivityDocument {
   job: string;
   animal: string;
-  quantity: number;
+  lameQuantity: number;
+  respitoryQuantity: number;
+  bellyRuptureQuantity: number;
+  scrotumRuptureQuantity: number;
+  scoursQuantity: number;
+  smallQuantity: number;
+  unthriftyQuantity: number;
   weight: number;
   comments: string;
 }
@@ -16,7 +22,13 @@ const PigGradeOffSchema = new Schema({
     unique: true
   },
   animal: String,
-  quantity: Number,
+  lameQuantity: Number,
+  respitoryQuantity: Number,
+  bellyRuptureQuantity: Number,
+  scrotumRuptureQuantity: Number,
+  scoursQuantity: Number,
+  smallQuantity: Number,
+  unthriftyQuantity: Number,
   weight: Number,
   comments: String
 });

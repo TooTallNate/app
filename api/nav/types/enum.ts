@@ -20,7 +20,14 @@ export enum NavJobJournalBatch {
 
 export enum NavReasonCode {
   NaturalDeath = "DEAD-NAT",
-  Euthanized = "DEAD-EUTH"
+  Euthanized = "DEAD-EUTH",
+  GradeOffLame = "GRLAME",
+  GradeOffRespitory = "GRRESP",
+  GradeOffBellyRupture = "GRBRUPT",
+  GradeOffScrotumRupture = "GRSRUPT",
+  GradeOffScours = "GRSCOURS",
+  GradeOffSmall = "GRSMALL",
+  GradeOffUnthrifty = "GRUNTHRIFT"
 }
 
 export enum WorkTypeCode {
