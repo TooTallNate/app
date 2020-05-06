@@ -1,5 +1,5 @@
-import React from "react";
-import { FormGroup } from "../../common/components/styled";
+import React, { useEffect } from "react";
+import FormGroup from "../../common/components/form/FormGroup";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -20,12 +20,24 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import WeightField from "../components/WeightField";
-import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import NumberInput from "../../common/components/input/NumberInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import StaticValue from "../../common/components/input/StaticValue";
+import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 
 interface FormData {
   animal: string;
-  quantity: number;
+  lameQuantity: number;
+  respitoryQuantity: number;
+  bellyRuptureQuantity: number;
+  scrotumRuptureQuantity: number;
+  scoursQuantity: number;
+  smallQuantity: number;
+  unthriftyQuantity: number;
   weight: number;
   comments?: string;
 }
@@ -50,7 +62,20 @@ const ActivityGradeOffView: React.FC = () => {
       const { setValue } = formContext;
       if (isSowFarm && pigGradeOff.animal)
         setValue("animal", pigGradeOff.animal);
-      if (pigGradeOff.quantity) setValue("quantity", pigGradeOff.quantity);
+      if (pigGradeOff.lameQuantity)
+        setValue("lameQuantity", pigGradeOff.lameQuantity);
+      if (pigGradeOff.respitoryQuantity)
+        setValue("respitoryQuantity", pigGradeOff.respitoryQuantity);
+      if (pigGradeOff.bellyRuptureQuantity)
+        setValue("bellyRuptureQuantity", pigGradeOff.bellyRuptureQuantity);
+      if (pigGradeOff.scrotumRuptureQuantity)
+        setValue("scrotumRuptureQuantity", pigGradeOff.scrotumRuptureQuantity);
+      if (pigGradeOff.scoursQuantity)
+        setValue("scoursQuantity", pigGradeOff.scoursQuantity);
+      if (pigGradeOff.smallQuantity)
+        setValue("smallQuantity", pigGradeOff.smallQuantity);
+      if (pigGradeOff.unthriftyQuantity)
+        setValue("unthriftyQuantity", pigGradeOff.unthriftyQuantity);
       if (pigGradeOff.weight) setValue("weight", pigGradeOff.weight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
     }
@@ -58,7 +83,67 @@ const ActivityGradeOffView: React.FC = () => {
   const [post] = usePostPigGradeOffMutation();
   const [save] = useSavePigGradeOffMutation();
   const { setMessage } = useFlash();
-  const { getValues } = formContext;
+  const { getValues, watch, formState, triggerValidation } = formContext;
+
+  const {
+    lameQuantity = 0,
+    respitoryQuantity = 0,
+    bellyRuptureQuantity = 0,
+    scrotumRuptureQuantity = 0,
+    scoursQuantity = 0,
+    smallQuantity = 0,
+    unthriftyQuantity = 0
+  } = watch([
+    "lameQuantity",
+    "respitoryQuantity",
+    "bellyRuptureQuantity",
+    "scrotumRuptureQuantity",
+    "scoursQuantity",
+    "smallQuantity",
+    "unthriftyQuantity"
+  ]);
+  const hasQuantity =
+    lameQuantity > 0 ||
+    respitoryQuantity > 0 ||
+    bellyRuptureQuantity > 0 ||
+    scrotumRuptureQuantity > 0 ||
+    scoursQuantity > 0 ||
+    smallQuantity > 0 ||
+    unthriftyQuantity > 0;
+  const quantityValidation = {
+    required: !hasQuantity && "At least one quantity field is required."
+  };
+  const totalQuantity =
+    lameQuantity +
+    respitoryQuantity +
+    bellyRuptureQuantity +
+    scrotumRuptureQuantity +
+    scoursQuantity +
+    smallQuantity +
+    unthriftyQuantity;
+
+  // Validate quantities if one changes.
+  useEffect(() => {
+    if (formState.isSubmitted) {
+      triggerValidation("lameQuantity");
+      triggerValidation("respitoryQuantity");
+      triggerValidation("bellyRuptureQuantity");
+      triggerValidation("scrotumRuptureQuantity");
+      triggerValidation("scoursQuantity");
+      triggerValidation("smallQuantity");
+      triggerValidation("unthriftyQuantity");
+    }
+  }, [
+    triggerValidation,
+    formState.isSubmitted,
+    lameQuantity,
+    respitoryQuantity,
+    bellyRuptureQuantity,
+    scrotumRuptureQuantity,
+    scoursQuantity,
+    smallQuantity,
+    unthriftyQuantity
+  ]);
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -127,15 +212,76 @@ const ActivityGradeOffView: React.FC = () => {
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
-            <QuantityField />
+            <FormGroup>
+              <FormGroupLabel>Quantity</FormGroupLabel>
+              <FormField name="lameQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Lame</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="respitoryQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Respitory</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="bellyRuptureQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Belly Rupture</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField
+                name="scrotumRuptureQuantity"
+                rules={quantityValidation}
+              >
+                <FormFieldLabel>Scrotum Rupture</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="scoursQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Scours</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="smallQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Small</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="unthriftyQuantity" rules={quantityValidation}>
+                <FormFieldLabel>Unthrifty</FormFieldLabel>
+                <FormFieldInput>
+                  <NumberInput />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField name="totalQuantity">
+                <FormFieldLabel>Total</FormFieldLabel>
+                <FormFieldInput noRegister>
+                  <StaticValue value={totalQuantity} />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+            </FormGroup>
             <WeightField />
             <CommentsField />
-            <FormGroup>
+            <div className="flex">
               <Button className="mr-4 w-full" type="button" onClick={onSave}>
                 Save
               </Button>
               <FormSubmit />
-            </FormGroup>
+            </div>
           </Form>
         )}
       </ViewContent>
