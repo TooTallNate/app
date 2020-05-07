@@ -39,7 +39,7 @@ function Form<T = Record<string, any>>({
           onSubmit={onSubmit && handleSubmit(onSubmit)}
           className={`child:mb-4 ${className}`}
         >
-          <Stack spacing={Spacing.S}>{children}</Stack>
+          <Stack spacing={Spacing.XS}>{children}</Stack>
         </form>
       </FormContext>
     );
