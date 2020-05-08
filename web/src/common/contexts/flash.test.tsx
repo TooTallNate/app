@@ -5,7 +5,7 @@ import {
   act,
   fireEvent,
   waitForElementToBeRemoved
-} from "../../test/utils";
+} from "../../../test/utils";
 import { FlashProvider, useFlash } from "./flash";
 
 function render() {

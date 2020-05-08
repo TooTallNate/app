@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 import fetchMock from "fetch-mock";
-import "../src/icons";
+import "../src/common/icons";
 
 jest.mock("react-transition-group");
 

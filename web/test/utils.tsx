@@ -2,10 +2,10 @@ import React, { useImperativeHandle, forwardRef, createRef } from "react";
 import faker from "faker";
 import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
-import { AuthProvider } from "../src/contexts/auth";
+import { AuthProvider } from "../src/user/contexts/auth";
 import App from "../src/App";
 import fetchMock from "fetch-mock";
-import { User, UserDocument } from "../src/graphql";
+import { User, UserDocument } from "../src/user/graphql";
 import { MockedResponse, MockedProvider } from "@apollo/react-testing";
 
 export * from "@testing-library/react";
