@@ -9,7 +9,8 @@
     "test": "jest --watch",
     "test:coverage": "jest --coverage",
     "e2e": "cypress open",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "preversion": "jest"
   },
   "browserslist": {
     "production": [
