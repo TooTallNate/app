@@ -96,7 +96,7 @@ const ScoreEntry: React.FC<ScoreEntryProps> = ({ name, label }) => {
       <FormField name={`${name}Comments`}>
         <FormFieldLabel>Comments</FormFieldLabel>
         <FormFieldInput>
-          <MultilineTextInput maxLength={50} />
+          <MultilineTextInput rows={2} maxLength={50} />
         </FormFieldInput>
         <FormFieldErrors />
       </FormField>
