@@ -147,7 +147,7 @@ const ActivityAdjustmentView: React.FC = () => {
                 required: "The quantity field is required."
               }}
             >
-              <FormFieldLabel>Quantity</FormFieldLabel>
+              <FormFieldLabel>Total Quantity</FormFieldLabel>
               <div className="flex">
                 <Button
                   id="quantity-sign"

@@ -146,42 +146,36 @@ const ActivityMoveView: React.FC = () => {
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <div className="flex">
-              <FormField name="fromJob" className="w-full mr-4">
-                <FormFieldLabel>From Job</FormFieldLabel>
-                <FormFieldInput noRegister>
-                  <StaticValue
-                    value={`${data.pigMove.fromJob.number} ${data.pigMove.fromJob.description}`}
-                  />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-              <FormField
-                className="w-full ml-4"
-                name="toJob"
-                rules={{ required: "The to job field is required." }}
-              >
-                <FormFieldLabel>To Job</FormFieldLabel>
-                <FormFieldInput>
-                  <TypeaheadInput
-                    sort="desc"
-                    items={data.pigActivityJobs.map(job => ({
-                      value: job.number,
-                      title: `${job.number} ${job.description}`
-                    }))}
-                  />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-            </div>
-            <div className="flex">
-              <InventoryField
-                className="w-full mr-4"
-                inventory={data.pigMove.fromJob.inventory || 0}
-                deadQuantity={data.pigMove.fromJob.deadQuantity || 0}
-              />
-              <div className="w-full ml-4" />
-            </div>
+            <FormField name="fromJob">
+              <FormFieldLabel>From Job</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={`${data.pigMove.fromJob.number} ${data.pigMove.fromJob.description}`}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <InventoryField
+              className="w-full mr-4"
+              inventory={data.pigMove.fromJob.inventory || 0}
+              deadQuantity={data.pigMove.fromJob.deadQuantity || 0}
+            />
+            <FormField
+              name="toJob"
+              rules={{ required: "The to job field is required." }}
+            >
+              <FormFieldLabel>To Job</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  sort="desc"
+                  items={data.pigActivityJobs.map(job => ({
+                    value: job.number,
+                    title: `${job.number} ${job.description}`
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             {isSowFarm && (
               <div className="flex">
                 <FormField

@@ -1,5 +1,10 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import {
+  RouteComponentProps,
+  useHistory,
+  useParams,
+  useRouteMatch
+} from "react-router-dom";
 import { FormGroup } from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
@@ -21,10 +26,14 @@ interface FormData {
   job: string;
 }
 
-const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
-  history,
-  match
-}) => {
+interface ViewParams {
+  activity: string;
+}
+
+const ActivityJobView: React.FC = () => {
+  const history = useHistory();
+  const match = useRouteMatch();
+  const params = useParams<ViewParams>();
   const formContext = useForm<FormData>();
   const { data, loading } = usePigActivityJobsQuery({
     onCompleted({ pigActivityDefaults: defaults }) {
@@ -58,7 +67,9 @@ const ActivityJobView: React.FC<RouteComponentProps<{ activity: string }>> = ({
                 required: "The job field is required."
               }}
             >
-              <FormFieldLabel>Job</FormFieldLabel>
+              <FormFieldLabel>
+                {params.activity === "move" ? "From Job" : "Job"}
+              </FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   sort="desc"

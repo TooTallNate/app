@@ -10,10 +10,10 @@ const QuantityField: React.FC = () => {
     <FormField
       name="quantity"
       rules={{
-        required: "The quantity field is required."
+        required: "The total quantity field is required."
       }}
     >
-      <FormFieldLabel>Quantity</FormFieldLabel>
+      <FormFieldLabel>Total Quantity</FormFieldLabel>
       <FormFieldInput>
         <NumberInput />
       </FormFieldInput>

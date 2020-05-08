@@ -10,7 +10,7 @@ const CommentsField: React.FC = () => {
     <FormField name="comments">
       <FormFieldLabel>Comments</FormFieldLabel>
       <FormFieldInput>
-        <MultilineTextInput maxLength={50} />
+        <MultilineTextInput rows={2} maxLength={50} />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
