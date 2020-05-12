@@ -8,9 +8,8 @@ import {
   useSavePigMoveMutation,
   usePostPigMoveMutation
 } from "../graphql";
-import StackedButtonInput, {
-  StackedButton
-} from "../../common/components/input/StackedButtonInput";
+import StackedInput from "../../common/components/input/StackedInput";
+import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
@@ -185,13 +184,16 @@ const ActivityMoveView: React.FC = () => {
                 >
                   <FormFieldLabel>From Animal</FormFieldLabel>
                   <FormFieldInput>
-                    <StackedButtonInput orientation="vertical">
+                    <StackedInput orientation="vertical">
                       {data.pigTypes.map(type => (
-                        <StackedButton value={type.number} key={type.number}>
+                        <StackedRadioButton
+                          value={type.number}
+                          key={type.number}
+                        >
                           {type.description}
-                        </StackedButton>
+                        </StackedRadioButton>
                       ))}
-                    </StackedButtonInput>
+                    </StackedInput>
                   </FormFieldInput>
                   <FormFieldErrors />
                 </FormField>
@@ -203,13 +205,16 @@ const ActivityMoveView: React.FC = () => {
                 >
                   <FormFieldLabel>To Animal</FormFieldLabel>
                   <FormFieldInput>
-                    <StackedButtonInput orientation="vertical">
+                    <StackedInput orientation="vertical">
                       {data.pigTypes.map(type => (
-                        <StackedButton value={type.number} key={type.number}>
+                        <StackedRadioButton
+                          value={type.number}
+                          key={type.number}
+                        >
                           {type.description}
-                        </StackedButton>
+                        </StackedRadioButton>
                       ))}
-                    </StackedButtonInput>
+                    </StackedInput>
                   </FormFieldInput>
                   <FormFieldErrors />
                 </FormField>

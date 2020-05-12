@@ -3,9 +3,8 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import StackedButtonInput, {
-  StackedButton
-} from "../../common/components/input/StackedButtonInput";
+import StackedInput from "../../common/components/input/StackedInput";
+import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import { Animal } from "../../user/graphql";
 
 export interface AnimalFieldProps {
@@ -21,13 +20,13 @@ const AnimalField: React.FC<AnimalFieldProps> = ({ animals }) => {
     >
       <FormFieldLabel>Animal</FormFieldLabel>
       <FormFieldInput>
-        <StackedButtonInput orientation="vertical">
+        <StackedInput orientation="vertical">
           {animals.map(type => (
-            <StackedButton value={type.number} key={type.number}>
+            <StackedRadioButton value={type.number} key={type.number}>
               {type.description}
-            </StackedButton>
+            </StackedRadioButton>
           ))}
-        </StackedButtonInput>
+        </StackedInput>
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

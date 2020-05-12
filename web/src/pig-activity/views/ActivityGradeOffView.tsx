@@ -30,9 +30,8 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
 import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 import FormGroupContent from "../../common/components/form/FormGroupContent";
-import StackedButtonInput, {
-  StackedButton
-} from "../../common/components/input/StackedButtonInput";
+import StackedInput from "../../common/components/input/StackedInput";
+import StackedButton from "../../common/components/input/StackedButton";
 
 function onInputAdded(el: FormFieldInputElement | null) {
   if (el) {
@@ -288,9 +287,8 @@ const ActivityGradeOffView: React.FC = () => {
                   }}
                 >
                   <FormFieldLabel>New Reason</FormFieldLabel>
-                  {/* TODO: Convert to buttons rather than radio buttons. */}
                   <FormFieldInput>
-                    <StackedButtonInput orientation="vertical">
+                    <StackedInput orientation="vertical">
                       {Object.entries(REASONS)
                         .filter(([code]) => !reasons.includes(code))
                         .map(([code, { description }]) => (
@@ -298,7 +296,7 @@ const ActivityGradeOffView: React.FC = () => {
                             {description}
                           </StackedButton>
                         ))}
-                    </StackedButtonInput>
+                    </StackedInput>
                   </FormFieldInput>
                   <FormFieldErrors />
                 </FormField>

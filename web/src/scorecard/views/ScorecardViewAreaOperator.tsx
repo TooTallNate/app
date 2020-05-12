@@ -16,9 +16,8 @@ import {
   useSetAreaOperatorMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
-import StackedButtonInput, {
-  StackedButton
-} from "../../common/components/input/StackedButtonInput";
+import StackedInput from "../../common/components/input/StackedInput";
+import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import StaticValue from "../../common/components/input/StaticValue";
 
@@ -97,16 +96,16 @@ const ScorecardViewAreaOperator: React.FC<RouteComponentProps<RouteParams>> = ({
                   >
                     <FormFieldLabel>Operator</FormFieldLabel>
                     <FormFieldInput>
-                      <StackedButtonInput orientation="vertical">
+                      <StackedInput orientation="vertical">
                         {operators.map(operator => (
-                          <StackedButton
+                          <StackedRadioButton
                             value={operator.number}
                             key={operator.number}
                           >
                             {operator.name}
-                          </StackedButton>
+                          </StackedRadioButton>
                         ))}
-                      </StackedButtonInput>
+                      </StackedInput>
                     </FormFieldInput>
                     <FormFieldErrors />
                   </FormField>
