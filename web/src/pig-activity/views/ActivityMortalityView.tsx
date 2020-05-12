@@ -70,8 +70,6 @@ const ActivityMortalityView: React.FC = () => {
     "euthanizedQuantity",
     "naturalQuantity"
   ]);
-  const hasEuthanizedQuantity = typeof euthanizedQuantity === "number";
-  const hasNaturalQuantity = typeof naturalQuantity === "number";
   const totalQuantity = (euthanizedQuantity || 0) + (naturalQuantity || 0);
 
   // Validate quantities if one changes.
@@ -136,6 +134,16 @@ const ActivityMortalityView: React.FC = () => {
     }
   };
 
+  function quantityRequired(): boolean | string {
+    const euthanizedQuantity = getValues("euthanizedQuantity");
+    const naturalQuantity = getValues("naturalQuantity");
+    return (
+      euthanizedQuantity > 0 ||
+      naturalQuantity > 0 ||
+      "Either the natural quantity or euthanized quantity fields are required."
+    );
+  }
+
   return (
     <View>
       <ViewHeader>
@@ -156,12 +164,7 @@ const ActivityMortalityView: React.FC = () => {
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <FormField
               name="naturalQuantity"
-              rules={{
-                required:
-                  !hasEuthanizedQuantity &&
-                  !hasNaturalQuantity &&
-                  "Either the natural quantity or euthanized quantity fields are required."
-              }}
+              rules={{ validate: { required: quantityRequired } }}
             >
               <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
               <FormFieldInput>
@@ -171,12 +174,7 @@ const ActivityMortalityView: React.FC = () => {
             </FormField>
             <FormField
               name="euthanizedQuantity"
-              rules={{
-                required:
-                  !hasEuthanizedQuantity &&
-                  !hasNaturalQuantity &&
-                  "Either the natural quantity or euthanized quantity fields are required."
-              }}
+              rules={{ validate: { required: quantityRequired } }}
             >
               <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
               <FormFieldInput>

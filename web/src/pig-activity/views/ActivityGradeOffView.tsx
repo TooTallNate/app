@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FormGroup from "../../common/components/form/FormGroup";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
@@ -22,22 +22,60 @@ import AnimalField from "../components/AnimalField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldInput, {
+  FormFieldInputElement
+} from "../../common/components/form/FormFieldInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
 import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 import FormGroupContent from "../../common/components/form/FormGroupContent";
+import StackedButtonInput, {
+  StackedButton
+} from "../../common/components/input/StackedButtonInput";
+
+function onInputAdded(el: FormFieldInputElement | null) {
+  if (el) {
+    el.focus();
+  }
+}
+
+enum GradeOffReasons {
+  Lame = "lame",
+  Respitory = "resp",
+  BellyRupture = "belly",
+  ScrotumRupture = "scrotum",
+  Scours = "scours",
+  Small = "small",
+  Unthrifty = "unthrift"
+}
+
+const REASONS: {
+  [key: string]: {
+    description: string;
+  };
+} = {
+  [GradeOffReasons.Lame]: { description: "Lame" },
+  [GradeOffReasons.Respitory]: { description: "Respitory" },
+  [GradeOffReasons.BellyRupture]: { description: "Belly Rupture" },
+  [GradeOffReasons.ScrotumRupture]: { description: "Scrotum Rupture" },
+  [GradeOffReasons.Scours]: { description: "Scours" },
+  [GradeOffReasons.Small]: { description: "Small" },
+  [GradeOffReasons.Unthrifty]: { description: "Unthrifty" }
+};
 
 interface FormData {
   animal: string;
-  lameQuantity: number;
-  respitoryQuantity: number;
-  bellyRuptureQuantity: number;
-  scrotumRuptureQuantity: number;
-  scoursQuantity: number;
-  smallQuantity: number;
-  unthriftyQuantity: number;
+  newQuantityReason?: string;
+  quantities: {
+    lame?: number;
+    resp?: number;
+    belly?: number;
+    scrotum?: number;
+    scours?: number;
+    small?: number;
+    unthrift?: number;
+  };
   pigWeight: number;
   comments?: string;
 }
@@ -52,8 +90,13 @@ const ActivityGradeOffView: React.FC = () => {
   const history = useHistory();
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
+  const [reasons, setReasons] = useState<string[]>([]);
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: {
+      quantities: {}
+    }
+  });
   const { loading, data } = usePigGradeOffQuery({
     variables: {
       job: params.job
@@ -83,74 +126,40 @@ const ActivityGradeOffView: React.FC = () => {
   const [post] = usePostPigGradeOffMutation();
   const [save] = useSavePigGradeOffMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, formState, triggerValidation } = formContext;
+  const { getValues, watch, setValue, triggerValidation } = formContext;
 
-  const {
-    lameQuantity = 0,
-    respitoryQuantity = 0,
-    bellyRuptureQuantity = 0,
-    scrotumRuptureQuantity = 0,
-    scoursQuantity = 0,
-    smallQuantity = 0,
-    unthriftyQuantity = 0
-  } = watch([
-    "lameQuantity",
-    "respitoryQuantity",
-    "bellyRuptureQuantity",
-    "scrotumRuptureQuantity",
-    "scoursQuantity",
-    "smallQuantity",
-    "unthriftyQuantity"
-  ]);
-  const hasQuantity =
-    lameQuantity > 0 ||
-    respitoryQuantity > 0 ||
-    bellyRuptureQuantity > 0 ||
-    scrotumRuptureQuantity > 0 ||
-    scoursQuantity > 0 ||
-    smallQuantity > 0 ||
-    unthriftyQuantity > 0;
-  const quantityValidation = {
-    required: !hasQuantity && "At least one quantity field is required."
-  };
-  const totalQuantity =
-    lameQuantity +
-    respitoryQuantity +
-    bellyRuptureQuantity +
-    scrotumRuptureQuantity +
-    scoursQuantity +
-    smallQuantity +
-    unthriftyQuantity;
+  const quantities = watch("quantities") || {};
+  const totalQuantity = Object.values(quantities).reduce<number>(
+    (sum, q = 0) => sum + q,
+    0
+  );
 
-  // Validate quantities if one changes.
+  const newQuantityReason = watch("newQuantityReason");
+
   useEffect(() => {
-    if (formState.isSubmitted) {
-      triggerValidation("lameQuantity");
-      triggerValidation("respitoryQuantity");
-      triggerValidation("bellyRuptureQuantity");
-      triggerValidation("scrotumRuptureQuantity");
-      triggerValidation("scoursQuantity");
-      triggerValidation("smallQuantity");
-      triggerValidation("unthriftyQuantity");
+    if (newQuantityReason) {
+      setReasons(reasons => [...reasons, newQuantityReason]);
+      setValue("newQuantityReason", undefined);
     }
-  }, [
-    triggerValidation,
-    formState.isSubmitted,
-    lameQuantity,
-    respitoryQuantity,
-    bellyRuptureQuantity,
-    scrotumRuptureQuantity,
-    scoursQuantity,
-    smallQuantity,
-    unthriftyQuantity
-  ]);
+  }, [newQuantityReason, setValue, triggerValidation]);
 
-  const onSubmit: OnSubmit<FormData> = async data => {
+  useEffect(() => {
+    triggerValidation("newQuantityReason");
+  }, [triggerValidation, quantities]);
+
+  const onSubmit: OnSubmit<FormData> = async ({ quantities, ...data }) => {
     try {
       await post({
         variables: {
           input: {
             ...data,
+            lameQuantity: quantities.lame,
+            respitoryQuantity: quantities.resp,
+            bellyRuptureQuantity: quantities.belly,
+            scrotumRuptureQuantity: quantities.scrotum,
+            scoursQuantity: quantities.scours,
+            smallQuantity: quantities.small,
+            unthriftyQuantity: quantities.unthrift,
             ...(isNurseryFinisher && { animal: "01" }),
             job: params.job
           }
@@ -172,10 +181,18 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
+      const { quantities, ...data } = getValues({ nest: true });
       await save({
         variables: {
           input: {
-            ...getValues(),
+            ...data,
+            lameQuantity: quantities.lame,
+            respitoryQuantity: quantities.resp,
+            bellyRuptureQuantity: quantities.belly,
+            scrotumRuptureQuantity: quantities.scrotum,
+            scoursQuantity: quantities.scours,
+            smallQuantity: quantities.small,
+            unthriftyQuantity: quantities.unthrift,
             job: params.job
           }
         }
@@ -215,65 +232,73 @@ const ActivityGradeOffView: React.FC = () => {
             <FormGroup>
               <FormGroupLabel>Quantity</FormGroupLabel>
               <FormGroupContent>
-                <FormField name="lameQuantity" rules={quantityValidation}>
-                  <FormFieldLabel>Lame</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField name="respitoryQuantity" rules={quantityValidation}>
-                  <FormFieldLabel>Respitory</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField
-                  name="bellyRuptureQuantity"
-                  rules={quantityValidation}
-                >
-                  <FormFieldLabel>Belly Rupture</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField
-                  name="scrotumRuptureQuantity"
-                  rules={quantityValidation}
-                >
-                  <FormFieldLabel>Scrotum Rupture</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField name="scoursQuantity" rules={quantityValidation}>
-                  <FormFieldLabel>Scours</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField name="smallQuantity" rules={quantityValidation}>
-                  <FormFieldLabel>Small</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField name="unthriftyQuantity" rules={quantityValidation}>
-                  <FormFieldLabel>Unthrifty</FormFieldLabel>
-                  <FormFieldInput>
-                    <NumberInput />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
+                {reasons.map((code, i) => {
+                  return (
+                    <FormField
+                      key={code}
+                      name={`quantities.${code}`}
+                      rules={{
+                        required: "This quantity field is required."
+                      }}
+                    >
+                      <FormFieldLabel>
+                        {REASONS[code].description}
+                      </FormFieldLabel>
+                      <div className="flex">
+                        <FormFieldInput
+                          ref={i === reasons.length - 1 ? onInputAdded : null}
+                        >
+                          <NumberInput className="rounded-r-none" />
+                        </FormFieldInput>
+                        <Button
+                          className="rounded-l-none"
+                          onClick={() => {
+                            setReasons(reasons =>
+                              reasons.filter(c => c !== code)
+                            );
+                            triggerValidation("newQuantityReason");
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                      <FormFieldErrors />
+                    </FormField>
+                  );
+                })}
                 <FormField name="totalQuantity">
                   <FormFieldLabel>Total</FormFieldLabel>
                   <FormFieldInput noRegister>
                     <StaticValue value={totalQuantity} />
+                  </FormFieldInput>
+                  <FormFieldErrors />
+                </FormField>
+                <FormField
+                  name="newQuantityReason"
+                  rules={{
+                    validate: {
+                      required: () => {
+                        const { quantities = {} } = getValues({ nest: true });
+                        return (
+                          Object.keys(quantities).length > 0 ||
+                          "At least one quantity is required."
+                        );
+                      }
+                    }
+                  }}
+                >
+                  <FormFieldLabel>New Reason</FormFieldLabel>
+                  {/* TODO: Convert to buttons rather than radio buttons. */}
+                  <FormFieldInput>
+                    <StackedButtonInput orientation="vertical">
+                      {Object.entries(REASONS)
+                        .filter(([code]) => !reasons.includes(code))
+                        .map(([code, { description }]) => (
+                          <StackedButton value={code} key={code}>
+                            {description}
+                          </StackedButton>
+                        ))}
+                    </StackedButtonInput>
                   </FormFieldInput>
                   <FormFieldErrors />
                 </FormField>

@@ -6,13 +6,7 @@ import Spinner from "../Spinner";
 const FormSubmit: React.FC = ({ children }) => {
   const { formState } = useFormContext();
   return (
-    <Button
-      type="submit"
-      className="w-full"
-      disabled={
-        (!formState.isValid && formState.isSubmitted) || formState.isSubmitting
-      }
-    >
+    <Button type="submit" className="w-full" disabled={formState.isSubmitting}>
       {formState.isSubmitting ? (
         <>
           <span className="mr-2">Loading</span>
