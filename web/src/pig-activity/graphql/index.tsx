@@ -653,6 +653,9 @@ export type PigGradeOffQuery = { __typename?: "Query" } & {
   pigTypes: Array<
     { __typename?: "Animal" } & Pick<Animal, "number" | "description">
   >;
+  pigGradeOffReasons: Array<
+    { __typename?: "Reason" } & Pick<Reason, "code" | "description">
+  >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
 
@@ -1244,6 +1247,10 @@ export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
     pigTypes {
       number
+      description
+    }
+    pigGradeOffReasons {
+      code
       description
     }
     pigGradeOff(job: $job) {

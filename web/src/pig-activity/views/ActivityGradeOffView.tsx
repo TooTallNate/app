@@ -39,42 +39,10 @@ function onInputAdded(el: FormFieldInputElement | null) {
   }
 }
 
-enum GradeOffReasons {
-  Lame = "lame",
-  Respitory = "resp",
-  BellyRupture = "belly",
-  ScrotumRupture = "scrotum",
-  Scours = "scours",
-  Small = "small",
-  Unthrifty = "unthrift"
-}
-
-const REASONS: {
-  [key: string]: {
-    description: string;
-  };
-} = {
-  [GradeOffReasons.Lame]: { description: "Lame" },
-  [GradeOffReasons.Respitory]: { description: "Respitory" },
-  [GradeOffReasons.BellyRupture]: { description: "Belly Rupture" },
-  [GradeOffReasons.ScrotumRupture]: { description: "Scrotum Rupture" },
-  [GradeOffReasons.Scours]: { description: "Scours" },
-  [GradeOffReasons.Small]: { description: "Small" },
-  [GradeOffReasons.Unthrifty]: { description: "Unthrifty" }
-};
-
 interface FormData {
   animal: string;
   newQuantityReason?: string;
-  quantities: {
-    lame?: number;
-    resp?: number;
-    belly?: number;
-    scrotum?: number;
-    scours?: number;
-    small?: number;
-    unthrift?: number;
-  };
+  quantities: { [code: string]: number };
   pigWeight: number;
   comments?: string;
 }
@@ -104,20 +72,6 @@ const ActivityGradeOffView: React.FC = () => {
       const { setValue } = formContext;
       if (isSowFarm && pigGradeOff.animal)
         setValue("animal", pigGradeOff.animal);
-      if (pigGradeOff.lameQuantity)
-        setValue("lameQuantity", pigGradeOff.lameQuantity);
-      if (pigGradeOff.respitoryQuantity)
-        setValue("respitoryQuantity", pigGradeOff.respitoryQuantity);
-      if (pigGradeOff.bellyRuptureQuantity)
-        setValue("bellyRuptureQuantity", pigGradeOff.bellyRuptureQuantity);
-      if (pigGradeOff.scrotumRuptureQuantity)
-        setValue("scrotumRuptureQuantity", pigGradeOff.scrotumRuptureQuantity);
-      if (pigGradeOff.scoursQuantity)
-        setValue("scoursQuantity", pigGradeOff.scoursQuantity);
-      if (pigGradeOff.smallQuantity)
-        setValue("smallQuantity", pigGradeOff.smallQuantity);
-      if (pigGradeOff.unthriftyQuantity)
-        setValue("unthriftyQuantity", pigGradeOff.unthriftyQuantity);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
     }
@@ -144,22 +98,20 @@ const ActivityGradeOffView: React.FC = () => {
 
   useEffect(() => {
     triggerValidation("newQuantityReason");
-  }, [triggerValidation, quantities]);
+  }, [triggerValidation, reasons]);
 
-  const onSubmit: OnSubmit<FormData> = async ({ quantities, ...data }) => {
+  const onSubmit: OnSubmit<FormData> = async ({
+    animal,
+    pigWeight,
+    comments
+  }) => {
     try {
       await post({
         variables: {
           input: {
-            ...data,
-            lameQuantity: quantities.lame,
-            respitoryQuantity: quantities.resp,
-            bellyRuptureQuantity: quantities.belly,
-            scrotumRuptureQuantity: quantities.scrotum,
-            scoursQuantity: quantities.scours,
-            smallQuantity: quantities.small,
-            unthriftyQuantity: quantities.unthrift,
-            ...(isNurseryFinisher && { animal: "01" }),
+            animal: isNurseryFinisher ? "01" : animal,
+            pigWeight,
+            comments,
             job: params.job
           }
         }
@@ -180,18 +132,13 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { quantities, ...data } = getValues({ nest: true });
+      const { animal, pigWeight, comments } = getValues({ nest: true });
       await save({
         variables: {
           input: {
-            ...data,
-            lameQuantity: quantities.lame,
-            respitoryQuantity: quantities.resp,
-            bellyRuptureQuantity: quantities.belly,
-            scrotumRuptureQuantity: quantities.scrotum,
-            scoursQuantity: quantities.scours,
-            smallQuantity: quantities.small,
-            unthriftyQuantity: quantities.unthrift,
+            animal,
+            pigWeight,
+            comments,
             job: params.job
           }
         }
@@ -232,6 +179,9 @@ const ActivityGradeOffView: React.FC = () => {
               <FormGroupLabel>Quantity</FormGroupLabel>
               <FormGroupContent>
                 {reasons.map((code, i) => {
+                  const reason = data.pigGradeOffReasons.find(
+                    r => r.code === code
+                  )!;
                   return (
                     <FormField
                       key={code}
@@ -240,9 +190,7 @@ const ActivityGradeOffView: React.FC = () => {
                         required: "This quantity field is required."
                       }}
                     >
-                      <FormFieldLabel>
-                        {REASONS[code].description}
-                      </FormFieldLabel>
+                      <FormFieldLabel>{reason.description}</FormFieldLabel>
                       <div className="flex">
                         <FormFieldInput
                           ref={i === reasons.length - 1 ? onInputAdded : null}
@@ -289,9 +237,9 @@ const ActivityGradeOffView: React.FC = () => {
                   <FormFieldLabel>New Reason</FormFieldLabel>
                   <FormFieldInput>
                     <StackedInput orientation="vertical">
-                      {Object.entries(REASONS)
-                        .filter(([code]) => !reasons.includes(code))
-                        .map(([code, { description }]) => (
+                      {data.pigGradeOffReasons
+                        .filter(({ code }) => !reasons.includes(code))
+                        .map(({ code, description }) => (
                           <StackedButton value={code} key={code}>
                             {description}
                           </StackedButton>
