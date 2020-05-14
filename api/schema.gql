@@ -120,6 +120,11 @@ input PigQuantityInput {
   quantity: Int!
 }
 
+input PigOptionalQuantityInput {
+  code: String!
+  quantity: Int
+}
+
 input PostPigAdjustmentInput {
   animal: String!
   job: String!
@@ -141,7 +146,7 @@ input SavePigAdjustmentInput {
 input PostPigGradeOffInput {
   animal: String!
   job: String!
-  quantities: [PigQuantityInput!]!
+  quantities: [PigOptionalQuantityInput!]!
   pigWeight: Float!
   comments: String
 }

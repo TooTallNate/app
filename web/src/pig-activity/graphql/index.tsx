@@ -186,6 +186,11 @@ export type PigMove = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PigOptionalQuantityInput = {
+  code: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+};
+
 export type PigPurchase = {
   __typename?: "PigPurchase";
   animal?: Maybe<Scalars["String"]>;
@@ -254,7 +259,7 @@ export type PostPigAdjustmentResult = {
 export type PostPigGradeOffInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
-  quantities: Array<PigQuantityInput>;
+  quantities: Array<PigOptionalQuantityInput>;
   pigWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };

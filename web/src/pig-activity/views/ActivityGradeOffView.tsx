@@ -74,12 +74,23 @@ const ActivityGradeOffView: React.FC = () => {
         setValue("animal", pigGradeOff.animal);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
+      const reasons = pigGradeOff.quantities.map(({ code, quantity }) => {
+        setValue(`quantities.${code}`, quantity);
+        return code;
+      });
+      setReasons(reasons);
     }
   });
   const [post] = usePostPigGradeOffMutation();
   const [save] = useSavePigGradeOffMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, setValue, triggerValidation } = formContext;
+  const {
+    getValues,
+    watch,
+    setValue,
+    triggerValidation,
+    formState
+  } = formContext;
 
   const quantities = watch("quantities") || {};
   const totalQuantity = Object.values(quantities).reduce<number>(
@@ -97,13 +108,16 @@ const ActivityGradeOffView: React.FC = () => {
   }, [newQuantityReason, setValue, triggerValidation]);
 
   useEffect(() => {
-    triggerValidation("newQuantityReason");
-  }, [triggerValidation, reasons]);
+    if (formState.isSubmitted) {
+      triggerValidation("newQuantityReason");
+    }
+  }, [triggerValidation, reasons, formState.isSubmitted]);
 
   const onSubmit: OnSubmit<FormData> = async ({
     animal,
     pigWeight,
-    comments
+    comments,
+    quantities
   }) => {
     try {
       await post({
@@ -112,6 +126,10 @@ const ActivityGradeOffView: React.FC = () => {
             animal: isNurseryFinisher ? "01" : animal,
             pigWeight,
             comments,
+            quantities: Object.entries(quantities).map(([code, quantity]) => ({
+              code,
+              quantity
+            })),
             job: params.job
           }
         }
@@ -132,13 +150,25 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { animal, pigWeight, comments } = getValues({ nest: true });
+      const { animal, pigWeight, comments, quantities } = getValues({
+        nest: true
+      });
+      console.log(
+        Object.entries(quantities).map(([code, quantity]) => ({
+          code,
+          quantity
+        }))
+      );
       await save({
         variables: {
           input: {
             animal,
             pigWeight,
             comments,
+            quantities: Object.entries(quantities).map(([code, quantity]) => ({
+              code,
+              quantity
+            })),
             job: params.job
           }
         }
