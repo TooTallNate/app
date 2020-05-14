@@ -339,6 +339,7 @@ export type Query = {
   user?: Maybe<User>;
   pigTypes: Array<Animal>;
   pigActivityJobs: Array<Job>;
+  pigGradeOffReasons: Array<Reason>;
   pigActivityDefaults: PigActivityDefaults;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
@@ -382,6 +383,12 @@ export type QueryFarrowingBackendScorecardArgs = {
 
 export type QueryFarrowingBackendAreaArgs = {
   number: Scalars["String"];
+};
+
+export type Reason = {
+  __typename?: "Reason";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type Resource = {

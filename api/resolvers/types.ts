@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob, NavAnimal, NavResource } from "../nav";
+import { NavUser, NavJob, NavAnimal, NavResource, NavReason } from "../nav";
 import { PigAdjustmentDocument } from "../models/PigAdjustment";
 import { PigGradeOffDocument } from "../models/PigGradeOff";
 import { PigMortalityDocument } from "../models/PigMortality";
@@ -352,6 +352,7 @@ export type Query = {
   user?: Maybe<User>;
   pigTypes: Array<Animal>;
   pigActivityJobs: Array<Job>;
+  pigGradeOffReasons: Array<Reason>;
   pigActivityDefaults: PigActivityDefaults;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
@@ -395,6 +396,12 @@ export type QueryFarrowingBackendScorecardArgs = {
 
 export type QueryFarrowingBackendAreaArgs = {
   number: Scalars["String"];
+};
+
+export type Reason = {
+  __typename?: "Reason";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type Resource = {
@@ -671,6 +678,7 @@ export type ResolversTypes = ResolversObject<{
   Job: ResolverTypeWrapper<NavJob>;
   Resource: ResolverTypeWrapper<NavResource>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
+  Reason: ResolverTypeWrapper<NavReason>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
@@ -802,6 +810,7 @@ export type ResolversParentTypes = ResolversObject<{
   Job: NavJob;
   Resource: NavResource;
   Int: Scalars["Int"];
+  Reason: NavReason;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
   PigAdjustment: PigAdjustmentDocument;
@@ -1371,6 +1380,11 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  pigGradeOffReasons?: Resolver<
+    Array<ResolversTypes["Reason"]>,
+    ParentType,
+    ContextType
+  >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
     ParentType,
@@ -1434,6 +1448,15 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+}>;
+
+export type ReasonResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Reason"] = ResolversParentTypes["Reason"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type ResourceResolvers<
@@ -1610,6 +1633,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PostPigPurchaseResult?: PostPigPurchaseResultResolvers<ContextType>;
   PostPigWeanResult?: PostPigWeanResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Reason?: ReasonResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   SaveFarrowingBackendScorecardResult?: SaveFarrowingBackendScorecardResultResolvers<
     ContextType

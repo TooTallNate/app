@@ -2,6 +2,7 @@ import { User, UserMutations, UserQueries } from "./user";
 import { Job } from "./jobs";
 import { Animal } from "./animal";
 import { Resource } from "./resource";
+import { Reason } from "./reason";
 import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
 import {
   PigAdjustment,
@@ -57,6 +58,7 @@ export default {
   Job,
   Animal,
   Resource,
+  Reason,
   PigActivityDefaults,
   PigAdjustment,
   PigGradeOff,

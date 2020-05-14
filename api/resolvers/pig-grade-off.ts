@@ -8,6 +8,7 @@ import {
   NavItemJournalTemplate,
   NavEntryType,
   NavJob,
+  NavReason,
   NavReasonCode
 } from "../nav";
 import { getDocumentNumber } from "./utils";
@@ -24,6 +25,13 @@ export const PigGradeOff: PigGradeOffResolvers = {
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
+  async pigGradeOffReasons(_, __, { navClient }) {
+    return await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("ReasonCodes")
+      .get<NavReason[]>()
+      .filter(f => f.startsWith("Code", "GR-"));
+  },
   async pigGradeOff(_, { job }) {
     return (
       (await PigGradeOffModel.findOne({ job })) || new PigGradeOffModel({ job })

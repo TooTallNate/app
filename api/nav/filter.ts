@@ -40,6 +40,12 @@ export interface GreaterThanOrEqualFilterExpression {
   arg2: NumericFilterExpression;
 }
 
+export interface StartsWithFilterExpression {
+  operator: "startswith";
+  arg1: string;
+  arg2: StringFilterExpression;
+}
+
 export interface AndFilterExpression {
   operator: "and";
   args: BooleanFilterExpression[];
@@ -60,7 +66,8 @@ export type BooleanFilterExpression =
   | GreaterThanFilterExpression
   | GreaterThanOrEqualFilterExpression
   | AndFilterExpression
-  | OrFilterExpression;
+  | OrFilterExpression
+  | StartsWithFilterExpression;
 export type StringFilterExpression = string;
 
 export type FilterExpression = BooleanFilterExpression;
@@ -92,6 +99,10 @@ export interface FilterFunctionArgument {
   ): GreaterThanOrEqualFilterExpression;
   and(...args: BooleanFilterExpression[]): AndFilterExpression;
   or(...args: BooleanFilterExpression[]): OrFilterExpression;
+  startsWith(
+    arg1: string,
+    arg2: StringFilterExpression
+  ): BooleanFilterExpression;
 }
 
 export interface FilterFunction {
@@ -131,6 +142,11 @@ function buildFilterExpression(
             .join(` ${expression.operator} `);
           return `(${newExpression})`;
         }
+        case "startswith": {
+          const arg1 = expression.arg1;
+          const arg2 = buildFilterExpression(expression.arg2);
+          return `${expression.operator}(${arg1}, ${arg2})`;
+        }
       }
     }
   }
@@ -147,7 +163,8 @@ export function createFilterExpression(
     greaterThan: (arg1, arg2) => ({ operator: "gt", arg1, arg2 }),
     greaterThanOrEqual: (arg1, arg2) => ({ operator: "ge", arg1, arg2 }),
     and: (...args) => ({ operator: "and", args }),
-    or: (...args) => ({ operator: "or", args })
+    or: (...args) => ({ operator: "or", args }),
+    startsWith: (arg1, arg2) => ({ operator: "startswith", arg1, arg2 })
   });
 }
 

@@ -27,6 +27,11 @@ export interface NavJob {
   Start_Date: string;
 }
 
+export interface NavReason {
+  Code: string;
+  Description: string;
+}
+
 export interface NavAnimal {
   No: string;
   Description: string;

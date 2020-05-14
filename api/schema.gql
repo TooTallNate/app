@@ -17,6 +17,11 @@ type Animal {
   description: String!
 }
 
+type Reason {
+  code: String!
+  description: String!
+}
+
 type Resource {
   number: String!
   name: String!
@@ -370,6 +375,7 @@ type Query {
 
   pigTypes: [Animal!]!
   pigActivityJobs: [Job!]!
+  pigGradeOffReasons: [Reason!]!
   pigActivityDefaults: PigActivityDefaults!
   pigAdjustment(job: String!): PigAdjustment!
   pigGradeOff(job: String!): PigGradeOff!

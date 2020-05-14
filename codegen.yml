@@ -17,6 +17,7 @@ generates:
         Job: "../nav#NavJob"
         Animal: "../nav#NavAnimal"
         Resource: "../nav#NavResource"
+        Reason: "../nav#NavReason"
         PigAdjustment: "../models/PigAdjustment#PigAdjustmentDocument"
         PigGradeOff: "../models/PigGradeOff#PigGradeOffDocument"
         PigMortality: "../models/PigMortality#PigMortalityDocument"

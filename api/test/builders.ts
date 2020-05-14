@@ -1,7 +1,7 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import { NavUser, NavJob, NavResource } from "../nav/types";
+import { NavUser, NavJob, NavResource, NavReason } from "../nav/types";
 import uuid from "uuid/v4";
 import {
   SaveFarrowingBackendScorecardInput,
@@ -45,6 +45,11 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
 export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
   Name: Factory.each(() => faker.name.firstName()),
   No: Factory.each(() => `resource_${faker.random.alphaNumeric(8)}`)
+});
+
+export const ReasonFactory = Factory.Sync.makeFactory<NavReason>({
+  Code: Factory.each(() => faker.random.alphaNumeric(4).toUpperCase()),
+  Description: Factory.each(() => faker.random.word())
 });
 
 export const ScorecardEntryInputFactory = Factory.Sync.makeFactory<
