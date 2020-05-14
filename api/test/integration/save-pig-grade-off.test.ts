@@ -23,13 +23,10 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
             number
           }
           animal
-          lameQuantity
-          respitoryQuantity
-          bellyRuptureQuantity
-          scrotumRuptureQuantity
-          scoursQuantity
-          smallQuantity
-          unthriftyQuantity
+          quantities {
+            code
+            quantity
+          }
           pigWeight
           comments
         }
@@ -83,13 +80,7 @@ test("creates new gradeOff and user settings documents", async () => {
           number: job.No
         },
         animal: input.animal,
-        lameQuantity: input.lameQuantity,
-        respitoryQuantity: input.respitoryQuantity,
-        bellyRuptureQuantity: input.bellyRuptureQuantity,
-        scrotumRuptureQuantity: input.scrotumRuptureQuantity,
-        scoursQuantity: input.scoursQuantity,
-        smallQuantity: input.smallQuantity,
-        unthriftyQuantity: input.unthriftyQuantity,
+        quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
       },
@@ -126,13 +117,7 @@ test("creates new gradeOff and user settings documents", async () => {
     activity: "gradeoff",
     job: job.No,
     animal: input.animal,
-    lameQuantity: input.lameQuantity,
-    respitoryQuantity: input.respitoryQuantity,
-    bellyRuptureQuantity: input.bellyRuptureQuantity,
-    scrotumRuptureQuantity: input.scrotumRuptureQuantity,
-    scoursQuantity: input.scoursQuantity,
-    smallQuantity: input.smallQuantity,
-    unthriftyQuantity: input.unthriftyQuantity,
+    quantities: input.quantities,
     pigWeight: input.pigWeight,
     comments: input.comments
   });
@@ -156,13 +141,7 @@ test("updates existing gradeOff document", async () => {
           number: job.No
         },
         animal: input.animal,
-        lameQuantity: input.lameQuantity,
-        respitoryQuantity: input.respitoryQuantity,
-        bellyRuptureQuantity: input.bellyRuptureQuantity,
-        scrotumRuptureQuantity: input.scrotumRuptureQuantity,
-        scoursQuantity: input.scoursQuantity,
-        smallQuantity: input.smallQuantity,
-        unthriftyQuantity: input.unthriftyQuantity,
+        quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
       },
@@ -185,13 +164,7 @@ test("updates existing gradeOff document", async () => {
     activity: "gradeoff",
     job: job.No,
     animal: input.animal,
-    lameQuantity: input.lameQuantity,
-    respitoryQuantity: input.respitoryQuantity,
-    bellyRuptureQuantity: input.bellyRuptureQuantity,
-    scrotumRuptureQuantity: input.scrotumRuptureQuantity,
-    scoursQuantity: input.scoursQuantity,
-    smallQuantity: input.smallQuantity,
-    unthriftyQuantity: input.unthriftyQuantity,
+    quantities: input.quantities,
     pigWeight: input.pigWeight,
     comments: input.comments
   });
@@ -217,13 +190,7 @@ test("updates existing user settings document", async () => {
           number: job.No
         },
         animal: input.animal,
-        lameQuantity: input.lameQuantity,
-        respitoryQuantity: input.respitoryQuantity,
-        bellyRuptureQuantity: input.bellyRuptureQuantity,
-        scrotumRuptureQuantity: input.scrotumRuptureQuantity,
-        scoursQuantity: input.scoursQuantity,
-        smallQuantity: input.smallQuantity,
-        unthriftyQuantity: input.unthriftyQuantity,
+        quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
       },

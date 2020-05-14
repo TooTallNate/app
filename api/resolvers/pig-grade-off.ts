@@ -21,7 +21,8 @@ export const PigGradeOff: PigGradeOffResolvers = {
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", pigGradeoff.job)
       .get<NavJob>();
-  }
+  },
+  quantities: pigGradeOff => pigGradeOff.quantities || []
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
@@ -61,11 +62,8 @@ export const PigGradeOffMutations: MutationResolvers = {
       .resource("Jobs", input.job)
       .get<NavJob>();
 
-    async function postGradeOff(
-      reason: NavReasonCode,
-      quantity?: number
-    ): Promise<void> {
-      if (quantity > 0) {
+    for (const entry of input.quantities) {
+      if (entry.quantity > 0) {
         await postItemJournal(
           {
             Journal_Template_Name: NavItemJournalTemplate.GradeOff,
@@ -75,9 +73,9 @@ export const PigGradeOffMutations: MutationResolvers = {
             Item_No: input.animal,
             Description: input.comments,
             Location_Code: job.Site,
-            Reason_Code: reason,
-            Quantity: quantity,
-            Weight: input.pigWeight * quantity,
+            Reason_Code: entry.code as NavReasonCode,
+            Quantity: entry.quantity,
+            Weight: input.pigWeight * entry.quantity,
             Job_No: input.job,
             Shortcut_Dimension_1_Code: job.Entity,
             Shortcut_Dimension_2_Code: job.Cost_Center
@@ -86,26 +84,6 @@ export const PigGradeOffMutations: MutationResolvers = {
         );
       }
     }
-
-    await postGradeOff(
-      NavReasonCode.GradeOffBellyRupture,
-      input.bellyRuptureQuantity
-    );
-    await postGradeOff(NavReasonCode.GradeOffLame, input.lameQuantity);
-    await postGradeOff(
-      NavReasonCode.GradeOffRespitory,
-      input.respitoryQuantity
-    );
-    await postGradeOff(NavReasonCode.GradeOffScours, input.scoursQuantity);
-    await postGradeOff(
-      NavReasonCode.GradeOffScrotumRupture,
-      input.scrotumRuptureQuantity
-    );
-    await postGradeOff(NavReasonCode.GradeOffSmall, input.smallQuantity);
-    await postGradeOff(
-      NavReasonCode.GradeOffUnthrifty,
-      input.unthriftyQuantity
-    );
 
     const userSettings = await updateUserSettings({
       username: user.username,

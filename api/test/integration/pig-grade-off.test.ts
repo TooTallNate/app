@@ -14,13 +14,10 @@ function query(variables: QueryPigGradeOffArgs) {
           number
         }
         animal
-        lameQuantity
-        respitoryQuantity
-        bellyRuptureQuantity
-        scrotumRuptureQuantity
-        scoursQuantity
-        smallQuantity
-        unthriftyQuantity
+        quantities {
+          code
+          quantity
+        }
         pigWeight
         comments
       }
@@ -54,13 +51,7 @@ test("returns default form if no record in the database", async () => {
       },
       animal: null,
       comments: null,
-      lameQuantity: null,
-      respitoryQuantity: null,
-      bellyRuptureQuantity: null,
-      scrotumRuptureQuantity: null,
-      scoursQuantity: null,
-      smallQuantity: null,
-      unthriftyQuantity: null,
+      quantities: [],
       pigWeight: null
     }
   });
@@ -82,13 +73,7 @@ test("returns from from the database", async () => {
       },
       animal: doc.animal,
       comments: doc.comments,
-      lameQuantity: doc.lameQuantity,
-      respitoryQuantity: doc.respitoryQuantity,
-      bellyRuptureQuantity: doc.bellyRuptureQuantity,
-      scrotumRuptureQuantity: doc.scrotumRuptureQuantity,
-      scoursQuantity: doc.scoursQuantity,
-      smallQuantity: doc.smallQuantity,
-      unthriftyQuantity: doc.unthriftyQuantity,
+      quantities: Array.from(doc.toObject().quantities),
       pigWeight: doc.pigWeight
     }
   });

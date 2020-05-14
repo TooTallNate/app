@@ -6,13 +6,10 @@ fragment PigGradeOffFragment on PigGradeOff {
     inventory
     deadQuantity
   }  
-  lameQuantity
-  respitoryQuantity
-  bellyRuptureQuantity
-  scrotumRuptureQuantity
-  scoursQuantity
-  smallQuantity
-  unthriftyQuantity
+  quantities {
+    code
+    quantity
+  }
   pigWeight
   comments
 }

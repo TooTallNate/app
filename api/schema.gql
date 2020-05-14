@@ -32,6 +32,11 @@ type PigActivityDefaults {
   price: Float
 }
 
+type PigQuantity {
+  code: String!
+  quantity: Int!
+}
+
 type PigAdjustment {
   animal: String
   job: Job!
@@ -44,13 +49,7 @@ type PigAdjustment {
 type PigGradeOff {
   animal: String
   job: Job!
-  lameQuantity: Int
-  respitoryQuantity: Int
-  bellyRuptureQuantity: Int
-  scrotumRuptureQuantity: Int
-  scoursQuantity: Int
-  smallQuantity: Int
-  unthriftyQuantity: Int
+  quantities: [PigQuantity!]!
   pigWeight: Float
   comments: String
 }
@@ -116,6 +115,11 @@ input LoginInput {
   password: String!
 }
 
+input PigQuantityInput {
+  code: String!
+  quantity: Int!
+}
+
 input PostPigAdjustmentInput {
   animal: String!
   job: String!
@@ -137,13 +141,7 @@ input SavePigAdjustmentInput {
 input PostPigGradeOffInput {
   animal: String!
   job: String!
-  lameQuantity: Int
-  respitoryQuantity: Int
-  bellyRuptureQuantity: Int
-  scrotumRuptureQuantity: Int
-  scoursQuantity: Int
-  smallQuantity: Int
-  unthriftyQuantity: Int
+  quantities: [PigQuantityInput!]!
   pigWeight: Float!
   comments: String
 }
@@ -151,13 +149,7 @@ input PostPigGradeOffInput {
 input SavePigGradeOffInput {
   animal: String
   job: String!
-  lameQuantity: Int
-  respitoryQuantity: Int
-  bellyRuptureQuantity: Int
-  scrotumRuptureQuantity: Int
-  scoursQuantity: Int
-  smallQuantity: Int
-  unthriftyQuantity: Int
+  quantities: [PigQuantityInput!]
   pigWeight: Float
   comments: String
 }

@@ -99,21 +99,20 @@ export const PigAdjustmentFactory = Factory.Sync.makeFactory({
 export const PigGradeOffFactory = Factory.Sync.makeFactory({
   animal: Factory.each(() => oneOf("01", "02", "03")),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
-  lameQuantity: Factory.each(() => faker.random.number({ min: 1, max: 20 })),
-  respitoryQuantity: Factory.each(() =>
-    faker.random.number({ min: 1, max: 20 })
-  ),
-  bellyRuptureQuantity: Factory.each(() =>
-    faker.random.number({ min: 1, max: 20 })
-  ),
-  scrotumRuptureQuantity: Factory.each(() =>
-    faker.random.number({ min: 1, max: 20 })
-  ),
-  scoursQuantity: Factory.each(() => faker.random.number({ min: 1, max: 20 })),
-  smallQuantity: Factory.each(() => faker.random.number({ min: 1, max: 20 })),
-  unthriftyQuantity: Factory.each(() =>
-    faker.random.number({ min: 1, max: 20 })
-  ),
+  quantities: Factory.each(() => [
+    {
+      code: oneOf("GR-RESP", "GR-BRUPT"),
+      quantity: faker.random.number({ min: 1, max: 50 })
+    },
+    {
+      code: oneOf("GR-SRUPT", "GR-LAME"),
+      quantity: faker.random.number({ min: 1, max: 50 })
+    },
+    {
+      code: oneOf("GR-UNTHRIF", "GR-DOA"),
+      quantity: faker.random.number({ min: 1, max: 50 })
+    }
+  ]),
   pigWeight: Factory.each(() => faker.random.number({ min: 50, max: 200 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });

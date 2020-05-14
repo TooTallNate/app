@@ -159,13 +159,7 @@ export type PigGradeOff = {
   __typename?: "PigGradeOff";
   animal?: Maybe<Scalars["String"]>;
   job: Job;
-  lameQuantity?: Maybe<Scalars["Int"]>;
-  respitoryQuantity?: Maybe<Scalars["Int"]>;
-  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scoursQuantity?: Maybe<Scalars["Int"]>;
-  smallQuantity?: Maybe<Scalars["Int"]>;
-  unthriftyQuantity?: Maybe<Scalars["Int"]>;
+  quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -200,6 +194,17 @@ export type PigPurchase = {
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigQuantity = {
+  __typename?: "PigQuantity";
+  code: Scalars["String"];
+  quantity: Scalars["Int"];
+};
+
+export type PigQuantityInput = {
+  code: Scalars["String"];
+  quantity: Scalars["Int"];
 };
 
 export type PigWean = {
@@ -249,13 +254,7 @@ export type PostPigAdjustmentResult = {
 export type PostPigGradeOffInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
-  lameQuantity?: Maybe<Scalars["Int"]>;
-  respitoryQuantity?: Maybe<Scalars["Int"]>;
-  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scoursQuantity?: Maybe<Scalars["Int"]>;
-  smallQuantity?: Maybe<Scalars["Int"]>;
-  unthriftyQuantity?: Maybe<Scalars["Int"]>;
+  quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -433,13 +432,7 @@ export type SavePigAdjustmentResult = {
 export type SavePigGradeOffInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
-  lameQuantity?: Maybe<Scalars["Int"]>;
-  respitoryQuantity?: Maybe<Scalars["Int"]>;
-  bellyRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scrotumRuptureQuantity?: Maybe<Scalars["Int"]>;
-  scoursQuantity?: Maybe<Scalars["Int"]>;
-  smallQuantity?: Maybe<Scalars["Int"]>;
-  unthriftyQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };

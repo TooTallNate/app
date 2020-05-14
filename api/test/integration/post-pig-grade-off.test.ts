@@ -30,13 +30,10 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
             number
           }
           animal
-          lameQuantity
-          respitoryQuantity
-          bellyRuptureQuantity
-          scrotumRuptureQuantity
-          scoursQuantity
-          smallQuantity
-          unthriftyQuantity
+          quantities {
+            code
+            quantity
+          }
           pigWeight
           comments
         }
@@ -74,7 +71,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .reply(200, job)
     .persist();
 
-  function postItemJournal(reason: NavReasonCode, quantity?: number) {
+  input.quantities.forEach(({ quantity, code }) => {
     if (quantity > 0) {
       nock(process.env.NAV_BASE_URL)
         .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
@@ -85,7 +82,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
           Item_No: input.animal,
           Description: input.comments || " ",
           Location_Code: job.Site,
-          Reason_Code: reason,
+          Reason_Code: code,
           Quantity: quantity,
           Weight: input.pigWeight * quantity,
           Job_No: input.job,
@@ -97,21 +94,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
         .basicAuth(auth)
         .reply(200, {});
     }
-  }
-
-  postItemJournal(
-    NavReasonCode.GradeOffBellyRupture,
-    input.bellyRuptureQuantity
-  );
-  postItemJournal(NavReasonCode.GradeOffLame, input.lameQuantity);
-  postItemJournal(NavReasonCode.GradeOffRespitory, input.respitoryQuantity);
-  postItemJournal(NavReasonCode.GradeOffScours, input.scoursQuantity);
-  postItemJournal(
-    NavReasonCode.GradeOffScrotumRupture,
-    input.scrotumRuptureQuantity
-  );
-  postItemJournal(NavReasonCode.GradeOffSmall, input.smallQuantity);
-  postItemJournal(NavReasonCode.GradeOffUnthrifty, input.unthriftyQuantity);
+  });
 
   return { user, job, input };
 }
@@ -137,13 +120,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
           number: job.No
         },
         animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
+        quantities: [],
         pigWeight: null,
         comments: null
       },
@@ -182,10 +159,10 @@ test("submits data to NAV and creates new user settings and grade off documents"
   });
 });
 
-test("does not submit belly rupture quantity if not positive", async () => {
+test("does not quantity if not positive", async () => {
   const { input, job, user } = await mockTestData({
     input: {
-      bellyRuptureQuantity: 0,
+      quantities: [{ code: "GR-BRUPT", quantity: 0 }],
       comments: faker.lorem.words(3)
     }
   });
@@ -198,379 +175,7 @@ test("does not submit belly rupture quantity if not positive", async () => {
           number: job.No
         },
         animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit lame quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      lameQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit respitory quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      respitoryQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit scours quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      scoursQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit scrotum rupture quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      scrotumRuptureQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit small quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      smallQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
-        pigWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        price: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob price"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No
-  });
-
-  await expect(
-    PigGradeOffModel.findOne(
-      {
-        job: job.No
-      },
-      "-__v -createdAt -updatedAt"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    activity: "gradeoff",
-    job: job.No
-  });
-});
-
-test("does not submit unthrifty quantity if not positive", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      unthriftyQuantity: 0,
-      comments: faker.lorem.words(3)
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigGradeOff: {
-      success: true,
-      pigGradeOff: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
+        quantities: [],
         pigWeight: null,
         comments: null
       },
@@ -629,13 +234,7 @@ test("submits data to NAV and updates existing user settings document", async ()
           number: job.No
         },
         animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
+        quantities: [],
         pigWeight: null,
         comments: null
       },
@@ -677,13 +276,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
           number: job.No
         },
         animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
+        quantities: [],
         pigWeight: null,
         comments: null
       },
@@ -723,13 +316,7 @@ test("sets description to an empty string if there are no comments", async () =>
           number: job.No
         },
         animal: null,
-        lameQuantity: null,
-        respitoryQuantity: null,
-        bellyRuptureQuantity: null,
-        scrotumRuptureQuantity: null,
-        scoursQuantity: null,
-        smallQuantity: null,
-        unthriftyQuantity: null,
+        quantities: [],
         pigWeight: null,
         comments: null
       },
