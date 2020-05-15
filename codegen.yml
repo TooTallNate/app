@@ -2,9 +2,6 @@ overwrite: true
 schema:
   - "api/**/*.gql"
   - "!*.generated.graphql"
-hooks:
-  afterAllFileWrite:
-    - eslint --fix
 generates:
   api/schema.generated.graphql:
     plugins:
@@ -31,6 +28,9 @@ generates:
         PigWean: "../models/PigWean#PigWeanDocument"
         PigActivityDefaults: "../models/UserSettings#UserSettingsDocument"
         FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/user/graphql/index.tsx:
     documents: "web/src/user/graphql/*.gql"
     plugins:
@@ -41,6 +41,9 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/pig-activity/graphql/index.tsx:
     documents: "web/src/pig-activity/graphql/*.gql"
     plugins:
@@ -51,6 +54,9 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/scorecard/graphql/index.tsx:
     documents: "web/src/scorecard/graphql/*.gql"
     plugins:
@@ -61,4 +67,7 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
 
