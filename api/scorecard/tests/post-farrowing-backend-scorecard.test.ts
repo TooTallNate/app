@@ -1,13 +1,13 @@
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  PostFarrowingBackendScorecardResult,
+  FarrowingBackendScorecardResult,
   MutationPostFarrowingBackendScorecardArgs,
   ScorecardEntry
 } from "../../resolvers/types";
 import {
   JobFactory,
   PostFarrowingBackendScorecardInputFactory
-} from "../builders";
+} from "../../test/builders";
 import {
   NavJobJournalTemplate,
   NavJobJournalBatch,
@@ -15,11 +15,11 @@ import {
   JobTaskNumber
 } from "../../nav";
 import { format } from "date-fns";
-import FarrowingBackendScorecardModel from "../../models/FarrowingBackendScorecard";
+import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
 import nock = require("nock");
 
 function mutation(variables: MutationPostFarrowingBackendScorecardArgs) {
-  return client.request<PostFarrowingBackendScorecardResult>(
+  return client.request<FarrowingBackendScorecardResult>(
     `mutation PostFarrowingBackendScorecard($input: PostFarrowingBackendScorecardInput!) {
       postFarrowingBackendScorecard(input: $input) {
         success

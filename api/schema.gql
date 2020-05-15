@@ -93,23 +93,6 @@ type PigWean {
   comments: String
 }
 
-type ScorecardEntry {
-  score: Int
-  comments: String
-}
-
-type FarrowingBackendScorecard {
-  area: Job!
-  operator: Resource
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
-}
-
-
 input LoginInput {
   username: String!
   password: String!
@@ -237,38 +220,6 @@ input SavePigWeanInput {
   comments: String
 }
 
-input ScorecardEntryInput {
-  score: Int!
-  comments: String
-}
-
-input SetAreaOperatorInput {
-  area: String!
-  operator: String!
-}
-
-input PostFarrowingBackendScorecardInput {
-  area: String!
-  operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
-}
-
-input SaveFarrowingBackendScorecardInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
-}
-
 
 type LoginResult {
   success: Boolean!
@@ -351,21 +302,6 @@ type SavePigWeanResult {
   defaults: PigActivityDefaults!
 }
 
-type PostFarrowingBackendScorecardResult {
-  success: Boolean!
-  scorecard: FarrowingBackendScorecard!
-}
-
-type SaveFarrowingBackendScorecardResult {
-  success: Boolean!
-  scorecard: FarrowingBackendScorecard!
-}
-
-type SetAreaOperatorResult {
-  success: Boolean!
-  area: Job!
-}
-
 
 type Query {
   user: User
@@ -380,11 +316,6 @@ type Query {
   pigMove(job: String!): PigMove!
   pigPurchase(job: String!): PigPurchase!
   pigWean(job: String!): PigWean!
-
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
-  farrowingBackendAreas: [Job!]!
-  farrowingBackendArea(number: String!): Job
-  farrowingBackendOperators: [Resource!]!
 }
 
 type Mutation {
@@ -403,8 +334,4 @@ type Mutation {
   savePigPurchase(input: SavePigPurchaseInput!): SavePigPurchaseResult!
   postPigWean(input: PostPigWeanInput!): PostPigWeanResult!
   savePigWean(input: SavePigWeanInput!): SavePigWeanResult!
-
-  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): PostFarrowingBackendScorecardResult!
-  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): SaveFarrowingBackendScorecardResult!
-  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
 }

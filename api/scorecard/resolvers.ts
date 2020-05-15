@@ -3,7 +3,7 @@ import {
   QueryResolvers,
   ScorecardEntry,
   FarrowingBackendScorecardResolvers
-} from "./types";
+} from "../resolvers/types";
 import {
   NavJob,
   NavJobJournalEntry,
@@ -14,8 +14,8 @@ import {
   JobTaskNumber,
   WorkTypeCode
 } from "../nav";
-import { navDate, getDocumentNumber } from "./utils";
-import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
+import { navDate, getDocumentNumber } from "../resolvers/utils";
+import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,

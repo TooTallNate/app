@@ -1,9 +1,14 @@
 overwrite: true
-schema: "api/schema.gql"
+schema:
+  - "api/**/*.gql"
+  - "!*.generated.graphql"
 hooks:
   afterAllFileWrite:
     - eslint --fix
 generates:
+  api/schema.generated.graphql:
+    plugins:
+      - "schema-ast"
   api/resolvers/types.ts:
     plugins:
       - "typescript"
@@ -25,7 +30,7 @@ generates:
         PigPurchase: "../models/PigPurchase#PigPurchaseDocument"
         PigWean: "../models/PigWean#PigWeanDocument"
         PigActivityDefaults: "../models/UserSettings#UserSettingsDocument"
-        FarrowingBackendScorecard: "../models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
+        FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
   web/src/user/graphql/index.tsx:
     documents: "web/src/user/graphql/*.gql"
     plugins:

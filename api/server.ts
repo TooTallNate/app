@@ -13,7 +13,10 @@ export default () => {
   initMongoose();
   initPassport();
 
-  const typeDefs = fs.readFileSync(path.join(__dirname, "schema.gql"), "utf8");
+  const typeDefs = fs.readFileSync(
+    path.join(__dirname, "schema.generated.graphql"),
+    "utf8"
+  );
 
   // Allow only the login mutation to requests without a session.
   const authMiddleware: IMiddlewareFunction<any, GraphqlContext, any> = (

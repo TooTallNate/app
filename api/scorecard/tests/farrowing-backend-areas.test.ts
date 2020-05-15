@@ -1,6 +1,6 @@
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import { Job } from "../../resolvers/types";
-import { JobFactory, ResourceFactory } from "../builders";
+import { JobFactory, ResourceFactory } from "../../test/builders";
 import nock = require("nock");
 
 interface QueryResult {

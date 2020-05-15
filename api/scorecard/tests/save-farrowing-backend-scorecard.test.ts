@@ -1,14 +1,14 @@
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  SaveFarrowingBackendScorecardResult,
+  FarrowingBackendScorecardResult,
   MutationSaveFarrowingBackendScorecardArgs
 } from "../../resolvers/types";
-import { SaveFarrowingBackendScorecardInputFactory } from "../builders";
-import FarrowingBackendScorecardModel from "../../models/FarrowingBackendScorecard";
+import { SaveFarrowingBackendScorecardInputFactory } from "../../test/builders";
+import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
 import { ObjectId } from "mongodb";
 
 function mutation(variables: MutationSaveFarrowingBackendScorecardArgs) {
-  return client.request<SaveFarrowingBackendScorecardResult>(
+  return client.request<FarrowingBackendScorecardResult>(
     `mutation SaveFarrowingBackendScorecard($input: SaveFarrowingBackendScorecardInput!) {
       saveFarrowingBackendScorecard(input: $input) {
         success

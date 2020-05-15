@@ -29,6 +29,12 @@ export type FarrowingBackendScorecard = {
   room: ScorecardEntry;
 };
 
+export type FarrowingBackendScorecardResult = {
+  __typename?: "FarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
+};
+
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
@@ -58,20 +64,20 @@ export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
+  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PostPigAdjustmentResult;
-  savePigAdjustment: SavePigAdjustmentResult;
   postPigGradeOff: PostPigGradeOffResult;
-  savePigGradeOff: SavePigGradeOffResult;
   postPigMortality: PostPigMortalityResult;
-  savePigMortality: SavePigMortalityResult;
   postPigMove: PostPigMoveResult;
-  savePigMove: SavePigMoveResult;
   postPigPurchase: PostPigPurchaseResult;
-  savePigPurchase: SavePigPurchaseResult;
   postPigWean: PostPigWeanResult;
+  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  savePigAdjustment: SavePigAdjustmentResult;
+  savePigGradeOff: SavePigGradeOffResult;
+  savePigMortality: SavePigMortalityResult;
+  savePigMove: SavePigMoveResult;
+  savePigPurchase: SavePigPurchaseResult;
   savePigWean: SavePigWeanResult;
-  postFarrowingBackendScorecard: PostFarrowingBackendScorecardResult;
-  saveFarrowingBackendScorecard: SaveFarrowingBackendScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -79,60 +85,60 @@ export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-export type MutationPostPigAdjustmentArgs = {
-  input: PostPigAdjustmentInput;
+export type MutationPostFarrowingBackendScorecardArgs = {
+  input: PostFarrowingBackendScorecardInput;
 };
 
-export type MutationSavePigAdjustmentArgs = {
-  input: SavePigAdjustmentInput;
+export type MutationPostPigAdjustmentArgs = {
+  input: PostPigAdjustmentInput;
 };
 
 export type MutationPostPigGradeOffArgs = {
   input: PostPigGradeOffInput;
 };
 
-export type MutationSavePigGradeOffArgs = {
-  input: SavePigGradeOffInput;
-};
-
 export type MutationPostPigMortalityArgs = {
   input: PostPigMortalityInput;
-};
-
-export type MutationSavePigMortalityArgs = {
-  input: SavePigMortalityInput;
 };
 
 export type MutationPostPigMoveArgs = {
   input: PostPigMoveInput;
 };
 
-export type MutationSavePigMoveArgs = {
-  input: SavePigMoveInput;
-};
-
 export type MutationPostPigPurchaseArgs = {
   input: PostPigPurchaseInput;
-};
-
-export type MutationSavePigPurchaseArgs = {
-  input: SavePigPurchaseInput;
 };
 
 export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
-export type MutationSavePigWeanArgs = {
-  input: SavePigWeanInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
-};
-
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
+};
+
+export type MutationSavePigAdjustmentArgs = {
+  input: SavePigAdjustmentInput;
+};
+
+export type MutationSavePigGradeOffArgs = {
+  input: SavePigGradeOffInput;
+};
+
+export type MutationSavePigMortalityArgs = {
+  input: SavePigMortalityInput;
+};
+
+export type MutationSavePigMoveArgs = {
+  input: SavePigMoveInput;
+};
+
+export type MutationSavePigPurchaseArgs = {
+  input: SavePigPurchaseInput;
+};
+
+export type MutationSavePigWeanArgs = {
+  input: SavePigWeanInput;
 };
 
 export type MutationSetAreaOperatorArgs = {
@@ -232,12 +238,6 @@ export type PostFarrowingBackendScorecardInput = {
   water: ScorecardEntryInput;
   crate: ScorecardEntryInput;
   room: ScorecardEntryInput;
-};
-
-export type PostFarrowingBackendScorecardResult = {
-  __typename?: "PostFarrowingBackendScorecardResult";
-  success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
 };
 
 export type PostPigAdjustmentInput = {
@@ -340,21 +340,29 @@ export type PostPigWeanResult = {
 
 export type Query = {
   __typename?: "Query";
-  user?: Maybe<User>;
-  pigTypes: Array<Animal>;
-  pigActivityJobs: Array<Job>;
-  pigGradeOffReasons: Array<Reason>;
+  farrowingBackendArea?: Maybe<Job>;
+  farrowingBackendAreas: Array<Job>;
+  farrowingBackendOperators: Array<Resource>;
+  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   pigActivityDefaults: PigActivityDefaults;
+  pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
+  pigGradeOffReasons: Array<Reason>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
+  pigTypes: Array<Animal>;
   pigWean: PigWean;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendOperators: Array<Resource>;
+  user?: Maybe<User>;
+};
+
+export type QueryFarrowingBackendAreaArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
 };
 
 export type QueryPigAdjustmentArgs = {
@@ -381,14 +389,6 @@ export type QueryPigWeanArgs = {
   job: Scalars["String"];
 };
 
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
 export type Reason = {
   __typename?: "Reason";
   code: Scalars["String"];
@@ -410,12 +410,6 @@ export type SaveFarrowingBackendScorecardInput = {
   water?: Maybe<ScorecardEntryInput>;
   crate?: Maybe<ScorecardEntryInput>;
   room?: Maybe<ScorecardEntryInput>;
-};
-
-export type SaveFarrowingBackendScorecardResult = {
-  __typename?: "SaveFarrowingBackendScorecardResult";
-  success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
 };
 
 export type SavePigAdjustmentInput = {
@@ -634,8 +628,8 @@ export type PostFarrowingBackendScorecardMutation = {
   __typename?: "Mutation";
 } & {
   postFarrowingBackendScorecard: {
-    __typename?: "PostFarrowingBackendScorecardResult";
-  } & Pick<PostFarrowingBackendScorecardResult, "success"> & {
+    __typename?: "FarrowingBackendScorecardResult";
+  } & Pick<FarrowingBackendScorecardResult, "success"> & {
       scorecard: {
         __typename?: "FarrowingBackendScorecard";
       } & FarrowingBackendScorecardFieldsFragment;
@@ -650,8 +644,8 @@ export type SaveFarrowingBackendScorecardMutation = {
   __typename?: "Mutation";
 } & {
   saveFarrowingBackendScorecard: {
-    __typename?: "SaveFarrowingBackendScorecardResult";
-  } & Pick<SaveFarrowingBackendScorecardResult, "success"> & {
+    __typename?: "FarrowingBackendScorecardResult";
+  } & Pick<FarrowingBackendScorecardResult, "success"> & {
       scorecard: {
         __typename?: "FarrowingBackendScorecard";
       } & FarrowingBackendScorecardFieldsFragment;

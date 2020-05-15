@@ -1,4 +1,4 @@
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   QueryFarrowingBackendScorecardArgs,
   ScorecardEntry,
@@ -8,10 +8,10 @@ import {
   FarrowingBackendScorecardFactory,
   JobFactory,
   ResourceFactory
-} from "../builders";
+} from "../../test/builders";
 import FarrowingBackendScorecardModel, {
   FarrowingBackendScorecardDocument
-} from "../../models/FarrowingBackendScorecard";
+} from "../models/FarrowingBackendScorecard";
 import { NavResource, NavJob } from "../../nav";
 import faker from "faker";
 import nock from "nock";

@@ -30,7 +30,7 @@ import {
   FarrowingBackendScorecard,
   ScorecardQueries,
   ScorecardMutations
-} from "./scorecard";
+} from "../scorecard/resolvers";
 
 export default {
   Query: {

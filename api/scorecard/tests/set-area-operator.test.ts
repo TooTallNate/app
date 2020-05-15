@@ -1,12 +1,12 @@
 import nock from "nock";
 import faker from "faker";
-import { client, mockUser, testUnauthenticated } from "../utils";
+import { client, mockUser, testUnauthenticated } from "../../test/utils";
 import {
   MutationSetAreaOperatorArgs,
   SetAreaOperatorResult
 } from "../../resolvers/types";
 import { NavJob } from "../../nav";
-import { JobFactory, ResourceFactory } from "../builders";
+import { JobFactory, ResourceFactory } from "../../test/builders";
 
 function mutation(variables: MutationSetAreaOperatorArgs) {
   return client.request<SetAreaOperatorResult>(
