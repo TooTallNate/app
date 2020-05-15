@@ -553,7 +553,7 @@ export type FarrowingBackendScorecardFieldsFragment = {
   __typename?: "FarrowingBackendScorecard";
 } & {
   area: { __typename?: "Job" } & Pick<Job, "number">;
-  operator: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
+  operator?: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
   sows: { __typename?: "ScorecardEntry" } & Pick<
     ScorecardEntry,
     "score" | "comments"
@@ -591,7 +591,7 @@ export type FarrowingBackendScorecardQueryVariables = {
 };
 
 export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  area: Maybe<
+  area?: Maybe<
     { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
@@ -602,7 +602,7 @@ export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
   operators: Array<
     { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
-  scorecard: Maybe<
+  scorecard?: Maybe<
     {
       __typename?: "FarrowingBackendScorecard";
     } & FarrowingBackendScorecardFieldsFragment
@@ -614,7 +614,7 @@ export type FarrowingBackendOperatorsQueryVariables = {
 };
 
 export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
-  area: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
+  area?: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
   operators: Array<
     { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;

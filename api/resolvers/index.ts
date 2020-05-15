@@ -1,4 +1,4 @@
-import { User, UserMutations, UserQueries } from "./user";
+import { User, UserMutations, UserQueries } from "../users/resolvers";
 import { Job } from "./jobs";
 import { Animal } from "./animal";
 import { Resource } from "./resource";

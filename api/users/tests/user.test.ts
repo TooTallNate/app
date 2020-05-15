@@ -1,5 +1,5 @@
 import nock from "nock";
-import { client, mockUser } from "../utils";
+import { client, mockUser } from "../../test/utils";
 import { User } from "../../resolvers/types";
 
 interface QueryResult {

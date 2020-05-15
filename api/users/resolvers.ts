@@ -1,6 +1,10 @@
-import { UserResolvers, MutationResolvers, QueryResolvers } from "./types";
+import {
+  UserResolvers,
+  MutationResolvers,
+  QueryResolvers
+} from "../resolvers/types";
 import { NavUser, Guid, NavErrorCode } from "../nav";
-import { ErrorCode } from "./utils";
+import { ErrorCode } from "../resolvers/utils";
 
 export const UserQueries: QueryResolvers = {
   async user(_, __, { user, navClient }) {

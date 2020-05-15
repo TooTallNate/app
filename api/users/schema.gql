@@ -1,0 +1,28 @@
+type User {
+  username: String!
+  license: String!
+  name: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+type LoginResult {
+  success: Boolean!
+  user: User!
+}
+
+type LogoutResult {
+  success: Boolean!
+}
+
+type Query {
+  user: User
+}
+
+type Mutation {
+  login(input: LoginInput!): LoginResult!
+  logout: LogoutResult!
+}

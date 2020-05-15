@@ -1,4 +1,4 @@
-import { client, mockUser, testUnauthenticated } from "../utils";
+import { client, mockUser, testUnauthenticated } from "../../test/utils";
 import { LogoutResult } from "../../resolvers/types";
 
 function mutation() {

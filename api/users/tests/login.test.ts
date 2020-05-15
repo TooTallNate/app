@@ -1,5 +1,5 @@
 import nock from "nock";
-import { client, mockUser } from "../utils";
+import { client, mockUser } from "../../test/utils";
 import { MutationLoginArgs, LoginResult } from "../../resolvers/types";
 import { NavErrorCode } from "../../nav";
 import { ErrorCode } from "../../resolvers/utils";

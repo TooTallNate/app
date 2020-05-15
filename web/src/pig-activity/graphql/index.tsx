@@ -542,14 +542,14 @@ export type User = {
 export type PigActivityDefaultsFragmentFragment = {
   __typename?: "PigActivityDefaults";
 } & Pick<PigActivityDefaults, "price"> & {
-    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
 export type PigActivityJobsQueryVariables = {};
 
 export type PigActivityJobsQuery = { __typename?: "Query" } & {
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    job: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<
@@ -726,7 +726,7 @@ export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
     >;
-    toJob: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    toJob?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
 
 export type PigMoveQueryVariables = {

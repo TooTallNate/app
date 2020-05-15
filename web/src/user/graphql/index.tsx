@@ -557,7 +557,7 @@ export type LoginMutation = { __typename?: "Mutation" } & {
 export type UserQueryVariables = {};
 
 export type UserQuery = { __typename?: "Query" } & {
-  user: Maybe<{ __typename?: "User" } & UserPartsFragment>;
+  user?: Maybe<{ __typename?: "User" } & UserPartsFragment>;
 };
 
 export type LogoutMutationVariables = {};
