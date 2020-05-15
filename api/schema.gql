@@ -34,7 +34,7 @@ type PigActivityDefaults {
 
 type PigQuantity {
   code: String!
-  quantity: Int!
+  quantity: Int
 }
 
 type PigAdjustment {
@@ -146,7 +146,7 @@ input SavePigAdjustmentInput {
 input PostPigGradeOffInput {
   animal: String!
   job: String!
-  quantities: [PigOptionalQuantityInput!]!
+  quantities: [PigQuantityInput!]!
   pigWeight: Float!
   comments: String
 }
@@ -154,7 +154,7 @@ input PostPigGradeOffInput {
 input SavePigGradeOffInput {
   animal: String
   job: String!
-  quantities: [PigQuantityInput!]
+  quantities: [PigOptionalQuantityInput!]
   pigWeight: Float
   comments: String
 }

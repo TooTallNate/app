@@ -217,7 +217,7 @@ export type PigPurchase = {
 export type PigQuantity = {
   __typename?: "PigQuantity";
   code: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity?: Maybe<Scalars["Int"]>;
 };
 
 export type PigQuantityInput = {
@@ -272,7 +272,7 @@ export type PostPigAdjustmentResult = {
 export type PostPigGradeOffInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
-  quantities: Array<PigOptionalQuantityInput>;
+  quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
@@ -450,7 +450,7 @@ export type SavePigAdjustmentResult = {
 export type SavePigGradeOffInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
-  quantities?: Maybe<Array<PigQuantityInput>>;
+  quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
@@ -712,7 +712,7 @@ export type ResolversTypes = ResolversObject<{
     }
   >;
   PostPigGradeOffInput: PostPigGradeOffInput;
-  PigOptionalQuantityInput: PigOptionalQuantityInput;
+  PigQuantityInput: PigQuantityInput;
   PostPigGradeOffResult: ResolverTypeWrapper<
     Omit<PostPigGradeOffResult, "pigGradeOff" | "defaults"> & {
       pigGradeOff: ResolversTypes["PigGradeOff"];
@@ -720,7 +720,7 @@ export type ResolversTypes = ResolversObject<{
     }
   >;
   SavePigGradeOffInput: SavePigGradeOffInput;
-  PigQuantityInput: PigQuantityInput;
+  PigOptionalQuantityInput: PigOptionalQuantityInput;
   SavePigGradeOffResult: ResolverTypeWrapper<
     Omit<SavePigGradeOffResult, "pigGradeOff" | "defaults"> & {
       pigGradeOff: ResolversTypes["PigGradeOff"];
@@ -847,7 +847,7 @@ export type ResolversParentTypes = ResolversObject<{
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
   PostPigGradeOffInput: PostPigGradeOffInput;
-  PigOptionalQuantityInput: PigOptionalQuantityInput;
+  PigQuantityInput: PigQuantityInput;
   PostPigGradeOffResult: Omit<
     PostPigGradeOffResult,
     "pigGradeOff" | "defaults"
@@ -856,7 +856,7 @@ export type ResolversParentTypes = ResolversObject<{
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
   SavePigGradeOffInput: SavePigGradeOffInput;
-  PigQuantityInput: PigQuantityInput;
+  PigOptionalQuantityInput: PigOptionalQuantityInput;
   SavePigGradeOffResult: Omit<
     SavePigGradeOffResult,
     "pigGradeOff" | "defaults"
@@ -1213,7 +1213,7 @@ export type PigQuantityResolvers<
   ParentType extends ResolversParentTypes["PigQuantity"] = ResolversParentTypes["PigQuantity"]
 > = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

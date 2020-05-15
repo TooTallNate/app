@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FormGroup from "../../common/components/form/FormGroup";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
@@ -57,7 +57,9 @@ const ActivityGradeOffView: React.FC = () => {
   const history = useHistory();
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
+
   const [reasons, setReasons] = useState<string[]>([]);
+  const focusedReason = useRef<string | null>(null);
 
   const formContext = useForm<FormData>({
     defaultValues: {
@@ -103,6 +105,7 @@ const ActivityGradeOffView: React.FC = () => {
   useEffect(() => {
     if (newQuantityReason) {
       setReasons(reasons => [...reasons, newQuantityReason]);
+      focusedReason.current = newQuantityReason;
       setValue("newQuantityReason", undefined);
     }
   }, [newQuantityReason, setValue, triggerValidation]);
@@ -223,7 +226,9 @@ const ActivityGradeOffView: React.FC = () => {
                       <FormFieldLabel>{reason.description}</FormFieldLabel>
                       <div className="flex">
                         <FormFieldInput
-                          ref={i === reasons.length - 1 ? onInputAdded : null}
+                          ref={
+                            focusedReason.current === code ? onInputAdded : null
+                          }
                         >
                           <NumberInput className="rounded-r-none" />
                         </FormFieldInput>
