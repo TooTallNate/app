@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "web": "NODE_ENV=development webpack-dev-server --config ./web/webpack.config.js",
-    "api": "NODE_ENV=development nodemon --watch api --ext .ts,.js --exec 'ts-node --project api/tsconfig.json api/index.ts'",
+    "api": "NODE_ENV=development nodemon --watch api --ext .ts,.js --exec 'ts-node --project api/tsconfig.json api/src/index.ts'",
     "build": "NODE_ENV=production webpack --config ./web/webpack.config.js",
     "test": "jest --watch",
     "test:coverage": "jest --coverage",

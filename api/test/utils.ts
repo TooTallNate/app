@@ -2,7 +2,7 @@ import faker from "faker";
 import nock from "nock";
 import { GraphQLClient } from "graphql-request";
 import { UserFactory } from "../test/builders";
-import { ErrorCode } from "../common/utils";
+import { ErrorCode } from "../src/common/utils";
 
 const port = process.env.PORT;
 

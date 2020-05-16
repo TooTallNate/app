@@ -2,7 +2,7 @@
 import "./env";
 
 import mongoose from "mongoose";
-import createServer from "../server";
+import createServer from "../src/server";
 import { Server as HttpServer } from "http";
 import { Server as HttpsServer } from "https";
 

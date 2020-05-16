@@ -65,19 +65,19 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
-  postPigAdjustment: PostPigAdjustmentResult;
-  postPigGradeOff: PostPigGradeOffResult;
-  postPigMortality: PostPigMortalityResult;
-  postPigMove: PostPigMoveResult;
-  postPigPurchase: PostPigPurchaseResult;
-  postPigWean: PostPigWeanResult;
+  postPigAdjustment: PigAdjustmentResult;
+  postPigGradeOff: PigGradeOffResult;
+  postPigMortality: PigMortalityResult;
+  postPigMove: PigMoveResult;
+  postPigPurchase: PigPurchaseResult;
+  postPigWean: PigWeanResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
-  savePigAdjustment: SavePigAdjustmentResult;
-  savePigGradeOff: SavePigGradeOffResult;
-  savePigMortality: SavePigMortalityResult;
-  savePigMove: SavePigMoveResult;
-  savePigPurchase: SavePigPurchaseResult;
-  savePigWean: SavePigWeanResult;
+  savePigAdjustment: PigAdjustmentResult;
+  savePigGradeOff: PigGradeOffResult;
+  savePigMortality: PigMortalityResult;
+  savePigMove: PigMoveResult;
+  savePigPurchase: PigPurchaseResult;
+  savePigWean: PigWeanResult;
   setAreaOperator: SetAreaOperatorResult;
 };
 
@@ -161,6 +161,13 @@ export type PigAdjustment = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PigAdjustmentResult = {
+  __typename?: "PigAdjustmentResult";
+  success: Scalars["Boolean"];
+  pigAdjustment: PigAdjustment;
+  defaults: PigActivityDefaults;
+};
+
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
   animal?: Maybe<Scalars["String"]>;
@@ -170,6 +177,13 @@ export type PigGradeOff = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PigGradeOffResult = {
+  __typename?: "PigGradeOffResult";
+  success: Scalars["Boolean"];
+  pigGradeOff: PigGradeOff;
+  defaults: PigActivityDefaults;
+};
+
 export type PigMortality = {
   __typename?: "PigMortality";
   animal?: Maybe<Scalars["String"]>;
@@ -177,6 +191,13 @@ export type PigMortality = {
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigMortalityResult = {
+  __typename?: "PigMortalityResult";
+  success: Scalars["Boolean"];
+  pigMortality: PigMortality;
+  defaults: PigActivityDefaults;
 };
 
 export type PigMove = {
@@ -192,6 +213,13 @@ export type PigMove = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PigMoveResult = {
+  __typename?: "PigMoveResult";
+  success: Scalars["Boolean"];
+  pigMove: PigMove;
+  defaults: PigActivityDefaults;
+};
+
 export type PigOptionalQuantityInput = {
   code: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
@@ -205,6 +233,13 @@ export type PigPurchase = {
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type PigPurchaseResult = {
+  __typename?: "PigPurchaseResult";
+  success: Scalars["Boolean"];
+  pigPurchase: PigPurchase;
+  defaults: PigActivityDefaults;
 };
 
 export type PigQuantity = {
@@ -229,6 +264,13 @@ export type PigWean = {
   comments?: Maybe<Scalars["String"]>;
 };
 
+export type PigWeanResult = {
+  __typename?: "PigWeanResult";
+  success: Scalars["Boolean"];
+  pigWean: PigWean;
+  defaults: PigActivityDefaults;
+};
+
 export type PostFarrowingBackendScorecardInput = {
   area: Scalars["String"];
   operator: Scalars["String"];
@@ -249,13 +291,6 @@ export type PostPigAdjustmentInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PostPigAdjustmentResult = {
-  __typename?: "PostPigAdjustmentResult";
-  success: Scalars["Boolean"];
-  pigAdjustment: PigAdjustment;
-  defaults: PigActivityDefaults;
-};
-
 export type PostPigGradeOffInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
@@ -264,26 +299,12 @@ export type PostPigGradeOffInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PostPigGradeOffResult = {
-  __typename?: "PostPigGradeOffResult";
-  success: Scalars["Boolean"];
-  pigGradeOff: PigGradeOff;
-  defaults: PigActivityDefaults;
-};
-
 export type PostPigMortalityInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigMortalityResult = {
-  __typename?: "PostPigMortalityResult";
-  success: Scalars["Boolean"];
-  pigMortality: PigMortality;
-  defaults: PigActivityDefaults;
 };
 
 export type PostPigMoveInput = {
@@ -298,13 +319,6 @@ export type PostPigMoveInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type PostPigMoveResult = {
-  __typename?: "PostPigMoveResult";
-  success: Scalars["Boolean"];
-  pigMove: PigMove;
-  defaults: PigActivityDefaults;
-};
-
 export type PostPigPurchaseInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
@@ -312,13 +326,6 @@ export type PostPigPurchaseInput = {
   totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigPurchaseResult = {
-  __typename?: "PostPigPurchaseResult";
-  success: Scalars["Boolean"];
-  pigPurchase: PigPurchase;
-  defaults: PigActivityDefaults;
 };
 
 export type PostPigWeanInput = {
@@ -329,13 +336,6 @@ export type PostPigWeanInput = {
   totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigWeanResult = {
-  __typename?: "PostPigWeanResult";
-  success: Scalars["Boolean"];
-  pigWean: PigWean;
-  defaults: PigActivityDefaults;
 };
 
 export type Query = {
@@ -421,13 +421,6 @@ export type SavePigAdjustmentInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type SavePigAdjustmentResult = {
-  __typename?: "SavePigAdjustmentResult";
-  success: Scalars["Boolean"];
-  pigAdjustment: PigAdjustment;
-  defaults: PigActivityDefaults;
-};
-
 export type SavePigGradeOffInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
@@ -436,26 +429,12 @@ export type SavePigGradeOffInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type SavePigGradeOffResult = {
-  __typename?: "SavePigGradeOffResult";
-  success: Scalars["Boolean"];
-  pigGradeOff: PigGradeOff;
-  defaults: PigActivityDefaults;
-};
-
 export type SavePigMortalityInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   naturalQuantity?: Maybe<Scalars["Int"]>;
   euthanizedQuantity?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigMortalityResult = {
-  __typename?: "SavePigMortalityResult";
-  success: Scalars["Boolean"];
-  pigMortality: PigMortality;
-  defaults: PigActivityDefaults;
 };
 
 export type SavePigMoveInput = {
@@ -470,13 +449,6 @@ export type SavePigMoveInput = {
   comments?: Maybe<Scalars["String"]>;
 };
 
-export type SavePigMoveResult = {
-  __typename?: "SavePigMoveResult";
-  success: Scalars["Boolean"];
-  pigMove: PigMove;
-  defaults: PigActivityDefaults;
-};
-
 export type SavePigPurchaseInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
@@ -484,13 +456,6 @@ export type SavePigPurchaseInput = {
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigPurchaseResult = {
-  __typename?: "SavePigPurchaseResult";
-  success: Scalars["Boolean"];
-  pigPurchase: PigPurchase;
-  defaults: PigActivityDefaults;
 };
 
 export type SavePigWeanInput = {
@@ -501,13 +466,6 @@ export type SavePigWeanInput = {
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigWeanResult = {
-  __typename?: "SavePigWeanResult";
-  success: Scalars["Boolean"];
-  pigWean: PigWean;
-  defaults: PigActivityDefaults;
 };
 
 export type ScorecardEntry = {
@@ -593,7 +551,7 @@ export type SavePigAdjustmentMutationVariables = {
 };
 
 export type SavePigAdjustmentMutation = { __typename?: "Mutation" } & {
-  savePigAdjustment: { __typename?: "SavePigAdjustmentResult" } & {
+  savePigAdjustment: { __typename?: "PigAdjustmentResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -608,7 +566,7 @@ export type PostPigAdjustmentMutationVariables = {
 };
 
 export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
-  postPigAdjustment: { __typename?: "PostPigAdjustmentResult" } & {
+  postPigAdjustment: { __typename?: "PigAdjustmentResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -650,7 +608,7 @@ export type SavePigGradeOffMutationVariables = {
 };
 
 export type SavePigGradeOffMutation = { __typename?: "Mutation" } & {
-  savePigGradeOff: { __typename?: "SavePigGradeOffResult" } & {
+  savePigGradeOff: { __typename?: "PigGradeOffResult" } & {
     pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
@@ -660,7 +618,7 @@ export type PostPigGradeOffMutationVariables = {
 };
 
 export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
-  postPigGradeOff: { __typename?: "PostPigGradeOffResult" } & {
+  postPigGradeOff: { __typename?: "PigGradeOffResult" } & {
     pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
   };
 };
@@ -693,7 +651,7 @@ export type SavePigMortalityMutationVariables = {
 };
 
 export type SavePigMortalityMutation = { __typename?: "Mutation" } & {
-  savePigMortality: { __typename?: "SavePigMortalityResult" } & {
+  savePigMortality: { __typename?: "PigMortalityResult" } & {
     pigMortality: {
       __typename?: "PigMortality";
     } & PigMortalityFragmentFragment;
@@ -705,7 +663,7 @@ export type PostPigMortalityMutationVariables = {
 };
 
 export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
-  postPigMortality: { __typename?: "PostPigMortalityResult" } & {
+  postPigMortality: { __typename?: "PigMortalityResult" } & {
     pigMortality: {
       __typename?: "PigMortality";
     } & PigMortalityFragmentFragment;
@@ -752,7 +710,7 @@ export type SavePigMoveMutationVariables = {
 };
 
 export type SavePigMoveMutation = { __typename?: "Mutation" } & {
-  savePigMove: { __typename?: "SavePigMoveResult" } & {
+  savePigMove: { __typename?: "PigMoveResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -765,7 +723,7 @@ export type PostPigMoveMutationVariables = {
 };
 
 export type PostPigMoveMutation = { __typename?: "Mutation" } & {
-  postPigMove: { __typename?: "PostPigMoveResult" } & {
+  postPigMove: { __typename?: "PigMoveResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -803,7 +761,7 @@ export type SavePigPurchaseMutationVariables = {
 };
 
 export type SavePigPurchaseMutation = { __typename?: "Mutation" } & {
-  savePigPurchase: { __typename?: "SavePigPurchaseResult" } & {
+  savePigPurchase: { __typename?: "PigPurchaseResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -816,7 +774,7 @@ export type PostPigPurchaseMutationVariables = {
 };
 
 export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
-  postPigPurchase: { __typename?: "PostPigPurchaseResult" } & {
+  postPigPurchase: { __typename?: "PigPurchaseResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -859,7 +817,7 @@ export type SavePigWeanMutationVariables = {
 };
 
 export type SavePigWeanMutation = { __typename?: "Mutation" } & {
-  savePigWean: { __typename?: "SavePigWeanResult" } & {
+  savePigWean: { __typename?: "PigWeanResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
@@ -872,7 +830,7 @@ export type PostPigWeanMutationVariables = {
 };
 
 export type PostPigWeanMutation = { __typename?: "Mutation" } & {
-  postPigWean: { __typename?: "PostPigWeanResult" } & {
+  postPigWean: { __typename?: "PigWeanResult" } & {
     defaults: {
       __typename?: "PigActivityDefaults";
     } & PigActivityDefaultsFragmentFragment;
