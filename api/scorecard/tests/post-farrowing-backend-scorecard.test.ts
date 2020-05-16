@@ -3,7 +3,7 @@ import {
   FarrowingBackendScorecardResult,
   MutationPostFarrowingBackendScorecardArgs,
   ScorecardEntry
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   JobFactory,
   PostFarrowingBackendScorecardInputFactory
@@ -13,7 +13,7 @@ import {
   NavJobJournalBatch,
   WorkTypeCode,
   JobTaskNumber
-} from "../../nav";
+} from "../../common/nav";
 import { format } from "date-fns";
 import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
 import nock = require("nock");

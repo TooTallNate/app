@@ -1,6 +1,6 @@
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
-import { Job } from "../../resolvers/types";
+import { Job } from "../../common/graphql";
 import { JobFactory } from "../builders";
 
 interface QueryResult {

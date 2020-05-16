@@ -3,7 +3,7 @@ import {
   QueryFarrowingBackendScorecardArgs,
   ScorecardEntry,
   FarrowingBackendScorecard
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   FarrowingBackendScorecardFactory,
   JobFactory,
@@ -12,7 +12,7 @@ import {
 import FarrowingBackendScorecardModel, {
   FarrowingBackendScorecardDocument
 } from "../models/FarrowingBackendScorecard";
-import { NavResource, NavJob } from "../../nav";
+import { NavResource, NavJob } from "../../common/nav";
 import faker from "faker";
 import nock from "nock";
 

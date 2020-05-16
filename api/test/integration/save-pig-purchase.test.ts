@@ -4,14 +4,14 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigPurchaseResult,
   MutationPostPigPurchaseArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigPurchaseFactory,
   JobFactory,
   UserSettingsFactory
 } from "../builders";
 import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {
   return client.request<PostPigPurchaseResult>(

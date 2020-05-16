@@ -2,14 +2,14 @@ import {
   MutationResolvers,
   QueryResolvers,
   PigAdjustmentResolvers
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavJob
-} from "../../nav";
-import { getDocumentNumber } from "../../resolvers/utils";
+} from "../../common/nav";
+import { getDocumentNumber } from "../../common/utils";
 import PigAdjustmentModel from "../models/PigAdjustment";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 

@@ -4,7 +4,7 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   MutationPostPigGradeOffArgs,
   PostPigGradeOffResult
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigGradeOffFactory,
   JobFactory,
@@ -15,9 +15,9 @@ import {
   NavItemJournalBatch,
   NavEntryType,
   NavReasonCode
-} from "../../nav";
+} from "../../common/nav";
 import { format } from "date-fns";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {

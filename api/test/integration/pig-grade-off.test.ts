@@ -1,6 +1,6 @@
 import faker from "faker";
 import nock from "nock";
-import { QueryPigGradeOffArgs, PigGradeOff } from "../../resolvers/types";
+import { QueryPigGradeOffArgs, PigGradeOff } from "../../common/graphql";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
 import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";

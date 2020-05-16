@@ -1,8 +1,8 @@
 import nock from "nock";
 import { client, mockUser } from "../../test/utils";
-import { MutationLoginArgs, LoginResult } from "../../resolvers/types";
-import { NavErrorCode } from "../../nav";
-import { ErrorCode } from "../../resolvers/utils";
+import { MutationLoginArgs, LoginResult } from "../../common/graphql";
+import { NavErrorCode } from "../../common/nav";
+import { ErrorCode } from "../../common/utils";
 
 function mutation(variables: MutationLoginArgs) {
   return client.request<LoginResult>(

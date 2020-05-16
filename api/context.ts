@@ -1,4 +1,4 @@
-import { ODataClient } from "./nav";
+import { ODataClient } from "./common/nav";
 
 export interface SessionUser {
   username: string;

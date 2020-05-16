@@ -1,9 +1,9 @@
 import faker from "faker";
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
-import { Job } from "../../resolvers/types";
+import { Job } from "../../common/graphql";
 import { JobFactory, UserSettingsFactory } from "../builders";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 interface QueryResult {
   pigActivityDefaults: {

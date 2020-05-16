@@ -4,7 +4,7 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigPurchaseResult,
   MutationPostPigPurchaseArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigPurchaseFactory,
   JobFactory,
@@ -14,9 +14,9 @@ import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
   NavEntryType
-} from "../../nav";
+} from "../../common/nav";
 import { format } from "date-fns";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {

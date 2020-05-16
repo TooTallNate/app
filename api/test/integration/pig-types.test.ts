@@ -1,7 +1,7 @@
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../utils";
-import { NavAnimal } from "../../nav";
-import { Animal } from "../../resolvers/types";
+import { NavAnimal } from "../../common/nav";
+import { Animal } from "../../common/graphql";
 
 interface QueryResult {
   pigTypes: Animal[];

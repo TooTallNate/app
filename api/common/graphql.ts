@@ -1,12 +1,12 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob, NavAnimal, NavResource, NavReason } from "../nav";
+import { NavUser, NavJob, NavAnimal, NavResource, NavReason } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
 import { PigMortalityDocument } from "../pig-activity/models/PigMortality";
 import { PigMoveDocument } from "../pig-activity/models/PigMove";
 import { PigPurchaseDocument } from "../pig-activity/models/PigPurchase";
 import { PigWeanDocument } from "../pig-activity/models/PigWean";
-import { UserSettingsDocument } from "../models/UserSettings";
+import { UserSettingsDocument } from "./models/UserSettings";
 import { FarrowingBackendScorecardDocument } from "../scorecard/models/FarrowingBackendScorecard";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;

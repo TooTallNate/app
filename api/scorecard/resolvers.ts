@@ -3,7 +3,7 @@ import {
   QueryResolvers,
   ScorecardEntry,
   FarrowingBackendScorecardResolvers
-} from "../resolvers/types";
+} from "../common/graphql";
 import {
   NavJob,
   NavJobJournalEntry,
@@ -13,8 +13,8 @@ import {
   NavJobJournalBatch,
   JobTaskNumber,
   WorkTypeCode
-} from "../nav";
-import { navDate, getDocumentNumber } from "../resolvers/utils";
+} from "../common/nav";
+import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 
 function postJobJournal(
@@ -30,7 +30,7 @@ function postJobJournal(
     .post(entry);
 }
 
-export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
+const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
   area(scorecard, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
@@ -53,7 +53,7 @@ export const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
   room: scorecard => scorecard.room || {}
 };
 
-export const ScorecardQueries: QueryResolvers = {
+export const queries: QueryResolvers = {
   async farrowingBackendScorecard(_, { area }) {
     return (
       (await FarrowingBackendScorecardModel.findOne({ area })) ||
@@ -87,7 +87,7 @@ export const ScorecardQueries: QueryResolvers = {
   }
 };
 
-export const ScorecardMutations: MutationResolvers = {
+export const mutations: MutationResolvers = {
   async saveFarrowingBackendScorecard(_, { input }) {
     let doc = await FarrowingBackendScorecardModel.findOne({
       area: input.area
@@ -155,4 +155,8 @@ export const ScorecardMutations: MutationResolvers = {
 
     return { success: true, area };
   }
+};
+
+export const types = {
+  FarrowingBackendScorecard
 };

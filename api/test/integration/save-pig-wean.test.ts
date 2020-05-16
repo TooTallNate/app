@@ -4,10 +4,10 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigWeanResult,
   MutationPostPigWeanArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import { PigWeanFactory, JobFactory, UserSettingsFactory } from "../builders";
 import PigWeanModel from "../../pig-activity/models/PigWean";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigWeanArgs) {
   return client.request<PostPigWeanResult>(

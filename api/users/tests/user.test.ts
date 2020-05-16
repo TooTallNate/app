@@ -1,6 +1,6 @@
 import nock from "nock";
 import { client, mockUser } from "../../test/utils";
-import { User } from "../../resolvers/types";
+import { User } from "../../common/graphql";
 
 interface QueryResult {
   user: User;

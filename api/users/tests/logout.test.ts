@@ -1,5 +1,5 @@
 import { client, mockUser, testUnauthenticated } from "../../test/utils";
-import { LogoutResult } from "../../resolvers/types";
+import { LogoutResult } from "../../common/graphql";
 
 function mutation() {
   return client.request<LogoutResult>(

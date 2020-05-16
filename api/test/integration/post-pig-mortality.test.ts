@@ -4,7 +4,7 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigMortalityResult,
   MutationPostPigMortalityArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigMortalityFactory,
   JobFactory,
@@ -15,11 +15,11 @@ import {
   NavItemJournalBatch,
   NavEntryType,
   NavReasonCode
-} from "../../nav";
+} from "../../common/nav";
 import { format, differenceInDays } from "date-fns";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 import PigMortalityModel from "../../pig-activity/models/PigMortality";
-import { parseNavDate } from "../../resolvers/utils";
+import { parseNavDate } from "../../common/utils";
 
 function mutation(variables: MutationPostPigMortalityArgs) {
   return client.request<PostPigMortalityResult>(

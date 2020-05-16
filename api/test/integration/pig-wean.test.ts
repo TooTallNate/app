@@ -1,6 +1,6 @@
 import faker from "faker";
 import nock from "nock";
-import { QueryPigWeanArgs, PigWean } from "../../resolvers/types";
+import { QueryPigWeanArgs, PigWean } from "../../common/graphql";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
 import PigWeanModel from "../../pig-activity/models/PigWean";

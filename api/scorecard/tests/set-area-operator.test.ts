@@ -4,8 +4,8 @@ import { client, mockUser, testUnauthenticated } from "../../test/utils";
 import {
   MutationSetAreaOperatorArgs,
   SetAreaOperatorResult
-} from "../../resolvers/types";
-import { NavJob } from "../../nav";
+} from "../../common/graphql";
+import { NavJob } from "../../common/nav";
 import { JobFactory, ResourceFactory } from "../../test/builders";
 
 function mutation(variables: MutationSetAreaOperatorArgs) {

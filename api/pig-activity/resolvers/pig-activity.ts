@@ -1,12 +1,17 @@
 import {
   QueryResolvers,
   PigActivityDefaultsResolvers
-} from "../../resolvers/types";
-import { NavItemJournalEntry, ODataClient, NavJob, NavAnimal } from "../../nav";
+} from "../../common/graphql";
+import {
+  NavItemJournalEntry,
+  ODataClient,
+  NavJob,
+  NavAnimal
+} from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
-} from "../../models/UserSettings";
-import { navDate } from "../../resolvers/utils";
+} from "../../common/models/UserSettings";
+import { navDate } from "../../common/utils";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,

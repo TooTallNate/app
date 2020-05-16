@@ -1,13 +1,13 @@
 import faker from "faker";
 import * as Factory from "factory.ts";
 import { ObjectId } from "mongodb";
-import { NavUser, NavJob, NavResource, NavReason } from "../nav/types";
+import { NavUser, NavJob, NavResource, NavReason } from "../common/nav/types";
 import uuid from "uuid/v4";
 import {
   SaveFarrowingBackendScorecardInput,
   PostFarrowingBackendScorecardInput,
   ScorecardEntryInput
-} from "../resolvers/types";
+} from "../common/graphql";
 import { format } from "date-fns";
 
 function oneOf<T>(...list: T[]) {

@@ -6,7 +6,7 @@ generates:
   api/schema.generated.graphql:
     plugins:
       - "schema-ast"
-  api/resolvers/types.ts:
+  api/common/generated/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"

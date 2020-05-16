@@ -12,7 +12,7 @@ import {
   FilterExpression
 } from "./filter";
 import { NavErrorCode } from "./types";
-import logger from "../config/logging";
+import logger from "../../config/logging";
 
 interface ODataRequestAPI
   extends RequestAPI<Request, CoreOptions, RequiredUriUrl> {}

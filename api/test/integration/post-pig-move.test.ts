@@ -4,15 +4,15 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigMoveResult,
   MutationPostPigMoveArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import { PigMoveFactory, JobFactory, UserSettingsFactory } from "../builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
   NavEntryType
-} from "../../nav";
+} from "../../common/nav";
 import { format } from "date-fns";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 import PigMoveModel from "../../pig-activity/models/PigMove";
 
 function mutation(variables: MutationPostPigMoveArgs) {

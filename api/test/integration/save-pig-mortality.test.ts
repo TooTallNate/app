@@ -4,14 +4,14 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigMortalityResult,
   MutationPostPigMortalityArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigMortalityFactory,
   JobFactory,
   UserSettingsFactory
 } from "../builders";
 import PigMortalityModel from "../../pig-activity/models/PigMortality";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigMortalityArgs) {
   return client.request<PostPigMortalityResult>(

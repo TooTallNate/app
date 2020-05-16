@@ -2,11 +2,11 @@ import {
   UserResolvers,
   MutationResolvers,
   QueryResolvers
-} from "../resolvers/types";
-import { NavUser, Guid, NavErrorCode } from "../nav";
-import { ErrorCode } from "../resolvers/utils";
+} from "../common/graphql";
+import { NavUser, Guid, NavErrorCode } from "../common/nav";
+import { ErrorCode } from "../common/utils";
 
-export const UserQueries: QueryResolvers = {
+export const queries: QueryResolvers = {
   async user(_, __, { user, navClient }) {
     if (user) {
       return await navClient
@@ -18,7 +18,7 @@ export const UserQueries: QueryResolvers = {
   }
 };
 
-export const UserMutations: MutationResolvers = {
+export const mutations: MutationResolvers = {
   async login(_, { input: { username, password } }, { session, navClient }) {
     navClient.auth(username, password);
     try {
@@ -62,4 +62,8 @@ export const User: UserResolvers = {
   username: user => user.User_Name,
   name: user => user.Full_Name,
   license: user => user.License_Type
+};
+
+export const types = {
+  User
 };

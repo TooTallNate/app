@@ -7,7 +7,7 @@ import { GraphQLServer } from "graphql-yoga";
 import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
 import { IMiddlewareFunction } from "graphql-middleware";
-import { ErrorCode } from "./resolvers/utils";
+import { ErrorCode } from "./common/utils";
 
 export default () => {
   initMongoose();

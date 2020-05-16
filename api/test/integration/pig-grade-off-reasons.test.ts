@@ -1,6 +1,6 @@
 import faker from "faker";
 import nock from "nock";
-import { Reason } from "../../resolvers/types";
+import { Reason } from "../../common/graphql";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory, ReasonFactory } from "../builders";
 import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";

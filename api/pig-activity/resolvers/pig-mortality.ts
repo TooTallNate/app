@@ -2,15 +2,15 @@ import {
   MutationResolvers,
   QueryResolvers,
   PigMortalityResolvers
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavJob,
   NavReasonCode
-} from "../../nav";
-import { getDocumentNumber, parseNavDate } from "../../resolvers/utils";
+} from "../../common/nav";
+import { getDocumentNumber, parseNavDate } from "../../common/utils";
 import PigMortalityModel from "../models/PigMortality";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 import { differenceInDays } from "date-fns";

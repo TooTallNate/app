@@ -1,6 +1,6 @@
 import faker from "faker";
 import nock from "nock";
-import { QueryPigPurchaseArgs, PigPurchase } from "../../resolvers/types";
+import { QueryPigPurchaseArgs, PigPurchase } from "../../common/graphql";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
 import PigPurchaseModel from "../../pig-activity/models/PigPurchase";

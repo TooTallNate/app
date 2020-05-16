@@ -2,7 +2,7 @@ import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   FarrowingBackendScorecardResult,
   MutationSaveFarrowingBackendScorecardArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import { SaveFarrowingBackendScorecardInputFactory } from "../../test/builders";
 import FarrowingBackendScorecardModel from "../models/FarrowingBackendScorecard";
 import { ObjectId } from "mongodb";

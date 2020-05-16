@@ -4,7 +4,7 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigAdjustmentResult,
   MutationPostPigAdjustmentArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigAdjustmentFactory,
   JobFactory,
@@ -14,10 +14,10 @@ import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
   NavEntryType
-} from "../../nav";
+} from "../../common/nav";
 import { format } from "date-fns";
 import PigAdjustmentModel from "../../pig-activity/models/PigAdjustment";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigAdjustmentArgs) {
   return client.request<PostPigAdjustmentResult>(

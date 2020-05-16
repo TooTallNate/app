@@ -1,5 +1,5 @@
 import { client, testUnauthenticated, mockUser } from "../../test/utils";
-import { Job } from "../../resolvers/types";
+import { Job } from "../../common/graphql";
 import { JobFactory, ResourceFactory } from "../../test/builders";
 import nock = require("nock");
 

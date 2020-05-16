@@ -2,14 +2,14 @@ import {
   MutationResolvers,
   QueryResolvers,
   PigWeanResolvers
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavJob
-} from "../../nav";
-import { getDocumentNumber } from "../../resolvers/utils";
+} from "../../common/nav";
+import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 

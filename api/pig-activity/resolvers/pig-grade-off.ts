@@ -2,7 +2,7 @@ import {
   MutationResolvers,
   QueryResolvers,
   PigGradeOffResolvers
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
@@ -10,8 +10,8 @@ import {
   NavJob,
   NavReason,
   NavReasonCode
-} from "../../nav";
-import { getDocumentNumber } from "../../resolvers/utils";
+} from "../../common/nav";
+import { getDocumentNumber } from "../../common/utils";
 import PigGradeOffModel from "../models/PigGradeOff";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 

@@ -4,14 +4,14 @@ import { client, testUnauthenticated, mockUser } from "../utils";
 import {
   PostPigGradeOffResult,
   MutationPostPigGradeOffArgs
-} from "../../resolvers/types";
+} from "../../common/graphql";
 import {
   PigGradeOffFactory,
   JobFactory,
   UserSettingsFactory
 } from "../builders";
 import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
-import UserSettingsModel from "../../models/UserSettings";
+import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {
   return client.request<PostPigGradeOffResult>(
