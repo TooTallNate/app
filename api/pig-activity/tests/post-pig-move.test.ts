@@ -1,11 +1,15 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   PostPigMoveResult,
   MutationPostPigMoveArgs
 } from "../../common/graphql";
-import { PigMoveFactory, JobFactory, UserSettingsFactory } from "../builders";
+import {
+  PigMoveFactory,
+  JobFactory,
+  UserSettingsFactory
+} from "../../test/builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
@@ -13,7 +17,7 @@ import {
 } from "../../common/nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../common/models/UserSettings";
-import PigMoveModel from "../../pig-activity/models/PigMove";
+import PigMoveModel from "../models/PigMove";
 
 function mutation(variables: MutationPostPigMoveArgs) {
   return client.request<PostPigMoveResult>(

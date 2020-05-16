@@ -1,6 +1,6 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   PostPigMortalityResult,
   MutationPostPigMortalityArgs
@@ -9,7 +9,7 @@ import {
   PigMortalityFactory,
   JobFactory,
   UserSettingsFactory
-} from "../builders";
+} from "../../test/builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
@@ -18,7 +18,7 @@ import {
 } from "../../common/nav";
 import { format, differenceInDays } from "date-fns";
 import UserSettingsModel from "../../common/models/UserSettings";
-import PigMortalityModel from "../../pig-activity/models/PigMortality";
+import PigMortalityModel from "../models/PigMortality";
 import { parseNavDate } from "../../common/utils";
 
 function mutation(variables: MutationPostPigMortalityArgs) {

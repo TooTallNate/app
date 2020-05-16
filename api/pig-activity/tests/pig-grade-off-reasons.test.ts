@@ -1,10 +1,10 @@
 import faker from "faker";
 import nock from "nock";
 import { Reason } from "../../common/graphql";
-import { client, testUnauthenticated, mockUser } from "../utils";
-import { JobFactory, ReasonFactory } from "../builders";
-import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
-import { PigGradeOffFactory } from "../builders";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
+import { JobFactory, ReasonFactory } from "../../test/builders";
+import PigGradeOffModel from "../models/PigGradeOff";
+import { PigGradeOffFactory } from "../../test/builders";
 
 function query() {
   return client.request<Reason[]>(

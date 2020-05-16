@@ -1,20 +1,21 @@
 import faker from "faker";
 import nock from "nock";
-import { QueryPigPurchaseArgs, PigPurchase } from "../../common/graphql";
-import { client, testUnauthenticated, mockUser } from "../utils";
-import { JobFactory } from "../builders";
-import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
-import { PigPurchaseFactory } from "../builders";
+import { QueryPigWeanArgs, PigWean } from "../../common/graphql";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
+import { JobFactory } from "../../test/builders";
+import PigWeanModel from "../models/PigWean";
+import { PigWeanFactory } from "../../test/builders";
 
-function query(variables: QueryPigPurchaseArgs) {
-  return client.request<PigPurchase>(
-    `query PigPurchase($job: String!) {
-      pigPurchase(job: $job) {
+function query(variables: QueryPigWeanArgs) {
+  return client.request<PigWean>(
+    `query PigWean($job: String!) {
+      pigWean(job: $job) {
         job {
           number
         }
         animal
         quantity
+        smallPigQuantity
         totalWeight
         price
         comments
@@ -43,7 +44,7 @@ test("returns default form if no record in the database", async () => {
   const { job } = await mockTestData();
 
   await expect(query({ job: job.No })).resolves.toEqual({
-    pigPurchase: {
+    pigWean: {
       job: {
         number: job.No
       },
@@ -51,6 +52,7 @@ test("returns default form if no record in the database", async () => {
       comments: null,
       price: null,
       quantity: null,
+      smallPigQuantity: null,
       totalWeight: null
     }
   });
@@ -58,15 +60,15 @@ test("returns default form if no record in the database", async () => {
 
 test("returns from from the database", async () => {
   const { job } = await mockTestData();
-  const doc = await PigPurchaseModel.create(
-    PigPurchaseFactory.build({
+  const doc = await PigWeanModel.create(
+    PigWeanFactory.build({
       job: job.No,
       comments: faker.random.words(2)
     })
   );
 
   await expect(query({ job: job.No })).resolves.toEqual({
-    pigPurchase: {
+    pigWean: {
       job: {
         number: job.No
       },
@@ -74,6 +76,7 @@ test("returns from from the database", async () => {
       comments: doc.comments,
       price: doc.price,
       quantity: doc.quantity,
+      smallPigQuantity: doc.smallPigQuantity,
       totalWeight: doc.totalWeight
     }
   });

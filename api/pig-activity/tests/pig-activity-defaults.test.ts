@@ -1,8 +1,8 @@
 import faker from "faker";
 import nock from "nock";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import { Job } from "../../common/graphql";
-import { JobFactory, UserSettingsFactory } from "../builders";
+import { JobFactory, UserSettingsFactory } from "../../test/builders";
 import UserSettingsModel from "../../common/models/UserSettings";
 
 interface QueryResult {

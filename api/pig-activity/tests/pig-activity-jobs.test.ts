@@ -1,7 +1,7 @@
 import nock from "nock";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import { Job } from "../../common/graphql";
-import { JobFactory } from "../builders";
+import { JobFactory } from "../../test/builders";
 
 interface QueryResult {
   pigActivityJobs: Job[];

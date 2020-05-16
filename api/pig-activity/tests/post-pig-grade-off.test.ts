@@ -1,6 +1,6 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   MutationPostPigGradeOffArgs,
   PostPigGradeOffResult
@@ -9,7 +9,7 @@ import {
   PigGradeOffFactory,
   JobFactory,
   UserSettingsFactory
-} from "../builders";
+} from "../../test/builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
@@ -18,7 +18,7 @@ import {
 } from "../../common/nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../common/models/UserSettings";
-import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
+import PigGradeOffModel from "../models/PigGradeOff";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {
   return client.request<PostPigGradeOffResult>(

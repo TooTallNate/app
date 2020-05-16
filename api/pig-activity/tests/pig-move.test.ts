@@ -1,10 +1,10 @@
 import faker from "faker";
 import nock from "nock";
 import { QueryPigMoveArgs, PigMove } from "../../common/graphql";
-import { client, testUnauthenticated, mockUser } from "../utils";
-import { JobFactory } from "../builders";
-import PigMoveModel from "../../pig-activity/models/PigMove";
-import { PigMoveFactory } from "../builders";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
+import { JobFactory } from "../../test/builders";
+import PigMoveModel from "../models/PigMove";
+import { PigMoveFactory } from "../../test/builders";
 
 function query(variables: QueryPigMoveArgs) {
   return client.request<PigMove>(

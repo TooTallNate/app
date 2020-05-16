@@ -1,12 +1,16 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
   PostPigWeanResult,
   MutationPostPigWeanArgs
 } from "../../common/graphql";
-import { PigWeanFactory, JobFactory, UserSettingsFactory } from "../builders";
-import PigWeanModel from "../../pig-activity/models/PigWean";
+import {
+  PigWeanFactory,
+  JobFactory,
+  UserSettingsFactory
+} from "../../test/builders";
+import PigWeanModel from "../models/PigWean";
 import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigWeanArgs) {

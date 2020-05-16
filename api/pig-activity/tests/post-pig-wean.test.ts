@@ -1,15 +1,15 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  PostPigPurchaseResult,
-  MutationPostPigPurchaseArgs
+  PostPigWeanResult,
+  MutationPostPigWeanArgs
 } from "../../common/graphql";
 import {
-  PigPurchaseFactory,
+  PigWeanFactory,
   JobFactory,
   UserSettingsFactory
-} from "../builders";
+} from "../../test/builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
@@ -17,19 +17,20 @@ import {
 } from "../../common/nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../common/models/UserSettings";
-import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
+import PigWeanModel from "../models/PigWean";
 
-function mutation(variables: MutationPostPigPurchaseArgs) {
-  return client.request<PostPigPurchaseResult>(
-    `mutation PostPigPurchase($input: PostPigPurchaseInput!) {
-      postPigPurchase(input: $input) {
+function mutation(variables: MutationPostPigWeanArgs) {
+  return client.request<PostPigWeanResult>(
+    `mutation PostPigWean($input: PostPigWeanInput!) {
+      postPigWean(input: $input) {
         success
-        pigPurchase {
+        pigWean {
           job {
             number
           }
           animal
           quantity
+          smallPigQuantity
           totalWeight
           price
           comments
@@ -49,16 +50,13 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  const input = PigPurchaseFactory.build({
+  const input = PigWeanFactory.build({
     job: job.No,
     ...inputOverrides
   });
 
   const documentNumberRegex = new RegExp(
-    `^PURCH${user.Full_Name.slice(0, 3)}${format(
-      new Date(),
-      "yyMMddHH"
-    )}\\d{4}$`
+    `^WEAN${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
   );
   const date = format(new Date(), "YYY-MM-dd");
 
@@ -81,10 +79,12 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Unit_Amount: input.price,
       Weight: input.totalWeight,
       Job_No: input.job,
-      Shortcut_Dimension_1_Code: job.Entity,
-      Shortcut_Dimension_2_Code: job.Cost_Center,
+      Gen_Prod_Posting_Group: "WEAN PIGS",
+      Shortcut_Dimension_1_Code: "2",
+      Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Meta: input.smallPigQuantity
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -94,11 +94,11 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigPurchaseFactory.build()
+    input: PigWeanFactory.build()
   })
 );
 
-test("submits data to NAV and creates new user settings and purchase documents", async () => {
+test("submits data to NAV and creates new user settings and wean documents", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -106,14 +106,15 @@ test("submits data to NAV and creates new user settings and purchase documents",
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigPurchase: {
+    postPigWean: {
       success: true,
-      pigPurchase: {
+      pigWean: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
@@ -138,7 +139,7 @@ test("submits data to NAV and creates new user settings and purchase documents",
   });
 
   await expect(
-    PigPurchaseModel.findOne(
+    PigWeanModel.findOne(
       {
         job: job.No
       },
@@ -146,13 +147,13 @@ test("submits data to NAV and creates new user settings and purchase documents",
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "purchase",
+    activity: "wean",
     job: job.No
   });
 });
 
 test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, job, user } = await mockTestData({
+  const { input, user, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -165,14 +166,15 @@ test("submits data to NAV and updates existing user settings document", async ()
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigPurchase: {
+    postPigWean: {
       success: true,
-      pigPurchase: {
+      pigWean: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
@@ -189,32 +191,32 @@ test("submits data to NAV and updates existing user settings document", async ()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigJob: userSettings.pigJob,
     price: input.price
   });
 });
 
-test("submits data to NAV and clears existing purchase document", async () => {
+test("submits data to NAV and clears existing wean document", async () => {
   const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
   });
-  const purchaseDoc = await PigPurchaseModel.create({
+  const weanDoc = await PigWeanModel.create({
     job: job.No,
     quantity: input.quantity,
     totalWeight: input.totalWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigPurchase: {
+    postPigWean: {
       success: true,
-      pigPurchase: {
+      pigWean: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
@@ -227,14 +229,11 @@ test("submits data to NAV and clears existing purchase document", async () => {
   });
 
   await expect(
-    PigPurchaseModel.findById(
-      purchaseDoc._id,
-      "-__v -createdAt -updatedAt"
-    ).lean()
+    PigWeanModel.findById(weanDoc._id, "-__v -createdAt -updatedAt").lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "purchase",
-    job: purchaseDoc.job
+    activity: "wean",
+    job: job.No
   });
 });
 
@@ -246,14 +245,15 @@ test("sets description to an empty string if there are no comments", async () =>
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigPurchase: {
+    postPigWean: {
       success: true,
-      pigPurchase: {
+      pigWean: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null

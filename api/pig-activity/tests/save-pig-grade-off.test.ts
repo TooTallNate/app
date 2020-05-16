@@ -1,30 +1,33 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  PostPigMortalityResult,
-  MutationPostPigMortalityArgs
+  PostPigGradeOffResult,
+  MutationPostPigGradeOffArgs
 } from "../../common/graphql";
 import {
-  PigMortalityFactory,
+  PigGradeOffFactory,
   JobFactory,
   UserSettingsFactory
-} from "../builders";
-import PigMortalityModel from "../../pig-activity/models/PigMortality";
+} from "../../test/builders";
+import PigGradeOffModel from "../models/PigGradeOff";
 import UserSettingsModel from "../../common/models/UserSettings";
 
-function mutation(variables: MutationPostPigMortalityArgs) {
-  return client.request<PostPigMortalityResult>(
-    `mutation SavePigMortality($input: SavePigMortalityInput!) {
-      savePigMortality(input: $input) {
+function mutation(variables: MutationPostPigGradeOffArgs) {
+  return client.request<PostPigGradeOffResult>(
+    `mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
+      savePigGradeOff(input: $input) {
         success
-        pigMortality {
+        pigGradeOff {
           job {
             number
           }
           animal
-          naturalQuantity
-          euthanizedQuantity
+          quantities {
+            code
+            quantity
+          }
+          pigWeight
           comments
         }
         defaults { 
@@ -42,7 +45,7 @@ function mutation(variables: MutationPostPigMortalityArgs) {
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  const input = PigMortalityFactory.build({
+  const input = PigGradeOffFactory.build({
     job: job.No,
     ...inputOverrides
   });
@@ -58,11 +61,11 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigMortalityFactory.build()
+    input: PigGradeOffFactory.build()
   })
 );
 
-test("creates new mortality and user settings documents", async () => {
+test("creates new gradeOff and user settings documents", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -70,15 +73,15 @@ test("creates new mortality and user settings documents", async () => {
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMortality: {
+    savePigGradeOff: {
       success: true,
-      pigMortality: {
+      pigGradeOff: {
         job: {
           number: job.No
         },
         animal: input.animal,
-        naturalQuantity: input.naturalQuantity,
-        euthanizedQuantity: input.euthanizedQuantity,
+        quantities: input.quantities,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {
@@ -103,7 +106,7 @@ test("creates new mortality and user settings documents", async () => {
   });
 
   await expect(
-    PigMortalityModel.findOne(
+    PigGradeOffModel.findOne(
       {
         job: job.No
       },
@@ -111,35 +114,35 @@ test("creates new mortality and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "mortality",
+    activity: "gradeoff",
     job: job.No,
     animal: input.animal,
-    naturalQuantity: input.naturalQuantity,
-    euthanizedQuantity: input.euthanizedQuantity,
+    quantities: input.quantities,
+    pigWeight: input.pigWeight,
     comments: input.comments
   });
 });
 
-test("updates existing mortality document", async () => {
+test("updates existing gradeOff document", async () => {
   const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
   });
-  const mortalityDoc = await PigMortalityModel.create({
+  const gradeOffDoc = await PigGradeOffModel.create({
     job: job.No
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMortality: {
+    savePigGradeOff: {
       success: true,
-      pigMortality: {
+      pigGradeOff: {
         job: {
           number: job.No
         },
         animal: input.animal,
-        naturalQuantity: input.naturalQuantity,
-        euthanizedQuantity: input.euthanizedQuantity,
+        quantities: input.quantities,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {
@@ -152,17 +155,17 @@ test("updates existing mortality document", async () => {
   });
 
   await expect(
-    PigMortalityModel.findById(
-      mortalityDoc._id,
+    PigGradeOffModel.findById(
+      gradeOffDoc._id,
       "-__v -createdAt -updatedAt"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "mortality",
+    activity: "gradeoff",
     job: job.No,
     animal: input.animal,
-    naturalQuantity: input.naturalQuantity,
-    euthanizedQuantity: input.euthanizedQuantity,
+    quantities: input.quantities,
+    pigWeight: input.pigWeight,
     comments: input.comments
   });
 });
@@ -180,15 +183,15 @@ test("updates existing user settings document", async () => {
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMortality: {
+    savePigGradeOff: {
       success: true,
-      pigMortality: {
+      pigGradeOff: {
         job: {
           number: job.No
         },
         animal: input.animal,
-        naturalQuantity: input.naturalQuantity,
-        euthanizedQuantity: input.euthanizedQuantity,
+        quantities: input.quantities,
+        pigWeight: input.pigWeight,
         comments: input.comments
       },
       defaults: {

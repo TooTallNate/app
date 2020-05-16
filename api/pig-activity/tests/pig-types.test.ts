@@ -1,5 +1,5 @@
 import nock from "nock";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import { NavAnimal } from "../../common/nav";
 import { Animal } from "../../common/graphql";
 

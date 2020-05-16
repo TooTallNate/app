@@ -1,21 +1,22 @@
 import faker from "faker";
 import nock from "nock";
-import { QueryPigMortalityArgs, PigMortality } from "../../common/graphql";
-import { client, testUnauthenticated, mockUser } from "../utils";
-import { JobFactory } from "../builders";
-import PigMortalityModel from "../../pig-activity/models/PigMortality";
-import { PigMortalityFactory } from "../builders";
+import { QueryPigPurchaseArgs, PigPurchase } from "../../common/graphql";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
+import { JobFactory } from "../../test/builders";
+import PigPurchaseModel from "../models/PigPurchase";
+import { PigPurchaseFactory } from "../../test/builders";
 
-function query(variables: QueryPigMortalityArgs) {
-  return client.request<PigMortality>(
-    `query PigMortality($job: String!) {
-      pigMortality(job: $job) {
+function query(variables: QueryPigPurchaseArgs) {
+  return client.request<PigPurchase>(
+    `query PigPurchase($job: String!) {
+      pigPurchase(job: $job) {
         job {
           number
         }
         animal
-        euthanizedQuantity
-        naturalQuantity
+        quantity
+        totalWeight
+        price
         comments
       }
     }`,
@@ -42,36 +43,38 @@ test("returns default form if no record in the database", async () => {
   const { job } = await mockTestData();
 
   await expect(query({ job: job.No })).resolves.toEqual({
-    pigMortality: {
+    pigPurchase: {
       job: {
         number: job.No
       },
       animal: null,
       comments: null,
-      euthanizedQuantity: null,
-      naturalQuantity: null
+      price: null,
+      quantity: null,
+      totalWeight: null
     }
   });
 });
 
 test("returns from from the database", async () => {
   const { job } = await mockTestData();
-  const doc = await PigMortalityModel.create(
-    PigMortalityFactory.build({
+  const doc = await PigPurchaseModel.create(
+    PigPurchaseFactory.build({
       job: job.No,
       comments: faker.random.words(2)
     })
   );
 
   await expect(query({ job: job.No })).resolves.toEqual({
-    pigMortality: {
+    pigPurchase: {
       job: {
         number: job.No
       },
       animal: doc.animal,
       comments: doc.comments,
-      euthanizedQuantity: doc.euthanizedQuantity,
-      naturalQuantity: doc.naturalQuantity
+      price: doc.price,
+      quantity: doc.quantity,
+      totalWeight: doc.totalWeight
     }
   });
 });

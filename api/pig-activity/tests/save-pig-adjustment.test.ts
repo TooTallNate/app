@@ -1,30 +1,29 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  PostPigMoveResult,
-  MutationPostPigMoveArgs
+  PostPigAdjustmentResult,
+  MutationPostPigAdjustmentArgs
 } from "../../common/graphql";
-import { PigMoveFactory, JobFactory, UserSettingsFactory } from "../builders";
-import PigMoveModel from "../../pig-activity/models/PigMove";
+import {
+  PigAdjustmentFactory,
+  JobFactory,
+  UserSettingsFactory
+} from "../../test/builders";
+import PigAdjustmentModel from "../models/PigAdjustment";
 import UserSettingsModel from "../../common/models/UserSettings";
 
-function mutation(variables: MutationPostPigMoveArgs) {
-  return client.request<PostPigMoveResult>(
-    `mutation SavePigMove($input: SavePigMoveInput!) {
-      savePigMove(input: $input) {
+function mutation(variables: MutationPostPigAdjustmentArgs) {
+  return client.request<PostPigAdjustmentResult>(
+    `mutation SavePigAdjustment($input: SavePigAdjustmentInput!) {
+      savePigAdjustment(input: $input) {
         success
-        pigMove {
-          fromJob {
+        pigAdjustment {
+          job {
             number
           }
-          toJob {
-            number
-          }
-          fromAnimal
-          toAnimal
+          animal
           quantity
-          smallPigQuantity
           totalWeight
           price
           comments
@@ -43,63 +42,50 @@ function mutation(variables: MutationPostPigMoveArgs) {
 
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
-  const fromJob = JobFactory.build();
-  const toJob = JobFactory.build();
-  const input = PigMoveFactory.build({
-    fromJob: fromJob.No,
-    toJob: toJob.No,
+  const job = JobFactory.build();
+  const input = PigAdjustmentFactory.build({
+    job: job.No,
     ...inputOverrides
   });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${fromJob.No}%27)`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
     .basicAuth(auth)
-    .reply(200, fromJob)
+    .reply(200, job)
     .persist();
 
-  nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${toJob.No}%27)`)
-    .basicAuth(auth)
-    .reply(200, toJob)
-    .persist();
-
-  return { user, fromJob, toJob, input };
+  return { user, job, input };
 }
 
 testUnauthenticated(() =>
   mutation({
-    input: PigMoveFactory.build()
+    input: PigAdjustmentFactory.build()
   })
 );
 
-test("creates new move and user settings documents", async () => {
-  const { input, fromJob, toJob, user } = await mockTestData({
+test("creates new adjustment and user settings documents", async () => {
+  const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMove: {
+    savePigAdjustment: {
       success: true,
-      pigMove: {
-        fromJob: {
-          number: fromJob.No
+      pigAdjustment: {
+        job: {
+          number: job.No
         },
-        toJob: {
-          number: toJob.No
-        },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
+        animal: input.animal,
         quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
       defaults: {
         job: {
-          number: fromJob.No
+          number: job.No
         },
         price: input.price
       }
@@ -115,63 +101,55 @@ test("creates new move and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: fromJob.No,
+    pigJob: job.No,
     price: input.price
   });
 
   await expect(
-    PigMoveModel.findOne(
+    PigAdjustmentModel.findOne(
       {
-        fromJob: fromJob.No
+        job: job.No
       },
       "-__v -createdAt -updatedAt"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "move",
-    fromJob: fromJob.No,
-    toJob: toJob.No,
-    fromAnimal: input.fromAnimal,
-    toAnimal: input.toAnimal,
+    activity: "adjustment",
+    job: job.No,
+    animal: input.animal,
     quantity: input.quantity,
-    smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
   });
 });
 
-test("updates existing move document", async () => {
-  const { input, fromJob, toJob } = await mockTestData({
+test("updates existing adjustment document", async () => {
+  const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
   });
-  const moveDoc = await PigMoveModel.create({
-    fromJob: fromJob.No
+  const adjustmentDoc = await PigAdjustmentModel.create({
+    job: job.No
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMove: {
+    savePigAdjustment: {
       success: true,
-      pigMove: {
-        fromJob: {
-          number: fromJob.No
+      pigAdjustment: {
+        job: {
+          number: job.No
         },
-        toJob: {
-          number: toJob.No
-        },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
+        animal: input.animal,
         quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
       defaults: {
         job: {
-          number: fromJob.No
+          number: job.No
         },
         price: input.price
       }
@@ -179,16 +157,16 @@ test("updates existing move document", async () => {
   });
 
   await expect(
-    PigMoveModel.findById(moveDoc._id, "-__v -createdAt -updatedAt").lean()
+    PigAdjustmentModel.findById(
+      adjustmentDoc._id,
+      "-__v -createdAt -updatedAt"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "move",
-    fromJob: fromJob.No,
-    toJob: toJob.No,
-    fromAnimal: input.fromAnimal,
-    toAnimal: input.toAnimal,
+    activity: "adjustment",
+    job: job.No,
+    animal: input.animal,
     quantity: input.quantity,
-    smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
     price: input.price,
     comments: input.comments
@@ -196,7 +174,7 @@ test("updates existing move document", async () => {
 });
 
 test("updates existing user settings document", async () => {
-  const { input, fromJob, toJob, user } = await mockTestData({
+  const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -208,26 +186,21 @@ test("updates existing user settings document", async () => {
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMove: {
+    savePigAdjustment: {
       success: true,
-      pigMove: {
-        fromJob: {
-          number: fromJob.No
+      pigAdjustment: {
+        job: {
+          number: job.No
         },
-        toJob: {
-          number: toJob.No
-        },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
+        animal: input.animal,
         quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
         price: input.price,
         comments: input.comments
       },
       defaults: {
         job: {
-          number: fromJob.No
+          number: job.No
         },
         price: input.price
       }
@@ -239,13 +212,13 @@ test("updates existing user settings document", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigJob: fromJob.No,
+    pigJob: job.No,
     price: input.price
   });
 });
 
 test("does not update price in user settings if not given in input", async () => {
-  const { input, fromJob, toJob, user } = await mockTestData({
+  const { input, job, user } = await mockTestData({
     input: {
       price: undefined,
       comments: faker.lorem.words(3)
@@ -258,26 +231,21 @@ test("does not update price in user settings if not given in input", async () =>
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    savePigMove: {
+    savePigAdjustment: {
       success: true,
-      pigMove: {
-        fromJob: {
-          number: fromJob.No
+      pigAdjustment: {
+        job: {
+          number: job.No
         },
-        toJob: {
-          number: toJob.No
-        },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
+        animal: input.animal,
         quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
         price: null,
         comments: input.comments
       },
       defaults: {
         job: {
-          number: fromJob.No
+          number: job.No
         },
         price: userSettings.price
       }
@@ -289,7 +257,7 @@ test("does not update price in user settings if not given in input", async () =>
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigJob: fromJob.No,
+    pigJob: job.No,
     price: userSettings.price
   });
 });

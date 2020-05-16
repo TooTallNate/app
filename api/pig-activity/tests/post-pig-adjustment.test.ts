@@ -1,37 +1,40 @@
 import nock from "nock";
 import faker from "faker";
-import { client, testUnauthenticated, mockUser } from "../utils";
+import { client, testUnauthenticated, mockUser } from "../../test/utils";
 import {
-  PostPigWeanResult,
-  MutationPostPigWeanArgs
+  PostPigAdjustmentResult,
+  MutationPostPigAdjustmentArgs
 } from "../../common/graphql";
-import { PigWeanFactory, JobFactory, UserSettingsFactory } from "../builders";
+import {
+  PigAdjustmentFactory,
+  JobFactory,
+  UserSettingsFactory
+} from "../../test/builders";
 import {
   NavItemJournalTemplate,
   NavItemJournalBatch,
   NavEntryType
 } from "../../common/nav";
 import { format } from "date-fns";
+import PigAdjustmentModel from "../models/PigAdjustment";
 import UserSettingsModel from "../../common/models/UserSettings";
-import PigWeanModel from "../../pig-activity/models/PigWean";
 
-function mutation(variables: MutationPostPigWeanArgs) {
-  return client.request<PostPigWeanResult>(
-    `mutation PostPigWean($input: PostPigWeanInput!) {
-      postPigWean(input: $input) {
+function mutation(variables: MutationPostPigAdjustmentArgs) {
+  return client.request<PostPigAdjustmentResult>(
+    `mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
+      postPigAdjustment(input: $input) {
         success
-        pigWean {
+        pigAdjustment {
           job {
             number
           }
           animal
           quantity
-          smallPigQuantity
           totalWeight
           price
           comments
         }
-        defaults {
+        defaults { 
           job {
             number
           }
@@ -46,13 +49,13 @@ function mutation(variables: MutationPostPigWeanArgs) {
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
-  const input = PigWeanFactory.build({
+  const input = PigAdjustmentFactory.build({
     job: job.No,
     ...inputOverrides
   });
 
   const documentNumberRegex = new RegExp(
-    `^WEAN${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
+    `^ADJ${user.Full_Name.slice(0, 5)}${format(new Date(), "yyMMddHH")}\\d{4}$`
   );
   const date = format(new Date(), "YYY-MM-dd");
 
@@ -64,23 +67,22 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Wean,
+      Journal_Template_Name: NavItemJournalTemplate.Adjustment,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Positive,
+      Entry_Type:
+        input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
       Document_No: documentNumberRegex,
       Item_No: input.animal,
       Description: input.comments || " ",
       Location_Code: job.Site,
-      Quantity: input.quantity,
-      Unit_Amount: input.price,
+      Quantity: Math.abs(input.quantity),
       Weight: input.totalWeight,
       Job_No: input.job,
-      Gen_Prod_Posting_Group: "WEAN PIGS",
-      Shortcut_Dimension_1_Code: "2",
-      Shortcut_Dimension_2_Code: "213",
+      Shortcut_Dimension_1_Code: job.Entity,
+      Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
       Document_Date: date,
-      Meta: input.smallPigQuantity
+      ...(input.quantity > 0 && { Unit_Amount: input.price })
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -90,11 +92,11 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
 testUnauthenticated(() =>
   mutation({
-    input: PigWeanFactory.build()
+    input: PigAdjustmentFactory.build()
   })
 );
 
-test("submits data to NAV and creates new user settings and wean documents", async () => {
+test("submits data to NAV and creates new user settings and adjustment documents", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -102,21 +104,22 @@ test("submits data to NAV and creates new user settings and wean documents", asy
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
+    postPigAdjustment: {
       success: true,
-      pigWean: {
+      pigAdjustment: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
-        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
       },
       defaults: {
-        job: null,
+        job: {
+          number: job.No
+        },
         price: input.price
       }
     }
@@ -131,11 +134,12 @@ test("submits data to NAV and creates new user settings and wean documents", asy
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
+    pigJob: job.No,
     price: input.price
   });
 
   await expect(
-    PigWeanModel.findOne(
+    PigAdjustmentModel.findOne(
       {
         job: job.No
       },
@@ -143,13 +147,13 @@ test("submits data to NAV and creates new user settings and wean documents", asy
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "wean",
+    activity: "adjustment",
     job: job.No
   });
 });
 
 test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, user, job } = await mockTestData({
+  const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -157,26 +161,27 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: undefined
+      price: faker.random.number({ min: 1, max: 50 })
     })
   );
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
+    postPigAdjustment: {
       success: true,
-      pigWean: {
+      pigAdjustment: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
-        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
       },
       defaults: {
-        job: null,
+        job: {
+          number: job.No
+        },
         price: input.price
       }
     }
@@ -187,49 +192,84 @@ test("submits data to NAV and updates existing user settings document", async ()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
+    pigJob: job.No,
     price: input.price
   });
 });
 
-test("submits data to NAV and clears existing wean document", async () => {
+test("submits data to NAV and clears existing adjustment document", async () => {
   const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
   });
-  const weanDoc = await PigWeanModel.create({
+  const adjustmentDoc = await PigAdjustmentModel.create({
     job: job.No,
     quantity: input.quantity,
     totalWeight: input.totalWeight
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
+    postPigAdjustment: {
       success: true,
-      pigWean: {
+      pigAdjustment: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
-        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
       },
       defaults: {
-        job: null,
+        job: {
+          number: job.No
+        },
         price: input.price
       }
     }
   });
 
   await expect(
-    PigWeanModel.findById(weanDoc._id, "-__v -createdAt -updatedAt").lean()
+    PigAdjustmentModel.findById(
+      adjustmentDoc._id,
+      "-__v -createdAt -updatedAt"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    activity: "wean",
+    activity: "adjustment",
     job: job.No
+  });
+});
+
+test("sets entry type to negative adjustment if quantity is negative", async () => {
+  const { input, job } = await mockTestData({
+    input: {
+      quantity: faker.random.number({ min: -10, max: -1 })
+    }
+  });
+
+  await expect(mutation({ input })).resolves.toEqual({
+    postPigAdjustment: {
+      success: true,
+      pigAdjustment: {
+        job: {
+          number: job.No
+        },
+        animal: null,
+        quantity: null,
+        totalWeight: null,
+        price: null,
+        comments: null
+      },
+      defaults: {
+        job: {
+          number: job.No
+        },
+        price: null
+      }
+    }
   });
 });
 
@@ -241,21 +281,22 @@ test("sets description to an empty string if there are no comments", async () =>
   });
 
   await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
+    postPigAdjustment: {
       success: true,
-      pigWean: {
+      pigAdjustment: {
         job: {
           number: job.No
         },
         animal: null,
         quantity: null,
-        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
       },
       defaults: {
-        job: null,
+        job: {
+          number: job.No
+        },
         price: input.price
       }
     }
