@@ -2,7 +2,7 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import {
-  PostPigPurchaseResult,
+  PigPurchaseResult,
   MutationPostPigPurchaseArgs
 } from "../../common/graphql";
 import {
@@ -20,7 +20,7 @@ import UserSettingsModel from "../../common/models/UserSettings";
 import PigPurchaseModel from "../models/PigPurchase";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {
-  return client.request<PostPigPurchaseResult>(
+  return client.request<PigPurchaseResult>(
     `mutation PostPigPurchase($input: PostPigPurchaseInput!) {
       postPigPurchase(input: $input) {
         success

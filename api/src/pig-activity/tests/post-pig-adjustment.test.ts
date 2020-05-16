@@ -2,7 +2,7 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import {
-  PostPigAdjustmentResult,
+  PigAdjustmentResult,
   MutationPostPigAdjustmentArgs
 } from "../../common/graphql";
 import {
@@ -20,7 +20,7 @@ import PigAdjustmentModel from "../models/PigAdjustment";
 import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigAdjustmentArgs) {
-  return client.request<PostPigAdjustmentResult>(
+  return client.request<PigAdjustmentResult>(
     `mutation PostPigAdjustment($input: PostPigAdjustmentInput!) {
       postPigAdjustment(input: $input) {
         success

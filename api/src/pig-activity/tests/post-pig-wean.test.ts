@@ -1,10 +1,7 @@
 import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
-import {
-  PostPigWeanResult,
-  MutationPostPigWeanArgs
-} from "../../common/graphql";
+import { PigWeanResult, MutationPostPigWeanArgs } from "../../common/graphql";
 import {
   PigWeanFactory,
   JobFactory,
@@ -20,7 +17,7 @@ import UserSettingsModel from "../../common/models/UserSettings";
 import PigWeanModel from "../models/PigWean";
 
 function mutation(variables: MutationPostPigWeanArgs) {
-  return client.request<PostPigWeanResult>(
+  return client.request<PigWeanResult>(
     `mutation PostPigWean($input: PostPigWeanInput!) {
       postPigWean(input: $input) {
         success

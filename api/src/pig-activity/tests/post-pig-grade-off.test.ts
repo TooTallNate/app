@@ -3,7 +3,7 @@ import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import {
   MutationPostPigGradeOffArgs,
-  PostPigGradeOffResult
+  PigGradeOffResult
 } from "../../common/graphql";
 import {
   PigGradeOffFactory,
@@ -21,7 +21,7 @@ import UserSettingsModel from "../../common/models/UserSettings";
 import PigGradeOffModel from "../models/PigGradeOff";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {
-  return client.request<PostPigGradeOffResult>(
+  return client.request<PigGradeOffResult>(
     `mutation PostPigGradeOff($input: PostPigGradeOffInput!) {
       postPigGradeOff(input: $input) {
         success

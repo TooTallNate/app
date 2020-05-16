@@ -1,10 +1,7 @@
 import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
-import {
-  PostPigMoveResult,
-  MutationPostPigMoveArgs
-} from "../../common/graphql";
+import { PigMoveResult, MutationPostPigMoveArgs } from "../../common/graphql";
 import {
   PigMoveFactory,
   JobFactory,
@@ -14,7 +11,7 @@ import PigMoveModel from "../models/PigMove";
 import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigMoveArgs) {
-  return client.request<PostPigMoveResult>(
+  return client.request<PigMoveResult>(
     `mutation SavePigMove($input: SavePigMoveInput!) {
       savePigMove(input: $input) {
         success

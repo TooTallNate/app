@@ -2,7 +2,7 @@ import nock from "nock";
 import faker from "faker";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import {
-  PostPigGradeOffResult,
+  PigGradeOffResult,
   MutationPostPigGradeOffArgs
 } from "../../common/graphql";
 import {
@@ -14,7 +14,7 @@ import PigGradeOffModel from "../models/PigGradeOff";
 import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {
-  return client.request<PostPigGradeOffResult>(
+  return client.request<PigGradeOffResult>(
     `mutation SavePigGradeOff($input: SavePigGradeOffInput!) {
       savePigGradeOff(input: $input) {
         success
