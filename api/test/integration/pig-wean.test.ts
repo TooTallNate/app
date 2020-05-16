@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryPigWeanArgs, PigWean } from "../../resolvers/types";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
-import PigWeanModel from "../../models/PigWean";
+import PigWeanModel from "../../pig-activity/models/PigWean";
 import { PigWeanFactory } from "../builders";
 
 function query(variables: QueryPigWeanArgs) {

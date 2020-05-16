@@ -6,7 +6,7 @@ import {
   MutationPostPigWeanArgs
 } from "../../resolvers/types";
 import { PigWeanFactory, JobFactory, UserSettingsFactory } from "../builders";
-import PigWeanModel from "../../models/PigWean";
+import PigWeanModel from "../../pig-activity/models/PigWean";
 import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigWeanArgs) {

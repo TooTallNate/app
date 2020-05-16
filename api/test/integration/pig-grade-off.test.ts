@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryPigGradeOffArgs, PigGradeOff } from "../../resolvers/types";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
-import PigGradeOffModel from "../../models/PigGradeOff";
+import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
 import { PigGradeOffFactory } from "../builders";
 
 function query(variables: QueryPigGradeOffArgs) {

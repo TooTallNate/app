@@ -1,11 +1,15 @@
-import { MutationResolvers, QueryResolvers, PigMoveResolvers } from "./types";
+import {
+  MutationResolvers,
+  QueryResolvers,
+  PigMoveResolvers
+} from "../../resolvers/types";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavJob
-} from "../nav";
-import { getDocumentNumber } from "./utils";
+} from "../../nav";
+import { getDocumentNumber } from "../../resolvers/utils";
 import PigMoveModel from "../models/PigMove";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 

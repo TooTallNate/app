@@ -18,7 +18,7 @@ import {
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
-import PigGradeOffModel from "../../models/PigGradeOff";
+import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {
   return client.request<PostPigGradeOffResult>(

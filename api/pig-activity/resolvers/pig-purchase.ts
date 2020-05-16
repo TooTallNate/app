@@ -1,35 +1,41 @@
-import { MutationResolvers, QueryResolvers, PigWeanResolvers } from "./types";
+import {
+  MutationResolvers,
+  QueryResolvers,
+  PigPurchaseResolvers
+} from "../../resolvers/types";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavJob
-} from "../nav";
-import { getDocumentNumber } from "./utils";
-import PigWeanModel from "../models/PigWean";
+} from "../../nav";
+import { getDocumentNumber } from "../../resolvers/utils";
+import PigPurchaseModel from "../models/PigPurchase";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
-export const PigWean: PigWeanResolvers = {
-  job(pigWean, _, { navClient }) {
+export const PigPurchase: PigPurchaseResolvers = {
+  job(pigPurchase, _, { navClient }) {
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigWean.job)
+      .resource("Jobs", pigPurchase.job)
       .get<NavJob>();
   }
 };
 
-export const PigWeanQueries: QueryResolvers = {
-  async pigWean(_, { job }) {
-    return (await PigWeanModel.findOne({ job })) || new PigWeanModel({ job });
+export const PigPurchaseQueries: QueryResolvers = {
+  async pigPurchase(_, { job }) {
+    return (
+      (await PigPurchaseModel.findOne({ job })) || new PigPurchaseModel({ job })
+    );
   }
 };
 
-export const PigWeanMutations: MutationResolvers = {
-  async savePigWean(_, { input }, { user }) {
+export const PigPurchaseMutations: MutationResolvers = {
+  async savePigPurchase(_, { input }, { user }) {
     const doc =
-      (await PigWeanModel.findOne({
+      (await PigPurchaseModel.findOne({
         job: input.job
-      })) || new PigWeanModel();
+      })) || new PigPurchaseModel();
     doc.set(input);
     await doc.save();
 
@@ -38,9 +44,9 @@ export const PigWeanMutations: MutationResolvers = {
       ...(input.price && { price: input.price })
     });
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return { success: true, pigPurchase: doc, defaults: userSettings };
   },
-  async postPigWean(_, { input }, { user, navClient }) {
+  async postPigPurchase(_, { input }, { user, navClient }) {
     const job = await navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs", input.job)
@@ -50,7 +56,7 @@ export const PigWeanMutations: MutationResolvers = {
         Journal_Template_Name: NavItemJournalTemplate.Wean,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type: NavEntryType.Positive,
-        Document_No: getDocumentNumber("WEAN", user.name),
+        Document_No: getDocumentNumber("PURCH", user.name),
         Item_No: input.animal,
         Description: input.comments,
         Location_Code: job.Site,
@@ -58,10 +64,8 @@ export const PigWeanMutations: MutationResolvers = {
         Unit_Amount: input.price,
         Weight: input.totalWeight,
         Job_No: input.job,
-        Gen_Prod_Posting_Group: "WEAN PIGS",
-        Shortcut_Dimension_1_Code: "2",
-        Shortcut_Dimension_2_Code: "213",
-        Meta: input.smallPigQuantity
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center
       },
       navClient
     );
@@ -72,15 +76,15 @@ export const PigWeanMutations: MutationResolvers = {
     });
 
     const doc =
-      (await PigWeanModel.findOne({
+      (await PigPurchaseModel.findOne({
         job: input.job
-      })) || new PigWeanModel();
+      })) || new PigPurchaseModel();
     doc.overwrite({
       activity: doc.activity,
       job: input.job
     });
     await doc.save();
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return { success: true, pigPurchase: doc, defaults: userSettings };
   }
 };

@@ -10,7 +10,7 @@ import {
   JobFactory,
   UserSettingsFactory
 } from "../builders";
-import PigGradeOffModel from "../../models/PigGradeOff";
+import PigGradeOffModel from "../../pig-activity/models/PigGradeOff";
 import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigGradeOffArgs) {

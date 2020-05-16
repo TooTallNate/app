@@ -16,7 +16,7 @@ import {
   NavEntryType
 } from "../../nav";
 import { format } from "date-fns";
-import PigAdjustmentModel from "../../models/PigAdjustment";
+import PigAdjustmentModel from "../../pig-activity/models/PigAdjustment";
 import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigAdjustmentArgs) {

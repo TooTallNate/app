@@ -1,9 +1,12 @@
-import { QueryResolvers, PigActivityDefaultsResolvers } from "./types";
-import { NavItemJournalEntry, ODataClient, NavJob, NavAnimal } from "../nav";
+import {
+  QueryResolvers,
+  PigActivityDefaultsResolvers
+} from "../../resolvers/types";
+import { NavItemJournalEntry, ODataClient, NavJob, NavAnimal } from "../../nav";
 import UserSettingsModel, {
   UserSettingsDocument
-} from "../models/UserSettings";
-import { navDate } from "./utils";
+} from "../../models/UserSettings";
+import { navDate } from "../../resolvers/utils";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,

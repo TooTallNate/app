@@ -10,7 +10,7 @@ import {
   JobFactory,
   UserSettingsFactory
 } from "../builders";
-import PigPurchaseModel from "../../models/PigPurchase";
+import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
 import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {

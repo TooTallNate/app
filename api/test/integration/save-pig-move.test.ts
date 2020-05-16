@@ -6,7 +6,7 @@ import {
   MutationPostPigMoveArgs
 } from "../../resolvers/types";
 import { PigMoveFactory, JobFactory, UserSettingsFactory } from "../builders";
-import PigMoveModel from "../../models/PigMove";
+import PigMoveModel from "../../pig-activity/models/PigMove";
 import UserSettingsModel from "../../models/UserSettings";
 
 function mutation(variables: MutationPostPigMoveArgs) {

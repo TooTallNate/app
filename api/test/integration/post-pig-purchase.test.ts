@@ -17,7 +17,7 @@ import {
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
-import PigPurchaseModel from "../../models/PigPurchase";
+import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
 
 function mutation(variables: MutationPostPigPurchaseArgs) {
   return client.request<PostPigPurchaseResult>(

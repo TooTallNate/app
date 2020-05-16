@@ -1,0 +1,258 @@
+type PigActivityDefaults {
+  job: Job
+  price: Float
+}
+
+type PigQuantity {
+  code: String!
+  quantity: Int
+}
+
+input PigQuantityInput {
+  code: String!
+  quantity: Int!
+}
+
+input PigOptionalQuantityInput {
+  code: String!
+  quantity: Int
+}
+
+
+type PigAdjustment {
+  animal: String
+  job: Job!
+  quantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigAdjustmentInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  totalWeight: Float!
+  price: Float
+  comments: String
+}
+
+input SavePigAdjustmentInput {
+  animal: String
+  job: String!
+  quantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+type PigAdjustmentResult  {
+  success: Boolean!
+  pigAdjustment: PigAdjustment!
+  defaults: PigActivityDefaults!
+}
+
+
+type PigGradeOff {
+  animal: String
+  job: Job!
+  quantities: [PigQuantity!]!
+  pigWeight: Float
+  comments: String
+}
+
+input PostPigGradeOffInput {
+  animal: String!
+  job: String!
+  quantities: [PigQuantityInput!]!
+  pigWeight: Float!
+  comments: String
+}
+
+input SavePigGradeOffInput {
+  animal: String
+  job: String!
+  quantities: [PigOptionalQuantityInput!]
+  pigWeight: Float
+  comments: String
+}
+
+type PigGradeOffResult {
+  success: Boolean!
+  pigGradeOff: PigGradeOff!
+  defaults: PigActivityDefaults!
+}
+
+
+type PigMortality {
+  animal: String
+  job: Job!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
+  comments: String
+}
+
+input PostPigMortalityInput {
+  animal: String!
+  job: String!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
+  comments: String
+}
+
+input SavePigMortalityInput {
+  animal: String
+  job: String!
+  naturalQuantity: Int
+  euthanizedQuantity: Int
+  comments: String
+}
+
+type PostPigMortalityResult {
+  success: Boolean!
+  pigMortality: PigMortality!
+  defaults: PigActivityDefaults!
+}
+
+
+type PigMove {
+  fromAnimal: String
+  toAnimal: String
+  fromJob: Job!
+  toJob: Job
+  quantity: Int
+  smallPigQuantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigMoveInput {
+  fromAnimal: String!
+  toAnimal: String!
+  fromJob: String!
+  toJob: String!
+  quantity: Int!
+  smallPigQuantity: Int
+  totalWeight: Float!
+  price: Float!
+  comments: String
+}
+
+input SavePigMoveInput {
+  fromAnimal: String
+  toAnimal: String
+  fromJob: String!
+  toJob: String
+  quantity: Int
+  smallPigQuantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+type PostPigMoveResult {
+  success: Boolean!
+  pigMove: PigMove!
+  defaults: PigActivityDefaults!
+}
+
+
+type PigPurchase {
+  animal: String
+  job: Job!
+  quantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigPurchaseInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  totalWeight: Float!
+  price: Float!
+  comments: String
+}
+
+input SavePigPurchaseInput {
+  animal: String
+  job: String!
+  quantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+type PostPigPurchaseResult {
+  success: Boolean!
+  pigPurchase: PigPurchase!
+  defaults: PigActivityDefaults!
+}
+
+
+type PigWean {
+  animal: String
+  job: Job!
+  quantity: Int
+  smallPigQuantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+input PostPigWeanInput {
+  animal: String!
+  job: String!
+  quantity: Int!
+  smallPigQuantity: Int
+  totalWeight: Float!
+  price: Float!
+  comments: String
+}
+
+input SavePigWeanInput {
+  animal: String
+  job: String!
+  quantity: Int
+  smallPigQuantity: Int
+  totalWeight: Float
+  price: Float
+  comments: String
+}
+
+type PostPigWeanResult {
+  success: Boolean!
+  pigWean: PigWean!
+  defaults: PigActivityDefaults!
+}
+
+
+type Query {
+  pigTypes: [Animal!]!
+  pigActivityJobs: [Job!]!
+  pigGradeOffReasons: [Reason!]!
+  pigActivityDefaults: PigActivityDefaults!
+  pigAdjustment(job: String!): PigAdjustment!
+  pigGradeOff(job: String!): PigGradeOff!
+  pigMortality(job: String!): PigMortality!
+  pigMove(job: String!): PigMove!
+  pigPurchase(job: String!): PigPurchase!
+  pigWean(job: String!): PigWean!
+}
+
+type Mutation {
+  postPigAdjustment(input: PostPigAdjustmentInput!): PostPigAdjustmentResult!
+  savePigAdjustment(input: SavePigAdjustmentInput!): SavePigAdjustmentResult!
+  postPigGradeOff(input: PostPigGradeOffInput!): PostPigGradeOffResult!
+  savePigGradeOff(input: SavePigGradeOffInput!): SavePigGradeOffResult!
+  postPigMortality(input: PostPigMortalityInput!): PostPigMortalityResult!
+  savePigMortality(input: SavePigMortalityInput!): SavePigMortalityResult!
+  postPigMove(input: PostPigMoveInput!): PostPigMoveResult!
+  savePigMove(input: SavePigMoveInput!): SavePigMoveResult!
+  postPigPurchase(input: PostPigPurchaseInput!): PostPigPurchaseResult!
+  savePigPurchase(input: SavePigPurchaseInput!): SavePigPurchaseResult!
+  postPigWean(input: PostPigWeanInput!): PostPigWeanResult!
+  savePigWean(input: SavePigWeanInput!): SavePigWeanResult!
+}

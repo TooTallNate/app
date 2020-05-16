@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryPigMortalityArgs, PigMortality } from "../../resolvers/types";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
-import PigMortalityModel from "../../models/PigMortality";
+import PigMortalityModel from "../../pig-activity/models/PigMortality";
 import { PigMortalityFactory } from "../builders";
 
 function query(variables: QueryPigMortalityArgs) {

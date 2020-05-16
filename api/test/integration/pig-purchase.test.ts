@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryPigPurchaseArgs, PigPurchase } from "../../resolvers/types";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
-import PigPurchaseModel from "../../models/PigPurchase";
+import PigPurchaseModel from "../../pig-activity/models/PigPurchase";
 import { PigPurchaseFactory } from "../builders";
 
 function query(variables: QueryPigPurchaseArgs) {

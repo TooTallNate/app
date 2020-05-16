@@ -3,29 +3,40 @@ import { Job } from "./jobs";
 import { Animal } from "./animal";
 import { Resource } from "./resource";
 import { Reason } from "./reason";
-import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
+import {
+  PigActivityDefaults,
+  PigActivityQueries
+} from "../pig-activity/resolvers/pig-activity";
 import {
   PigAdjustment,
   PigAdjustmentQueries,
   PigAdjustmentMutations
-} from "./pig-adjustment";
+} from "../pig-activity/resolvers/pig-adjustment";
 import {
   PigGradeOff,
   PigGradeOffQueries,
   PigGradeOffMutations
-} from "./pig-grade-off";
+} from "../pig-activity/resolvers/pig-grade-off";
 import {
   PigMortality,
   PigMortalityQueries,
   PigMortalityMutations
-} from "./pig-mortality";
-import { PigMove, PigMoveQueries, PigMoveMutations } from "./pig-move";
+} from "../pig-activity/resolvers/pig-mortality";
+import {
+  PigMove,
+  PigMoveQueries,
+  PigMoveMutations
+} from "../pig-activity/resolvers/pig-move";
 import {
   PigPurchase,
   PigPurchaseQueries,
   PigPurchaseMutations
-} from "./pig-purchase";
-import { PigWean, PigWeanQueries, PigWeanMutations } from "./pig-wean";
+} from "../pig-activity/resolvers/pig-purchase";
+import {
+  PigWean,
+  PigWeanQueries,
+  PigWeanMutations
+} from "../pig-activity/resolvers/pig-wean";
 import {
   FarrowingBackendScorecard,
   ScorecardQueries,

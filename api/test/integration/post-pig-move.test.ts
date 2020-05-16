@@ -13,7 +13,7 @@ import {
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
-import PigMoveModel from "../../models/PigMove";
+import PigMoveModel from "../../pig-activity/models/PigMove";
 
 function mutation(variables: MutationPostPigMoveArgs) {
   return client.request<PostPigMoveResult>(

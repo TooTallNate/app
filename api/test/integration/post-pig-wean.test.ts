@@ -13,7 +13,7 @@ import {
 } from "../../nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
-import PigWeanModel from "../../models/PigWean";
+import PigWeanModel from "../../pig-activity/models/PigWean";
 
 function mutation(variables: MutationPostPigWeanArgs) {
   return client.request<PostPigWeanResult>(

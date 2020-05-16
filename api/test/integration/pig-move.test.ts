@@ -3,7 +3,7 @@ import nock from "nock";
 import { QueryPigMoveArgs, PigMove } from "../../resolvers/types";
 import { client, testUnauthenticated, mockUser } from "../utils";
 import { JobFactory } from "../builders";
-import PigMoveModel from "../../models/PigMove";
+import PigMoveModel from "../../pig-activity/models/PigMove";
 import { PigMoveFactory } from "../builders";
 
 function query(variables: QueryPigMoveArgs) {

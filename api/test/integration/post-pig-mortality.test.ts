@@ -18,7 +18,7 @@ import {
 } from "../../nav";
 import { format, differenceInDays } from "date-fns";
 import UserSettingsModel from "../../models/UserSettings";
-import PigMortalityModel from "../../models/PigMortality";
+import PigMortalityModel from "../../pig-activity/models/PigMortality";
 import { parseNavDate } from "../../resolvers/utils";
 
 function mutation(variables: MutationPostPigMortalityArgs) {
