@@ -14,7 +14,7 @@ export default () => {
   initPassport();
 
   const typeDefs = fs.readFileSync(
-    path.join(__dirname, "schema.generated.graphql"),
+    path.join(__dirname, "schema.graphql"),
     "utf8"
   );
 

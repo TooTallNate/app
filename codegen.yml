@@ -1,9 +1,9 @@
 overwrite: true
 schema:
-  - "api/**/*.gql"
-  - "!*.generated.graphql"
+  - "api/**/*.{gql,graphql}"
+  - "!api/src/schema.graphql"
 generates:
-  api/src/schema.generated.graphql:
+  api/src/schema.graphql:
     plugins:
       - "schema-ast"
   api/src/common/graphql.ts:
