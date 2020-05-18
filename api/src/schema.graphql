@@ -19,12 +19,22 @@ type FarrowingBackendScorecardResult {
   scorecard: FarrowingBackendScorecard!
 }
 
+enum InclusivityMode {
+  INCLUDE
+  EXCLUDE
+}
+
 type Job {
   number: String!
   description: String!
   personResponsible: Resource!
   inventory: Int
   deadQuantity: Int
+}
+
+type Location {
+  code: String!
+  description: String!
 }
 
 input LoginInput {
@@ -59,6 +69,7 @@ type Mutation {
   savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
   savePigWean(input: SavePigWeanInput!): PigWeanResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
+  updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
 
 type PigActivityDefaults {
@@ -358,8 +369,25 @@ type SetAreaOperatorResult {
   area: Job!
 }
 
+input UpdateUserLocationsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
+type UpdateUserLocationsResult {
+  success: Boolean!
+  locations: UserLocations!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
+  locations: UserLocations!
+}
+
+type UserLocations {
+  type: InclusivityMode!
+  list: [Location!]!
 }
