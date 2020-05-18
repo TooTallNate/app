@@ -176,7 +176,13 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   _id: Factory.each(() => new ObjectId()),
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
-  price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  locations: Factory.each(() => ({
+    listType: oneOf("include", "exclude"),
+    list: Array.from({ length: faker.random.number({ min: 1, max: 4 }) }, () =>
+      faker.random.alphaNumeric(2)
+    )
+  }))
 });
 
 function generateScorecardEntry(min: number, max: number) {
