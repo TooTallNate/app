@@ -1,0 +1,22 @@
+type Job {
+  number: String!
+  description: String!
+  personResponsible: Resource!
+  inventory: Int
+  deadQuantity: Int
+}
+
+type Animal {
+  number: String!
+  description: String!
+}
+
+type Reason {
+  code: String!
+  description: String!
+}
+
+type Resource {
+  number: String!
+  name: String!
+}

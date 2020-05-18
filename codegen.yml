@@ -1,10 +1,12 @@
 overwrite: true
-schema: "api/schema.gql"
-hooks:
-  afterAllFileWrite:
-    - eslint --fix
+schema:
+  - "api/**/*.{gql,graphql}"
+  - "!api/src/schema.graphql"
 generates:
-  api/resolvers/types.ts:
+  api/src/schema.graphql:
+    plugins:
+      - "schema-ast"
+  api/src/common/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
@@ -13,19 +15,22 @@ generates:
       useIndexSignature: true
       contextType: "../context#GraphqlContext"
       mappers:
-        User: "../nav#NavUser"
-        Job: "../nav#NavJob"
-        Animal: "../nav#NavAnimal"
-        Resource: "../nav#NavResource"
-        Reason: "../nav#NavReason"
-        PigAdjustment: "../models/PigAdjustment#PigAdjustmentDocument"
-        PigGradeOff: "../models/PigGradeOff#PigGradeOffDocument"
-        PigMortality: "../models/PigMortality#PigMortalityDocument"
-        PigMove: "../models/PigMove#PigMoveDocument"
-        PigPurchase: "../models/PigPurchase#PigPurchaseDocument"
-        PigWean: "../models/PigWean#PigWeanDocument"
-        PigActivityDefaults: "../models/UserSettings#UserSettingsDocument"
-        FarrowingBackendScorecard: "../models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
+        User: "./nav#NavUser"
+        Job: "./nav#NavJob"
+        Animal: "./nav#NavAnimal"
+        Resource: "./nav#NavResource"
+        Reason: "./nav#NavReason"
+        PigAdjustment: "../pig-activity/models/PigAdjustment#PigAdjustmentDocument"
+        PigGradeOff: "../pig-activity/models/PigGradeOff#PigGradeOffDocument"
+        PigMortality: "../pig-activity/models/PigMortality#PigMortalityDocument"
+        PigMove: "../pig-activity/models/PigMove#PigMoveDocument"
+        PigPurchase: "../pig-activity/models/PigPurchase#PigPurchaseDocument"
+        PigWean: "../pig-activity/models/PigWean#PigWeanDocument"
+        PigActivityDefaults: "./models/UserSettings#UserSettingsDocument"
+        FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/user/graphql/index.tsx:
     documents: "web/src/user/graphql/*.gql"
     plugins:
@@ -36,6 +41,9 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/pig-activity/graphql/index.tsx:
     documents: "web/src/pig-activity/graphql/*.gql"
     plugins:
@@ -46,6 +54,9 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
   web/src/scorecard/graphql/index.tsx:
     documents: "web/src/scorecard/graphql/*.gql"
     plugins:
@@ -56,4 +67,7 @@ generates:
       withHOC: false
       withHooks: true
       withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
 
