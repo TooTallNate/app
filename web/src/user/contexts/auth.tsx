@@ -102,7 +102,7 @@ const AuthProvider: React.FC = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated: !!data && !!data.user,
-        user: data ? data.user : null,
+        user: data && data.user ? data.user : null,
         login,
         logout
       }}
