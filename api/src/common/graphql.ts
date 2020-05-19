@@ -1,5 +1,12 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob, NavAnimal, NavResource, NavReason } from "./nav";
+import {
+  NavUser,
+  NavJob,
+  NavAnimal,
+  NavResource,
+  NavReason,
+  NavLocation
+} from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
 import { PigMortalityDocument } from "../pig-activity/models/PigMortality";
@@ -65,7 +72,7 @@ export type Job = {
 export type Location = {
   __typename?: "Location";
   code: Scalars["String"];
-  description: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type LoginInput = {
@@ -680,9 +687,11 @@ export type ResolversTypes = ResolversObject<{
   Animal: ResolverTypeWrapper<NavAnimal>;
   PigWean: ResolverTypeWrapper<PigWeanDocument>;
   User: ResolverTypeWrapper<NavUser>;
-  UserLocations: ResolverTypeWrapper<UserLocations>;
+  UserLocations: ResolverTypeWrapper<
+    Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
+  >;
   InclusivityMode: InclusivityMode;
-  Location: ResolverTypeWrapper<Location>;
+  Location: ResolverTypeWrapper<NavLocation>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -753,7 +762,11 @@ export type ResolversTypes = ResolversObject<{
     Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
   >;
   UpdateUserLocationsInput: UpdateUserLocationsInput;
-  UpdateUserLocationsResult: ResolverTypeWrapper<UpdateUserLocationsResult>;
+  UpdateUserLocationsResult: ResolverTypeWrapper<
+    Omit<UpdateUserLocationsResult, "locations"> & {
+      locations: ResolversTypes["UserLocations"];
+    }
+  >;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -777,9 +790,11 @@ export type ResolversParentTypes = ResolversObject<{
   Animal: NavAnimal;
   PigWean: PigWeanDocument;
   User: NavUser;
-  UserLocations: UserLocations;
+  UserLocations: Omit<UserLocations, "list"> & {
+    list: Array<ResolversParentTypes["Location"]>;
+  };
   InclusivityMode: InclusivityMode;
-  Location: Location;
+  Location: NavLocation;
   Mutation: {};
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -840,7 +855,9 @@ export type ResolversParentTypes = ResolversObject<{
     area: ResolversParentTypes["Job"];
   };
   UpdateUserLocationsInput: UpdateUserLocationsInput;
-  UpdateUserLocationsResult: UpdateUserLocationsResult;
+  UpdateUserLocationsResult: Omit<UpdateUserLocationsResult, "locations"> & {
+    locations: ResolversParentTypes["UserLocations"];
+  };
 }>;
 
 export type AnimalResolvers<
@@ -909,7 +926,7 @@ export type LocationResolvers<
   ParentType extends ResolversParentTypes["Location"] = ResolversParentTypes["Location"]
 > = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

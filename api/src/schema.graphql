@@ -34,7 +34,7 @@ type Job {
 
 type Location {
   code: String!
-  description: String!
+  name: String!
 }
 
 input LoginInput {

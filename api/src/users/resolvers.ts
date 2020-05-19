@@ -1,10 +1,14 @@
 import {
   UserResolvers,
   MutationResolvers,
-  QueryResolvers
+  QueryResolvers,
+  InclusivityMode
 } from "../common/graphql";
-import { NavUser, Guid, NavErrorCode } from "../common/nav";
+import { NavUser, Guid, NavErrorCode, NavLocation } from "../common/nav";
 import { ErrorCode } from "../common/utils";
+import UserSettingsModel, {
+  UserSettingsDocument
+} from "../common/models/UserSettings";
 
 export const queries: QueryResolvers = {
   async user(_, __, { user, navClient }) {
@@ -61,7 +65,33 @@ export const mutations: MutationResolvers = {
 export const User: UserResolvers = {
   username: user => user.User_Name,
   name: user => user.Full_Name,
-  license: user => user.License_Type
+  license: user => user.License_Type,
+  async locations(_, __, { navClient, user }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    }).lean<UserSettingsDocument>();
+    if (settings && settings.locations) {
+      let list: NavLocation[] = [];
+      if (settings.locations.list.length > 0) {
+        list = await navClient
+          .resource("Company", process.env.NAV_COMPANY)
+          .resource("Locations")
+          .get<NavLocation[]>()
+          .filter(f =>
+            f.or(...settings.locations.list.map(code => f.equals("Code", code)))
+          );
+      }
+      return {
+        type: settings.locations.listType as InclusivityMode,
+        list
+      };
+    } else {
+      return {
+        type: InclusivityMode.Include,
+        list: []
+      };
+    }
+  }
 };
 
 export const types = {

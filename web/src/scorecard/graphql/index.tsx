@@ -52,7 +52,7 @@ export type Job = {
 export type Location = {
   __typename?: "Location";
   code: Scalars["String"];
-  description: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type LoginInput = {

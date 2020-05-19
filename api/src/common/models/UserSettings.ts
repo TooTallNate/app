@@ -25,7 +25,9 @@ const UserSettingsSchema = new Schema(
     locations: {
       _id: false,
       listType: String,
-      list: [String]
+      list: {
+        type: [String]
+      }
     }
   },
   {

@@ -37,6 +37,11 @@ export interface NavAnimal {
   Description: string;
 }
 
+export interface NavLocation {
+  Code: string;
+  Name: string;
+}
+
 export interface NavResource {
   No: string;
   Name: string;

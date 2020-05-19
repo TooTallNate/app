@@ -28,5 +28,5 @@ type Resource {
 
 type Location {
   code: String!
-  description: String!
+  name: String!
 }
