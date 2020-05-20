@@ -1,4 +1,5 @@
 import { Schema, model, Document } from "mongoose";
+import { InclusivityMode } from "../graphql";
 
 export interface UserSettingsDocument extends Document {
   username: string;
@@ -6,7 +7,7 @@ export interface UserSettingsDocument extends Document {
   price: number | null | undefined;
   locations:
     | {
-        listType: string;
+        listType: InclusivityMode;
         list: string[];
       }
     | null

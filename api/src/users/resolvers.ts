@@ -65,6 +65,41 @@ export const mutations: MutationResolvers = {
       })
     );
     return { success: true };
+  },
+  async updateUserLocations(_, { input }, { user, navClient }) {
+    const settings =
+      (await UserSettingsModel.findOne({ username: user.username })) ||
+      new UserSettingsModel({ username: user.username });
+    if (input.add) {
+      settings.locations.list.push(...input.add);
+    }
+    if (input.remove) {
+      settings.locations.list = settings.locations.list.filter(
+        code => !input.remove.includes(code)
+      );
+    }
+    if (input.mode) {
+      settings.locations.listType = input.mode;
+    }
+    await settings.save();
+
+    let list: NavLocation[] = [];
+    if (settings.locations.list.length > 0) {
+      list = await navClient
+        .resource("Company", process.env.NAV_COMPANY)
+        .resource("Locations")
+        .get<NavLocation[]>()
+        .filter(f =>
+          f.or(...settings.locations.list.map(code => f.equals("Code", code)))
+        );
+    }
+    return {
+      success: true,
+      locations: {
+        type: settings.locations.listType || InclusivityMode.Include,
+        list: list
+      }
+    };
   }
 };
 
