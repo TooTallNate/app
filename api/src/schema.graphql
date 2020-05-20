@@ -258,6 +258,7 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendOperators: [Resource!]!
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
+  locations: [Location!]!
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!

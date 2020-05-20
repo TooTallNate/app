@@ -382,6 +382,7 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  locations: Array<Location>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -675,6 +676,7 @@ export type ResolversTypes = ResolversObject<{
     FarrowingBackendScorecardDocument
   >;
   ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
+  Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
@@ -691,7 +693,6 @@ export type ResolversTypes = ResolversObject<{
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
   InclusivityMode: InclusivityMode;
-  Location: ResolverTypeWrapper<NavLocation>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -778,6 +779,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars["Int"];
   FarrowingBackendScorecard: FarrowingBackendScorecardDocument;
   ScorecardEntry: ScorecardEntry;
+  Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
   PigAdjustment: PigAdjustmentDocument;
@@ -794,7 +796,6 @@ export type ResolversParentTypes = ResolversObject<{
     list: Array<ResolversParentTypes["Location"]>;
   };
   InclusivityMode: InclusivityMode;
-  Location: NavLocation;
   Mutation: {};
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -1324,6 +1325,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryFarrowingBackendScorecardArgs, "area">
+  >;
+  locations?: Resolver<
+    Array<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
   >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],

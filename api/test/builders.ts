@@ -5,7 +5,8 @@ import {
   NavUser,
   NavJob,
   NavResource,
-  NavReason
+  NavReason,
+  NavLocation
 } from "../src/common/nav/types";
 import uuid from "uuid/v4";
 import {
@@ -50,6 +51,11 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
 export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
   Name: Factory.each(() => faker.name.firstName()),
   No: Factory.each(() => `resource_${faker.random.alphaNumeric(8)}`)
+});
+
+export const LocationFactory = Factory.Sync.makeFactory<NavLocation>({
+  Name: Factory.each(() => faker.name.firstName()),
+  Code: Factory.each(() => `${faker.random.alphaNumeric(2)}`)
 });
 
 export const ReasonFactory = Factory.Sync.makeFactory<NavReason>({

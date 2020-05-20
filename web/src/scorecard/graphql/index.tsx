@@ -362,6 +362,7 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  locations: Array<Location>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;

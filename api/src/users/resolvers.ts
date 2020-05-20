@@ -19,6 +19,12 @@ export const queries: QueryResolvers = {
     } else {
       return null;
     }
+  },
+  async locations(_, __, { navClient }) {
+    return await navClient
+      .resource("Company", process.env.NAV_COMPANY)
+      .resource("Locations")
+      .get<NavLocation[]>();
   }
 };
 
