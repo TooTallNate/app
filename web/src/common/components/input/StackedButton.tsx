@@ -25,7 +25,7 @@ const StackedButton = forwardRef<HTMLButtonElement, StackedButtonProps>(
           ${
             orientation === "vertical"
               ? "border-b last:border-b-0 text-left"
-              : "flex-1 text-center border-r last:border-r-0"
+              : "text-center border-r last:border-r-0"
           }
         `}
         onClick={() => onChange && onChange(value)}
