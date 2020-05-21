@@ -15,7 +15,7 @@ function mutation(variables: MutationUpdateUserLocationsArgs) {
       updateUserLocations(input: $input) {
         success
         locations {
-          type
+          mode
           list {
             code
             name
@@ -67,7 +67,7 @@ test("adds location to the list", async () => {
     updateUserLocations: {
       success: true,
       locations: {
-        type: settings.locations.listType,
+        mode: settings.locations.mode,
         list: locations.map(loc => ({
           code: loc.Code,
           name: loc.Name
@@ -79,7 +79,7 @@ test("adds location to the list", async () => {
   const updatedSettings = await UserSettingsModel.findById(settings._id).lean();
   expect(updatedSettings).toMatchObject({
     locations: {
-      listType: settings.locations.listType,
+      mode: settings.locations.mode,
       list: locations.map(loc => loc.Code)
     }
   });
@@ -94,7 +94,7 @@ test("removes location from the list", async () => {
     UserSettingsFactory.build({
       username: user.User_Name,
       locations: {
-        listType: InclusivityMode.Include,
+        mode: InclusivityMode.Include,
         list: oldLocations.map(loc => loc.Code)
       }
     })
@@ -112,7 +112,7 @@ test("removes location from the list", async () => {
     updateUserLocations: {
       success: true,
       locations: {
-        type: settings.locations.listType,
+        mode: settings.locations.mode,
         list: locations.map(loc => ({
           code: loc.Code,
           name: loc.Name
@@ -124,7 +124,7 @@ test("removes location from the list", async () => {
   const updatedSettings = await UserSettingsModel.findById(settings._id).lean();
   expect(updatedSettings).toMatchObject({
     locations: {
-      listType: settings.locations.listType,
+      mode: settings.locations.mode,
       list: locations.map(loc => loc.Code)
     }
   });
@@ -137,7 +137,7 @@ test("changes list type", async () => {
     UserSettingsFactory.build({
       username: user.User_Name,
       locations: {
-        listType: InclusivityMode.Include,
+        mode: InclusivityMode.Include,
         list: locations.map(loc => loc.Code)
       }
     })
@@ -155,7 +155,7 @@ test("changes list type", async () => {
     updateUserLocations: {
       success: true,
       locations: {
-        type: InclusivityMode.Exclude,
+        mode: InclusivityMode.Exclude,
         list: locations.map(loc => ({
           code: loc.Code,
           name: loc.Name
@@ -167,7 +167,7 @@ test("changes list type", async () => {
   const updatedSettings = await UserSettingsModel.findById(settings._id).lean();
   expect(updatedSettings).toMatchObject({
     locations: {
-      listType: InclusivityMode.Exclude,
+      mode: InclusivityMode.Exclude,
       list: locations.map(loc => loc.Code)
     }
   });
@@ -189,7 +189,7 @@ test("creates new settings document if one does not exist", async () => {
     updateUserLocations: {
       success: true,
       locations: {
-        type: InclusivityMode.Include,
+        mode: InclusivityMode.Include,
         list: locations.map(loc => ({
           code: loc.Code,
           name: loc.Name

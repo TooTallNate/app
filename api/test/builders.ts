@@ -184,7 +184,7 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   locations: Factory.each(() => ({
-    listType: oneOf("INCLUDE", "EXCLUDE"),
+    mode: oneOf("INCLUDE", "EXCLUDE"),
     list: Array.from({ length: faker.random.number({ min: 1, max: 4 }) }, () =>
       faker.random.alphaNumeric(2)
     )

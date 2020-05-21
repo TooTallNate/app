@@ -79,7 +79,7 @@ export const mutations: MutationResolvers = {
       );
     }
     if (input.mode) {
-      settings.locations.listType = input.mode;
+      settings.locations.mode = input.mode;
     }
     await settings.save();
 
@@ -96,7 +96,7 @@ export const mutations: MutationResolvers = {
     return {
       success: true,
       locations: {
-        type: settings.locations.listType || InclusivityMode.Include,
+        mode: settings.locations.mode || InclusivityMode.Include,
         list: list
       }
     };
@@ -123,12 +123,12 @@ export const User: UserResolvers = {
           );
       }
       return {
-        type: settings.locations.listType as InclusivityMode,
+        mode: settings.locations.mode as InclusivityMode,
         list
       };
     } else {
       return {
-        type: InclusivityMode.Include,
+        mode: InclusivityMode.Include,
         list: []
       };
     }

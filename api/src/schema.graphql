@@ -389,6 +389,6 @@ type User {
 }
 
 type UserLocations {
-  type: InclusivityMode!
+  mode: InclusivityMode!
   list: [Location!]!
 }

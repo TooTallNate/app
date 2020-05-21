@@ -532,7 +532,7 @@ export type User = {
 
 export type UserLocations = {
   __typename?: "UserLocations";
-  type: InclusivityMode;
+  mode: InclusivityMode;
   list: Array<Location>;
 };
 

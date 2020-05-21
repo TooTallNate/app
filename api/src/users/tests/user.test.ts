@@ -73,7 +73,7 @@ test("returns users locations from database", async () => {
     client.request(`{
       user {
         locations {
-          type
+          mode
           list {
             code
             name
@@ -84,7 +84,7 @@ test("returns users locations from database", async () => {
   ).resolves.toEqual({
     user: {
       locations: {
-        type: settings.locations.listType,
+        mode: settings.locations.mode,
         list: locations.map(location => ({
           code: location.Code,
           name: location.Name

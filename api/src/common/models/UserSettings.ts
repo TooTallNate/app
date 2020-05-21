@@ -7,7 +7,7 @@ export interface UserSettingsDocument extends Document {
   price: number | null | undefined;
   locations:
     | {
-        listType: InclusivityMode;
+        mode: InclusivityMode;
         list: string[];
       }
     | null
@@ -25,7 +25,7 @@ const UserSettingsSchema = new Schema(
     price: Number,
     locations: {
       _id: false,
-      listType: String,
+      mode: String,
       list: {
         type: [String]
       }
