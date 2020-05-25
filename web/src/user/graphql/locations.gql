@@ -1,0 +1,27 @@
+fragment UserLocationsFields on UserLocations {
+  mode
+  list {
+    code
+    name
+  }
+}
+
+query Locations {
+  locations {
+    code
+    name
+  }
+  user {
+    locations {
+      ...UserLocationsFields
+    }
+  }
+}
+
+mutation UpdateLocations($input: UpdateUserLocationsInput!) {
+  updateUserLocations(input: $input) {
+    locations {
+      ...UserLocationsFields
+    }
+  }
+}

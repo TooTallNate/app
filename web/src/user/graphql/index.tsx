@@ -536,6 +536,35 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type UserLocationsFieldsFragment = {
+  __typename?: "UserLocations";
+} & Pick<UserLocations, "mode"> & {
+    list: Array<{ __typename?: "Location" } & Pick<Location, "code" | "name">>;
+  };
+
+export type LocationsQueryVariables = {};
+
+export type LocationsQuery = { __typename?: "Query" } & {
+  locations: Array<
+    { __typename?: "Location" } & Pick<Location, "code" | "name">
+  >;
+  user?: Maybe<
+    { __typename?: "User" } & {
+      locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
+    }
+  >;
+};
+
+export type UpdateLocationsMutationVariables = {
+  input: UpdateUserLocationsInput;
+};
+
+export type UpdateLocationsMutation = { __typename?: "Mutation" } & {
+  updateUserLocations: { __typename?: "UpdateUserLocationsResult" } & {
+    locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
+  };
+};
+
 export type UserPartsFragment = { __typename?: "User" } & Pick<
   User,
   "username" | "name"
@@ -563,12 +592,134 @@ export type LogoutMutation = { __typename?: "Mutation" } & {
   logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
 };
 
+export const UserLocationsFieldsFragmentDoc = gql`
+  fragment UserLocationsFields on UserLocations {
+    mode
+    list {
+      code
+      name
+    }
+  }
+`;
 export const UserPartsFragmentDoc = gql`
   fragment UserParts on User {
     username
     name
   }
 `;
+export const LocationsDocument = gql`
+  query Locations {
+    locations {
+      code
+      name
+    }
+    user {
+      locations {
+        ...UserLocationsFields
+      }
+    }
+  }
+  ${UserLocationsFieldsFragmentDoc}
+`;
+
+/**
+ * __useLocationsQuery__
+ *
+ * To run a query within a React component, call `useLocationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLocationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLocationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLocationsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    LocationsQuery,
+    LocationsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<LocationsQuery, LocationsQueryVariables>(
+    LocationsDocument,
+    baseOptions
+  );
+}
+export function useLocationsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    LocationsQuery,
+    LocationsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
+    LocationsDocument,
+    baseOptions
+  );
+}
+export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
+export type LocationsLazyQueryHookResult = ReturnType<
+  typeof useLocationsLazyQuery
+>;
+export type LocationsQueryResult = ApolloReactCommon.QueryResult<
+  LocationsQuery,
+  LocationsQueryVariables
+>;
+export const UpdateLocationsDocument = gql`
+  mutation UpdateLocations($input: UpdateUserLocationsInput!) {
+    updateUserLocations(input: $input) {
+      locations {
+        ...UserLocationsFields
+      }
+    }
+  }
+  ${UserLocationsFieldsFragmentDoc}
+`;
+export type UpdateLocationsMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateLocationsMutation,
+  UpdateLocationsMutationVariables
+>;
+
+/**
+ * __useUpdateLocationsMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationsMutation, { data, loading, error }] = useUpdateLocationsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLocationsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateLocationsMutation,
+    UpdateLocationsMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateLocationsMutation,
+    UpdateLocationsMutationVariables
+  >(UpdateLocationsDocument, baseOptions);
+}
+export type UpdateLocationsMutationHookResult = ReturnType<
+  typeof useUpdateLocationsMutation
+>;
+export type UpdateLocationsMutationResult = ApolloReactCommon.MutationResult<
+  UpdateLocationsMutation
+>;
+export type UpdateLocationsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateLocationsMutation,
+  UpdateLocationsMutationVariables
+>;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {

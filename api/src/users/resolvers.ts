@@ -123,7 +123,9 @@ export const User: UserResolvers = {
           );
       }
       return {
-        mode: settings.locations.mode as InclusivityMode,
+        mode:
+          (settings.locations.mode as InclusivityMode) ||
+          InclusivityMode.Include,
         list
       };
     } else {
