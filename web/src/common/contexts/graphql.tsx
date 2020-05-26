@@ -4,7 +4,6 @@ import { ApolloProvider } from "react-apollo";
 import { InMemoryCache, defaultDataIdFromObject } from "apollo-cache-inmemory";
 import {
   Job,
-  User,
   Resource,
   FarrowingBackendScorecard,
   PigWean,
@@ -15,20 +14,23 @@ import {
   PigPurchase,
   Animal
 } from "../../user/graphql";
+import { Location } from "../../pig-activity/graphql";
 
 const cache = new InMemoryCache({
   dataIdFromObject: object => {
     switch (object.__typename) {
+      case "UserLocations":
+      case "User":
       case "PigActivityDefaults":
         return object.__typename;
       case "Job":
         return `Job:${(object as Job).number}`;
       case "Animal":
         return `Animal:${(object as Animal).number}`;
-      case "User":
-        return `User:${(object as User).username}`;
       case "Resource":
         return `Resource:${(object as Resource).number}`;
+      case "Location":
+        return `Location:${(object as Location).code}`;
       case "FarrowingBackendScorecard":
         return `FarrowingBackendScorecard:${
           (object as FarrowingBackendScorecard).area.number
