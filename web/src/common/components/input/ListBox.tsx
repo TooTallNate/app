@@ -27,7 +27,7 @@ const ListBox = forwardRef<HTMLUListElement, ListBoxProps>(function ListBox(
           <span className="flex-grow">{displayValue(item)}</span>
           <button
             type="button"
-            className="px-4 w-11 h-full focus:outline-none"
+            className="px-4 w-11 h-full rounded-lg focus:outline-none focus:shadow-outline"
             aria-label={`Remove ${displayValue(item)}`}
             onClick={() => {
               const newValue = value.slice();
