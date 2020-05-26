@@ -23,6 +23,7 @@ import TotalWeightField from "../components/TotalWeightField";
 import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import SmallPigField from "../components/SmallPigField";
 
 interface FormData {
   animal: string;
@@ -134,6 +135,7 @@ const ActivityPurchaseView: React.FC = () => {
             />
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
             <QuantityField />
+            <SmallPigField />
             <TotalWeightField />
             <PriceField />
             <CommentsField />

@@ -243,6 +243,7 @@ export type PigPurchase = {
   animal?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -336,6 +337,7 @@ export type PostPigPurchaseInput = {
   animal: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
   price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
@@ -466,6 +468,7 @@ export type SavePigPurchaseInput = {
   animal?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
+  smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
@@ -1141,6 +1144,11 @@ export type PigPurchaseResolvers<
   animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  smallPigQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
   totalWeight?: Resolver<
     Maybe<ResolversTypes["Float"]>,
     ParentType,
