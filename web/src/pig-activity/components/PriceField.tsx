@@ -15,7 +15,7 @@ const PriceField: React.FC = () => {
     >
       <FormFieldLabel>Price/Pig</FormFieldLabel>
       <FormFieldInput>
-        <NumberInput />
+        <NumberInput className="w-32" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

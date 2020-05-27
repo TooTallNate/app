@@ -35,7 +35,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         name={name}
         step={step}
         className={`
-          flex items-center px-4 h-11 w-full no-spinner
+          flex items-center px-4 h-11 no-spinner
           text-base text-black leading-none 
           border border-gray-500 rounded-lg
           focus:shadow-outline focus:outline-none

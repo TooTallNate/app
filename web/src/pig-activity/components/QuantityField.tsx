@@ -15,7 +15,7 @@ const QuantityField: React.FC = () => {
     >
       <FormFieldLabel>Total Quantity</FormFieldLabel>
       <FormFieldInput>
-        <NumberInput />
+        <NumberInput className="w-32" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

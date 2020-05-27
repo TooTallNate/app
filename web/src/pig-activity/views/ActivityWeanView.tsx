@@ -20,9 +20,8 @@ import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
-import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
-import SmallPigField from "../components/SmallPigField";
+import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
@@ -146,8 +145,7 @@ const ActivityWeanView: React.FC = () => {
                 animals={data.pigTypes.filter(type => type.number !== "03")}
               />
             )}
-            <QuantityField />
-            <SmallPigField />
+            <QuantityAndSmallsField />
             <TotalWeightField />
             <PriceField />
             <CommentsField />

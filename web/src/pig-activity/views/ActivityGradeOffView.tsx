@@ -230,7 +230,7 @@ const ActivityGradeOffView: React.FC = () => {
                             focusedReason.current === code ? onInputAdded : null
                           }
                         >
-                          <NumberInput className="rounded-r-none" />
+                          <NumberInput className="rounded-r-none w-32" />
                         </FormFieldInput>
                         <Button
                           className="rounded-l-none"

@@ -77,33 +77,36 @@ const StackedInput = forwardRef<StackedButtonInputRef, StackedButtonInputProps>(
       <div
         aria-labelledby={props["aria-labelledby"]}
         role="group"
-        className={`
-        flex rounded-lg border border-gray-500 overflow-hidden
-        focus-within:shadow-outline
-        ${orientation === "vertical" ? "flex-col" : ""}
-        ${className}
-      `}
+        className={className}
       >
-        <StackedInputContext.Provider
-          value={{
-            orientation,
-            name,
-            onChange,
-            selected: value
-          }}
+        <div
+          className={`
+            inline-flex rounded-lg border border-gray-500 overflow-hidden
+            focus-within:shadow-outline
+            ${orientation === "vertical" ? "flex-col" : ""}
+          `}
         >
-          {React.Children.map(children, (child, i) => {
-            if (i === 0 && React.isValidElement(child)) {
-              return React.cloneElement(child, {
-                ref: (value: any) => {
-                  (firstElement.current as any) = value;
-                }
-              });
-            } else {
-              return child;
-            }
-          })}
-        </StackedInputContext.Provider>
+          <StackedInputContext.Provider
+            value={{
+              orientation,
+              name,
+              onChange,
+              selected: value
+            }}
+          >
+            {React.Children.map(children, (child, i) => {
+              if (i === 0 && React.isValidElement(child)) {
+                return React.cloneElement(child, {
+                  ref: (value: any) => {
+                    (firstElement.current as any) = value;
+                  }
+                });
+              } else {
+                return child;
+              }
+            })}
+          </StackedInputContext.Provider>
+        </div>
       </div>
     );
   }

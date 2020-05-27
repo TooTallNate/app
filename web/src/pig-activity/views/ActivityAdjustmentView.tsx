@@ -159,7 +159,10 @@ const ActivityAdjustmentView: React.FC = () => {
                   {quantitySign > 0 ? "+" : "-"}
                 </Button>
                 <FormFieldInput>
-                  <NumberInput aria-describedby="quantity-sign" />
+                  <NumberInput
+                    aria-describedby="quantity-sign"
+                    className="w-24"
+                  />
                 </FormFieldInput>
               </div>
               <FormFieldErrors />
