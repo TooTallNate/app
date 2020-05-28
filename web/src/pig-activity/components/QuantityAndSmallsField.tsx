@@ -18,14 +18,7 @@ interface FormData {
 }
 
 const QuantityAndSmallsField: React.FC = () => {
-  const { getValues, watch } = useFormContext<FormData>();
-  const { quantity = 0, smallPigQuantity = 0 } = watch([
-    "quantity",
-    "smallPigQuantity"
-  ]);
-  const smallPigRatio =
-    100 * Math.min(1, quantity ? smallPigQuantity / quantity : 0);
-  const smallPigPercent = `${smallPigRatio.toFixed(2)}%`;
+  const { getValues } = useFormContext<FormData>();
 
   return (
     <FormGroup>
@@ -49,17 +42,14 @@ const QuantityAndSmallsField: React.FC = () => {
             name="smallPigQuantity"
             rules={{
               validate: (value: number = 0) =>
-                value <= getValues().quantity ||
+                value <= (getValues("quantity") || 0) ||
                 "The small pig quantity field must not be more than the total quantity."
             }}
           >
             <FormFieldLabel>Smalls</FormFieldLabel>
-            <div className="flex items-center">
-              <FormFieldInput>
-                <NumberInput className="w-24" />
-              </FormFieldInput>
-              <div className="ml-4">{smallPigPercent}</div>
-            </div>
+            <FormFieldInput>
+              <NumberInput className="w-32" />
+            </FormFieldInput>
             <FormFieldErrors />
           </FormField>
         </div>
