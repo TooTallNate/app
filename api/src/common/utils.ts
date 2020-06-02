@@ -21,6 +21,7 @@ export function parseNavDate(dateStr: string) {
 
 export enum ErrorCode {
   Unauthorized = "UNAUTHORIZED",
+  Unauthenticated = "UNAUTHENTICATED",
   InvalidCredentials = "INVALID_CREDENTIALS",
   NoAvailableLicense = "NO_AVAILABLE_LICENSE",
   Unknown = "UNKNOWN_ERROR"

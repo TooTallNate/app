@@ -5,6 +5,7 @@ import { ErrorCode } from "../src/common/utils";
 import { schema } from "../src/server";
 import { ApolloServer } from "apollo-server-express";
 import { createContext } from "../src/context";
+import dataSources from "../src/common/datasources";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -20,6 +21,7 @@ global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
 export const getUser = jest.fn().mockReturnValue(undefined);
 const server = new ApolloServer({
   schema,
+  dataSources,
   context: () =>
     createContext({
       req: {

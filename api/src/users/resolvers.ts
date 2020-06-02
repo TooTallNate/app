@@ -4,18 +4,15 @@ import {
   QueryResolvers,
   InclusivityMode
 } from "../common/graphql";
-import { NavUser, Guid, NavErrorCode, NavLocation } from "../common/nav";
-import { ErrorCode } from "../common/utils";
+import { NavLocation } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
 
 export const queries: QueryResolvers = {
-  async user(_, __, { user, navClient }) {
+  async user(_, __, { user, dataSources }) {
     if (user) {
-      return await navClient
-        .resource("User", new Guid(user.securityId))
-        .get<NavUser>();
+      return await dataSources.userNavApi.getBySecurityID(user.securityId);
     } else {
       return null;
     }
@@ -29,32 +26,24 @@ export const queries: QueryResolvers = {
 };
 
 export const mutations: MutationResolvers = {
-  async login(_, { input: { username, password } }, { session, navClient }) {
-    navClient.auth(username, password);
-    try {
-      var users = await navClient
-        .resource("User")
-        .get<NavUser[]>()
-        .filter(f => f.equals("User_Name", username));
-    } catch (error) {
-      switch (error.code) {
-        case NavErrorCode.InvalidCredentials:
-          throw new Error(ErrorCode.InvalidCredentials);
-        case NavErrorCode.NoAvailableLicense:
-          throw new Error(ErrorCode.NoAvailableLicense);
-        default:
-          throw error;
-      }
-    }
-    session.user = {
-      username: users[0].User_Name,
+  async login(_, { input: { username, password } }, context) {
+    context.user = {
+      username,
+      password
+    } as any;
+    const { dataSources, session } = context;
+    const user = await dataSources.userNavApi.getByUsername(username);
+    const sessionUser = {
+      username: user.User_Name,
       password,
-      name: users[0].Full_Name,
-      securityId: users[0].User_Security_ID
+      name: user.Full_Name,
+      securityId: user.User_Security_ID
     };
+    context.user = sessionUser;
+    session.user = sessionUser;
     return {
       success: true,
-      user: users[0]
+      user
     };
   },
   async logout(_, __, context) {

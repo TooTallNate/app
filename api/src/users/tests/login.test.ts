@@ -24,8 +24,8 @@ test("returns user data if login is successful", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get("/User")
-    .query({ $filter: `(User_Name eq '${user.User_Name}')` })
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(200, { value: [user] });
 
@@ -47,8 +47,8 @@ test("returns with error if credentials are incorrect", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get("/User")
-    .query({ $filter: `(User_Name eq '${user.User_Name}')` })
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(401, {
       error: {
@@ -65,7 +65,10 @@ test("returns with error if credentials are incorrect", async () => {
     data: null,
     errors: [
       expect.objectContaining({
-        message: ErrorCode.InvalidCredentials
+        message: expect.any(String),
+        extensions: expect.objectContaining({
+          code: ErrorCode.Unauthenticated
+        })
       })
     ]
   });
@@ -75,13 +78,14 @@ test("returns with error if too many users are logged in", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get("/User")
-    .query({ $filter: `(User_Name eq '${user.User_Name}')` })
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(401, {
       error: {
-        code: NavErrorCode.NoAvailableLicense,
-        message: "There is not a license for you."
+        code: NavErrorCode.Unknown,
+        message:
+          "Your program license does not permit more users to work simultaneously"
       }
     });
 
@@ -93,7 +97,10 @@ test("returns with error if too many users are logged in", async () => {
     data: null,
     errors: [
       expect.objectContaining({
-        message: ErrorCode.NoAvailableLicense
+        message: expect.any(String),
+        extensions: expect.objectContaining({
+          code: ErrorCode.NoAvailableLicense
+        })
       })
     ]
   });

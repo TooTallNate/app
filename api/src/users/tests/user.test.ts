@@ -20,7 +20,9 @@ test("returns user data for a logged in user", async () => {
   const { user, auth } = await mockUser();
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/User(${user.User_Security_ID})`)
+    .get(
+      `/Company(%27${process.env.NAV_COMPANY}%27)/User(${user.User_Security_ID})`
+    )
     .basicAuth(auth)
     .reply(200, user);
 

@@ -10,6 +10,7 @@ import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
 import { applyMiddleware, IMiddlewareFunction } from "graphql-middleware";
 import { ErrorCode } from "./common/utils";
+import dataSources from "./common/datasources";
 
 const typeDefs = fs.readFileSync(
   path.join(__dirname, "schema.graphql"),
@@ -72,6 +73,7 @@ export default () => {
 
   const server = new ApolloServer({
     schema,
+    dataSources,
     context: createContext
   });
 

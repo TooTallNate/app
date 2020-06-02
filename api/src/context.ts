@@ -1,4 +1,5 @@
 import { ODataClient } from "./common/nav";
+import UserNavDataSource from "./common/datasources/UserNavDataSource";
 
 export interface SessionUser {
   username: string;
@@ -10,6 +11,9 @@ export interface SessionUser {
 export type Session = Express.Session & { user?: SessionUser };
 
 export interface GraphqlContext {
+  dataSources: {
+    userNavApi: UserNavDataSource;
+  };
   session: Session;
   user: SessionUser;
   navClient: ODataClient;
@@ -21,7 +25,9 @@ export interface CreateContextOptions {
   };
 }
 
-export function createContext({ req }: CreateContextOptions): GraphqlContext {
+export function createContext({
+  req
+}: CreateContextOptions): Omit<GraphqlContext, "dataSources"> {
   const navClient = new ODataClient({
     serviceRoot: process.env.NAV_BASE_URL
   });
