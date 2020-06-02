@@ -37,6 +37,7 @@ test("returns areas for the farrowing backend", async () => {
       )
       .basicAuth(auth)
       .reply(200, resource)
+      .persist()
   );
 
   nock(process.env.NAV_BASE_URL)
@@ -45,7 +46,8 @@ test("returns areas for the farrowing backend", async () => {
       $filter: `((Status eq 'Open') and (Job_Posting_Group eq 'FARROW-BE'))`
     })
     .basicAuth(auth)
-    .reply(200, { value: areas });
+    .reply(200, { value: areas })
+    .persist();
 
   await expect(query()).resolves.toEqual({
     farrowingBackendAreas: areas.map((area, i) => ({

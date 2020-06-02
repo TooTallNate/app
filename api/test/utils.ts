@@ -1,10 +1,10 @@
 import faker from "faker";
-import nock from "nock";
-import { GraphQLClient } from "graphql-request";
+import { createTestClient } from "apollo-server-testing";
 import { UserFactory } from "../test/builders";
 import { ErrorCode } from "../src/common/utils";
-
-const port = process.env.PORT;
+import { schema } from "../src/server";
+import { ApolloServer } from "apollo-server-express";
+import { createContext } from "../src/context";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -17,7 +17,42 @@ declare global {
 
 global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
 
-export const client = new GraphQLClient(`http://localhost:${port}`);
+export const getUser = jest.fn().mockReturnValue(undefined);
+const server = new ApolloServer({
+  schema,
+  context: () =>
+    createContext({
+      req: {
+        session: {
+          destroy: jest.fn().mockImplementation(cb => cb()),
+          user: getUser()
+        } as any
+      }
+    })
+});
+
+const _client = createTestClient(server);
+export const client = {
+  async request<T = any>(queryOrMutation: string, variables?: any): Promise<T> {
+    let result;
+    if (queryOrMutation.includes("mutation")) {
+      result = await _client.mutate({
+        mutation: queryOrMutation,
+        variables
+      });
+    } else {
+      result = await _client.query({
+        query: queryOrMutation,
+        variables
+      });
+    }
+    if (!result.errors) {
+      return result.data as T;
+    } else {
+      throw result;
+    }
+  }
+};
 
 export async function mockUser({ login = true } = {}) {
   const user = UserFactory.build();
@@ -29,27 +64,12 @@ export async function mockUser({ login = true } = {}) {
   };
 
   if (login) {
-    nock(process.env.NAV_BASE_URL)
-      .get("/User")
-      .query({ $filter: `(User_Name eq '${user.User_Name}')` })
-      .basicAuth(auth)
-      .reply(200, { value: [user] });
-
-    await client.request(
-      `mutation Login($input: LoginInput!) {
-        login(input: $input) {
-          user {
-            username
-          }
-        }
-      }`,
-      {
-        input: {
-          username: user.User_Name,
-          password
-        }
-      }
-    );
+    getUser.mockReturnValue({
+      securityId: user.User_Security_ID,
+      username: user.User_Name,
+      name: user.Full_Name,
+      password
+    });
   }
 
   return {
@@ -65,14 +85,42 @@ export function testUnauthenticated(
 ): void {
   test("returns with error if unauthenticated", async () => {
     await expect(queryOrMutation()).rejects.toMatchObject({
-      response: {
-        data,
-        errors: [
-          expect.objectContaining({
-            message: ErrorCode.Unauthorized
-          })
-        ]
-      }
+      data,
+      errors: [
+        expect.objectContaining({
+          message: ErrorCode.Unauthorized
+        })
+      ]
     });
   });
 }
+
+// export async function buildQuery(
+//   query: string,
+//   variables?: object
+// ): Promise<any> {
+//   const r = await client.query({
+//     query,
+//     variables
+//   });
+//   if (r.data) {
+//     return r.data;
+//   } else {
+//     throw r;
+//   }
+// }
+
+// export async function buildMutation(
+//   mutation: string,
+//   variables?: object
+// ): Promise<any> {
+//   const r = await client.mutate({
+//     mutation,
+//     variables
+//   });
+//   if (r.data) {
+//     return r.data;
+//   } else {
+//     throw r;
+//   }
+// }

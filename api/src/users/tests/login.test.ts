@@ -62,14 +62,12 @@ test("returns with error if credentials are incorrect", async () => {
       input: { username: user.User_Name, password }
     })
   ).rejects.toMatchObject({
-    response: {
-      data: null,
-      errors: [
-        expect.objectContaining({
-          message: ErrorCode.InvalidCredentials
-        })
-      ]
-    }
+    data: null,
+    errors: [
+      expect.objectContaining({
+        message: ErrorCode.InvalidCredentials
+      })
+    ]
   });
 });
 
@@ -92,13 +90,11 @@ test("returns with error if too many users are logged in", async () => {
       input: { username: user.User_Name, password }
     })
   ).rejects.toMatchObject({
-    response: {
-      data: null,
-      errors: [
-        expect.objectContaining({
-          message: ErrorCode.NoAvailableLicense
-        })
-      ]
-    }
+    data: null,
+    errors: [
+      expect.objectContaining({
+        message: ErrorCode.NoAvailableLicense
+      })
+    ]
   });
 });

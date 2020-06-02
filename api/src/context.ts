@@ -16,24 +16,22 @@ export interface GraphqlContext {
 }
 
 export interface CreateContextOptions {
-  request: {
+  req: {
     session: Session;
   };
 }
 
-export function createContext({
-  request
-}: CreateContextOptions): GraphqlContext {
+export function createContext({ req }: CreateContextOptions): GraphqlContext {
   const navClient = new ODataClient({
     serviceRoot: process.env.NAV_BASE_URL
   });
-  if (request.session.user) {
-    const { username, password } = request.session.user;
+  if (req.session.user) {
+    const { username, password } = req.session.user;
     navClient.auth(username, password);
   }
   return {
-    session: request.session,
-    user: request.session.user as SessionUser,
+    session: req.session,
+    user: req.session.user as SessionUser,
     navClient
   };
 }
