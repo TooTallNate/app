@@ -7,7 +7,7 @@ export interface JobFilter {
   includeLocations?: string[];
 }
 
-const pigJobFilter = buildFilterFragment(f =>
+const jobFilter = buildFilterFragment(f =>
   f.and(
     f.equals("Status", "Open"),
     f.or(
@@ -27,16 +27,16 @@ export default class PigJobNavDataSource extends NavDataSource {
     let odataFilter = this.buildFilter(f => {
       if (includeLocations) {
         return f.and(
-          pigJobFilter,
+          jobFilter,
           f.or(...includeLocations.map(loc => f.equals("Site", loc)))
         );
       } else if (excludeLocations) {
         return f.and(
-          pigJobFilter,
+          jobFilter,
           f.and(...excludeLocations.map(loc => f.notEquals("Site", loc)))
         );
       } else {
-        return pigJobFilter;
+        return jobFilter;
       }
     });
     return this.get(`/Jobs?$filter=${odataFilter}`);
