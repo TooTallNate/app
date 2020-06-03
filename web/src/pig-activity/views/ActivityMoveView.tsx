@@ -27,9 +27,11 @@ import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
-import QuantityField from "../components/QuantityField";
-import SmallPigField from "../components/SmallPigField";
+import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import FormGroupContent from "../../common/components/form/FormGroupContent";
+import FormGroupLabel from "../../common/components/form/FormGroupLabel";
+import FormGroup from "../../common/components/form/FormGroup";
 
 interface FormData {
   fromAnimal: string;
@@ -176,52 +178,54 @@ const ActivityMoveView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             {isSowFarm && (
-              <div className="flex">
-                <FormField
-                  className="w-full"
-                  name="fromAnimal"
-                  rules={{ required: "The from animal field is required." }}
-                >
-                  <FormFieldLabel>From Animal</FormFieldLabel>
-                  <FormFieldInput>
-                    <StackedInput orientation="vertical">
-                      {data.pigTypes.map(type => (
-                        <StackedRadioButton
-                          value={type.number}
-                          key={type.number}
-                        >
-                          {type.description}
-                        </StackedRadioButton>
-                      ))}
-                    </StackedInput>
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <HorizontalSpacer />
-                <FormField
-                  className="w-full"
-                  name="toAnimal"
-                  rules={{ required: "The to animal field is required." }}
-                >
-                  <FormFieldLabel>To Animal</FormFieldLabel>
-                  <FormFieldInput>
-                    <StackedInput orientation="vertical">
-                      {data.pigTypes.map(type => (
-                        <StackedRadioButton
-                          value={type.number}
-                          key={type.number}
-                        >
-                          {type.description}
-                        </StackedRadioButton>
-                      ))}
-                    </StackedInput>
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-              </div>
+              <FormGroup>
+                <FormGroupLabel>Animal</FormGroupLabel>
+                <FormGroupContent>
+                  <div className="flex">
+                    <FormField
+                      name="fromAnimal"
+                      rules={{ required: "The from animal field is required." }}
+                    >
+                      <FormFieldLabel>From</FormFieldLabel>
+                      <FormFieldInput>
+                        <StackedInput orientation="vertical">
+                          {data.pigTypes.map(type => (
+                            <StackedRadioButton
+                              value={type.number}
+                              key={type.number}
+                            >
+                              {type.description}
+                            </StackedRadioButton>
+                          ))}
+                        </StackedInput>
+                      </FormFieldInput>
+                      <FormFieldErrors />
+                    </FormField>
+                    <HorizontalSpacer />
+                    <FormField
+                      name="toAnimal"
+                      rules={{ required: "The to animal field is required." }}
+                    >
+                      <FormFieldLabel>To</FormFieldLabel>
+                      <FormFieldInput>
+                        <StackedInput orientation="vertical">
+                          {data.pigTypes.map(type => (
+                            <StackedRadioButton
+                              value={type.number}
+                              key={type.number}
+                            >
+                              {type.description}
+                            </StackedRadioButton>
+                          ))}
+                        </StackedInput>
+                      </FormFieldInput>
+                      <FormFieldErrors />
+                    </FormField>
+                  </div>
+                </FormGroupContent>
+              </FormGroup>
             )}
-            <QuantityField />
-            <SmallPigField />
+            <QuantityAndSmallsField />
             <TotalWeightField />
             <PriceField />
             <CommentsField />

@@ -162,6 +162,7 @@ type PigPurchase {
   animal: String
   job: Job!
   quantity: Int
+  smallPigQuantity: Int
   totalWeight: Float
   price: Float
   comments: String
@@ -171,6 +172,7 @@ input PostPigPurchaseInput {
   animal: String!
   job: String!
   quantity: Int!
+  smallPigQuantity: Int
   totalWeight: Float!
   price: Float!
   comments: String
@@ -180,6 +182,7 @@ input SavePigPurchaseInput {
   animal: String
   job: String!
   quantity: Int
+  smallPigQuantity: Int
   totalWeight: Float
   price: Float
   comments: String

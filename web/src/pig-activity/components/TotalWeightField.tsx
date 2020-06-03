@@ -15,7 +15,7 @@ const TotalWeightField: React.FC = () => {
     >
       <FormFieldLabel>Total Weight</FormFieldLabel>
       <FormFieldInput>
-        <NumberInput />
+        <NumberInput className="w-32" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

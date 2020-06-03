@@ -65,7 +65,8 @@ export const PigPurchaseMutations: MutationResolvers = {
         Weight: input.totalWeight,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Meta: input.smallPigQuantity
       },
       navClient
     );

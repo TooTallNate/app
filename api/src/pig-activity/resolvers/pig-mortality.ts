@@ -72,6 +72,7 @@ export const PigMortalityMutations: MutationResolvers = {
           Quantity: input.naturalQuantity,
           Weight: input.naturalQuantity * weight,
           Job_No: input.job,
+          Gen_Prod_Posting_Group: "DEADS",
           Shortcut_Dimension_1_Code: job.Entity,
           Shortcut_Dimension_2_Code: job.Cost_Center,
           Reason_Code: NavReasonCode.NaturalDeath
@@ -92,6 +93,7 @@ export const PigMortalityMutations: MutationResolvers = {
           Quantity: input.euthanizedQuantity,
           Weight: input.euthanizedQuantity * weight,
           Job_No: input.job,
+          Gen_Prod_Posting_Group: "DEADS",
           Shortcut_Dimension_1_Code: job.Entity,
           Shortcut_Dimension_2_Code: job.Cost_Center,
           Reason_Code: NavReasonCode.Euthanized

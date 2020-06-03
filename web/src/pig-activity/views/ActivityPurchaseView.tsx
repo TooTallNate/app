@@ -20,9 +20,9 @@ import InventoryField from "../components/InventoryField";
 import AnimalField from "../components/AnimalField";
 import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
-import QuantityField from "../components/QuantityField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 
 interface FormData {
   animal: string;
@@ -133,7 +133,7 @@ const ActivityPurchaseView: React.FC = () => {
               deadQuantity={data.pigPurchase.job.deadQuantity || 0}
             />
             {isSowFarm && <AnimalField animals={data.pigTypes} />}
-            <QuantityField />
+            <QuantityAndSmallsField />
             <TotalWeightField />
             <PriceField />
             <CommentsField />

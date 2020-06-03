@@ -152,6 +152,9 @@ export const PigPurchaseFactory = Factory.Sync.makeFactory({
   animal: Factory.each(() => oneOf("01", "02", "03")),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
+  smallPigQuantity: Factory.each(() =>
+    faker.random.number({ min: 1, max: 50 })
+  ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))

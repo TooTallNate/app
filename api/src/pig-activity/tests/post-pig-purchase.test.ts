@@ -30,6 +30,7 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           }
           animal
           quantity
+          smallPigQuantity
           totalWeight
           price
           comments
@@ -84,7 +85,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
-      Document_Date: date
+      Document_Date: date,
+      Meta: input.smallPigQuantity
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -115,6 +117,7 @@ test("submits data to NAV and creates new user settings and purchase documents",
         animal: null,
         quantity: null,
         totalWeight: null,
+        smallPigQuantity: null,
         price: null,
         comments: null
       },
@@ -173,6 +176,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
@@ -215,6 +219,7 @@ test("submits data to NAV and clears existing purchase document", async () => {
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
@@ -254,6 +259,7 @@ test("sets description to an empty string if there are no comments", async () =>
         },
         animal: null,
         quantity: null,
+        smallPigQuantity: null,
         totalWeight: null,
         price: null,
         comments: null
