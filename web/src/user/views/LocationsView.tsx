@@ -141,6 +141,7 @@ const LocationsView: React.FC = () => {
             <FormFieldLabel>Locations</FormFieldLabel>
             <FormFieldInput>
               <ListBox
+                className="h-64"
                 displayValue={(item: Location) => item.name}
                 elementKey={item => item.code}
               />

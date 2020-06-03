@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ListBoxProps {
+  className?: string;
   value?: any[];
   displayValue?(item: any): string;
   elementKey?(item: any): any;
@@ -12,6 +13,7 @@ interface ListBoxProps {
 
 const ListBox = forwardRef<HTMLUListElement, ListBoxProps>(function ListBox(
   {
+    className,
     value = [],
     displayValue = item => item,
     elementKey = item => item,
@@ -21,7 +23,14 @@ const ListBox = forwardRef<HTMLUListElement, ListBoxProps>(function ListBox(
   ref
 ) {
   return (
-    <ul className="rounded-lg border border-gray-500" ref={ref} {...props}>
+    <ul
+      className={`
+        rounded-lg border border-gray-500 overflow-x-auto
+        ${className || ""}
+      `}
+      ref={ref}
+      {...props}
+    >
       {value.map((item, i) => (
         <li className="h-11 pl-4 flex items-center" key={i}>
           <span className="flex-grow">{displayValue(item)}</span>
