@@ -5,7 +5,6 @@ import {
   ResourceResolvers,
   LocationResolvers
 } from "./graphql";
-import { NavResource } from "./nav";
 
 const Resource: ResourceResolvers = {
   number: resource => resource.No,
@@ -15,11 +14,8 @@ const Resource: ResourceResolvers = {
 const Job: JobResolvers = {
   number: job => job.No,
   description: job => job.Description,
-  personResponsible(job, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Resources", job.Person_Responsible)
-      .get<NavResource>();
+  personResponsible(job, _, { dataSources }) {
+    return dataSources.resourceNavApi.getByCode(job.Person_Responsible);
   },
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity

@@ -27,7 +27,7 @@ test("returns areas for the farrowing backend", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Resources`)
     .query({
-      $filter: `(Resource_Group_No eq 'FARROW-BE')`
+      $filter: `(((Resource_Group_No eq 'FARROW-BE')))`
     })
     .basicAuth(auth)
     .reply(200, { value: resources })

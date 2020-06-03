@@ -66,12 +66,10 @@ export const queries: QueryResolvers = {
   farrowingBackendArea(_, { number }, { dataSources }) {
     return dataSources.farrowBackendJobNavApi.getByNo(number);
   },
-  farrowingBackendOperators(_, __, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Resources")
-      .get<NavResource[]>()
-      .filter(f => f.equals("Resource_Group_No", "FARROW-BE"));
+  farrowingBackendOperators(_, __, { dataSources }) {
+    return dataSources.resourceNavApi.getAll({
+      groups: ["FARROW-BE"]
+    });
   }
 };
 

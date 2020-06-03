@@ -2,6 +2,7 @@ import UserNavDataSource from "./UserNavDataSource";
 import LocationNavDataSource from "./LocationNavDataSource";
 import PigJobNavDataSource from "./PigJobNavDataSource";
 import FarrowBackendJobNavDataSource from "./FarrowBackendJobNavDataSource";
+import ResourceNavDataSource from "./ResourceNavDataSource";
 
 export interface DataSources {
   [source: string]: any;
@@ -9,6 +10,7 @@ export interface DataSources {
   locationNavApi: LocationNavDataSource;
   pigJobNavApi: PigJobNavDataSource;
   farrowBackendJobNavApi: FarrowBackendJobNavDataSource;
+  resourceNavApi: ResourceNavDataSource;
 }
 
 export default (): DataSources => {
@@ -16,6 +18,7 @@ export default (): DataSources => {
     userNavApi: new UserNavDataSource(),
     locationNavApi: new LocationNavDataSource(),
     pigJobNavApi: new PigJobNavDataSource(),
-    farrowBackendJobNavApi: new FarrowBackendJobNavDataSource()
+    farrowBackendJobNavApi: new FarrowBackendJobNavDataSource(),
+    resourceNavApi: new ResourceNavDataSource()
   };
 };
