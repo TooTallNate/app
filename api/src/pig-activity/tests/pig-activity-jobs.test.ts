@@ -61,7 +61,7 @@ test("filters jobs by site inclusion", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
     .query({
-      $filter: `((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU')) and ((Site eq 'site1') or (Site eq 'site2')))`
+      $filter: `(((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU'))) and ((Site eq 'site1') or (Site eq 'site2')))`
     })
     .basicAuth(auth)
     .reply(200, { value: jobs });
@@ -92,7 +92,7 @@ test("filters jobs by site exclusion", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
     .query({
-      $filter: `((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU')) and ((Site ne 'site1') and (Site ne 'site2')))`
+      $filter: `(((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU'))) and ((Site ne 'site1') and (Site ne 'site2')))`
     })
     .basicAuth(auth)
     .reply(200, { value: jobs });

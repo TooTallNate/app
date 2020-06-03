@@ -6,19 +6,15 @@ import {
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavEntryType,
-  NavJob
+  NavEntryType
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigWean: PigWeanResolvers = {
-  job(pigWean, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigWean.job)
-      .get<NavJob>();
+  job(pigWean, _, { dataSources }) {
+    return dataSources.pigJobNavApi.getByNo(pigWean.job);
   }
 };
 
@@ -44,11 +40,8 @@ export const PigWeanMutations: MutationResolvers = {
 
     return { success: true, pigWean: doc, defaults: userSettings };
   },
-  async postPigWean(_, { input }, { user, navClient }) {
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
-      .get<NavJob>();
+  async postPigWean(_, { input }, { user, dataSources, navClient }) {
+    const job = await dataSources.pigJobNavApi.getByNo(input.job);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,

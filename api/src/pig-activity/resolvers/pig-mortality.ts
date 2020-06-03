@@ -7,7 +7,6 @@ import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
-  NavJob,
   NavReasonCode
 } from "../../common/nav";
 import { getDocumentNumber, parseNavDate } from "../../common/utils";
@@ -16,11 +15,8 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 import { differenceInDays } from "date-fns";
 
 export const PigMortality: PigMortalityResolvers = {
-  job(pigMortality, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigMortality.job)
-      .get<NavJob>();
+  job(pigMortality, _, { dataSources }) {
+    return dataSources.pigJobNavApi.getByNo(pigMortality.job);
   }
 };
 
@@ -49,12 +45,9 @@ export const PigMortalityMutations: MutationResolvers = {
 
     return { success: true, pigMortality: doc, defaults: userSettings };
   },
-  async postPigMortality(_, { input }, { user, navClient }) {
+  async postPigMortality(_, { input }, { user, dataSources, navClient }) {
     const docNo = getDocumentNumber("MORT", user.name);
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
-      .get<NavJob>();
+    const job = await dataSources.pigJobNavApi.getByNo(input.job);
     const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
     const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
     const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));

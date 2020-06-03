@@ -6,19 +6,15 @@ import {
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavEntryType,
-  NavJob
+  NavEntryType
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigPurchaseModel from "../models/PigPurchase";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigPurchase: PigPurchaseResolvers = {
-  job(pigPurchase, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigPurchase.job)
-      .get<NavJob>();
+  job(pigPurchase, _, { dataSources }) {
+    return dataSources.pigJobNavApi.getByNo(pigPurchase.job);
   }
 };
 
@@ -46,11 +42,8 @@ export const PigPurchaseMutations: MutationResolvers = {
 
     return { success: true, pigPurchase: doc, defaults: userSettings };
   },
-  async postPigPurchase(_, { input }, { user, navClient }) {
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
-      .get<NavJob>();
+  async postPigPurchase(_, { input }, { user, dataSources, navClient }) {
+    const job = await dataSources.pigJobNavApi.getByNo(input.job);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,

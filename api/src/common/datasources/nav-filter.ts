@@ -109,6 +109,10 @@ export interface FilterFunction {
   (f: FilterFunctionArgument): BooleanFilterExpression;
 }
 
+export interface FilterFragmentFunction<T> {
+  (f: FilterFunctionArgument): T;
+}
+
 function buildFilterExpression(
   expression:
     | BooleanFilterExpression
@@ -152,8 +156,8 @@ function buildFilterExpression(
   }
 }
 
-export function compileFilter(fn: FilterFunction): string {
-  const expression = fn({
+export function buildFilterFragment<T>(fn: FilterFragmentFunction<T>): T {
+  return fn({
     equals: (arg1, arg2) => ({ operator: "eq", arg1, arg2 }),
     notEquals: (arg1, arg2) => ({ operator: "ne", arg1, arg2 }),
     lessThan: (arg1, arg2) => ({ operator: "lt", arg1, arg2 }),
@@ -164,5 +168,9 @@ export function compileFilter(fn: FilterFunction): string {
     or: (...args) => ({ operator: "or", args }),
     startsWith: (arg1, arg2) => ({ operator: "startswith", arg1, arg2 })
   });
+}
+
+export function compileFilter(fn: FilterFunction): string {
+  const expression = buildFilterFragment(fn);
   return buildFilterExpression(expression);
 }

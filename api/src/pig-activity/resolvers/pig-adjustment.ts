@@ -6,19 +6,15 @@ import {
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavEntryType,
-  NavJob
+  NavEntryType
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigAdjustmentModel from "../models/PigAdjustment";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigAdjustment: PigAdjustmentResolvers = {
-  job(pigAdjustment, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigAdjustment.job)
-      .get<NavJob>();
+  job(pigAdjustment, _, { dataSources }) {
+    return dataSources.pigJobNavApi.getByNo(pigAdjustment.job);
   }
 };
 
@@ -48,11 +44,8 @@ export const PigAdjustmentMutations: MutationResolvers = {
 
     return { success: true, pigAdjustment: doc, defaults: userSettings };
   },
-  async postPigAdjustment(_, { input }, { user, navClient }) {
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
-      .get<NavJob>();
+  async postPigAdjustment(_, { input }, { user, dataSources, navClient }) {
+    const job = await dataSources.pigJobNavApi.getByNo(input.job);
 
     await postItemJournal(
       {

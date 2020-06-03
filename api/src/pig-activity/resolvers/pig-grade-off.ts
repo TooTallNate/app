@@ -7,7 +7,6 @@ import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
-  NavJob,
   NavReason,
   NavReasonCode
 } from "../../common/nav";
@@ -16,11 +15,8 @@ import PigGradeOffModel from "../models/PigGradeOff";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigGradeOff: PigGradeOffResolvers = {
-  job(pigGradeoff, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigGradeoff.job)
-      .get<NavJob>();
+  job(pigGradeOff, _, { dataSources }) {
+    return dataSources.pigJobNavApi.getByNo(pigGradeOff.job);
   },
   quantities: pigGradeOff => pigGradeOff.quantities || []
 };
@@ -56,11 +52,8 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
-  async postPigGradeOff(_, { input }, { user, navClient }) {
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.job)
-      .get<NavJob>();
+  async postPigGradeOff(_, { input }, { user, dataSources, navClient }) {
+    const job = await dataSources.pigJobNavApi.getByNo(input.job);
 
     for (const entry of input.quantities) {
       if (entry.quantity > 0) {

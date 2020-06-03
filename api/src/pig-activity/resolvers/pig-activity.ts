@@ -3,20 +3,12 @@ import {
   PigActivityDefaultsResolvers,
   InclusivityMode
 } from "../../common/graphql";
-import {
-  NavItemJournalEntry,
-  ODataClient,
-  NavJob,
-  NavAnimal
-} from "../../common/nav";
+import { NavItemJournalEntry, ODataClient, NavAnimal } from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
-import {
-  BooleanFilterExpression,
-  FilterFunctionArgument
-} from "../../common/nav/filter";
+import { JobFilter } from "../../common/datasources/PigJobNavDataSource";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
@@ -50,12 +42,9 @@ export async function updateUserSettings({
 }
 
 export const PigActivityDefaults: PigActivityDefaultsResolvers = {
-  job(userSettings, _, { navClient }) {
+  job(userSettings, _, { dataSources }) {
     if (userSettings && userSettings.pigJob) {
-      return navClient
-        .resource("Company", process.env.NAV_COMPANY)
-        .resource("Jobs", userSettings.pigJob)
-        .get<NavJob>();
+      return dataSources.pigJobNavApi.getByNo(userSettings.pigJob);
     } else {
       return null;
     }
@@ -70,42 +59,19 @@ export const PigActivityQueries: QueryResolvers = {
       .resource("PigTypes")
       .get<NavAnimal[]>();
   },
-  async pigActivityJobs(_, __, { user, navClient }) {
+  async pigActivityJobs(_, __, { user, dataSources }) {
     const settings = await UserSettingsModel.findOne({
       username: user.username
     });
-    function filter(f: FilterFunctionArgument) {
-      let filters: BooleanFilterExpression[] = [
-        f.equals("Status", "Open"),
-        f.or(
-          f.equals("Job_Posting_Group", "MKT PIGS"),
-          f.equals("Job_Posting_Group", "SOWS"),
-          f.equals("Job_Posting_Group", "GDU")
-        )
-      ];
-
-      if (settings && settings.locations.list.length > 0) {
-        if (settings.locations.mode === InclusivityMode.Include) {
-          filters.push(
-            f.or(...settings.locations.list.map(loc => f.equals("Site", loc)))
-          );
-        } else {
-          filters.push(
-            f.and(
-              ...settings.locations.list.map(loc => f.notEquals("Site", loc))
-            )
-          );
-        }
+    const filter: JobFilter = {};
+    if (settings && settings.locations.list) {
+      if (settings.locations.mode === InclusivityMode.Include) {
+        filter.includeLocations = settings.locations.list;
+      } else {
+        filter.excludeLocations = settings.locations.list;
       }
-
-      return filters;
     }
-
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs")
-      .get<NavJob[]>()
-      .filter(f => f.and(...filter(f)));
+    return dataSources.pigJobNavApi.getAll(filter);
   },
   async pigActivityDefaults(_, __, { user }) {
     return (
