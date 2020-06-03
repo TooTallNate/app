@@ -5,7 +5,8 @@ import {
   NavUser,
   NavJob,
   NavResource,
-  NavReason
+  NavReason,
+  NavLocation
 } from "../src/common/nav/types";
 import uuid from "uuid/v4";
 import {
@@ -50,6 +51,11 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
 export const ResourceFactory = Factory.Sync.makeFactory<NavResource>({
   Name: Factory.each(() => faker.name.firstName()),
   No: Factory.each(() => `resource_${faker.random.alphaNumeric(8)}`)
+});
+
+export const LocationFactory = Factory.Sync.makeFactory<NavLocation>({
+  Name: Factory.each(() => faker.name.firstName()),
+  Code: Factory.each(() => `${faker.random.alphaNumeric(2)}`)
 });
 
 export const ReasonFactory = Factory.Sync.makeFactory<NavReason>({
@@ -176,7 +182,13 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   _id: Factory.each(() => new ObjectId()),
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
-  price: Factory.each(() => faker.random.number({ min: 30, max: 150 }))
+  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  locations: Factory.each(() => ({
+    mode: oneOf("INCLUDE", "EXCLUDE"),
+    list: Array.from({ length: faker.random.number({ min: 1, max: 4 }) }, () =>
+      faker.random.alphaNumeric(2)
+    )
+  }))
 });
 
 function generateScorecardEntry(min: number, max: number) {

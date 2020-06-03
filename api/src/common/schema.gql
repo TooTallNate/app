@@ -1,3 +1,8 @@
+enum InclusivityMode {
+  INCLUDE
+  EXCLUDE
+}
+
 type Job {
   number: String!
   description: String!
@@ -18,5 +23,10 @@ type Reason {
 
 type Resource {
   number: String!
+  name: String!
+}
+
+type Location {
+  code: String!
   name: String!
 }

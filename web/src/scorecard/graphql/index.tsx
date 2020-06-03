@@ -35,6 +35,11 @@ export type FarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
+export enum InclusivityMode {
+  Include = "INCLUDE",
+  Exclude = "EXCLUDE"
+}
+
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
@@ -42,6 +47,12 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+};
+
+export type Location = {
+  __typename?: "Location";
+  code: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type LoginInput = {
@@ -79,6 +90,7 @@ export type Mutation = {
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
   setAreaOperator: SetAreaOperatorResult;
+  updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
@@ -143,6 +155,10 @@ export type MutationSavePigWeanArgs = {
 
 export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
+};
+
+export type MutationUpdateUserLocationsArgs = {
+  input: UpdateUserLocationsInput;
 };
 
 export type PigActivityDefaults = {
@@ -346,6 +362,7 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  locations: Array<Location>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -493,11 +510,30 @@ export type SetAreaOperatorResult = {
   area: Job;
 };
 
+export type UpdateUserLocationsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
+export type UpdateUserLocationsResult = {
+  __typename?: "UpdateUserLocationsResult";
+  success: Scalars["Boolean"];
+  locations: UserLocations;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
+  locations: UserLocations;
+};
+
+export type UserLocations = {
+  __typename?: "UserLocations";
+  mode: InclusivityMode;
+  list: Array<Location>;
 };
 
 export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<

@@ -2,7 +2,8 @@ import {
   AnimalResolvers,
   JobResolvers,
   ReasonResolvers,
-  ResourceResolvers
+  ResourceResolvers,
+  LocationResolvers
 } from "./graphql";
 import { NavResource } from "./nav";
 
@@ -29,14 +30,20 @@ const Animal: AnimalResolvers = {
   description: animal => animal.Description
 };
 
-export const Reason: ReasonResolvers = {
+const Reason: ReasonResolvers = {
   code: reason => reason.Code,
   description: reason => reason.Description
+};
+
+const Location: LocationResolvers = {
+  code: location => location.Code,
+  name: location => location.Name
 };
 
 export const types = {
   Job,
   Animal,
   Resource,
-  Reason
+  Reason,
+  Location
 };

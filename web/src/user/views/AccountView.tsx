@@ -1,13 +1,16 @@
 import React from "react";
-import { RouteComponentProps } from "react-router";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
-import Button from "../../common/components/input/Button";
 import { useAuth } from "../contexts/auth";
 import Title from "../../common/components/view/ViewTitle";
 import ViewContent from "../../common/components/view/ViewContent";
+import StackedNav from "../../common/components/nav/StackedNav";
+import StackedNavLink from "../../common/components/nav/StackedNavLink";
+import StackedNavButton from "../../common/components/nav/StackedNavButton";
+import { useRouteMatch } from "react-router-dom";
 
-const AccountView: React.FC<RouteComponentProps> = () => {
+const AccountView: React.FC = () => {
+  const match = useRouteMatch();
   const { logout } = useAuth();
 
   return (
@@ -16,8 +19,12 @@ const AccountView: React.FC<RouteComponentProps> = () => {
         <Title>Account</Title>
       </ViewHeader>
       <ViewContent>
-        <div className="flex-grow" />
-        <Button onClick={logout}>Log Out</Button>
+        <StackedNav>
+          <StackedNavLink to={`${match.path}/locations`}>
+            Locations
+          </StackedNavLink>
+          <StackedNavButton onClick={() => logout()}>Log Out</StackedNavButton>
+        </StackedNav>
       </ViewContent>
     </View>
   );

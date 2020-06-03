@@ -15,6 +15,7 @@ const Button = React.forwardRef<
         bg-black border border-black rounded-lg
         active:border-gray-500 active:text-black active:bg-white
         focus:shadow-outline focus:outline-none
+        disabled:opacity-50
         ${className}
       `}
     />

@@ -1,9 +1,17 @@
 import { Schema, model, Document } from "mongoose";
+import { InclusivityMode } from "../graphql";
 
 export interface UserSettingsDocument extends Document {
   username: string;
   pigJob: string | null | undefined;
   price: number | null | undefined;
+  locations:
+    | {
+        mode: InclusivityMode;
+        list: string[];
+      }
+    | null
+    | undefined;
 }
 
 const UserSettingsSchema = new Schema(
@@ -13,11 +21,14 @@ const UserSettingsSchema = new Schema(
       required: true,
       unique: true
     },
-    pigJob: {
-      type: String
-    },
-    price: {
-      type: Number
+    pigJob: String,
+    price: Number,
+    locations: {
+      _id: false,
+      mode: String,
+      list: {
+        type: [String]
+      }
     }
   },
   {

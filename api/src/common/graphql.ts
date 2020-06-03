@@ -1,5 +1,12 @@
 import { GraphQLResolveInfo } from "graphql";
-import { NavUser, NavJob, NavAnimal, NavResource, NavReason } from "./nav";
+import {
+  NavUser,
+  NavJob,
+  NavAnimal,
+  NavResource,
+  NavReason,
+  NavLocation
+} from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
 import { PigMortalityDocument } from "../pig-activity/models/PigMortality";
@@ -48,6 +55,11 @@ export type FarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
+export enum InclusivityMode {
+  Include = "INCLUDE",
+  Exclude = "EXCLUDE"
+}
+
 export type Job = {
   __typename?: "Job";
   number: Scalars["String"];
@@ -55,6 +67,12 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+};
+
+export type Location = {
+  __typename?: "Location";
+  code: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type LoginInput = {
@@ -92,6 +110,7 @@ export type Mutation = {
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
   setAreaOperator: SetAreaOperatorResult;
+  updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
@@ -156,6 +175,10 @@ export type MutationSavePigWeanArgs = {
 
 export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
+};
+
+export type MutationUpdateUserLocationsArgs = {
+  input: UpdateUserLocationsInput;
 };
 
 export type PigActivityDefaults = {
@@ -359,6 +382,7 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  locations: Array<Location>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -506,11 +530,30 @@ export type SetAreaOperatorResult = {
   area: Job;
 };
 
+export type UpdateUserLocationsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
+export type UpdateUserLocationsResult = {
+  __typename?: "UpdateUserLocationsResult";
+  success: Scalars["Boolean"];
+  locations: UserLocations;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
+  locations: UserLocations;
+};
+
+export type UserLocations = {
+  __typename?: "UserLocations";
+  mode: InclusivityMode;
+  list: Array<Location>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -633,6 +676,7 @@ export type ResolversTypes = ResolversObject<{
     FarrowingBackendScorecardDocument
   >;
   ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
+  Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
@@ -645,6 +689,10 @@ export type ResolversTypes = ResolversObject<{
   Animal: ResolverTypeWrapper<NavAnimal>;
   PigWean: ResolverTypeWrapper<PigWeanDocument>;
   User: ResolverTypeWrapper<NavUser>;
+  UserLocations: ResolverTypeWrapper<
+    Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
+  >;
+  InclusivityMode: InclusivityMode;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -714,6 +762,12 @@ export type ResolversTypes = ResolversObject<{
   SetAreaOperatorResult: ResolverTypeWrapper<
     Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
   >;
+  UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserLocationsResult: ResolverTypeWrapper<
+    Omit<UpdateUserLocationsResult, "locations"> & {
+      locations: ResolversTypes["UserLocations"];
+    }
+  >;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -725,6 +779,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars["Int"];
   FarrowingBackendScorecard: FarrowingBackendScorecardDocument;
   ScorecardEntry: ScorecardEntry;
+  Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
   Float: Scalars["Float"];
   PigAdjustment: PigAdjustmentDocument;
@@ -737,6 +792,10 @@ export type ResolversParentTypes = ResolversObject<{
   Animal: NavAnimal;
   PigWean: PigWeanDocument;
   User: NavUser;
+  UserLocations: Omit<UserLocations, "list"> & {
+    list: Array<ResolversParentTypes["Location"]>;
+  };
+  InclusivityMode: InclusivityMode;
   Mutation: {};
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -795,6 +854,10 @@ export type ResolversParentTypes = ResolversObject<{
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
     area: ResolversParentTypes["Job"];
+  };
+  UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserLocationsResult: Omit<UpdateUserLocationsResult, "locations"> & {
+    locations: ResolversParentTypes["UserLocations"];
   };
 }>;
 
@@ -856,6 +919,15 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LocationResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Location"] = ResolversParentTypes["Location"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -976,6 +1048,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationSetAreaOperatorArgs, "input">
+  >;
+  updateUserLocations?: Resolver<
+    ResolversTypes["UpdateUserLocationsResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserLocationsArgs, "input">
   >;
 }>;
 
@@ -1248,6 +1326,11 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFarrowingBackendScorecardArgs, "area">
   >;
+  locations?: Resolver<
+    Array<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
+  >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
     ParentType,
@@ -1339,6 +1422,19 @@ export type SetAreaOperatorResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type UpdateUserLocationsResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UpdateUserLocationsResult"] = ResolversParentTypes["UpdateUserLocationsResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  locations?: Resolver<
+    ResolversTypes["UserLocations"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
@@ -1346,6 +1442,20 @@ export type UserResolvers<
   username?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   license?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  locations?: Resolver<
+    ResolversTypes["UserLocations"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type UserLocationsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UserLocations"] = ResolversParentTypes["UserLocations"]
+> = ResolversObject<{
+  mode?: Resolver<ResolversTypes["InclusivityMode"], ParentType, ContextType>;
+  list?: Resolver<Array<ResolversTypes["Location"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1356,6 +1466,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
     ContextType
   >;
   Job?: JobResolvers<ContextType>;
+  Location?: LocationResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;
   LogoutResult?: LogoutResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -1378,7 +1489,9 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Resource?: ResourceResolvers<ContextType>;
   ScorecardEntry?: ScorecardEntryResolvers<ContextType>;
   SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
+  UpdateUserLocationsResult?: UpdateUserLocationsResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserLocations?: UserLocationsResolvers<ContextType>;
 }>;
 
 /**

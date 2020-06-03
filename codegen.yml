@@ -20,6 +20,7 @@ generates:
         Animal: "./nav#NavAnimal"
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
+        Location: "./nav#NavLocation"
         PigAdjustment: "../pig-activity/models/PigAdjustment#PigAdjustmentDocument"
         PigGradeOff: "../pig-activity/models/PigGradeOff#PigGradeOffDocument"
         PigMortality: "../pig-activity/models/PigMortality#PigMortalityDocument"

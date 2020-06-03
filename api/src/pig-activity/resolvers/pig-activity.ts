@@ -1,6 +1,7 @@
 import {
   QueryResolvers,
-  PigActivityDefaultsResolvers
+  PigActivityDefaultsResolvers,
+  InclusivityMode
 } from "../../common/graphql";
 import {
   NavItemJournalEntry,
@@ -12,6 +13,10 @@ import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
+import {
+  BooleanFilterExpression,
+  FilterFunctionArgument
+} from "../../common/nav/filter";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
@@ -65,21 +70,42 @@ export const PigActivityQueries: QueryResolvers = {
       .resource("PigTypes")
       .get<NavAnimal[]>();
   },
-  async pigActivityJobs(_, __, { navClient }) {
+  async pigActivityJobs(_, __, { user, navClient }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username
+    });
+    function filter(f: FilterFunctionArgument) {
+      let filters: BooleanFilterExpression[] = [
+        f.equals("Status", "Open"),
+        f.or(
+          f.equals("Job_Posting_Group", "MKT PIGS"),
+          f.equals("Job_Posting_Group", "SOWS"),
+          f.equals("Job_Posting_Group", "GDU")
+        )
+      ];
+
+      if (settings && settings.locations.list.length > 0) {
+        if (settings.locations.mode === InclusivityMode.Include) {
+          filters.push(
+            f.or(...settings.locations.list.map(loc => f.equals("Site", loc)))
+          );
+        } else {
+          filters.push(
+            f.and(
+              ...settings.locations.list.map(loc => f.notEquals("Site", loc))
+            )
+          );
+        }
+      }
+
+      return filters;
+    }
+
     return navClient
       .resource("Company", process.env.NAV_COMPANY)
       .resource("Jobs")
       .get<NavJob[]>()
-      .filter(f =>
-        f.and(
-          f.equals("Status", "Open"),
-          f.or(
-            f.equals("Job_Posting_Group", "MKT PIGS"),
-            f.equals("Job_Posting_Group", "SOWS"),
-            f.equals("Job_Posting_Group", "GDU")
-          )
-        )
-      );
+      .filter(f => f.and(...filter(f)));
   },
   async pigActivityDefaults(_, __, { user }) {
     return (
