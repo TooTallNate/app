@@ -17,11 +17,8 @@ export const queries: QueryResolvers = {
       return null;
     }
   },
-  async locations(_, __, { navClient }) {
-    return await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Locations")
-      .get<NavLocation[]>();
+  locations(_, __, { dataSources }) {
+    return dataSources.locationNavApi.getAll();
   }
 };
 
@@ -55,7 +52,7 @@ export const mutations: MutationResolvers = {
     );
     return { success: true };
   },
-  async updateUserLocations(_, { input }, { user, navClient }) {
+  async updateUserLocations(_, { input }, { user, dataSources }) {
     const settings =
       (await UserSettingsModel.findOne({ username: user.username })) ||
       new UserSettingsModel({ username: user.username });
@@ -74,13 +71,9 @@ export const mutations: MutationResolvers = {
 
     let list: NavLocation[] = [];
     if (settings.locations.list.length > 0) {
-      list = await navClient
-        .resource("Company", process.env.NAV_COMPANY)
-        .resource("Locations")
-        .get<NavLocation[]>()
-        .filter(f =>
-          f.or(...settings.locations.list.map(code => f.equals("Code", code)))
-        );
+      list = await dataSources.locationNavApi.getAllByCode(
+        settings.locations.list
+      );
     }
     return {
       success: true,
@@ -96,20 +89,16 @@ export const User: UserResolvers = {
   username: user => user.User_Name,
   name: user => user.Full_Name,
   license: user => user.License_Type,
-  async locations(_, __, { navClient, user }) {
+  async locations(_, __, { dataSources, user }) {
     const settings = await UserSettingsModel.findOne({
       username: user.username
     }).lean<UserSettingsDocument>();
     if (settings && settings.locations) {
       let list: NavLocation[] = [];
       if (settings.locations.list.length > 0) {
-        list = await navClient
-          .resource("Company", process.env.NAV_COMPANY)
-          .resource("Locations")
-          .get<NavLocation[]>()
-          .filter(f =>
-            f.or(...settings.locations.list.map(code => f.equals("Code", code)))
-          );
+        list = await dataSources.locationNavApi.getAllByCode(
+          settings.locations.list
+        );
       }
       return {
         mode:

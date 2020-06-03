@@ -6,6 +6,7 @@ import {
 import { GraphqlContext } from "../../context";
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { ErrorCode } from "../utils";
+import { FilterFunction, compileFilter } from "./nav-filter";
 
 export default class NavDataSource extends RESTDataSource<GraphqlContext> {
   get baseURL() {
@@ -21,6 +22,10 @@ export default class NavDataSource extends RESTDataSource<GraphqlContext> {
       );
       request.headers.set("Authorization", `Basic ${str}`);
     }
+  }
+
+  protected buildFilter(fn: FilterFunction) {
+    return compileFilter(fn);
   }
 
   // Convert ODATA response to a more typical REST response.

@@ -1,5 +1,5 @@
 import { ODataClient } from "./common/nav";
-import UserNavDataSource from "./common/datasources/UserNavDataSource";
+import { DataSources } from "./common/datasources";
 
 export interface SessionUser {
   username: string;
@@ -11,9 +11,7 @@ export interface SessionUser {
 export type Session = Express.Session & { user?: SessionUser };
 
 export interface GraphqlContext {
-  dataSources: {
-    userNavApi: UserNavDataSource;
-  };
+  dataSources: DataSources;
   session: Session;
   user: SessionUser;
   navClient: ODataClient;
