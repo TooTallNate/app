@@ -14,7 +14,7 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigPurchase: PigPurchaseResolvers = {
   job(pigPurchase, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigPurchase.job);
+    return dataSources.navJob.getByNo(pigPurchase.job);
   }
 };
 
@@ -43,7 +43,7 @@ export const PigPurchaseMutations: MutationResolvers = {
     return { success: true, pigPurchase: doc, defaults: userSettings };
   },
   async postPigPurchase(_, { input }, { user, dataSources, navClient }) {
-    const job = await dataSources.pigJobNavApi.getByNo(input.job);
+    const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,

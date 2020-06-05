@@ -15,7 +15,7 @@ const Job: JobResolvers = {
   number: job => job.No,
   description: job => job.Description,
   personResponsible(job, _, { dataSources }) {
-    return dataSources.resourceNavApi.getByCode(job.Person_Responsible);
+    return dataSources.navResource.getByCode(job.Person_Responsible);
   },
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity

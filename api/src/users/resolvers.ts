@@ -12,13 +12,13 @@ import UserSettingsModel, {
 export const queries: QueryResolvers = {
   async user(_, __, { user, dataSources }) {
     if (user) {
-      return await dataSources.userNavApi.getBySecurityID(user.securityId);
+      return await dataSources.navUser.getBySecurityID(user.securityId);
     } else {
       return null;
     }
   },
   locations(_, __, { dataSources }) {
-    return dataSources.locationNavApi.getAll();
+    return dataSources.navLocation.getAll();
   }
 };
 
@@ -29,7 +29,7 @@ export const mutations: MutationResolvers = {
       password
     } as any;
     const { dataSources, session } = context;
-    const user = await dataSources.userNavApi.getByUsername(username);
+    const user = await dataSources.navUser.getByUsername(username);
     const sessionUser = {
       username: user.User_Name,
       password,
@@ -71,7 +71,7 @@ export const mutations: MutationResolvers = {
 
     let list: NavLocation[] = [];
     if (settings.locations.list.length > 0) {
-      list = await dataSources.locationNavApi.getAllByCode(
+      list = await dataSources.navLocation.getAllByCode(
         settings.locations.list
       );
     }
@@ -96,7 +96,7 @@ export const User: UserResolvers = {
     if (settings && settings.locations) {
       let list: NavLocation[] = [];
       if (settings.locations.list.length > 0) {
-        list = await dataSources.locationNavApi.getAllByCode(
+        list = await dataSources.navLocation.getAllByCode(
           settings.locations.list
         );
       }

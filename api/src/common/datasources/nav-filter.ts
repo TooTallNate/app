@@ -141,10 +141,14 @@ function buildFilterExpression(
         }
         case "and":
         case "or": {
-          const newExpression = expression.args
-            .map(buildFilterExpression)
-            .join(` ${expression.operator} `);
-          return `(${newExpression})`;
+          const args = expression.args.map(buildFilterExpression);
+          if (args.length === 0) {
+            return "";
+          } else if (args.length === 1) {
+            return args[0];
+          } else {
+            return `(${args.join(` ${expression.operator} `)})`;
+          }
         }
         case "startswith": {
           const arg1 = expression.arg1;

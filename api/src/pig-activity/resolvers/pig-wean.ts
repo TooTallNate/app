@@ -14,7 +14,7 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigWean.job);
+    return dataSources.navJob.getByNo(pigWean.job);
   }
 };
 
@@ -41,7 +41,7 @@ export const PigWeanMutations: MutationResolvers = {
     return { success: true, pigWean: doc, defaults: userSettings };
   },
   async postPigWean(_, { input }, { user, dataSources, navClient }) {
-    const job = await dataSources.pigJobNavApi.getByNo(input.job);
+    const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Wean,

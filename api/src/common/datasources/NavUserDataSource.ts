@@ -1,7 +1,7 @@
 import { NavUser } from "../nav";
 import NavDataSource from "./NavDataSource";
 
-export default class UserNavDataSource extends NavDataSource {
+export default class NavUserDataSource extends NavDataSource {
   async getByUsername(username: string): Promise<NavUser> {
     const data = await this.get(`/User?$filter=User_Name eq '${username}'`);
     return data[0];

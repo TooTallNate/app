@@ -7,7 +7,6 @@ import {
 import {
   NavJob,
   NavJobJournalEntry,
-  NavResource,
   ODataClient,
   NavJobJournalTemplate,
   NavJobJournalBatch,
@@ -37,12 +36,9 @@ const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
       .resource("Jobs", scorecard.area)
       .get<NavJob>();
   },
-  operator(scorecard, _, { navClient }) {
+  operator(scorecard, _, { dataSources }) {
     return scorecard.operator
-      ? navClient
-          .resource("Company", process.env.NAV_COMPANY)
-          .resource("Resources", scorecard.operator)
-          .get<NavResource>()
+      ? dataSources.navResource.getByCode(scorecard.operator)
       : null;
   },
   sows: scorecard => scorecard.sows || {},
@@ -61,13 +57,16 @@ export const queries: QueryResolvers = {
     );
   },
   farrowingBackendAreas(_, __, { dataSources }) {
-    return dataSources.farrowBackendJobNavApi.getAll();
+    return dataSources.navJob.getAll({
+      isOpen: true,
+      postingGroups: ["FARROW-BE"]
+    });
   },
   farrowingBackendArea(_, { number }, { dataSources }) {
-    return dataSources.farrowBackendJobNavApi.getByNo(number);
+    return dataSources.navJob.getByNo(number);
   },
   farrowingBackendOperators(_, __, { dataSources }) {
-    return dataSources.resourceNavApi.getAll({
+    return dataSources.navResource.getAll({
       groups: ["FARROW-BE"]
     });
   }
@@ -91,7 +90,7 @@ export const mutations: MutationResolvers = {
     { input },
     { dataSources, navClient, user }
   ) {
-    const job = await dataSources.farrowBackendJobNavApi.getByNo(input.area);
+    const job = await dataSources.navJob.getByNo(input.area);
     const docNo = getDocumentNumber("FBE", user.name);
 
     function postScore(task: string, entry: ScorecardEntry) {
@@ -133,7 +132,7 @@ export const mutations: MutationResolvers = {
     return { success: true, scorecard: doc };
   },
   async setAreaOperator(_, { input }, { dataSources }) {
-    const area = await dataSources.farrowBackendJobNavApi.updatePersonResponsible(
+    const area = await dataSources.navJob.updatePersonResponsible(
       input.area,
       input.operator
     );

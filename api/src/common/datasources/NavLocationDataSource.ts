@@ -1,7 +1,7 @@
 import { NavLocation } from "../nav";
 import NavDataSource from "./NavDataSource";
 
-export default class LocationNavDataSource extends NavDataSource {
+export default class NavLocationDataSource extends NavDataSource {
   getAll(): Promise<NavLocation[]> {
     return this.get(`/Locations`);
   }

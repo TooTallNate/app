@@ -8,7 +8,6 @@ import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
-import { JobFilter } from "../../common/datasources/PigJobNavDataSource";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
@@ -44,7 +43,7 @@ export async function updateUserSettings({
 export const PigActivityDefaults: PigActivityDefaultsResolvers = {
   job(userSettings, _, { dataSources }) {
     if (userSettings && userSettings.pigJob) {
-      return dataSources.pigJobNavApi.getByNo(userSettings.pigJob);
+      return dataSources.navJob.getByNo(userSettings.pigJob);
     } else {
       return null;
     }
@@ -63,15 +62,19 @@ export const PigActivityQueries: QueryResolvers = {
     const settings = await UserSettingsModel.findOne({
       username: user.username
     });
-    const filter: JobFilter = {};
     if (settings && settings.locations.list) {
       if (settings.locations.mode === InclusivityMode.Include) {
-        filter.includeLocations = settings.locations.list;
+        var includeLocations = settings.locations.list;
       } else {
-        filter.excludeLocations = settings.locations.list;
+        var excludeLocations = settings.locations.list;
       }
     }
-    return dataSources.pigJobNavApi.getAll(filter);
+    return dataSources.navJob.getAll({
+      isOpen: true,
+      postingGroups: ["MKT PIGS", "SOWS", "GDU"],
+      includeLocations,
+      excludeLocations
+    });
   },
   async pigActivityDefaults(_, __, { user }) {
     return (

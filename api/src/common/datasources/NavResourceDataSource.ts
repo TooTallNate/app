@@ -5,7 +5,7 @@ export interface ResourceFilter {
   groups?: string[];
 }
 
-export default class ResourceNavDataSource extends NavDataSource {
+export default class NavResourceDataSource extends NavDataSource {
   getAll({ groups }: ResourceFilter = {}): Promise<NavResource[]> {
     let filter = this.buildFilter(f =>
       f.and(

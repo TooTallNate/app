@@ -14,11 +14,11 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigMove: PigMoveResolvers = {
   fromJob(pigMove, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigMove.fromJob);
+    return dataSources.navJob.getByNo(pigMove.fromJob);
   },
   toJob(pigMove, _, { dataSources }) {
     if (pigMove.toJob) {
-      return dataSources.pigJobNavApi.getByNo(pigMove.toJob);
+      return dataSources.navJob.getByNo(pigMove.toJob);
     }
   }
 };
@@ -50,8 +50,8 @@ export const PigMoveMutations: MutationResolvers = {
   },
   async postPigMove(_, { input }, { user, dataSources, navClient }) {
     const docNo = getDocumentNumber("MOVE", user.name);
-    const fromJob = await dataSources.pigJobNavApi.getByNo(input.fromJob);
-    const toJob = await dataSources.pigJobNavApi.getByNo(input.toJob);
+    const fromJob = await dataSources.navJob.getByNo(input.fromJob);
+    const toJob = await dataSources.navJob.getByNo(input.toJob);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,

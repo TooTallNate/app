@@ -16,7 +16,7 @@ import { differenceInDays } from "date-fns";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigMortality.job);
+    return dataSources.navJob.getByNo(pigMortality.job);
   }
 };
 
@@ -47,7 +47,7 @@ export const PigMortalityMutations: MutationResolvers = {
   },
   async postPigMortality(_, { input }, { user, dataSources, navClient }) {
     const docNo = getDocumentNumber("MORT", user.name);
-    const job = await dataSources.pigJobNavApi.getByNo(input.job);
+    const job = await dataSources.navJob.getByNo(input.job);
     const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
     const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
     const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));

@@ -14,7 +14,7 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigAdjustment: PigAdjustmentResolvers = {
   job(pigAdjustment, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigAdjustment.job);
+    return dataSources.navJob.getByNo(pigAdjustment.job);
   }
 };
 
@@ -45,7 +45,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
     return { success: true, pigAdjustment: doc, defaults: userSettings };
   },
   async postPigAdjustment(_, { input }, { user, dataSources, navClient }) {
-    const job = await dataSources.pigJobNavApi.getByNo(input.job);
+    const job = await dataSources.navJob.getByNo(input.job);
 
     await postItemJournal(
       {

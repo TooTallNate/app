@@ -16,7 +16,7 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeOff, _, { dataSources }) {
-    return dataSources.pigJobNavApi.getByNo(pigGradeOff.job);
+    return dataSources.navJob.getByNo(pigGradeOff.job);
   },
   quantities: pigGradeOff => pigGradeOff.quantities || []
 };
@@ -53,7 +53,7 @@ export const PigGradeOffMutations: MutationResolvers = {
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
   async postPigGradeOff(_, { input }, { user, dataSources, navClient }) {
-    const job = await dataSources.pigJobNavApi.getByNo(input.job);
+    const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
       if (entry.quantity > 0) {
