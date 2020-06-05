@@ -45,7 +45,7 @@ export const PigMortalityMutations: MutationResolvers = {
 
     return { success: true, pigMortality: doc, defaults: userSettings };
   },
-  async postPigMortality(_, { input }, { user, dataSources, navClient }) {
+  async postPigMortality(_, { input }, { user, dataSources }) {
     const docNo = getDocumentNumber("MORT", user.name);
     const job = await dataSources.navJob.getByNo(input.job);
     const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
@@ -70,7 +70,7 @@ export const PigMortalityMutations: MutationResolvers = {
           Shortcut_Dimension_2_Code: job.Cost_Center,
           Reason_Code: NavReasonCode.NaturalDeath
         },
-        navClient
+        dataSources.navItemJournal
       );
     }
     if (input.euthanizedQuantity > 0) {
@@ -91,7 +91,7 @@ export const PigMortalityMutations: MutationResolvers = {
           Shortcut_Dimension_2_Code: job.Cost_Center,
           Reason_Code: NavReasonCode.Euthanized
         },
-        navClient
+        dataSources.navItemJournal
       );
     }
 

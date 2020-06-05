@@ -5,9 +5,7 @@ import {
   FarrowingBackendScorecardResolvers
 } from "../common/graphql";
 import {
-  NavJob,
   NavJobJournalEntry,
-  ODataClient,
   NavJobJournalTemplate,
   NavJobJournalBatch,
   JobTaskNumber,
@@ -15,26 +13,21 @@ import {
 } from "../common/nav";
 import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
+import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,
-  navClient: ODataClient
+  dataSource: NavJobJournalDataSource
 ): Promise<NavJobJournalEntry> {
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
-  return navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("JobJournal")
-    .post(entry);
+  return dataSource.postEntry(entry);
 }
 
 const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
-  area(scorecard, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", scorecard.area)
-      .get<NavJob>();
+  area(scorecard, _, { dataSources }) {
+    return dataSources.navJob.getByNo(scorecard.area);
   },
   operator(scorecard, _, { dataSources }) {
     return scorecard.operator
@@ -85,11 +78,7 @@ export const mutations: MutationResolvers = {
     await doc.save();
     return { success: true, scorecard: doc };
   },
-  async postFarrowingBackendScorecard(
-    _,
-    { input },
-    { dataSources, navClient, user }
-  ) {
+  async postFarrowingBackendScorecard(_, { input }, { dataSources, user }) {
     const job = await dataSources.navJob.getByNo(input.area);
     const docNo = getDocumentNumber("FBE", user.name);
 
@@ -107,7 +96,7 @@ export const mutations: MutationResolvers = {
           Quantity: entry.score,
           Description: entry.comments || " "
         },
-        navClient
+        dataSources.navJobJournal
       );
     }
 

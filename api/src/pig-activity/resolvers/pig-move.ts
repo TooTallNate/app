@@ -48,7 +48,7 @@ export const PigMoveMutations: MutationResolvers = {
 
     return { success: true, pigMove: doc, defaults: userSettings };
   },
-  async postPigMove(_, { input }, { user, dataSources, navClient }) {
+  async postPigMove(_, { input }, { user, dataSources }) {
     const docNo = getDocumentNumber("MOVE", user.name);
     const fromJob = await dataSources.navJob.getByNo(input.fromJob);
     const toJob = await dataSources.navJob.getByNo(input.toJob);
@@ -67,7 +67,7 @@ export const PigMoveMutations: MutationResolvers = {
         Shortcut_Dimension_1_Code: fromJob.Entity,
         Shortcut_Dimension_2_Code: fromJob.Cost_Center
       },
-      navClient
+      dataSources.navItemJournal
     );
     await postItemJournal(
       {
@@ -86,7 +86,7 @@ export const PigMoveMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: toJob.Cost_Center,
         Meta: input.smallPigQuantity
       },
-      navClient
+      dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({

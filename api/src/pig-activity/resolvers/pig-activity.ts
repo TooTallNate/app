@@ -3,24 +3,22 @@ import {
   PigActivityDefaultsResolvers,
   InclusivityMode
 } from "../../common/graphql";
-import { NavItemJournalEntry, ODataClient, NavAnimal } from "../../common/nav";
+import { NavItemJournalEntry, NavAnimal } from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
+import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
-  navClient: ODataClient
+  dataSource: NavItemJournalDataSource
 ): Promise<NavItemJournalEntry> {
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
   entry.Description = entry.Description || " ";
-  return navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("ItemJournal")
-    .post(entry);
+  return dataSource.postEntry(entry);
 }
 
 export async function updateUserSettings({
@@ -52,11 +50,8 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
 };
 
 export const PigActivityQueries: QueryResolvers = {
-  async pigTypes(_, __, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("PigTypes")
-      .get<NavAnimal[]>();
+  async pigTypes(_, __, { dataSources }) {
+    return dataSources.navConfig.getPigTypes();
   },
   async pigActivityJobs(_, __, { user, dataSources }) {
     const settings = await UserSettingsModel.findOne({

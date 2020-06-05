@@ -22,12 +22,8 @@ export const PigGradeOff: PigGradeOffResolvers = {
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
-  async pigGradeOffReasons(_, __, { navClient }) {
-    return await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("ReasonCodes")
-      .get<NavReason[]>()
-      .filter(f => f.startsWith("Code", "GR-"));
+  async pigGradeOffReasons(_, __, { dataSources }) {
+    return dataSources.navConfig.getReasonCodes("GR-");
   },
   async pigGradeOff(_, { job }) {
     return (
@@ -52,7 +48,7 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
-  async postPigGradeOff(_, { input }, { user, dataSources, navClient }) {
+  async postPigGradeOff(_, { input }, { user, dataSources }) {
     const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
@@ -73,7 +69,7 @@ export const PigGradeOffMutations: MutationResolvers = {
             Shortcut_Dimension_1_Code: job.Entity,
             Shortcut_Dimension_2_Code: job.Cost_Center
           },
-          navClient
+          dataSources.navItemJournal
         );
       }
     }

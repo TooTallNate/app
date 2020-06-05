@@ -42,7 +42,7 @@ export const PigPurchaseMutations: MutationResolvers = {
 
     return { success: true, pigPurchase: doc, defaults: userSettings };
   },
-  async postPigPurchase(_, { input }, { user, dataSources, navClient }) {
+  async postPigPurchase(_, { input }, { user, dataSources }) {
     const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
@@ -61,7 +61,7 @@ export const PigPurchaseMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: job.Cost_Center,
         Meta: input.smallPigQuantity
       },
-      navClient
+      dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({

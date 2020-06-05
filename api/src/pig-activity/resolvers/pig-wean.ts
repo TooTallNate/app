@@ -40,7 +40,7 @@ export const PigWeanMutations: MutationResolvers = {
 
     return { success: true, pigWean: doc, defaults: userSettings };
   },
-  async postPigWean(_, { input }, { user, dataSources, navClient }) {
+  async postPigWean(_, { input }, { user, dataSources }) {
     const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
@@ -60,7 +60,7 @@ export const PigWeanMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: "213",
         Meta: input.smallPigQuantity
       },
-      navClient
+      dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({
