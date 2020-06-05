@@ -7,7 +7,7 @@ import {
   NavResource,
   NavReason,
   NavLocation
-} from "../src/common/nav/types";
+} from "../src/common/nav";
 import uuid from "uuid/v4";
 import {
   SaveFarrowingBackendScorecardInput,

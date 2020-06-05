@@ -109,6 +109,10 @@ export interface FilterFunction {
   (f: FilterFunctionArgument): BooleanFilterExpression;
 }
 
+export interface FilterFragmentFunction<T> {
+  (f: FilterFunctionArgument): T;
+}
+
 function buildFilterExpression(
   expression:
     | BooleanFilterExpression
@@ -137,10 +141,14 @@ function buildFilterExpression(
         }
         case "and":
         case "or": {
-          const newExpression = expression.args
-            .map(buildFilterExpression)
-            .join(` ${expression.operator} `);
-          return `(${newExpression})`;
+          const args = expression.args.map(buildFilterExpression);
+          if (args.length === 0) {
+            return "";
+          } else if (args.length === 1) {
+            return args[0];
+          } else {
+            return `(${args.join(` ${expression.operator} `)})`;
+          }
         }
         case "startswith": {
           const arg1 = expression.arg1;
@@ -152,9 +160,7 @@ function buildFilterExpression(
   }
 }
 
-export function createFilterExpression(
-  fn: FilterFunction
-): BooleanFilterExpression {
+export function buildFilterFragment<T>(fn: FilterFragmentFunction<T>): T {
   return fn({
     equals: (arg1, arg2) => ({ operator: "eq", arg1, arg2 }),
     notEquals: (arg1, arg2) => ({ operator: "ne", arg1, arg2 }),
@@ -168,6 +174,7 @@ export function createFilterExpression(
   });
 }
 
-export function buildFilter(expression: FilterExpression): string {
+export function compileFilter(fn: FilterFunction): string {
+  const expression = buildFilterFragment(fn);
   return buildFilterExpression(expression);
 }

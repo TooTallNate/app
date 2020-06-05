@@ -6,7 +6,7 @@ import {
 import { GraphqlContext } from "../../context";
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { ErrorCode } from "../utils";
-import { FilterFunction, compileFilter } from "./nav-filter";
+import { FilterFunction, compileFilter } from "../nav/filter";
 
 export default class NavDataSource extends RESTDataSource<GraphqlContext> {
   get baseURL() {

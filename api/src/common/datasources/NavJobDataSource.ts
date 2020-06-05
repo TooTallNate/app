@@ -1,6 +1,6 @@
 import { NavJob } from "../nav";
 import NavDataSource from "./NavDataSource";
-import { BooleanFilterExpression } from "./nav-filter";
+import { BooleanFilterExpression } from "../nav/filter";
 
 export interface JobFilter {
   isOpen?: boolean;

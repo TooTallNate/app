@@ -10,9 +10,9 @@ import UserSettingsModel, {
 } from "../common/models/UserSettings";
 
 export const queries: QueryResolvers = {
-  async user(_, __, { user, dataSources }) {
+  user(_, __, { user, dataSources }) {
     if (user) {
-      return await dataSources.navUser.getBySecurityID(user.securityId);
+      return dataSources.navUser.getBySecurityID(user.securityId);
     } else {
       return null;
     }
