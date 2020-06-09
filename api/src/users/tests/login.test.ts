@@ -24,7 +24,7 @@ test("returns user data if login is successful", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(200, { value: [user] });
@@ -47,7 +47,7 @@ test("returns with error if credentials are incorrect", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(401, {
@@ -78,7 +78,7 @@ test("returns with error if too many users are logged in", async () => {
   const { user, auth, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/User`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
     .basicAuth(auth)
     .reply(401, {

@@ -21,7 +21,7 @@ test("returns user data for a logged in user", async () => {
 
   nock(process.env.NAV_BASE_URL)
     .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/User(${user.User_Security_ID})`
+      `/Company(%27${process.env.NAV_COMPANY}%27)/Users(${user.User_Security_ID})`
     )
     .basicAuth(auth)
     .reply(200, user);
@@ -58,7 +58,7 @@ test("returns users locations from database", async () => {
 
   nock(process.env.NAV_BASE_URL)
     .get(
-      `/Company(%27${process.env.NAV_COMPANY}%27)/User(${user.User_Security_ID})`
+      `/Company(%27${process.env.NAV_COMPANY}%27)/Users(${user.User_Security_ID})`
     )
     .basicAuth(auth)
     .reply(200, user);
