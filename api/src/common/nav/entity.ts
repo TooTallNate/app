@@ -32,7 +32,7 @@ export interface NavReason {
   Description: string;
 }
 
-export interface NavAnimal {
+export interface NavItem {
   No: string;
   Description: string;
 }

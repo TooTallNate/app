@@ -17,7 +17,7 @@ generates:
       mappers:
         User: "./nav#NavUser"
         Job: "./nav#NavJob"
-        Animal: "./nav#NavAnimal"
+        Item: "./nav#NavItem"
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"

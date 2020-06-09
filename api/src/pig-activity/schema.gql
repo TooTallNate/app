@@ -233,7 +233,7 @@ type PigWeanResult {
 
 
 type Query {
-  pigTypes: [Animal!]!
+  pigTypes: [Item!]!
   pigActivityJobs: [Job!]!
   pigGradeOffReasons: [Reason!]!
   pigActivityDefaults: PigActivityDefaults!

@@ -1,6 +1,6 @@
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
-import { NavAnimal } from "../../common/nav";
+import { NavItem } from "../../common/nav";
 import { Animal } from "../../common/graphql";
 
 interface QueryResult {
@@ -22,7 +22,7 @@ testUnauthenticated(query);
 
 test("returns pig animals", async () => {
   const { auth } = await mockUser();
-  const animals: NavAnimal[] = [
+  const animals: NavItem[] = [
     {
       No: "01",
       Description: "Market Hogs"
@@ -34,7 +34,11 @@ test("returns pig animals", async () => {
   ];
 
   nock(process.env.NAV_BASE_URL)
-    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/PigTypes`)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Items`)
+    .query({
+      $select: "No, Description",
+      $filter: `((Gen_Prod_Posting_Group eq 'SOWS') or (Gen_Prod_Posting_Group eq 'MARKET HOGS'))`
+    })
     .basicAuth(auth)
     .reply(200, { value: animals });
 

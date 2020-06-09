@@ -3,7 +3,7 @@ import {
   PigActivityDefaultsResolvers,
   InclusivityMode
 } from "../../common/graphql";
-import { NavItemJournalEntry, NavAnimal } from "../../common/nav";
+import { NavItemJournalEntry } from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
@@ -51,7 +51,9 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
 
 export const PigActivityQueries: QueryResolvers = {
   async pigTypes(_, __, { dataSources }) {
-    return dataSources.navConfig.getPigTypes();
+    return dataSources.navConfig.getItems({
+      postingGroups: ["SOWS", "MARKET HOGS"]
+    });
   },
   async pigActivityJobs(_, __, { user, dataSources }) {
     const settings = await UserSettingsModel.findOne({
