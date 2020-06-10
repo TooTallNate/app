@@ -1,13 +1,5 @@
 {
-   "name": "farm-activity-entry",
    "version": 2,
-   "env": {
-      "NAV_BASE_URL": "https://nav.moglerfarms.com:4248/PHC2/ODataV4",
-      "MONGO_URI": "@farm-activity-mongo-uri",
-      "SESSION_SECRET": "@farm-activity-session-secret",
-      "NAV_COMPANY": "PHC_LIVE",
-      "PAPERTRAIL_URL": "@farm-activity-papertrail-url"
-   },
    "builds": [
       {
          "src": "package.json",

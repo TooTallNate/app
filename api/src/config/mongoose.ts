@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import logger from "./logging";
 
 export function initMongoose() {
-  mongoose.connect(process.env.MONGO_URI || "", {
+  mongoose.connect(process.env.MONGO_URL || "", {
     useNewUrlParser: true,
     useFindAndModify: true,
     useCreateIndex: true,
