@@ -1,15 +1,5 @@
 {
-  "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "typeRoots": [
-      "../node_modules/@types",
-      "@types"
-    ]
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
     "src",
   ],

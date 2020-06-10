@@ -22,11 +22,5 @@
       "../node_modules/@types",
       "@types"
     ]
-  },
-  "include": [
-    "src",
-  ],
-  "exclude": [
-    "**/*.test.*"
-  ]
+  }
 }
