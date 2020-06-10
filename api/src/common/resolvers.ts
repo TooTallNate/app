@@ -1,11 +1,10 @@
 import {
-  AnimalResolvers,
   JobResolvers,
   ReasonResolvers,
   ResourceResolvers,
-  LocationResolvers
+  LocationResolvers,
+  ItemResolvers
 } from "./graphql";
-import { NavResource } from "./nav";
 
 const Resource: ResourceResolvers = {
   number: resource => resource.No,
@@ -15,17 +14,14 @@ const Resource: ResourceResolvers = {
 const Job: JobResolvers = {
   number: job => job.No,
   description: job => job.Description,
-  personResponsible(job, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Resources", job.Person_Responsible)
-      .get<NavResource>();
+  personResponsible(job, _, { dataSources }) {
+    return dataSources.navResource.getByCode(job.Person_Responsible);
   },
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity
 };
 
-const Animal: AnimalResolvers = {
+const Item: ItemResolvers = {
   number: animal => animal.No,
   description: animal => animal.Description
 };
@@ -42,7 +38,7 @@ const Location: LocationResolvers = {
 
 export const types = {
   Job,
-  Animal,
+  Item,
   Resource,
   Reason,
   Location

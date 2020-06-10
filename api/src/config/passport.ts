@@ -3,6 +3,22 @@ import passport from "passport";
 import storeBuilder from "connect-mongo";
 import mongoose from "mongoose";
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface SessionUser {
+      username: string;
+      password: string;
+      name: string;
+      securityId: string;
+    }
+
+    interface Session {
+      user?: SessionUser;
+    }
+  }
+}
+
 const MongoStore = storeBuilder(session);
 
 export function initPassport() {

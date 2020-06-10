@@ -41,7 +41,8 @@ test("returns default job when set in user settings", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
     .basicAuth(auth)
-    .reply(200, job);
+    .reply(200, job)
+    .persist();
 
   await expect(query()).resolves.toEqual({
     pigActivityDefaults: {

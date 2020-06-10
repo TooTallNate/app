@@ -105,7 +105,8 @@ test("returns empty scorecard if no scorecard is saved", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
-    .reply(200, area);
+    .reply(200, area)
+    .persist();
 
   await expect(query({ area: area.No })).resolves.toEqual({
     farrowingBackendScorecard: mapScorecard(
@@ -122,7 +123,8 @@ test("returns scorecard", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
-    .reply(200, area);
+    .reply(200, area)
+    .persist();
 
   const operator = ResourceFactory.build();
   nock(process.env.NAV_BASE_URL)
@@ -130,7 +132,8 @@ test("returns scorecard", async () => {
       `/Company(%27${process.env.NAV_COMPANY}%27)/Resources(%27${operator.No}%27)`
     )
     .basicAuth(auth)
-    .reply(200, operator);
+    .reply(200, operator)
+    .persist();
 
   const scorecard = await FarrowingBackendScorecardModel.create(
     FarrowingBackendScorecardFactory.build({
@@ -151,7 +154,8 @@ test("returns scorecard without operator", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
-    .reply(200, area);
+    .reply(200, area)
+    .persist();
 
   const scorecard = await FarrowingBackendScorecardModel.create(
     FarrowingBackendScorecardFactory.build({
@@ -172,7 +176,8 @@ test("returns scorecard without scores", async () => {
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${area.No}%27)`)
     .basicAuth(auth)
-    .reply(200, area);
+    .reply(200, area)
+    .persist();
 
   const operator = ResourceFactory.build();
   nock(process.env.NAV_BASE_URL)
@@ -180,7 +185,8 @@ test("returns scorecard without scores", async () => {
       `/Company(%27${process.env.NAV_COMPANY}%27)/Resources(%27${operator.No}%27)`
     )
     .basicAuth(auth)
-    .reply(200, operator);
+    .reply(200, operator)
+    .persist();
 
   const scorecard = await FarrowingBackendScorecardModel.create(
     FarrowingBackendScorecardFactory.build({

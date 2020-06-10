@@ -4,57 +4,43 @@ import {
   QueryResolvers,
   InclusivityMode
 } from "../common/graphql";
-import { NavUser, Guid, NavErrorCode, NavLocation } from "../common/nav";
-import { ErrorCode } from "../common/utils";
+import { NavLocation } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
 
 export const queries: QueryResolvers = {
-  async user(_, __, { user, navClient }) {
+  user(_, __, { user, dataSources }) {
     if (user) {
-      return await navClient
-        .resource("User", new Guid(user.securityId))
-        .get<NavUser>();
+      return dataSources.navUser.getBySecurityID(user.securityId);
     } else {
       return null;
     }
   },
-  async locations(_, __, { navClient }) {
-    return await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Locations")
-      .get<NavLocation[]>();
+  locations(_, __, { dataSources }) {
+    return dataSources.navLocation.getAll();
   }
 };
 
 export const mutations: MutationResolvers = {
-  async login(_, { input: { username, password } }, { session, navClient }) {
-    navClient.auth(username, password);
-    try {
-      var users = await navClient
-        .resource("User")
-        .get<NavUser[]>()
-        .filter(f => f.equals("User_Name", username));
-    } catch (error) {
-      switch (error.code) {
-        case NavErrorCode.InvalidCredentials:
-          throw new Error(ErrorCode.InvalidCredentials);
-        case NavErrorCode.NoAvailableLicense:
-          throw new Error(ErrorCode.NoAvailableLicense);
-        default:
-          throw error;
-      }
-    }
-    session.user = {
-      username: users[0].User_Name,
+  async login(_, { input: { username, password } }, context) {
+    context.user = {
+      username,
+      password
+    } as any;
+    const { dataSources, session } = context;
+    const user = await dataSources.navUser.getByUsername(username);
+    const sessionUser = {
+      username: user.User_Name,
       password,
-      name: users[0].Full_Name,
-      securityId: users[0].User_Security_ID
+      name: user.Full_Name,
+      securityId: user.User_Security_ID
     };
+    context.user = sessionUser;
+    session.user = sessionUser;
     return {
       success: true,
-      user: users[0]
+      user
     };
   },
   async logout(_, __, context) {
@@ -66,7 +52,7 @@ export const mutations: MutationResolvers = {
     );
     return { success: true };
   },
-  async updateUserLocations(_, { input }, { user, navClient }) {
+  async updateUserLocations(_, { input }, { user, dataSources }) {
     const settings =
       (await UserSettingsModel.findOne({ username: user.username })) ||
       new UserSettingsModel({ username: user.username });
@@ -85,13 +71,9 @@ export const mutations: MutationResolvers = {
 
     let list: NavLocation[] = [];
     if (settings.locations.list.length > 0) {
-      list = await navClient
-        .resource("Company", process.env.NAV_COMPANY)
-        .resource("Locations")
-        .get<NavLocation[]>()
-        .filter(f =>
-          f.or(...settings.locations.list.map(code => f.equals("Code", code)))
-        );
+      list = await dataSources.navLocation.getAllByCode(
+        settings.locations.list
+      );
     }
     return {
       success: true,
@@ -107,20 +89,16 @@ export const User: UserResolvers = {
   username: user => user.User_Name,
   name: user => user.Full_Name,
   license: user => user.License_Type,
-  async locations(_, __, { navClient, user }) {
+  async locations(_, __, { dataSources, user }) {
     const settings = await UserSettingsModel.findOne({
       username: user.username
     }).lean<UserSettingsDocument>();
     if (settings && settings.locations) {
       let list: NavLocation[] = [];
       if (settings.locations.list.length > 0) {
-        list = await navClient
-          .resource("Company", process.env.NAV_COMPANY)
-          .resource("Locations")
-          .get<NavLocation[]>()
-          .filter(f =>
-            f.or(...settings.locations.list.map(code => f.equals("Code", code)))
-          );
+        list = await dataSources.navLocation.getAllByCode(
+          settings.locations.list
+        );
       }
       return {
         mode:

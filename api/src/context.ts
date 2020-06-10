@@ -1,39 +1,22 @@
-import { ODataClient } from "./common/nav";
-
-export interface SessionUser {
-  username: string;
-  password: string;
-  name: string;
-  securityId: string;
-}
-
-export type Session = Express.Session & { user?: SessionUser };
+import { DataSources } from "./common/datasources";
 
 export interface GraphqlContext {
-  session: Session;
-  user: SessionUser;
-  navClient: ODataClient;
+  dataSources: DataSources;
+  session: Express.Session;
+  user?: Express.SessionUser;
 }
 
 export interface CreateContextOptions {
-  request: {
-    session: Session;
+  req: {
+    session: Express.Session;
   };
 }
 
 export function createContext({
-  request
-}: CreateContextOptions): GraphqlContext {
-  const navClient = new ODataClient({
-    serviceRoot: process.env.NAV_BASE_URL
-  });
-  if (request.session.user) {
-    const { username, password } = request.session.user;
-    navClient.auth(username, password);
-  }
+  req
+}: CreateContextOptions): Omit<GraphqlContext, "dataSources"> {
   return {
-    session: request.session,
-    user: request.session.user as SessionUser,
-    navClient
+    session: req.session,
+    user: req.session.user
   };
 }

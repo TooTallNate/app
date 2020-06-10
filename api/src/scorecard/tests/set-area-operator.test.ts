@@ -66,7 +66,8 @@ test("returns updated area", async () => {
       `/Company(%27${process.env.NAV_COMPANY}%27)/Resources(%27${operator.No}%27)`
     )
     .basicAuth(auth)
-    .reply(200, operator);
+    .reply(200, operator)
+    .persist();
 
   await expect(
     mutation({ input: { area: area.No, operator: operator.No } })

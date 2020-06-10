@@ -11,7 +11,7 @@ type Job {
   deadQuantity: Int
 }
 
-type Animal {
+type Item {
   number: String!
   description: String!
 }

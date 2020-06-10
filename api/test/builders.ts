@@ -7,7 +7,7 @@ import {
   NavResource,
   NavReason,
   NavLocation
-} from "../src/common/nav/types";
+} from "../src/common/nav";
 import uuid from "uuid/v4";
 import {
   SaveFarrowingBackendScorecardInput,
@@ -185,7 +185,7 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   locations: Factory.each(() => ({
     mode: oneOf("INCLUDE", "EXCLUDE"),
-    list: Array.from({ length: faker.random.number({ min: 1, max: 4 }) }, () =>
+    list: Array.from({ length: faker.random.number({ min: 2, max: 4 }) }, () =>
       faker.random.alphaNumeric(2)
     )
   }))

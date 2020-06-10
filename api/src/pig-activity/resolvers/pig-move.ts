@@ -6,28 +6,20 @@ import {
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavEntryType,
-  NavJob
+  NavEntryType
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigMoveModel from "../models/PigMove";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 
 export const PigMove: PigMoveResolvers = {
-  fromJob(pigMove, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", pigMove.fromJob)
-      .get<NavJob>();
+  fromJob(pigMove, _, { dataSources }) {
+    return dataSources.navJob.getByNo(pigMove.fromJob);
   },
-  toJob(pigMove, _, { navClient }) {
-    return (
-      pigMove.toJob &&
-      navClient
-        .resource("Company", process.env.NAV_COMPANY)
-        .resource("Jobs", pigMove.toJob)
-        .get<NavJob>()
-    );
+  toJob(pigMove, _, { dataSources }) {
+    if (pigMove.toJob) {
+      return dataSources.navJob.getByNo(pigMove.toJob);
+    }
   }
 };
 
@@ -56,16 +48,10 @@ export const PigMoveMutations: MutationResolvers = {
 
     return { success: true, pigMove: doc, defaults: userSettings };
   },
-  async postPigMove(_, { input }, { user, navClient }) {
+  async postPigMove(_, { input }, { user, dataSources }) {
     const docNo = getDocumentNumber("MOVE", user.name);
-    const fromJob = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.fromJob)
-      .get<NavJob>();
-    const toJob = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.toJob)
-      .get<NavJob>();
+    const fromJob = await dataSources.navJob.getByNo(input.fromJob);
+    const toJob = await dataSources.navJob.getByNo(input.toJob);
     await postItemJournal(
       {
         Journal_Template_Name: NavItemJournalTemplate.Move,
@@ -81,7 +67,7 @@ export const PigMoveMutations: MutationResolvers = {
         Shortcut_Dimension_1_Code: fromJob.Entity,
         Shortcut_Dimension_2_Code: fromJob.Cost_Center
       },
-      navClient
+      dataSources.navItemJournal
     );
     await postItemJournal(
       {
@@ -100,7 +86,7 @@ export const PigMoveMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: toJob.Cost_Center,
         Meta: input.smallPigQuantity
       },
-      navClient
+      dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({

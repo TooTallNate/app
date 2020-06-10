@@ -5,10 +5,7 @@ import {
   FarrowingBackendScorecardResolvers
 } from "../common/graphql";
 import {
-  NavJob,
   NavJobJournalEntry,
-  NavResource,
-  ODataClient,
   NavJobJournalTemplate,
   NavJobJournalBatch,
   JobTaskNumber,
@@ -16,33 +13,25 @@ import {
 } from "../common/nav";
 import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
+import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
 
 function postJobJournal(
   entry: Partial<NavJobJournalEntry>,
-  navClient: ODataClient
+  dataSource: NavJobJournalDataSource
 ): Promise<NavJobJournalEntry> {
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
-  return navClient
-    .resource("Company", process.env.NAV_COMPANY)
-    .resource("JobJournal")
-    .post(entry);
+  return dataSource.postEntry(entry);
 }
 
 const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
-  area(scorecard, _, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", scorecard.area)
-      .get<NavJob>();
+  area(scorecard, _, { dataSources }) {
+    return dataSources.navJob.getByNo(scorecard.area);
   },
-  operator(scorecard, _, { navClient }) {
+  operator(scorecard, _, { dataSources }) {
     return scorecard.operator
-      ? navClient
-          .resource("Company", process.env.NAV_COMPANY)
-          .resource("Resources", scorecard.operator)
-          .get<NavResource>()
+      ? dataSources.navResource.getByCode(scorecard.operator)
       : null;
   },
   sows: scorecard => scorecard.sows || {},
@@ -60,30 +49,19 @@ export const queries: QueryResolvers = {
       new FarrowingBackendScorecardModel({ area })
     );
   },
-  farrowingBackendAreas(_, __, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs")
-      .get<NavJob[]>()
-      .filter(f =>
-        f.and(
-          f.equals("Status", "Open"),
-          f.equals("Job_Posting_Group", "FARROW-BE")
-        )
-      );
+  farrowingBackendAreas(_, __, { dataSources }) {
+    return dataSources.navJob.getAll({
+      isOpen: true,
+      postingGroups: ["FARROW-BE"]
+    });
   },
-  farrowingBackendArea(_, { number }, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", number)
-      .get<NavJob>();
+  farrowingBackendArea(_, { number }, { dataSources }) {
+    return dataSources.navJob.getByNo(number);
   },
-  farrowingBackendOperators(_, __, { navClient }) {
-    return navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Resources")
-      .get<NavResource[]>()
-      .filter(f => f.equals("Resource_Group_No", "FARROW-BE"));
+  farrowingBackendOperators(_, __, { dataSources }) {
+    return dataSources.navResource.getAll({
+      groups: ["FARROW-BE"]
+    });
   }
 };
 
@@ -100,11 +78,8 @@ export const mutations: MutationResolvers = {
     await doc.save();
     return { success: true, scorecard: doc };
   },
-  async postFarrowingBackendScorecard(_, { input }, { navClient, user }) {
-    const job = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.area)
-      .get<NavJob>();
+  async postFarrowingBackendScorecard(_, { input }, { dataSources, user }) {
+    const job = await dataSources.navJob.getByNo(input.area);
     const docNo = getDocumentNumber("FBE", user.name);
 
     function postScore(task: string, entry: ScorecardEntry) {
@@ -121,7 +96,7 @@ export const mutations: MutationResolvers = {
           Quantity: entry.score,
           Description: entry.comments || " "
         },
-        navClient
+        dataSources.navJobJournal
       );
     }
 
@@ -145,13 +120,11 @@ export const mutations: MutationResolvers = {
 
     return { success: true, scorecard: doc };
   },
-  async setAreaOperator(_, { input }, { navClient }) {
-    const area = await navClient
-      .resource("Company", process.env.NAV_COMPANY)
-      .resource("Jobs", input.area)
-      .patch<NavJob>({
-        Person_Responsible: input.operator
-      });
+  async setAreaOperator(_, { input }, { dataSources }) {
+    const area = await dataSources.navJob.updatePersonResponsible(
+      input.area,
+      input.operator
+    );
 
     return { success: true, area };
   }

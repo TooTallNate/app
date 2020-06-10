@@ -30,7 +30,8 @@ test("returns areas for the farrowing backend", async () => {
       $filter: `(Resource_Group_No eq 'FARROW-BE')`
     })
     .basicAuth(auth)
-    .reply(200, { value: resources });
+    .reply(200, { value: resources })
+    .persist();
 
   await expect(query()).resolves.toEqual({
     farrowingBackendOperators: resources.map(resource => ({
