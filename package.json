@@ -1,6 +1,6 @@
 {
   "name": "farm-activity-entry",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "web": "NODE_ENV=development webpack-dev-server --config ./web/webpack.config.js",
