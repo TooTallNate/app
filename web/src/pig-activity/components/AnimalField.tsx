@@ -5,11 +5,11 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StackedInput from "../../common/components/input/StackedInput";
 import StackedRadioButton from "../../common/components/input/StackedRadioButton";
-import { Animal } from "../../user/graphql";
+import { Item } from "../../user/graphql";
 
 export interface AnimalFieldProps {
   className?: string;
-  animals: Animal[];
+  animals: Item[];
 }
 
 const AnimalField: React.FC<AnimalFieldProps> = ({ animals }) => {

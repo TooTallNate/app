@@ -12,7 +12,7 @@ import {
   PigMortality,
   PigMove,
   PigPurchase,
-  Animal
+  Item
 } from "../../user/graphql";
 import { Location } from "../../pig-activity/graphql";
 
@@ -25,8 +25,8 @@ const cache = new InMemoryCache({
         return object.__typename;
       case "Job":
         return `Job:${(object as Job).number}`;
-      case "Animal":
-        return `Animal:${(object as Animal).number}`;
+      case "Item":
+        return `Item:${(object as Item).number}`;
       case "Resource":
         return `Resource:${(object as Resource).number}`;
       case "Location":

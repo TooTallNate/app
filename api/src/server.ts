@@ -5,7 +5,7 @@ import { initMongoose } from "./config/mongoose";
 import { initPassport, sessions } from "./config/passport";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
-import { makeExecutableSchema } from "graphql-tools";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
 import { applyMiddleware, IMiddlewareFunction } from "graphql-middleware";
