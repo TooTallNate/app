@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-process.env.MONGO_URI = `${global.__MONGO_URI__}${process.env.JEST_WORKER_ID}`;
+process.env.MONGO_URL = `${global.__MONGO_URI__}${process.env.JEST_WORKER_ID}`;
 
 process.env.PORT = (
   parseInt(process.env.PORT || "7000") +
