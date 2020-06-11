@@ -4,7 +4,6 @@ import "./env";
 import mongoose from "mongoose";
 import { initMongoose } from "../src/config/mongoose";
 import { getUser } from "./utils";
-import "./matchers";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
