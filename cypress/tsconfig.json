@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "types": [
-      "cypress", "@testing-library/cypress/typings"
-    ],
-  }
-}

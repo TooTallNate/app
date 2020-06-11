@@ -17,7 +17,6 @@
 
 ### Other useful development commands
 * Run `npm run test` to run tests on both the web and api projects.
-* Run `npm run test:coverage` to run tests and get a coverage report.
 * Run `npm run generate` to update typings after changing the GraphQL schema.
 
 

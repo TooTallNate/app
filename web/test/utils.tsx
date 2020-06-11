@@ -4,7 +4,6 @@ import { render as renderRTL, waitForDomChange } from "@testing-library/react";
 import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
 import { AuthProvider } from "../src/user/contexts/auth";
 import App from "../src/App";
-import fetchMock from "fetch-mock";
 import { User, UserDocument } from "../src/user/graphql";
 import { MockedResponse, MockedProvider } from "@apollo/react-testing";
 
@@ -65,8 +64,10 @@ export function renderHook<T>(
   };
 }
 
+type RenderUser = Pick<User, "username" | "name">;
+
 interface RenderViewOptions {
-  user?: User | null;
+  user?: RenderUser | null;
   dataMocks?: MockedResponse[];
 }
 
@@ -74,15 +75,6 @@ export async function renderView(
   initialRoute: string,
   { user = getUser(), dataMocks = [] }: RenderViewOptions = {}
 ) {
-  fetchMock.get(
-    "/api/refresh",
-    user
-      ? {
-          status: 200,
-          body: JSON.stringify(user)
-        }
-      : { status: 403 }
-  );
   const utils = renderRTL(
     <MemoryRouter initialEntries={[initialRoute]}>
       <MockedProvider
@@ -114,11 +106,8 @@ export async function renderView(
 
 // Get test user.
 export function getUser({
-  id = faker.random.uuid(),
   name = faker.name.findName(),
-  domain = faker.internet.domainWord(),
-  license = "Full License",
-  username = `${domain}\\${faker.internet.userName()}`
-}: Partial<User> = {}): User {
-  return { id, domain, name, license, username };
+  username = faker.internet.userName()
+}: Partial<RenderUser> = {}): RenderUser {
+  return { name, username };
 }

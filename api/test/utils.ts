@@ -16,8 +16,6 @@ declare global {
   }
 }
 
-global.fetch = require("fetch-cookie/node-fetch")(require("node-fetch"));
-
 export const getUser = jest.fn().mockReturnValue(undefined);
 const server = new ApolloServer({
   schema,
