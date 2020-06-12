@@ -2,8 +2,18 @@ import { NavUser } from "../nav";
 import NavDataSource from "./NavDataSource";
 
 export default class NavUserDataSource extends NavDataSource {
-  async getByUsername(username: string): Promise<NavUser> {
-    const data = await this.get(`/Users?$filter=User_Name eq '${username}'`);
+  async login(username: string, password: string): Promise<NavUser> {
+    const data = await this.get(
+      `/Users?$filter=User_Name eq '${username}'`,
+      null,
+      {
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `${username}:${password}`
+          ).toString("base64")}`
+        }
+      }
+    );
     return data[0];
   }
 
