@@ -25,7 +25,7 @@ const paths = {
   public: "/"
 };
 
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 function selectEnv(options) {
   return options[NODE_ENV] === undefined
