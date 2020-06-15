@@ -59,8 +59,8 @@ export async function mockUser({ login = true } = {}) {
   const password = faker.internet.password();
 
   const auth = {
-    user: user.User_Name,
-    pass: password
+    user: process.env.NAV_USER,
+    pass: process.env.NAV_ACCESS_KEY
   };
 
   if (login) {

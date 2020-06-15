@@ -25,6 +25,9 @@ const paths = {
   public: "/"
 };
 
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = "development";
+}
 const NODE_ENV = process.env.NODE_ENV;
 
 function selectEnv(options) {

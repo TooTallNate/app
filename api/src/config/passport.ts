@@ -8,7 +8,6 @@ declare global {
   namespace Express {
     interface SessionUser {
       username: string;
-      password: string;
       name: string;
       securityId: string;
     }

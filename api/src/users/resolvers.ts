@@ -24,15 +24,10 @@ export const queries: QueryResolvers = {
 
 export const mutations: MutationResolvers = {
   async login(_, { input: { username, password } }, context) {
-    context.user = {
-      username,
-      password
-    } as any;
     const { dataSources, session } = context;
-    const user = await dataSources.navUser.getByUsername(username);
+    const user = await dataSources.navUser.login(username, password);
     const sessionUser = {
       username: user.User_Name,
-      password,
       name: user.Full_Name,
       securityId: user.User_Security_ID
     };

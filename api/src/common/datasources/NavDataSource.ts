@@ -8,6 +8,10 @@ import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { ErrorCode } from "../utils";
 import { FilterFunction, compileFilter } from "../nav/filter";
 
+const authHeader = `Basic ${Buffer.from(
+  `${process.env.NAV_USER}:${process.env.NAV_ACCESS_KEY}`
+).toString("base64")}`;
+
 export default class NavDataSource extends RESTDataSource<GraphqlContext> {
   get baseURL() {
     return `${process.env.NAV_BASE_URL}/Company('${process.env.NAV_COMPANY}')`;
@@ -15,12 +19,8 @@ export default class NavDataSource extends RESTDataSource<GraphqlContext> {
 
   // Attach authorization header if user is logged in on the context.
   willSendRequest(request: RequestOptions) {
-    if (this.context.user) {
-      const { user } = this.context;
-      const str = Buffer.from(`${user.username}:${user.password}`).toString(
-        "base64"
-      );
-      request.headers.set("Authorization", `Basic ${str}`);
+    if (this.context.user && !request.headers.has("Authorization")) {
+      request.headers.set("Authorization", authHeader);
     }
   }
 

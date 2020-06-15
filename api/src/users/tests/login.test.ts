@@ -21,12 +21,15 @@ function mutation(variables: MutationLoginArgs) {
 }
 
 test("returns user data if login is successful", async () => {
-  const { user, auth, password } = await mockUser({ login: false });
+  const { user, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
-    .basicAuth(auth)
+    .basicAuth({
+      user: user.User_Name,
+      pass: password
+    })
     .reply(200, { value: [user] });
 
   await expect(
@@ -44,12 +47,15 @@ test("returns user data if login is successful", async () => {
 });
 
 test("returns with error if credentials are incorrect", async () => {
-  const { user, auth, password } = await mockUser({ login: false });
+  const { user, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
-    .basicAuth(auth)
+    .basicAuth({
+      user: user.User_Name,
+      pass: password
+    })
     .reply(401, {
       error: {
         code: NavErrorCode.InvalidCredentials,
@@ -75,12 +81,15 @@ test("returns with error if credentials are incorrect", async () => {
 });
 
 test("returns with error if too many users are logged in", async () => {
-  const { user, auth, password } = await mockUser({ login: false });
+  const { user, password } = await mockUser({ login: false });
 
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Users`)
     .query({ $filter: `User_Name eq '${user.User_Name}'` })
-    .basicAuth(auth)
+    .basicAuth({
+      user: user.User_Name,
+      pass: password
+    })
     .reply(401, {
       error: {
         code: NavErrorCode.Unknown,
