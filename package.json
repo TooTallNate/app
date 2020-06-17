@@ -9,7 +9,8 @@
     "test": "jest --watch",
     "e2e": "cypress open",
     "generate": "graphql-codegen",
-    "preversion": "jest"
+    "preversion": "jest",
+    "postversion": "node ./scripts/postversion.js"
   },
   "browserslist": {
     "production": [
@@ -86,6 +87,7 @@
     "@graphql-codegen/typescript-operations": "1.13.5",
     "@graphql-codegen/typescript-react-apollo": "1.13.5",
     "@graphql-codegen/typescript-resolvers": "1.13.5",
+    "@sentry/cli": "1.54.0",
     "@shelf/jest-mongodb": "1.1.1",
     "@testing-library/jest-dom": "4.0.0",
     "@testing-library/react": "9.1.1",

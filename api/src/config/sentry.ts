@@ -12,7 +12,8 @@ export const sentryMiddleware =
   sentry<GraphqlContext>({
     config: {
       dsn: process.env.SENTRY_DSN_API,
-      release: `farm-entry@${pkg.version}`
+      release: `farm-entry@${pkg.version}`,
+      environment: process.env.NODE_ENV
     },
     withScope(scope: Scope, error: Error, context: GraphqlContext) {
       if (context.user) {
