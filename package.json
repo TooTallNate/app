@@ -9,7 +9,8 @@
     "test": "jest --watch",
     "e2e": "cypress open",
     "generate": "graphql-codegen",
-    "preversion": "jest"
+    "preversion": "jest",
+    "postversion": "node ./scripts/postversion.js"
   },
   "browserslist": {
     "production": [
@@ -45,6 +46,8 @@
     "@fortawesome/free-solid-svg-icons": "5.11.2",
     "@fortawesome/react-fontawesome": "0.1.7",
     "@graphql-tools/schema": "6.0.9",
+    "@sentry/browser": "^5.17.0",
+    "@sentry/node": "5.17.0",
     "apollo-boost": "0.4.4",
     "apollo-datasource-rest": "0.9.2",
     "apollo-server-express": "2.14.1",
@@ -55,6 +58,7 @@
     "express-session": "1.16.2",
     "graphql": "15.0.0",
     "graphql-middleware": "4.0.2",
+    "graphql-middleware-sentry": "3.2.1",
     "mongoose": "5.9.7",
     "passport": "0.4.0",
     "react": "16.9.0",
@@ -83,6 +87,7 @@
     "@graphql-codegen/typescript-operations": "1.13.5",
     "@graphql-codegen/typescript-react-apollo": "1.13.5",
     "@graphql-codegen/typescript-resolvers": "1.13.5",
+    "@sentry/cli": "1.54.0",
     "@shelf/jest-mongodb": "1.1.1",
     "@testing-library/jest-dom": "4.0.0",
     "@testing-library/react": "9.1.1",

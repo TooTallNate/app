@@ -15,6 +15,11 @@ const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const safePostCssParser = require("postcss-safe-parser");
 
+if (!process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+}
+const NODE_ENV = process.env.NODE_ENV;
+
 const paths = {
   index: path.resolve(__dirname, "src/index.tsx"),
   src: path.resolve(__dirname, "src"),
@@ -24,11 +29,6 @@ const paths = {
   tsConfig: path.resolve(__dirname, "tsconfig.json"),
   public: "/"
 };
-
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = "development";
-}
-const NODE_ENV = process.env.NODE_ENV;
 
 function selectEnv(options) {
   return options[NODE_ENV] === undefined
@@ -228,7 +228,8 @@ module.exports = {
     new DefinePlugin({
       "process.env": {
         // Required for React to use production build.
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        SENTRY_DSN_WEB: JSON.stringify(process.env.SENTRY_DSN_WEB)
       }
     }),
     // Warn when importing incorrect paths
