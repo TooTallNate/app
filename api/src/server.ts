@@ -8,9 +8,14 @@ import express from "express";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import resolvers from "./resolvers";
 import { createContext, GraphqlContext } from "./context";
-import { applyMiddleware, IMiddlewareFunction } from "graphql-middleware";
+import {
+  applyMiddleware,
+  IMiddlewareFunction,
+  IMiddleware
+} from "graphql-middleware";
 import { ErrorCode } from "./common/utils";
 import dataSources from "./common/datasources";
+import { sentryEnabled, sentryMiddleware } from "./config/sentry";
 
 const typeDefs = fs.readFileSync(
   path.join(__dirname, "schema.graphql"),
@@ -43,11 +48,7 @@ const loggingMiddleware: IMiddlewareFunction<any, GraphqlContext, any> = (
   return resolve(root, args, context, info);
 };
 
-export const schema = applyMiddleware(
-  makeExecutableSchema({
-    typeDefs,
-    resolvers
-  }),
+const middlewares: IMiddleware[] = [
   {
     Query: loggingMiddleware,
     Mutation: loggingMiddleware
@@ -56,6 +57,18 @@ export const schema = applyMiddleware(
     Query: authMiddleware,
     Mutation: authMiddleware
   }
+];
+
+if (sentryEnabled) {
+  middlewares.push(sentryMiddleware);
+}
+
+export const schema = applyMiddleware(
+  makeExecutableSchema({
+    typeDefs,
+    resolvers
+  }),
+  ...middlewares
 );
 
 export default () => {
