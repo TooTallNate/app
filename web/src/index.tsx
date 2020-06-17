@@ -11,7 +11,7 @@ if (process.env.SENTRY_DSN_WEB) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN_WEB,
     environment: process.env.NODE_ENV,
-    release: `farm-entry@${pkg.version}`
+    release: pkg.version
   });
 }
 
