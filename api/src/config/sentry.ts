@@ -3,6 +3,7 @@ import { sentry } from "graphql-middleware-sentry";
 import { GraphqlContext } from "../context";
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { ErrorCode } from "../common/utils";
+import pkg from "../../../package.json";
 
 export const sentryEnabled = !!process.env.SENTRY_DSN_API;
 
@@ -10,7 +11,8 @@ export const sentryMiddleware =
   sentryEnabled &&
   sentry<GraphqlContext>({
     config: {
-      dsn: process.env.SENTRY_DSN_API
+      dsn: process.env.SENTRY_DSN_API,
+      release: `farm-entry@${pkg.version}`
     },
     withScope(scope: Scope, error: Error, context: GraphqlContext) {
       if (context.user) {
