@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout Repo'
+      uses: actions/checkout@v2
+
+    - name: 'Set Up Node'
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+
+    - name: Cache Node.js modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm 
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+
+    - name: 'Install Dependencies'
+      run: 'npm ci'
+    - name: 'Execute Tests'
+      run: 'npm run test:ci'
