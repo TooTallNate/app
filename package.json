@@ -7,10 +7,10 @@
     "api": "nodemon --watch api --ext .ts,.js --exec \"ts-node --project api/tsconfig.json api/src/index.ts\"",
     "build": "webpack --config ./web/webpack.config.js",
     "test": "jest --watch",
+    "test:ci": "jest --maxWorkers=1",
     "e2e": "cypress open",
     "generate": "graphql-codegen",
-    "preversion": "jest",
-    "postversion": "node ./scripts/postversion.js"
+    "preversion": "jest"
   },
   "browserslist": {
     "production": [
@@ -87,7 +87,7 @@
     "@graphql-codegen/typescript-operations": "1.13.5",
     "@graphql-codegen/typescript-react-apollo": "1.13.5",
     "@graphql-codegen/typescript-resolvers": "1.13.5",
-    "@sentry/cli": "1.54.0",
+    "@sentry/cli": "^1.54.0",
     "@shelf/jest-mongodb": "1.1.1",
     "@testing-library/jest-dom": "4.0.0",
     "@testing-library/react": "9.1.1",
@@ -138,6 +138,7 @@
     "husky": "4.2.5",
     "interpolate-html-plugin": "3.0.0",
     "jest": "24.9.0",
+    "jest-junit": "10.0.0",
     "jest-watch-select-projects": "1.0.0",
     "jest-watch-typeahead": "0.4.0",
     "lint-staged": "9.2.1",

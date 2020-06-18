@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+
+    steps:
+    - name: 'Checkout Repo'
+      uses: actions/checkout@v2
+
+    - name: 'Create Sentry Release'
+      run: |
+        curl -sL https://sentry.io/get-cli/ | bash
+
+        export VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
+
+        sentry-cli releases new -p api -p web --finalize $VERSION
+        sentry-cli releases set-commits --auto $VERSION
+        sentry-cli releases deploys $VERSION new -e production
+
