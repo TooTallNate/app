@@ -6,7 +6,8 @@ import { useParams, useHistory } from "react-router";
 import {
   usePigWeanQuery,
   useSavePigWeanMutation,
-  usePostPigWeanMutation
+  usePostPigWeanMutation,
+  PigWeanDocument
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -55,8 +56,9 @@ const ActivityWeanView: React.FC = () => {
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
       if (pigWean.price) setValue("price", pigWean.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
+      //default price is handled on click of pig type rather than on load
+      //else if (pigActivityDefaults.price)
+      //  setValue("price", pigActivityDefaults.price);
       if (pigWean.comments) setValue("comments", pigWean.comments);
     }
   });
@@ -114,6 +116,8 @@ const ActivityWeanView: React.FC = () => {
     }
   };
 
+  //when animal is changed, re-render to get price default for the selected pig
+  //const priceWatch = watch("animal", data?.pigActivityDefaults.pigList[data?.pigWean.animal].price);
   const quantity = watch("quantity") || 0;
 
   // Validate small pig quantity if total quantity changes.

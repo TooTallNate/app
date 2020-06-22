@@ -52,6 +52,7 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
+  name?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 

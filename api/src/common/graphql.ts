@@ -72,6 +72,7 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
+  name?: Maybe<Scalars["String"]>;
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -922,6 +923,7 @@ export type PigActivityDefaultsResolvers<
   ParentType extends ResolversParentTypes["PigActivityDefaults"] = ResolversParentTypes["PigActivityDefaults"]
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
