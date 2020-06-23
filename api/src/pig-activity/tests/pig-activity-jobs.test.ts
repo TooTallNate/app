@@ -106,3 +106,34 @@ test("filters jobs by site exclusion", async () => {
     }))
   });
 });
+
+test("does not filter by site if list is empty", async () => {
+  const { auth, user } = await mockUser();
+  const jobs = JobFactory.buildList(3);
+  await UserSettingsModel.create(
+    UserSettingsFactory.build({
+      username: user.User_Name,
+      locations: {
+        mode: InclusivityMode.Exclude,
+        list: []
+      }
+    })
+  );
+
+  nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs`)
+    .query({
+      $filter: `((Status eq 'Open') and ((Job_Posting_Group eq 'MKT PIGS') or (Job_Posting_Group eq 'SOWS') or (Job_Posting_Group eq 'GDU')))`
+    })
+    .basicAuth(auth)
+    .reply(200, { value: jobs });
+
+  await expect(query()).resolves.toEqual({
+    pigActivityJobs: jobs.map(job => ({
+      number: job.No,
+      description: job.Description,
+      inventory: job.Inventory_Left,
+      deadQuantity: job.Dead_Quantity
+    }))
+  });
+});
