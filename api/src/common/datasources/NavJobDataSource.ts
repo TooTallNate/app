@@ -36,11 +36,11 @@ export default class PigJobNavDataSource extends NavDataSource {
           )
         );
       }
-      if (includeLocations) {
+      if (includeLocations && includeLocations.length > 0) {
         filters.push(
           f.or(...includeLocations.map(loc => f.equals("Site", loc)))
         );
-      } else if (excludeLocations) {
+      } else if (excludeLocations && excludeLocations.length > 0) {
         filters.push(
           f.and(...excludeLocations.map(loc => f.notEquals("Site", loc)))
         );
