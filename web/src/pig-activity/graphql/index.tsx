@@ -52,7 +52,12 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
-  name?: Maybe<Scalars["String"]>;
+  pigList: Array<PigAndPrice>;
+};
+
+export type PigAndPrice = {
+  __typename?: "PigAndPrice";
+  pigType: Scalars["String"];
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -539,9 +544,12 @@ export type UpdateUserLocationsResult = {
 
 export type PigActivityDefaultsFragmentFragment = {
   __typename?: "PigActivityDefaults";
-} & Pick<PigActivityDefaults, "price"> & {
-    job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
-  };
+} & {
+  job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+  pigList: Array<
+    { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+  >;
+};
 
 export type PigActivityJobsQueryVariables = {};
 
@@ -577,10 +585,11 @@ export type PigAdjustmentQuery = { __typename?: "Query" } & {
   pigTypes: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    pigList: Array<
+      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    >;
+  };
   pigAdjustment: {
     __typename?: "PigAdjustment";
   } & PigAdjustmentFragmentFragment;
@@ -738,10 +747,11 @@ export type PigMoveQuery = { __typename?: "Query" } & {
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    pigList: Array<
+      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    >;
+  };
   pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
 };
 
@@ -789,10 +799,11 @@ export type PigPurchaseQuery = { __typename?: "Query" } & {
   pigTypes: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    pigList: Array<
+      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    >;
+  };
   pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
 };
 
@@ -845,10 +856,11 @@ export type PigWeanQuery = { __typename?: "Query" } & {
   pigTypes: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & Pick<
-    PigActivityDefaults,
-    "price"
-  >;
+  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
+    pigList: Array<
+      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    >;
+  };
   pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
 };
 
@@ -883,7 +895,10 @@ export const PigActivityDefaultsFragmentFragmentDoc = gql`
     job {
       number
     }
-    price
+    pigList {
+      pigType
+      price
+    }
   }
 `;
 export const PigAdjustmentFragmentFragmentDoc = gql`
@@ -1053,7 +1068,10 @@ export const PigAdjustmentDocument = gql`
       description
     }
     pigActivityDefaults {
-      price
+      pigList {
+        pigType
+        price
+      }
     }
     pigAdjustment(job: $job) {
       ...PigAdjustmentFragment
@@ -1571,7 +1589,10 @@ export const PigMoveDocument = gql`
       description
     }
     pigActivityDefaults {
-      price
+      pigList {
+        pigType
+        price
+      }
     }
     pigMove(job: $job) {
       ...PigMoveFragment
@@ -1745,7 +1766,10 @@ export const PigPurchaseDocument = gql`
       description
     }
     pigActivityDefaults {
-      price
+      pigList {
+        pigType
+        price
+      }
     }
     pigPurchase(job: $job) {
       ...PigPurchaseFragment
@@ -1921,7 +1945,10 @@ export const PigWeanDocument = gql`
       description
     }
     pigActivityDefaults {
-      price
+      pigList {
+        pigType
+        price
+      }
     }
     pigWean(job: $job) {
       ...PigWeanFragment

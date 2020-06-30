@@ -2,7 +2,10 @@ fragment PigActivityDefaultsFragment on PigActivityDefaults {
   job {
     number
   }
-  price
+  pigList {
+    pigType
+    price
+  }
 }
 
 query PigActivityJobs {

@@ -72,7 +72,12 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
-  name?: Maybe<Scalars["String"]>;
+  pigList: Array<PigAndPrice>;
+};
+
+export type PigAndPrice = {
+  __typename?: "PigAndPrice";
+  pigType: Scalars["String"];
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -678,6 +683,7 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
+  PigAndPrice: ResolverTypeWrapper<PigAndPrice>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
   PigQuantityInput: PigQuantityInput;
@@ -783,6 +789,7 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
+  PigAndPrice: PigAndPrice;
   Float: Scalars["Float"];
   PigQuantity: PigQuantity;
   PigQuantityInput: PigQuantityInput;
@@ -923,7 +930,19 @@ export type PigActivityDefaultsResolvers<
   ParentType extends ResolversParentTypes["PigActivityDefaults"] = ResolversParentTypes["PigActivityDefaults"]
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  pigList?: Resolver<
+    Array<ResolversTypes["PigAndPrice"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigAndPriceResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigAndPrice"] = ResolversParentTypes["PigAndPrice"]
+> = ResolversObject<{
+  pigType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
@@ -1468,6 +1487,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
+  PigAndPrice?: PigAndPriceResolvers<ContextType>;
   PigQuantity?: PigQuantityResolvers<ContextType>;
   PigAdjustment?: PigAdjustmentResolvers<ContextType>;
   PigAdjustmentResult?: PigAdjustmentResultResolvers<ContextType>;

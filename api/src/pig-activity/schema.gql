@@ -1,11 +1,11 @@
-# type PigActivityDefaults {
-#   job: Job
-#   price: Float
-# }
-
 type PigActivityDefaults {
   job: Job
-  pigList: [PigAndPrice]
+  pigList: [PigAndPrice!]!
+}
+
+type PigAndPrice {
+  pigType: String!
+  price: Float
 }
 
 type PigQuantity {
