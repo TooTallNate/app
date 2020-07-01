@@ -18,7 +18,10 @@ query PigAdjustment($job: String!) {
     description
   }
   pigActivityDefaults {
-    price
+    pigList {
+      pigType
+      price
+    }
   }
   pigAdjustment(job: $job) {
     ...PigAdjustmentFragment

@@ -19,12 +19,16 @@ query PigWean($job: String!) {
     description
   }
   pigActivityDefaults {
-    price
+    pigList {
+      pigType
+      price
+    }
   }
   pigWean(job: $job) {
     ...PigWeanFragment
   }
 }
+
 
 mutation SavePigWean($input: SavePigWeanInput!) {
   savePigWean(input: $input) {

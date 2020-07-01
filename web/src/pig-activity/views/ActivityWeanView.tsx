@@ -65,7 +65,13 @@ const ActivityWeanView: React.FC = () => {
   const [post] = usePostPigWeanMutation();
   const [save] = useSavePigWeanMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, triggerValidation, formState } = formContext;
+  const {
+    getValues,
+    setValue,
+    watch,
+    triggerValidation,
+    formState
+  } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -116,9 +122,23 @@ const ActivityWeanView: React.FC = () => {
     }
   };
 
-  //when animal is changed, re-render to get price default for the selected pig
-  //const priceWatch = watch("animal", data?.pigActivityDefaults.pigList[data?.pigWean.animal].price);
+  const animal = watch("animal");
   const quantity = watch("quantity") || 0;
+
+  useEffect(() => {
+    if (animal && data) {
+      console.log(data.pigActivityDefaults);
+      const priceEntry = data.pigActivityDefaults.pigList.find(
+        n => n.pigType === animal
+      );
+      console.log("animal = " + animal);
+      console.log(JSON.stringify(priceEntry));
+      if (priceEntry && typeof priceEntry.price === "number") {
+        console.log("inside the second if");
+        setValue("price", priceEntry.price);
+      }
+    }
+  }, [data, animal, setValue]);
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {

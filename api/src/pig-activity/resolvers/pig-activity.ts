@@ -23,17 +23,35 @@ export function postItemJournal(
 
 export async function updateUserSettings({
   username,
+  animal,
   ...doc
 }: {
   username: string;
   pigJob?: string;
-  price?: number;
+  animal?: string;
+  price?: number | null | undefined;
 }): Promise<UserSettingsDocument> {
   let settings = await UserSettingsModel.findOne({ username });
   if (!settings) {
     settings = new UserSettingsModel({ username });
   }
-  settings.set(doc);
+
+  if (typeof doc.price === "number" && typeof animal === "string") {
+    const allPigs = settings.pigList;
+    const pigObj = allPigs.find(pig => pig.pigType === animal);
+    if (!pigObj) {
+      const newPig = {
+        pigType: animal,
+        price: doc.price
+      };
+      settings.pigList.push(newPig);
+    } else {
+      pigObj.price = doc.price;
+    }
+  }
+  if (typeof doc.pigJob === "string") {
+    settings.pigJob = doc.pigJob;
+  }
   await settings.save();
   return settings;
 }
@@ -46,7 +64,7 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
       return null;
     }
   },
-  price: userSettings => (userSettings ? userSettings.price : null)
+  pigList: userSettings => (userSettings ? userSettings.pigList : null)
 };
 
 export const PigActivityQueries: QueryResolvers = {

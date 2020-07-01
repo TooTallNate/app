@@ -5,6 +5,10 @@ export interface UserSettingsDocument extends Document {
   username: string;
   pigJob: string | null | undefined;
   price: number | null | undefined;
+  pigList: {
+    pigType: string;
+    price: number | null | undefined;
+  }[];
   locations:
     | {
         mode: InclusivityMode;
@@ -22,7 +26,12 @@ const UserSettingsSchema = new Schema(
       unique: true
     },
     pigJob: String,
-    price: Number,
+    pigList: [
+      {
+        pigType: String,
+        price: Number
+      }
+    ],
     locations: {
       _id: false,
       mode: String,

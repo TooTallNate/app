@@ -8,7 +8,10 @@ import UserSettingsModel from "../../common/models/UserSettings";
 interface QueryResult {
   pigActivityDefaults: {
     job: Job;
-    price: number;
+    pigList: {
+      pigType: String;
+      price: number;
+    };
   };
 }
 

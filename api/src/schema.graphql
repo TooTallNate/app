@@ -31,31 +31,9 @@ type Location {
   name: String!
 }
 
-# type PigActivityDefaults {
-#   job: Job
-#   name: String
-#   price: Float
-# }
-
-# mock data for pigandprice
-# data [
-#   {
-#     pigType: "animal1",
-#     price: 10
-#   },
-#   {
-#     pigType: "animal2",
-#     price: 20
-#   },
-#   {
-#     pigType: "animal3",
-#     price: 
-#   },
-# ]
-
 type PigActivityDefaults {
   job: Job
-  pigList: [PigAndPrice]
+  pigList: [PigAndPrice!]!
 }
 
 type PigAndPrice {
