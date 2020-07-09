@@ -49,8 +49,6 @@ function mutation(variables: MutationPostPigAdjustmentArgs) {
   );
 }
 
-//TODO ADRIAN TO CHECK CHANGES
-
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
   const job = JobFactory.build();
@@ -175,7 +173,6 @@ test("submits data to NAV and updates existing user settings document", async ()
     })
   );
 
-  //TODO
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
       success: true,
@@ -193,12 +190,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -209,12 +201,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });
 

@@ -175,7 +175,7 @@ test("submits data to NAV and updates existing user settings document", async ()
       pigList: [
         {
           pigType: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
+          price: input.price
         }
       ]
     })
@@ -197,12 +197,7 @@ test("submits data to NAV and updates existing user settings document", async ()
       },
       defaults: {
         job: null,
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -212,12 +207,7 @@ test("submits data to NAV and updates existing user settings document", async ()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });
 

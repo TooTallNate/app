@@ -105,12 +105,7 @@ test("creates new move and user settings documents", async () => {
         job: {
           number: fromJob.No
         },
-        pigList: [
-          {
-            pigType: input.fromAnimal,
-            price: input.price
-          }
-        ]
+        pigList: []
       }
     }
   });
@@ -187,12 +182,7 @@ test("updates existing move document", async () => {
         job: {
           number: fromJob.No
         },
-        pigList: [
-          {
-            pigType: input.fromAnimal,
-            price: input.price
-          }
-        ]
+        pigList: []
       }
     }
   });
@@ -210,7 +200,13 @@ test("updates existing move document", async () => {
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
     price: input.price,
-    comments: input.comments
+    comments: input.comments,
+    pigList: [
+      {
+        pigType: input.fromAnimal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -222,7 +218,13 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      pigList: [
+        {
+          pigType: input.fromAnimal,
+          price: input.price
+        }
+      ]
     })
   );
 
@@ -248,12 +250,7 @@ test("updates existing user settings document", async () => {
         job: {
           number: fromJob.No
         },
-        pigList: [
-          {
-            pigType: input.fromAnimal,
-            price: input.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -264,12 +261,7 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: fromJob.No,
-    pigList: [
-      {
-        pigType: input.fromAnimal,
-        price: input.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });
 
@@ -314,12 +306,7 @@ test("does not update price in user settings if not given in input", async () =>
         job: {
           number: fromJob.No
         },
-        pigList: [
-          {
-            pigType: input.fromAnimal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -330,11 +317,6 @@ test("does not update price in user settings if not given in input", async () =>
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: fromJob.No,
-    pigList: [
-      {
-        pigType: input.fromAnimal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });

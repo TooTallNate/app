@@ -225,7 +225,13 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      pigList: [
+        {
+          pigType: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -245,12 +251,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -261,12 +262,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });
 

@@ -188,7 +188,6 @@ test("updates existing user settings document", async () => {
     })
   );
 
-  //TODO
   await expect(mutation({ input })).resolves.toEqual({
     savePigMortality: {
       success: true,
@@ -205,12 +204,7 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -221,11 +215,6 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });

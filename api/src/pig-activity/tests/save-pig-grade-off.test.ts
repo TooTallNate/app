@@ -173,6 +173,7 @@ test("updates existing gradeOff document", async () => {
   });
 });
 
+//How would you update the userSettings price if there is no price in the input?
 test("updates existing user settings document", async () => {
   const { input, job, user } = await mockTestData({
     input: {
@@ -181,7 +182,8 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      pigList: []
     })
   );
 
@@ -201,12 +203,7 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -217,11 +214,6 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });

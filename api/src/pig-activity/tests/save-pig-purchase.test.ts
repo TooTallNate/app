@@ -191,12 +191,7 @@ test("updates existing purchase document", async () => {
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: input.price
-      }
-    ],
+    price: input.price,
     comments: input.comments
   });
 });
@@ -290,12 +285,7 @@ test("does not update price in user settings if not given in input", async () =>
       },
       defaults: {
         job: null,
-        pigList: [
-          {
-            pigType: input.animal,
-            price: userSettings.price
-          }
-        ]
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -305,11 +295,6 @@ test("does not update price in user settings if not given in input", async () =>
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigList: [
-      {
-        pigType: input.animal,
-        price: userSettings.price
-      }
-    ]
+    pigList: userSettings.toObject().pigList
   });
 });
