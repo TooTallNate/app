@@ -40,7 +40,10 @@ function mutation(variables: MutationPostPigMoveArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -153,7 +156,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
         job: {
           number: fromJob.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });
@@ -168,7 +171,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: fromJob.No,
-    price: input.price
+    pigList: []
   });
 
   await expect(
@@ -193,7 +196,13 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      pigList: [
+        {
+          pigType: input.fromAnimal,
+          price: input.price
+        }
+      ]
     })
   );
 
@@ -217,7 +226,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: fromJob.No
         },
-        price: input.price
+        pigList: userSettings.toObject().pigList
       }
     }
   });
@@ -228,7 +237,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: fromJob.No,
-    price: input.price
+    pigList: userSettings.toObject().pigList
   });
 });
 
@@ -265,7 +274,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         job: {
           number: fromJob.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });
@@ -306,7 +315,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: fromJob.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });

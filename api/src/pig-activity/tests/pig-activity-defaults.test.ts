@@ -2,8 +2,9 @@ import faker from "faker";
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import { Job } from "../../common/graphql";
-import { JobFactory, UserSettingsFactory } from "../../../test/builders";
+import { JobFactory, UserSettingsFactory, oneOf } from "../../../test/builders";
 import UserSettingsModel from "../../common/models/UserSettings";
+import { assertNonNullType } from "graphql";
 
 interface QueryResult {
   pigActivityDefaults: {
@@ -22,7 +23,10 @@ function query() {
         job {
           number
         }
-        price
+        pigList {
+          pigType
+          price
+        }
       }
     }`
   );
@@ -37,7 +41,7 @@ test("returns default job when set in user settings", async () => {
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: job.No,
-      price: null
+      pigList: []
     })
   );
 
@@ -52,7 +56,7 @@ test("returns default job when set in user settings", async () => {
       job: {
         number: job.No
       },
-      price: null
+      pigList: []
     }
   });
 });
@@ -60,18 +64,29 @@ test("returns default job when set in user settings", async () => {
 test("returns default price when set in user settings", async () => {
   const { user } = await mockUser();
   const price = faker.random.number({ min: 30, max: 150 });
+  const pigType = oneOf("01", "02", "03");
   await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: null,
-      price: price
+      pigList: [
+        {
+          pigType: pigType,
+          price
+        }
+      ]
     })
   );
 
   await expect(query()).resolves.toEqual({
     pigActivityDefaults: {
       job: null,
-      price
+      pigList: [
+        {
+          pigType,
+          price
+        }
+      ]
     }
   });
 });

@@ -28,6 +28,7 @@ const UserSettingsSchema = new Schema(
     pigJob: String,
     pigList: [
       {
+        _id: false,
         pigType: String,
         price: Number
       }

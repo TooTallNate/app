@@ -36,7 +36,10 @@ function mutation(variables: MutationPostPigWeanArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -118,7 +121,12 @@ test("submits data to NAV and creates new user settings and wean documents", asy
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -132,7 +140,12 @@ test("submits data to NAV and creates new user settings and wean documents", asy
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -158,7 +171,13 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: undefined
+      pigJob: undefined,
+      pigList: [
+        {
+          pigType: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -178,7 +197,12 @@ test("submits data to NAV and updates existing user settings document", async ()
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -188,7 +212,12 @@ test("submits data to NAV and updates existing user settings document", async ()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });
 
@@ -220,7 +249,12 @@ test("submits data to NAV and clears existing wean document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -257,7 +291,12 @@ test("sets description to an empty string if there are no comments", async () =>
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });

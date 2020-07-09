@@ -41,7 +41,10 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -128,7 +131,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -183,7 +186,7 @@ test("does not quantity if not positive", async () => {
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -242,7 +245,12 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        price: userSettings.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -253,7 +261,12 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: userSettings.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });
 
@@ -284,7 +297,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -324,7 +337,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });

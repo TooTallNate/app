@@ -39,7 +39,10 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -151,7 +154,7 @@ test("submits data to NAV and creates new user settings and mortality documents"
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -210,7 +213,12 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        price: userSettings.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -221,7 +229,12 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: userSettings.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });
 
@@ -252,7 +265,7 @@ test("submits data to NAV and clears existing mortality document", async () => {
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -322,7 +335,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });

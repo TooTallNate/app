@@ -33,7 +33,10 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -87,7 +90,12 @@ test("creates new purchase and user settings documents", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -101,7 +109,12 @@ test("creates new purchase and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -119,7 +132,12 @@ test("creates new purchase and user settings documents", async () => {
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
-    price: input.price,
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ],
     comments: input.comments
   });
 });
@@ -150,7 +168,12 @@ test("updates existing purchase document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -168,7 +191,12 @@ test("updates existing purchase document", async () => {
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
-    price: input.price,
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ],
     comments: input.comments
   });
 });
@@ -202,7 +230,12 @@ test("updates existing user settings document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -212,7 +245,12 @@ test("updates existing user settings document", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -226,7 +264,13 @@ test("does not update price in user settings if not given in input", async () =>
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       pigJob: undefined,
-      username: user.User_Name
+      username: user.User_Name,
+      pigList: [
+        {
+          pigType: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -246,7 +290,12 @@ test("does not update price in user settings if not given in input", async () =>
       },
       defaults: {
         job: null,
-        price: userSettings.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -256,6 +305,11 @@ test("does not update price in user settings if not given in input", async () =>
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    price: userSettings.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });

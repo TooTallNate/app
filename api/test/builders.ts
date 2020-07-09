@@ -16,7 +16,7 @@ import {
 } from "../src/common/graphql";
 import { format } from "date-fns";
 
-function oneOf<T>(...list: T[]) {
+export function oneOf<T>(...list: T[]) {
   return list[faker.random.number({ min: 0, max: list.length - 1 })];
 }
 
@@ -182,7 +182,7 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   _id: Factory.each(() => new ObjectId()),
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
-  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
+  pigList: Factory.each<{ pigType: string; price: number }[]>(() => []),
   locations: Factory.each(() => ({
     mode: oneOf("INCLUDE", "EXCLUDE"),
     list: Array.from({ length: faker.random.number({ min: 2, max: 4 }) }, () =>

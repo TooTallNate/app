@@ -38,13 +38,18 @@ function mutation(variables: MutationPostPigAdjustmentArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
     variables
   );
 }
+
+//TODO ADRIAN TO CHECK CHANGES
 
 async function mockTestData({ input: inputOverrides = {} } = {}) {
   const { user, auth } = await mockUser();
@@ -120,7 +125,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
         job: {
           number: job.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });
@@ -135,7 +140,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: job.No,
-    price: input.price
+    pigList: []
   });
 
   await expect(
@@ -161,10 +166,16 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      price: faker.random.number({ min: 1, max: 50 })
+      pigList: [
+        {
+          pigType: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
+  //TODO
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
       success: true,
@@ -182,7 +193,12 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -193,7 +209,12 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });
 
@@ -226,7 +247,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         job: {
           number: job.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });
@@ -267,7 +288,7 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -297,7 +318,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        price: input.price
+        pigList: []
       }
     }
   });

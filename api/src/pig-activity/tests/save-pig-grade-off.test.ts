@@ -34,7 +34,10 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -88,7 +91,7 @@ test("creates new gradeOff and user settings documents", async () => {
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -149,7 +152,7 @@ test("updates existing gradeOff document", async () => {
         job: {
           number: job.No
         },
-        price: null
+        pigList: []
       }
     }
   });
@@ -198,7 +201,12 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        price: userSettings.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: userSettings.price
+          }
+        ]
       }
     }
   });
@@ -209,6 +217,11 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: userSettings.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: userSettings.price
+      }
+    ]
   });
 });

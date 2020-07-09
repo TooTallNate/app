@@ -39,7 +39,10 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           job {
             number
           }
-          price
+          pigList {
+            pigType
+            price
+          }
         }
       }
     }`,
@@ -123,7 +126,12 @@ test("submits data to NAV and creates new user settings and purchase documents",
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -137,7 +145,12 @@ test("submits data to NAV and creates new user settings and purchase documents",
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -183,7 +196,12 @@ test("submits data to NAV and updates existing user settings document", async ()
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -194,7 +212,12 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: userSettings.pigJob,
-    price: input.price
+    pigList: [
+      {
+        pigType: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -226,7 +249,12 @@ test("submits data to NAV and clears existing purchase document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -266,7 +294,12 @@ test("sets description to an empty string if there are no comments", async () =>
       },
       defaults: {
         job: null,
-        price: input.price
+        pigList: [
+          {
+            pigType: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
