@@ -39,8 +39,8 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -126,9 +126,9 @@ test("submits data to NAV and creates new user settings and purchase documents",
       },
       defaults: {
         job: null,
-        pigList: [
+        prices: [
           {
-            pigType: input.animal,
+            animal: input.animal,
             price: input.price
           }
         ]
@@ -145,9 +145,9 @@ test("submits data to NAV and creates new user settings and purchase documents",
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigList: [
+    prices: [
       {
-        pigType: input.animal,
+        animal: input.animal,
         price: input.price
       }
     ]
@@ -196,9 +196,9 @@ test("submits data to NAV and updates existing user settings document", async ()
       },
       defaults: {
         job: null,
-        pigList: [
+        prices: [
           {
-            pigType: input.animal,
+            animal: input.animal,
             price: input.price
           }
         ]
@@ -212,9 +212,9 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: userSettings.pigJob,
-    pigList: [
+    prices: [
       {
-        pigType: input.animal,
+        animal: input.animal,
         price: input.price
       }
     ]
@@ -249,9 +249,9 @@ test("submits data to NAV and clears existing purchase document", async () => {
       },
       defaults: {
         job: null,
-        pigList: [
+        prices: [
           {
-            pigType: input.animal,
+            animal: input.animal,
             price: input.price
           }
         ]
@@ -294,9 +294,9 @@ test("sets description to an empty string if there are no comments", async () =>
       },
       defaults: {
         job: null,
-        pigList: [
+        prices: [
           {
-            pigType: input.animal,
+            animal: input.animal,
             price: input.price
           }
         ]

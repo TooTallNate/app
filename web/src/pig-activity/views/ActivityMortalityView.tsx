@@ -161,7 +161,7 @@ const ActivityMortalityView: React.FC = () => {
               inventory={data.pigMortality.job.inventory || 0}
               deadQuantity={data.pigMortality.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.pigTypes} />}
+            {isSowFarm && <AnimalField animals={data.animals} />}
             <FormField
               name="naturalQuantity"
               rules={{ validate: { required: quantityRequired } }}

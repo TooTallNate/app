@@ -4,13 +4,13 @@ import { NavItem } from "../../common/nav";
 import { Animal } from "../../common/graphql";
 
 interface QueryResult {
-  pigTypes: Animal[];
+  animals: Animal[];
 }
 
 function query() {
   return client.request<QueryResult>(
     `{
-      pigTypes {
+      animals {
         number
         description
       }
@@ -43,7 +43,7 @@ test("returns pig animals", async () => {
     .reply(200, { value: animals });
 
   await expect(query()).resolves.toEqual({
-    pigTypes: animals.map(animal => ({
+    animals: animals.map(animal => ({
       number: animal.No,
       description: animal.Description
     }))

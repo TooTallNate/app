@@ -43,7 +43,6 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      ...(input.animal && { animal: input.animal }),
       pigJob: input.job
     });
 
@@ -77,7 +76,6 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      animal: input.animal,
       pigJob: input.job
     });
 

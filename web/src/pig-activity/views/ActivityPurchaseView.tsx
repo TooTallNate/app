@@ -132,7 +132,7 @@ const ActivityPurchaseView: React.FC = () => {
               inventory={data.pigPurchase.job.inventory || 0}
               deadQuantity={data.pigPurchase.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.pigTypes} />}
+            {isSowFarm && <AnimalField animals={data.animals} />}
             <QuantityAndSmallsField />
             <TotalWeightField />
             <PriceField />

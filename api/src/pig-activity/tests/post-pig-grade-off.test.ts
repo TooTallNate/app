@@ -41,8 +41,8 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -131,7 +131,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -186,7 +186,7 @@ test("does not quantity if not positive", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -226,9 +226,9 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigList: [
+      prices: [
         {
-          pigType: input.animal,
+          animal: input.animal,
           price: faker.random.number({ min: 30, max: 150 })
         }
       ]
@@ -251,7 +251,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        pigList: userSettings.toObject().pigList
+        prices: userSettings.toObject().prices
       }
     }
   });
@@ -262,7 +262,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: userSettings.toObject().pigList
+    prices: userSettings.toObject().prices
   });
 });
 
@@ -293,7 +293,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -333,7 +333,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });

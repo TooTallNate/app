@@ -40,8 +40,8 @@ function mutation(variables: MutationPostPigMoveArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -156,7 +156,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
         job: {
           number: fromJob.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -171,7 +171,7 @@ test("submits data to NAV and creates new user settings and adjustment documents
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: fromJob.No,
-    pigList: []
+    prices: []
   });
 
   await expect(
@@ -197,9 +197,9 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigList: [
+      prices: [
         {
-          pigType: input.fromAnimal,
+          animal: input.fromAnimal,
           price: input.price
         }
       ]
@@ -226,7 +226,7 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: fromJob.No
         },
-        pigList: userSettings.toObject().pigList
+        prices: userSettings.toObject().prices
       }
     }
   });
@@ -237,7 +237,7 @@ test("submits data to NAV and updates existing user settings document", async ()
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: fromJob.No,
-    pigList: userSettings.toObject().pigList
+    prices: userSettings.toObject().prices
   });
 });
 
@@ -274,7 +274,7 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         job: {
           number: fromJob.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -315,7 +315,7 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: fromJob.No
         },
-        pigList: []
+        prices: []
       }
     }
   });

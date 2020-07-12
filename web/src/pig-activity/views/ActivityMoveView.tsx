@@ -189,7 +189,7 @@ const ActivityMoveView: React.FC = () => {
                       <FormFieldLabel>From</FormFieldLabel>
                       <FormFieldInput>
                         <StackedInput orientation="vertical">
-                          {data.pigTypes.map(type => (
+                          {data.animals.map(type => (
                             <StackedRadioButton
                               value={type.number}
                               key={type.number}
@@ -209,7 +209,7 @@ const ActivityMoveView: React.FC = () => {
                       <FormFieldLabel>To</FormFieldLabel>
                       <FormFieldInput>
                         <StackedInput orientation="vertical">
-                          {data.pigTypes.map(type => (
+                          {data.animals.map(type => (
                             <StackedRadioButton
                               value={type.number}
                               key={type.number}

@@ -52,12 +52,12 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
-  pigList: Array<PigAndPrice>;
+  prices: Array<PriceEntry>;
 };
 
-export type PigAndPrice = {
-  __typename?: "PigAndPrice";
-  pigType: Scalars["String"];
+export type PriceEntry = {
+  __typename?: "PriceEntry";
+  animal: Scalars["String"];
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -311,7 +311,7 @@ export type Query = {
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
-  pigTypes: Array<Item>;
+  animals: Array<Item>;
   pigWean: PigWean;
   user?: Maybe<User>;
 };

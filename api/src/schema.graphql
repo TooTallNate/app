@@ -33,11 +33,11 @@ type Location {
 
 type PigActivityDefaults {
   job: Job
-  pigList: [PigAndPrice!]!
+  prices: [PriceEntry!]!
 }
 
-type PigAndPrice {
-  pigType: String!
+type PriceEntry {
+  animal: String!
   price: Float
 }
 
@@ -277,7 +277,7 @@ type Query {
   pigMortality(job: String!): PigMortality!
   pigMove(job: String!): PigMove!
   pigPurchase(job: String!): PigPurchase!
-  pigTypes: [Item!]!
+  animals: [Item!]!
   pigWean(job: String!): PigWean!
   user: User
 }

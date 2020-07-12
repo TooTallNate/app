@@ -52,12 +52,12 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
-  pigList: Array<PigAndPrice>;
+  prices: Array<PriceEntry>;
 };
 
-export type PigAndPrice = {
-  __typename?: "PigAndPrice";
-  pigType: Scalars["String"];
+export type PriceEntry = {
+  __typename?: "PriceEntry";
+  animal: Scalars["String"];
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -311,7 +311,7 @@ export type Query = {
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
-  pigTypes: Array<Item>;
+  animals: Array<Item>;
   pigWean: PigWean;
   user?: Maybe<User>;
 };
@@ -546,8 +546,8 @@ export type PigActivityDefaultsFragmentFragment = {
   __typename?: "PigActivityDefaults";
 } & {
   job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
-  pigList: Array<
-    { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+  prices: Array<
+    { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
   >;
 };
 
@@ -582,12 +582,12 @@ export type PigAdjustmentQueryVariables = {
 };
 
 export type PigAdjustmentQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    pigList: Array<
-      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    prices: Array<
+      { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
     >;
   };
   pigAdjustment: {
@@ -643,7 +643,7 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigGradeOffReasons: Array<
@@ -689,7 +689,7 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
@@ -741,15 +741,15 @@ export type PigMoveQueryVariables = {
 };
 
 export type PigMoveQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    pigList: Array<
-      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    prices: Array<
+      { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
     >;
   };
   pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
@@ -796,12 +796,12 @@ export type PigPurchaseQueryVariables = {
 };
 
 export type PigPurchaseQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    pigList: Array<
-      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    prices: Array<
+      { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
     >;
   };
   pigPurchase: { __typename?: "PigPurchase" } & PigPurchaseFragmentFragment;
@@ -853,12 +853,12 @@ export type PigWeanQueryVariables = {
 };
 
 export type PigWeanQuery = { __typename?: "Query" } & {
-  pigTypes: Array<
+  animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    pigList: Array<
-      { __typename?: "PigAndPrice" } & Pick<PigAndPrice, "pigType" | "price">
+    prices: Array<
+      { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
     >;
   };
   pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
@@ -895,8 +895,8 @@ export const PigActivityDefaultsFragmentFragmentDoc = gql`
     job {
       number
     }
-    pigList {
-      pigType
+    prices {
+      animal
       price
     }
   }
@@ -1063,13 +1063,13 @@ export type PigActivityJobsQueryResult = ApolloReactCommon.QueryResult<
 >;
 export const PigAdjustmentDocument = gql`
   query PigAdjustment($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
     pigActivityDefaults {
-      pigList {
-        pigType
+      prices {
+        animal
         price
       }
     }
@@ -1244,7 +1244,7 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
@@ -1413,7 +1413,7 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigMortalityDocument = gql`
   query PigMortality($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
@@ -1580,7 +1580,7 @@ export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOpti
 >;
 export const PigMoveDocument = gql`
   query PigMove($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
@@ -1589,8 +1589,8 @@ export const PigMoveDocument = gql`
       description
     }
     pigActivityDefaults {
-      pigList {
-        pigType
+      prices {
+        animal
         price
       }
     }
@@ -1761,13 +1761,13 @@ export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
 >;
 export const PigPurchaseDocument = gql`
   query PigPurchase($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
     pigActivityDefaults {
-      pigList {
-        pigType
+      prices {
+        animal
         price
       }
     }
@@ -1940,13 +1940,13 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigWeanDocument = gql`
   query PigWean($job: String!) {
-    pigTypes {
+    animals {
       number
       description
     }
     pigActivityDefaults {
-      pigList {
-        pigType
+      prices {
+        animal
         price
       }
     }

@@ -34,8 +34,8 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -91,7 +91,7 @@ test("creates new gradeOff and user settings documents", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -152,7 +152,7 @@ test("updates existing gradeOff document", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -183,7 +183,7 @@ test("updates existing user settings document", async () => {
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigList: []
+      prices: []
     })
   );
 
@@ -203,7 +203,7 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        pigList: userSettings.toObject().pigList
+        prices: userSettings.toObject().prices
       }
     }
   });
@@ -214,6 +214,6 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: userSettings.toObject().pigList
+    prices: userSettings.toObject().prices
   });
 });

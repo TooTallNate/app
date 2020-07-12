@@ -29,7 +29,7 @@ export async function updateUserSettings({
   username: string;
   pigJob?: string;
   animal?: string;
-  price?: number | null | undefined;
+  price?: number;
 }): Promise<UserSettingsDocument> {
   let settings = await UserSettingsModel.findOne({ username });
   if (!settings) {
@@ -37,14 +37,13 @@ export async function updateUserSettings({
   }
 
   if (typeof doc.price === "number" && typeof animal === "string") {
-    const allPigs = settings.pigList;
-    const pigObj = allPigs.find(pig => pig.pigType === animal);
+    const pigObj = settings.prices.find(pig => pig.animal === animal);
     if (!pigObj) {
       const newPig = {
-        pigType: animal,
+        animal: animal,
         price: doc.price
       };
-      settings.pigList.push(newPig);
+      settings.prices.push(newPig);
     } else {
       pigObj.price = doc.price;
     }
@@ -64,11 +63,11 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
       return null;
     }
   },
-  pigList: userSettings => (userSettings ? userSettings.pigList : null)
+  prices: userSettings => (userSettings ? userSettings.prices : null)
 };
 
 export const PigActivityQueries: QueryResolvers = {
-  async pigTypes(_, __, { dataSources }) {
+  async animals(_, __, { dataSources }) {
     return dataSources.navConfig.getItems({
       postingGroups: ["SOWS", "MARKET HOGS"]
     });

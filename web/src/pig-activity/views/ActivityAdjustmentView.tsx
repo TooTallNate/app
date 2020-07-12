@@ -141,7 +141,7 @@ const ActivityAdjustmentView: React.FC = () => {
               inventory={data.pigAdjustment.job.inventory || 0}
               deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.pigTypes} />}
+            {isSowFarm && <AnimalField animals={data.animals} />}
             <FormField
               name="quantity"
               rules={{

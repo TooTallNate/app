@@ -13,13 +13,13 @@ fragment PigAdjustmentFragment on PigAdjustment {
 }
 
 query PigAdjustment($job: String!) {
-  pigTypes {
+  animals {
     number
     description
   }
   pigActivityDefaults {
-    pigList {
-      pigType
+    prices {
+      animal
       price
     }
   }

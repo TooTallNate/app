@@ -9,8 +9,8 @@ import { assertNonNullType } from "graphql";
 interface QueryResult {
   pigActivityDefaults: {
     job: Job;
-    pigList: {
-      pigType: String;
+    prices: {
+      animal: String;
       price: number;
     };
   };
@@ -23,8 +23,8 @@ function query() {
         job {
           number
         }
-        pigList {
-          pigType
+        prices {
+          animal
           price
         }
       }
@@ -41,7 +41,7 @@ test("returns default job when set in user settings", async () => {
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: job.No,
-      pigList: []
+      prices: []
     })
   );
 
@@ -56,7 +56,7 @@ test("returns default job when set in user settings", async () => {
       job: {
         number: job.No
       },
-      pigList: []
+      prices: []
     }
   });
 });
@@ -64,14 +64,14 @@ test("returns default job when set in user settings", async () => {
 test("returns default price when set in user settings", async () => {
   const { user } = await mockUser();
   const price = faker.random.number({ min: 30, max: 150 });
-  const pigType = oneOf("01", "02", "03");
+  const animal = oneOf("01", "02", "03");
   await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
       pigJob: null,
-      pigList: [
+      prices: [
         {
-          pigType: pigType,
+          animal: animal,
           price
         }
       ]
@@ -81,9 +81,9 @@ test("returns default price when set in user settings", async () => {
   await expect(query()).resolves.toEqual({
     pigActivityDefaults: {
       job: null,
-      pigList: [
+      prices: [
         {
-          pigType,
+          animal,
           price
         }
       ]

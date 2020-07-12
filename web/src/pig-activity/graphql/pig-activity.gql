@@ -2,8 +2,8 @@ fragment PigActivityDefaultsFragment on PigActivityDefaults {
   job {
     number
   }
-  pigList {
-    pigType
+  prices {
+    animal
     price
   }
 }

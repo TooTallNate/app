@@ -45,7 +45,9 @@ const ActivityWeanView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
+  });
   const { loading, data } = usePigWeanQuery({
     variables: {
       job: params.job
@@ -56,9 +58,6 @@ const ActivityWeanView: React.FC = () => {
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
       if (pigWean.price) setValue("price", pigWean.price);
-      //default price is handled on click of pig type rather than on load
-      //else if (pigActivityDefaults.price)
-      //  setValue("price", pigActivityDefaults.price);
       if (pigWean.comments) setValue("comments", pigWean.comments);
     }
   });
@@ -79,7 +78,7 @@ const ActivityWeanView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            ...(isNurseryFinisher && { animal: "01" }),
+
             job: params.job
           }
         }
@@ -127,14 +126,10 @@ const ActivityWeanView: React.FC = () => {
 
   useEffect(() => {
     if (animal && data) {
-      console.log(data.pigActivityDefaults);
-      const priceEntry = data.pigActivityDefaults.pigList.find(
-        n => n.pigType === animal
+      const priceEntry = data.pigActivityDefaults.prices.find(
+        n => n.animal === animal
       );
-      console.log("animal = " + animal);
-      console.log(JSON.stringify(priceEntry));
       if (priceEntry && typeof priceEntry.price === "number") {
-        console.log("inside the second if");
         setValue("price", priceEntry.price);
       }
     }
@@ -166,7 +161,7 @@ const ActivityWeanView: React.FC = () => {
             />
             {isSowFarm && (
               <AnimalField
-                animals={data.pigTypes.filter(type => type.number !== "03")}
+                animals={data.animals.filter(type => type.number !== "03")}
               />
             )}
             <QuantityAndSmallsField />

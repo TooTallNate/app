@@ -31,8 +31,8 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -88,7 +88,7 @@ test("creates new mortality and user settings documents", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -149,7 +149,7 @@ test("updates existing mortality document", async () => {
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -179,9 +179,9 @@ test("updates existing user settings document", async () => {
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigList: [
+      prices: [
         {
-          pigType: input.animal,
+          animal: input.animal,
           price: faker.random.number({ min: 30, max: 150 })
         }
       ]
@@ -204,7 +204,7 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        pigList: userSettings.toObject().pigList
+        prices: userSettings.toObject().prices
       }
     }
   });
@@ -215,6 +215,6 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: userSettings.toObject().pigList
+    prices: userSettings.toObject().prices
   });
 });

@@ -38,8 +38,8 @@ function mutation(variables: MutationPostPigAdjustmentArgs) {
           job {
             number
           }
-          pigList {
-            pigType
+          prices {
+            animal
             price
           }
         }
@@ -123,7 +123,12 @@ test("submits data to NAV and creates new user settings and adjustment documents
         job: {
           number: job.No
         },
-        pigList: []
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -133,12 +138,17 @@ test("submits data to NAV and creates new user settings and adjustment documents
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: job.No,
-    pigList: []
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -164,9 +174,9 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigList: [
+      prices: [
         {
-          pigType: input.animal,
+          animal: input.animal,
           price: faker.random.number({ min: 30, max: 150 })
         }
       ]
@@ -190,18 +200,31 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        pigList: userSettings.toObject().pigList
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    pigList: userSettings.toObject().pigList
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -234,7 +257,12 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         job: {
           number: job.No
         },
-        pigList: []
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -257,6 +285,7 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
       quantity: faker.random.number({ min: -10, max: -1 })
     }
   });
+  console.log(input);
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {
@@ -275,7 +304,7 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
         job: {
           number: job.No
         },
-        pigList: []
+        prices: []
       }
     }
   });
@@ -305,7 +334,12 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        pigList: []
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
