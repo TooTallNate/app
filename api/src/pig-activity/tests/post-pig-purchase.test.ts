@@ -141,7 +141,7 @@ test("submits data to NAV and creates new user settings and purchase documents",
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
@@ -176,7 +176,13 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: undefined
+      pigJob: undefined,
+      prices: [
+        {
+          animal: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -207,7 +213,10 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,

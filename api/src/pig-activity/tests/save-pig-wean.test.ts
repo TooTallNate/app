@@ -102,11 +102,16 @@ test("creates new wean and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    prices: []
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -193,7 +198,7 @@ test("updates existing user settings document", async () => {
       prices: [
         {
           animal: input.animal,
-          price: input.price
+          price: faker.random.number({ min: 30, max: 150 })
         }
       ]
     })
@@ -215,7 +220,12 @@ test("updates existing user settings document", async () => {
       },
       defaults: {
         job: null,
-        prices: userSettings.toObject().prices
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -228,7 +238,12 @@ test("updates existing user settings document", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    prices: userSettings.toObject().prices
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 

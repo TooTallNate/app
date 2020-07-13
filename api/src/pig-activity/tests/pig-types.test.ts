@@ -1,10 +1,10 @@
 import nock from "nock";
 import { client, testUnauthenticated, mockUser } from "../../../test/utils";
 import { NavItem } from "../../common/nav";
-import { Animal } from "../../common/graphql";
+import { Item } from "../../common/graphql";
 
 interface QueryResult {
-  animals: Animal[];
+  animals: Item[];
 }
 
 function query() {

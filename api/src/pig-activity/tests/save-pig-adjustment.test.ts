@@ -90,7 +90,12 @@ test("creates new adjustment and user settings documents", async () => {
         job: {
           number: job.No
         },
-        prices: []
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -105,7 +110,12 @@ test("creates new adjustment and user settings documents", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: job.No,
-    prices: []
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -154,7 +164,12 @@ test("updates existing adjustment document", async () => {
         job: {
           number: job.No
         },
-        prices: []
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -188,7 +203,7 @@ test("updates existing user settings document", async () => {
       prices: [
         {
           animal: input.animal,
-          price: input.price
+          price: faker.random.number({ min: 30, max: 150 })
         }
       ]
     })
@@ -211,7 +226,12 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        prices: userSettings.toObject().prices
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -225,7 +245,12 @@ test("updates existing user settings document", async () => {
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    prices: userSettings.toObject().prices
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 

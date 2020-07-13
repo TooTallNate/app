@@ -40,8 +40,7 @@ test("returns default job when set in user settings", async () => {
   await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: job.No,
-      prices: []
+      pigJob: job.No
     })
   );
 

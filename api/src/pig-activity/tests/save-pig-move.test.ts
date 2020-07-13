@@ -105,7 +105,12 @@ test("creates new move and user settings documents", async () => {
         job: {
           number: fromJob.No
         },
-        prices: []
+        prices: [
+          {
+            animal: input.toAnimal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -115,14 +120,14 @@ test("creates new move and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     pigJob: fromJob.No,
     prices: [
       {
-        animal: input.fromAnimal,
+        animal: input.toAnimal,
         price: input.price
       }
     ]
@@ -182,7 +187,12 @@ test("updates existing move document", async () => {
         job: {
           number: fromJob.No
         },
-        prices: []
+        prices: [
+          {
+            animal: input.toAnimal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -200,13 +210,7 @@ test("updates existing move document", async () => {
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
     price: input.price,
-    comments: input.comments,
-    prices: [
-      {
-        animal: input.fromAnimal,
-        price: input.price
-      }
-    ]
+    comments: input.comments
   });
 });
 
@@ -221,7 +225,7 @@ test("updates existing user settings document", async () => {
       username: user.User_Name,
       prices: [
         {
-          animal: input.fromAnimal,
+          animal: input.toAnimal,
           price: input.price
         }
       ]
@@ -250,18 +254,31 @@ test("updates existing user settings document", async () => {
         job: {
           number: fromJob.No
         },
-        prices: userSettings.toObject().prices
+        prices: [
+          {
+            animal: input.toAnimal,
+            price: input.price
+          }
+        ]
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: fromJob.No,
-    prices: userSettings.toObject().prices
+    prices: [
+      {
+        animal: input.toAnimal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -312,7 +329,10 @@ test("does not update price in user settings if not given in input", async () =>
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,

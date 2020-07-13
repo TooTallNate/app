@@ -98,11 +98,12 @@ test("creates new mortality and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No
+    pigJob: job.No,
+    prices: []
   });
 
   await expect(
@@ -210,7 +211,10 @@ test("updates existing user settings document", async () => {
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,

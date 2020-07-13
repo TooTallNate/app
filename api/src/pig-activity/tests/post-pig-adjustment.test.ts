@@ -285,7 +285,6 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
       quantity: faker.random.number({ min: -10, max: -1 })
     }
   });
-  console.log(input);
 
   await expect(mutation({ input })).resolves.toEqual({
     postPigAdjustment: {

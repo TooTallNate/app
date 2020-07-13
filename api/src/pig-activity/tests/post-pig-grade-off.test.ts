@@ -141,11 +141,12 @@ test("submits data to NAV and creates new user settings and grade off documents"
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No
+    pigJob: job.No,
+    prices: []
   });
 
   await expect(
@@ -196,11 +197,12 @@ test("does not quantity if not positive", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No
+    pigJob: job.No,
+    prices: []
   });
 
   await expect(
@@ -257,7 +259,10 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
