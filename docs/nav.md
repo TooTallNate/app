@@ -15,6 +15,7 @@
 * [Resources](#resources)
 * [Jobs](#jobs)
 * [Item Journals](#item-journals)
+* [Standard Item Journals](#standard-item-journals)
 * [Job Journals](#job-journals)
 
 #### Users
@@ -105,6 +106,16 @@ Manages transactions for items.
   * Weight (`number`) - The total weight of the items in the entry.
   * Reason_Code (`string -> Reason Code`) - The code of the reason for this entry.
   * Meta (`number`) - Used to record small pigs.
+
+#### Standard Item Journals
+Manages standard transactions for items.
+* Route: `/StandardItemJournal`
+* Key: `Journal_Template_Name`, `Code`, `Line_No`
+* Type:
+  * Journal_Template_Name (`string`) - The code of the journal template.
+  * Code (`string`) - The standard journal code. Identifies a standard journal within a template.
+  * Line_No (`number`) - The line number in the journal of the entry.
+  * *See Item Journals for the rest of the fields.*
 
 #### Job Journals
 Manages transactions for jobs.
