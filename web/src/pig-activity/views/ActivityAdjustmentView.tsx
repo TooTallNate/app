@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import View from "../../common/components/view/View";
 import Title from "../../common/components/view/ViewTitle";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -48,7 +48,9 @@ const ActivityAdjustmentView: React.FC = () => {
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const [quantitySign, setQuantitySign] = useState(1);
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
+  });
   const { loading, data } = usePigAdjustmentQuery({
     variables: {
       job: params.job
@@ -64,15 +66,13 @@ const ActivityAdjustmentView: React.FC = () => {
       if (pigAdjustment.totalWeight)
         setValue("totalWeight", pigAdjustment.totalWeight);
       if (pigAdjustment.price) setValue("price", pigAdjustment.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
       if (pigAdjustment.comments) setValue("comments", pigAdjustment.comments);
     }
   });
   const [post] = usePostPigAdjustmentMutation();
   const [save] = useSavePigAdjustmentMutation();
   const { setMessage } = useFlash();
-  const { getValues } = formContext;
+  const { getValues, setValue, watch } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -80,7 +80,6 @@ const ActivityAdjustmentView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            ...(isNurseryFinisher && { animal: "01" }),
             quantity: quantitySign * data.quantity,
             job: params.job
           }
@@ -123,6 +122,19 @@ const ActivityAdjustmentView: React.FC = () => {
       });
     }
   };
+
+  const animal = watch("animal");
+
+  useEffect(() => {
+    if (animal && data) {
+      const priceEntry = data.pigActivityDefaults.prices.find(
+        n => n.animal === animal
+      );
+      if (priceEntry && typeof priceEntry.price === "number") {
+        setValue("price", priceEntry.price);
+      }
+    }
+  }, [data, animal, setValue]);
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -43,7 +43,9 @@ const ActivityPurchaseView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
+  });
   const { loading, data } = usePigPurchaseQuery({
     variables: {
       job: params.job
@@ -56,15 +58,13 @@ const ActivityPurchaseView: React.FC = () => {
       if (pigPurchase.totalWeight)
         setValue("totalWeight", pigPurchase.totalWeight);
       if (pigPurchase.price) setValue("price", pigPurchase.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
       if (pigPurchase.comments) setValue("comments", pigPurchase.comments);
     }
   });
   const [post] = usePostPigPurchaseMutation();
   const [save] = useSavePigPurchaseMutation();
   const { setMessage } = useFlash();
-  const { getValues } = formContext;
+  const { getValues, setValue, watch } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -72,7 +72,6 @@ const ActivityPurchaseView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            ...(isNurseryFinisher && { animal: "01" }),
             job: params.job
           }
         }
@@ -114,6 +113,18 @@ const ActivityPurchaseView: React.FC = () => {
       });
     }
   };
+
+  const animal = watch("animal");
+  useEffect(() => {
+    if (animal && data) {
+      const priceEntry = data.pigActivityDefaults.prices.find(
+        n => n.animal === animal
+      );
+      if (priceEntry && typeof priceEntry.price === "number") {
+        setValue("price", priceEntry.price);
+      }
+    }
+  }, [data, animal, setValue]);
 
   return (
     <View>
