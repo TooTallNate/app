@@ -1,5 +1,10 @@
 type PigActivityDefaults {
   job: Job
+  prices: [PriceEntry!]!
+}
+
+type PriceEntry {
+  animal: String!
   price: Float
 }
 
@@ -233,7 +238,7 @@ type PigWeanResult {
 
 
 type Query {
-  pigTypes: [Item!]!
+  animals: [Item!]!
   pigActivityJobs: [Job!]!
   pigGradeOffReasons: [Reason!]!
   pigActivityDefaults: PigActivityDefaults!

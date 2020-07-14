@@ -14,17 +14,21 @@ fragment PigWeanFragment on PigWean {
 }
 
 query PigWean($job: String!) {
-  pigTypes {
+  animals {
     number
     description
   }
   pigActivityDefaults {
-    price
+    prices {
+      animal
+      price
+    }
   }
   pigWean(job: $job) {
     ...PigWeanFragment
   }
 }
+
 
 mutation SavePigWean($input: SavePigWeanInput!) {
   savePigWean(input: $input) {

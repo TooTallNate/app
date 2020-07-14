@@ -72,6 +72,12 @@ export type Location = {
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
+  prices: Array<PriceEntry>;
+};
+
+export type PriceEntry = {
+  __typename?: "PriceEntry";
+  animal: Scalars["String"];
   price?: Maybe<Scalars["Float"]>;
 };
 
@@ -325,7 +331,7 @@ export type Query = {
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
-  pigTypes: Array<Item>;
+  animals: Array<Item>;
   pigWean: PigWean;
   user?: Maybe<User>;
 };
@@ -677,6 +683,7 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
+  PriceEntry: ResolverTypeWrapper<PriceEntry>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
   PigQuantityInput: PigQuantityInput;
@@ -782,6 +789,7 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
+  PriceEntry: PriceEntry;
   Float: Scalars["Float"];
   PigQuantity: PigQuantity;
   PigQuantityInput: PigQuantityInput;
@@ -922,6 +930,19 @@ export type PigActivityDefaultsResolvers<
   ParentType extends ResolversParentTypes["PigActivityDefaults"] = ResolversParentTypes["PigActivityDefaults"]
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  prices?: Resolver<
+    Array<ResolversTypes["PriceEntry"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PriceEntryResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PriceEntry"] = ResolversParentTypes["PriceEntry"]
+> = ResolversObject<{
+  animal?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
@@ -1236,7 +1257,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryPigPurchaseArgs, "job">
   >;
-  pigTypes?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
   pigWean?: Resolver<
     ResolversTypes["PigWean"],
     ParentType,
@@ -1466,6 +1487,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
+  PriceEntry?: PriceEntryResolvers<ContextType>;
   PigQuantity?: PigQuantityResolvers<ContextType>;
   PigAdjustment?: PigAdjustmentResolvers<ContextType>;
   PigAdjustmentResult?: PigAdjustmentResultResolvers<ContextType>;

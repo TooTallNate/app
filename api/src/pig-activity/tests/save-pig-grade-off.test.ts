@@ -34,7 +34,10 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          price
+          prices {
+            animal
+            price
+          }
         }
       }
     }`,
@@ -88,7 +91,7 @@ test("creates new gradeOff and user settings documents", async () => {
         job: {
           number: job.No
         },
-        price: null
+        prices: []
       }
     }
   });
@@ -98,11 +101,12 @@ test("creates new gradeOff and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No
+    pigJob: job.No,
+    prices: []
   });
 
   await expect(
@@ -149,7 +153,7 @@ test("updates existing gradeOff document", async () => {
         job: {
           number: job.No
         },
-        price: null
+        prices: []
       }
     }
   });
@@ -170,6 +174,7 @@ test("updates existing gradeOff document", async () => {
   });
 });
 
+//How would you update the userSettings price if there is no price in the input?
 test("updates existing user settings document", async () => {
   const { input, job, user } = await mockTestData({
     input: {
@@ -178,7 +183,8 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      prices: []
     })
   );
 
@@ -198,17 +204,20 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        price: userSettings.price
+        prices: userSettings.toObject().prices
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: userSettings.price
+    prices: userSettings.toObject().prices
   });
 });

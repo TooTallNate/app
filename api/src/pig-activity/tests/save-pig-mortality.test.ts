@@ -31,7 +31,10 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           job {
             number
           }
-          price
+          prices {
+            animal
+            price
+          }
         }
       }
     }`,
@@ -85,7 +88,7 @@ test("creates new mortality and user settings documents", async () => {
         job: {
           number: job.No
         },
-        price: null
+        prices: []
       }
     }
   });
@@ -95,11 +98,12 @@ test("creates new mortality and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No
+    pigJob: job.No,
+    prices: []
   });
 
   await expect(
@@ -146,7 +150,7 @@ test("updates existing mortality document", async () => {
         job: {
           number: job.No
         },
-        price: null
+        prices: []
       }
     }
   });
@@ -175,7 +179,13 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name
+      username: user.User_Name,
+      prices: [
+        {
+          animal: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -195,17 +205,20 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        price: userSettings.price
+        prices: userSettings.toObject().prices
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: job.No,
-    price: userSettings.price
+    prices: userSettings.toObject().prices
   });
 });

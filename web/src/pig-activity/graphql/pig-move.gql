@@ -18,7 +18,7 @@ fragment PigMoveFragment on PigMove {
 }
 
 query PigMove($job: String!) {
-  pigTypes {
+  animals {
     number
     description
   }
@@ -27,7 +27,10 @@ query PigMove($job: String!) {
     description
   }
   pigActivityDefaults {
-    price
+    prices {
+      animal
+      price
+    }
   }
   pigMove(job: $job) {
     ...PigMoveFragment

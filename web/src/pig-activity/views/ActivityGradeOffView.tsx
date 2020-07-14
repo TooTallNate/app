@@ -207,7 +207,7 @@ const ActivityGradeOffView: React.FC = () => {
               inventory={data.pigGradeOff.job.inventory || 0}
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.pigTypes} />}
+            {isSowFarm && <AnimalField animals={data.animals} />}
             <FormGroup>
               <FormGroupLabel>Quantity</FormGroupLabel>
               <FormGroupContent>

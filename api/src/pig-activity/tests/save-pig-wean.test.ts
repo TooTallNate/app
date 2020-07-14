@@ -30,7 +30,10 @@ function mutation(variables: MutationPostPigWeanArgs) {
           job {
             number
           }
-          price
+          prices {
+            animal
+            price
+          }
         }
       }
     }`,
@@ -84,7 +87,12 @@ test("creates new wean and user settings documents", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -94,11 +102,16 @@ test("creates new wean and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    price: input.price
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -147,7 +160,12 @@ test("updates existing wean document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -176,7 +194,13 @@ test("updates existing user settings document", async () => {
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       pigJob: undefined,
-      username: user.User_Name
+      username: user.User_Name,
+      prices: [
+        {
+          animal: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -196,17 +220,30 @@ test("updates existing user settings document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    price: input.price
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -220,7 +257,13 @@ test("does not update price in user settings if not given in input", async () =>
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       pigJob: undefined,
-      username: user.User_Name
+      username: user.User_Name,
+      prices: [
+        {
+          animal: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -240,16 +283,19 @@ test("does not update price in user settings if not given in input", async () =>
       },
       defaults: {
         job: null,
-        price: userSettings.price
+        prices: userSettings.toObject().prices
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    price: userSettings.price
+    prices: userSettings.toObject().prices
   });
 });

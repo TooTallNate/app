@@ -37,6 +37,7 @@ export const PigPurchaseMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
+      ...(input.animal && { animal: input.animal }),
       ...(input.price && { price: input.price })
     });
 
@@ -66,6 +67,7 @@ export const PigPurchaseMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
+      animal: input.animal,
       price: input.price
     });
 

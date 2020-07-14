@@ -55,7 +55,9 @@ const ActivityMoveView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>();
+  const formContext = useForm<FormData>({
+    defaultValues: { toAnimal: isNurseryFinisher ? "01" : undefined }
+  });
   const { loading, data } = usePigMoveQuery({
     variables: {
       job: params.job
@@ -70,15 +72,19 @@ const ActivityMoveView: React.FC = () => {
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
       if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
       if (pigMove.price) setValue("price", pigMove.price);
-      else if (pigActivityDefaults.price)
-        setValue("price", pigActivityDefaults.price);
       if (pigMove.comments) setValue("comments", pigMove.comments);
     }
   });
   const [post] = usePostPigMoveMutation();
   const [save] = useSavePigMoveMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, triggerValidation, formState } = formContext;
+  const {
+    getValues,
+    setValue,
+    watch,
+    triggerValidation,
+    formState
+  } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -86,7 +92,6 @@ const ActivityMoveView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            ...(isNurseryFinisher && { fromAnimal: "01", toAnimal: "01" }),
             fromJob: params.job
           }
         }
@@ -129,7 +134,19 @@ const ActivityMoveView: React.FC = () => {
     }
   };
 
+  const animal = watch("toAnimal");
   const quantity = watch("quantity") || 0;
+
+  useEffect(() => {
+    if (animal && data) {
+      const priceEntry = data.pigActivityDefaults.prices.find(
+        n => n.animal === animal
+      );
+      if (priceEntry && typeof priceEntry.price === "number") {
+        setValue("price", priceEntry.price);
+      }
+    }
+  }, [data, animal, setValue]);
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {
@@ -189,7 +206,7 @@ const ActivityMoveView: React.FC = () => {
                       <FormFieldLabel>From</FormFieldLabel>
                       <FormFieldInput>
                         <StackedInput orientation="vertical">
-                          {data.pigTypes.map(type => (
+                          {data.animals.map(type => (
                             <StackedRadioButton
                               value={type.number}
                               key={type.number}
@@ -209,7 +226,7 @@ const ActivityMoveView: React.FC = () => {
                       <FormFieldLabel>To</FormFieldLabel>
                       <FormFieldInput>
                         <StackedInput orientation="vertical">
-                          {data.pigTypes.map(type => (
+                          {data.animals.map(type => (
                             <StackedRadioButton
                               value={type.number}
                               key={type.number}

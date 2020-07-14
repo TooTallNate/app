@@ -39,7 +39,10 @@ function mutation(variables: MutationPostPigPurchaseArgs) {
           job {
             number
           }
-          price
+          prices {
+            animal
+            price
+          }
         }
       }
     }`,
@@ -123,7 +126,12 @@ test("submits data to NAV and creates new user settings and purchase documents",
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -133,11 +141,16 @@ test("submits data to NAV and creates new user settings and purchase documents",
       {
         username: user.User_Name
       },
-      "pigJob price"
+      "pigJob prices"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    price: input.price
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 
   await expect(
@@ -163,7 +176,13 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: undefined
+      pigJob: undefined,
+      prices: [
+        {
+          animal: input.animal,
+          price: faker.random.number({ min: 30, max: 150 })
+        }
+      ]
     })
   );
 
@@ -183,18 +202,31 @@ test("submits data to NAV and updates existing user settings document", async ()
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob price").lean()
+    UserSettingsModel.findById(
+      userSettings._id,
+      "username pigJob prices"
+    ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
     pigJob: userSettings.pigJob,
-    price: input.price
+    prices: [
+      {
+        animal: input.animal,
+        price: input.price
+      }
+    ]
   });
 });
 
@@ -226,7 +258,12 @@ test("submits data to NAV and clears existing purchase document", async () => {
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
@@ -266,7 +303,12 @@ test("sets description to an empty string if there are no comments", async () =>
       },
       defaults: {
         job: null,
-        price: input.price
+        prices: [
+          {
+            animal: input.animal,
+            price: input.price
+          }
+        ]
       }
     }
   });
