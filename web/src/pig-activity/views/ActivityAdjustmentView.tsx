@@ -126,7 +126,7 @@ const ActivityAdjustmentView: React.FC = () => {
   const animal = watch("animal");
 
   useEffect(() => {
-    if (animal && data) {
+    if (animal && data && quantitySign > 0) {
       const priceEntry = data.pigActivityDefaults.prices.find(
         n => n.animal === animal
       );
@@ -134,7 +134,7 @@ const ActivityAdjustmentView: React.FC = () => {
         setValue("price", priceEntry.price);
       }
     }
-  }, [data, animal, setValue]);
+  }, [data, animal, setValue, quantitySign]);
 
   return (
     <View>
