@@ -7,6 +7,7 @@ import { GraphqlContext } from "../../context";
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { ErrorCode } from "../utils";
 import { FilterFunction, compileFilter } from "../nav/filter";
+import logger from "../../config/logging";
 
 const authHeader = `Basic ${Buffer.from(
   `${process.env.NAV_USER}:${process.env.NAV_ACCESS_KEY}`
@@ -48,6 +49,11 @@ export default class NavDataSource extends RESTDataSource<GraphqlContext> {
     } catch {
       body = await response.text();
     }
+
+    logger.error(`Nav Error: 
+URL: ${response.url}
+Status Code: ${response.status}
+Response: ${JSON.stringify(body, null, 2)}`);
 
     if (body && body.error) {
       switch (body.error.code) {

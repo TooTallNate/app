@@ -8,7 +8,7 @@ const { combine, timestamp, printf } = winston.format;
 const PAPERTRAIL_URL = process.env.PAPERTRAIL_URL;
 const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 const NODE_ENV = process.env.NODE_ENV || "production";
-const BRANCH = process.env.NOW_GITHUB_COMMIT_REF || "unknown";
+const BRANCH = process.env.VERCEL_GITHUB_COMMIT_REF || "unknown";
 
 const transports: Transport[] = [new winston.transports.Console()];
 const exceptionHandlers: Transport[] = [new winston.transports.Console()];
