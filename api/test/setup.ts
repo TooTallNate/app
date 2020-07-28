@@ -4,6 +4,7 @@ import "./env";
 import mongoose from "mongoose";
 import { initMongoose } from "../src/config/mongoose";
 import { getUser } from "./utils";
+import nock from "nock";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -26,6 +27,7 @@ beforeEach(async () => {
     await mongoose.connection.db.dropDatabase();
   }
   getUser.mockReset();
+  nock.cleanAll();
 });
 
 afterAll(async () => {

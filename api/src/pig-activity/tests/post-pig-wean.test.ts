@@ -76,7 +76,9 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       $filter: `((Journal_Template_Name eq 'WEAN') and (Standard_Journal_Code eq '${input.event}'))`
     })
     .basicAuth(auth)
-    .reply(200, standardJournal)
+    .reply(200, {
+      value: [standardJournal]
+    })
     .persist();
 
   nock(process.env.NAV_BASE_URL)

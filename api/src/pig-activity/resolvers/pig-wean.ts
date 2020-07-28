@@ -48,13 +48,13 @@ export const PigWeanMutations: MutationResolvers = {
     return { success: true, pigWean: doc, defaults: userSettings };
   },
   async postPigWean(_, { input }, { user, dataSources }) {
-    const standardJournal = await dataSources.navItemJournal.getStandardJournal(
-      {
-        //should change to code from event input
-        code: "FE-DEFAULT",
-        template: NavItemJournalTemplate.Wean
-      }
-    );
+    const [
+      standardJournal
+    ] = await dataSources.navItemJournal.getStandardJournal({
+      //should change to code from event input
+      code: "FE-DEFAULT",
+      template: NavItemJournalTemplate.Wean
+    });
     const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
