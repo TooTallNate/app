@@ -5,7 +5,8 @@ import { PigWeanResult, MutationPostPigWeanArgs } from "../../common/graphql";
 import {
   PigWeanFactory,
   JobFactory,
-  UserSettingsFactory
+  UserSettingsFactory,
+  StandardJournalWeanFactory
 } from "../../../test/builders";
 import {
   NavItemJournalTemplate,
@@ -52,6 +53,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const job = JobFactory.build();
   const input = PigWeanFactory.build({
     job: job.No,
+    event: "FE-DEFAULT",
     ...inputOverrides
   });
 
@@ -60,6 +62,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   );
   const date = format(new Date(), "YYY-MM-dd");
 
+  const standardJournal = StandardJournalWeanFactory.build();
+
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
     .basicAuth(auth)
@@ -67,10 +71,18 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .persist();
 
   nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/StandardItemJournal`)
+    .query({
+      $filter: `((Journal_Template_Name eq 'WEAN') and (Standard_Journal_Code eq '${input.event}'))`
+    })
+    .basicAuth(auth)
+    .reply(200, standardJournal)
+    .persist();
+
+  nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Wean,
+      ...standardJournal,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Positive,
       Document_No: documentNumberRegex,
       Item_No: input.animal,
       Description: input.comments || " ",
@@ -79,9 +91,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Unit_Amount: input.price,
       Weight: input.totalWeight,
       Job_No: input.job,
-      Gen_Prod_Posting_Group: "WEAN PIGS",
-      Shortcut_Dimension_1_Code: "2",
-      Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
       Document_Date: date,
       Meta: input.smallPigQuantity

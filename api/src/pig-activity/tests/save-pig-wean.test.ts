@@ -124,6 +124,7 @@ test("creates new wean and user settings documents", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     activity: "wean",
+    event: input.event,
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
@@ -175,6 +176,7 @@ test("updates existing wean document", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     activity: "wean",
+    event: input.event,
     job: job.No,
     animal: input.animal,
     quantity: input.quantity,
