@@ -5,7 +5,8 @@ import {
   NavItem,
   NavResource,
   NavReason,
-  NavLocation
+  NavLocation,
+  NavStandardItemJournal
 } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
@@ -693,7 +694,7 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
-  PigActivityEvent: ResolverTypeWrapper<PigActivityEvent>;
+  PigActivityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
@@ -800,7 +801,7 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
-  PigActivityEvent: PigActivityEvent;
+  PigActivityEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
   Float: Scalars["Float"];
   PigQuantity: PigQuantity;

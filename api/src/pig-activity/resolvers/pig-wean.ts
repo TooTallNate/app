@@ -6,7 +6,8 @@ import {
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavEntryType
+  NavEntryType,
+  NavStandardItemJournal
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
@@ -21,6 +22,11 @@ export const PigWean: PigWeanResolvers = {
 export const PigWeanQueries: QueryResolvers = {
   async pigWean(_, { job }) {
     return (await PigWeanModel.findOne({ job })) || new PigWeanModel({ job });
+  },
+  async pigWeanEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.Wean
+    );
   }
 };
 
@@ -41,11 +47,10 @@ export const PigWeanMutations: MutationResolvers = {
 
     return { success: true, pigWean: doc, defaults: userSettings };
   },
-  //get standard journal and populate object with values from the standard journals
-  //assign values from that std j obj to the post below
   async postPigWean(_, { input }, { user, dataSources }) {
     const standardJournal = await dataSources.navItemJournal.getStandardJournal(
       {
+        //should change to code from event input
         code: "FE-DEFAULT",
         template: NavItemJournalTemplate.Wean
       }
@@ -54,9 +59,7 @@ export const PigWeanMutations: MutationResolvers = {
     await postItemJournal(
       {
         ...standardJournal,
-        //Journal_Template_Name: NavItemJournalTemplate.Wean,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        //Entry_Type: NavEntryType.Positive,
         Document_No: getDocumentNumber("WEAN", user.name),
         Item_No: input.animal,
         Description: input.comments,
@@ -65,9 +68,6 @@ export const PigWeanMutations: MutationResolvers = {
         Unit_Amount: input.price,
         Weight: input.totalWeight,
         Job_No: input.job,
-        // Gen_Prod_Posting_Group: "WEAN PIGS",
-        // Shortcut_Dimension_1_Code: "2",
-        // Shortcut_Dimension_2_Code: "213",
         Meta: input.smallPigQuantity
       },
       dataSources.navItemJournal

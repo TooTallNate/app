@@ -83,3 +83,9 @@ export interface NavJobJournalEntry {
   No: string;
   Work_Type_Code: string;
 }
+
+export interface NavStandardItemJournal {
+  Journal_Template_Name: string;
+  Code: string;
+  Description: string;
+}

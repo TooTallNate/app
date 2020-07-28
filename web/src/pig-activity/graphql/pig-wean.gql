@@ -1,4 +1,5 @@
 fragment PigWeanFragment on PigWean {
+  event
   animal
   job {
     number
@@ -14,6 +15,10 @@ fragment PigWeanFragment on PigWean {
 }
 
 query PigWean($job: String!) {
+  pigWeanEventTypes {
+    code
+    description
+  }
   animals {
     number
     description
@@ -28,7 +33,6 @@ query PigWean($job: String!) {
     ...PigWeanFragment
   }
 }
-
 
 mutation SavePigWean($input: SavePigWeanInput!) {
   savePigWean(input: $input) {
