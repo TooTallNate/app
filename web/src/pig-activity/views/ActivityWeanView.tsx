@@ -24,8 +24,14 @@ import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormField from "../../common/components/form/FormField";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 
 interface FormData {
+  event: string;
   animal: string;
   quantity: number;
   smallPigQuantity?: number;
@@ -78,7 +84,6 @@ const ActivityWeanView: React.FC = () => {
         variables: {
           input: {
             ...data,
-
             job: params.job
           }
         }
@@ -155,6 +160,23 @@ const ActivityWeanView: React.FC = () => {
               number={data.pigWean.job.number}
               description={data.pigWean.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigWeanEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigWean.job.inventory || 0}
               deadQuantity={data.pigWean.job.deadQuantity || 0}

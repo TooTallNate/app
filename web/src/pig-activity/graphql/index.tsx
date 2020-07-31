@@ -863,6 +863,12 @@ export type PigWeanQueryVariables = {
 };
 
 export type PigWeanQuery = { __typename?: "Query" } & {
+  pigWeanEventTypes: Array<
+    { __typename?: "PigActivityEvent" } & Pick<
+      PigActivityEvent,
+      "code" | "description"
+    >
+  >;
   animals: Array<
     { __typename?: "Item" } & Pick<Item, "number" | "description">
   >;
@@ -1950,6 +1956,10 @@ export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigWeanDocument = gql`
   query PigWean($job: String!) {
+    pigWeanEventTypes {
+      code
+      description
+    }
     animals {
       number
       description

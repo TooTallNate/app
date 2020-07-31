@@ -16,7 +16,10 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigWean.job);
-  }
+  } //,
+  // event() {
+  //   // Request standard journal from NAV
+  // }
 };
 
 export const PigWeanQueries: QueryResolvers = {
@@ -50,12 +53,25 @@ export const PigWeanMutations: MutationResolvers = {
   async postPigWean(_, { input }, { user, dataSources }) {
     const [
       standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournal({
-      //should change to code from event input
-      code: "FE-DEFAULT",
+    ] = (await dataSources.navItemJournal.getStandardJournal({
+      code: input.event,
       template: NavItemJournalTemplate.Wean
-    });
+    })) as any;
+
     const job = await dataSources.navJob.getByNo(input.job);
+    console.log({
+      ...standardJournal,
+      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+      Document_No: getDocumentNumber("WEAN", user.name),
+      Item_No: input.animal,
+      Description: input.comments,
+      Location_Code: job.Site,
+      Quantity: input.quantity,
+      Unit_Amount: input.price,
+      Weight: input.totalWeight,
+      Job_No: input.job,
+      Meta: input.smallPigQuantity
+    });
     await postItemJournal(
       {
         ...standardJournal,

@@ -1,5 +1,4 @@
 fragment PigWeanFragment on PigWean {
-  event
   animal
   job {
     number
