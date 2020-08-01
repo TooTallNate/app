@@ -48,9 +48,7 @@ const ActivityAdjustmentView: React.FC = () => {
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const [quantitySign, setQuantitySign] = useState(1);
-  const formContext = useForm<FormData>({
-    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
-  });
+  const formContext = useForm<FormData>();
   const { loading, data } = usePigAdjustmentQuery({
     variables: {
       job: params.job
@@ -79,7 +77,8 @@ const ActivityAdjustmentView: React.FC = () => {
       await post({
         variables: {
           input: {
-            ...data,
+            animal: isNurseryFinisher ? "01" : undefined,
+            ...getValues(),
             quantity: quantitySign * data.quantity,
             job: params.job
           }
@@ -104,6 +103,7 @@ const ActivityAdjustmentView: React.FC = () => {
       await save({
         variables: {
           input: {
+            animal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             job: params.job
           }
@@ -123,7 +123,7 @@ const ActivityAdjustmentView: React.FC = () => {
     }
   };
 
-  const animal = watch("animal");
+  const animal = watch("animal") || (isNurseryFinisher ? "01" : undefined);
 
   useEffect(() => {
     if (animal && data && quantitySign > 0) {
