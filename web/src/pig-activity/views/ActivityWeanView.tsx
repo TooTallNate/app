@@ -6,8 +6,7 @@ import { useParams, useHistory } from "react-router";
 import {
   usePigWeanQuery,
   useSavePigWeanMutation,
-  usePostPigWeanMutation,
-  PigWeanDocument
+  usePostPigWeanMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -45,9 +44,7 @@ const ActivityWeanView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>({
-    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
-  });
+  const formContext = useForm<FormData>({});
   const { loading, data } = usePigWeanQuery({
     variables: {
       job: params.job
@@ -72,13 +69,17 @@ const ActivityWeanView: React.FC = () => {
     formState
   } = formContext;
 
+  const animal = watch("animal") || (isNurseryFinisher ? "01" : undefined);
+  const quantity = watch("quantity") || 0;
+
   const onSubmit: OnSubmit<FormData> = async data => {
+    console.log(getValues());
     try {
       await post({
         variables: {
           input: {
+            animal: isNurseryFinisher ? "01" : undefined,
             ...data,
-
             job: params.job
           }
         }
@@ -102,6 +103,7 @@ const ActivityWeanView: React.FC = () => {
       await save({
         variables: {
           input: {
+            animal,
             ...getValues(),
             job: params.job
           }
@@ -120,9 +122,6 @@ const ActivityWeanView: React.FC = () => {
       });
     }
   };
-
-  const animal = watch("animal");
-  const quantity = watch("quantity") || 0;
 
   useEffect(() => {
     if (animal && data) {
