@@ -3,12 +3,7 @@ import {
   QueryResolvers,
   PigWeanResolvers
 } from "../../common/graphql";
-import {
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavEntryType,
-  NavStandardItemJournal
-} from "../../common/nav";
+import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
@@ -16,10 +11,15 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigWean.job);
-  } //,
-  // event() {
-  //   // Request standard journal from NAV
-  // }
+  },
+  event(pigWean, _, { dataSources }) {
+    if (pigWean.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigWean.event,
+        template: NavItemJournalTemplate.Wean
+      });
+    }
+  }
 };
 
 export const PigWeanQueries: QueryResolvers = {

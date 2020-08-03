@@ -852,6 +852,9 @@ export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   | "price"
   | "comments"
 > & {
+    event?: Maybe<
+      { __typename?: "PigActivityEvent" } & Pick<PigActivityEvent, "code">
+    >;
     job: { __typename?: "Job" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
@@ -1001,6 +1004,9 @@ export const PigPurchaseFragmentFragmentDoc = gql`
 export const PigWeanFragmentFragmentDoc = gql`
   fragment PigWeanFragment on PigWean {
     animal
+    event {
+      code
+    }
     job {
       number
       description

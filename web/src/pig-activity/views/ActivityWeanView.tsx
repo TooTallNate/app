@@ -6,8 +6,7 @@ import { useParams, useHistory } from "react-router";
 import {
   usePigWeanQuery,
   useSavePigWeanMutation,
-  usePostPigWeanMutation,
-  PigWeanDocument
+  usePostPigWeanMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -59,12 +58,14 @@ const ActivityWeanView: React.FC = () => {
       job: params.job
     },
     onCompleted({ pigWean, pigActivityDefaults }) {
+      //add logic for if only 1 template
       const { setValue } = formContext;
       if (isSowFarm && pigWean.animal) setValue("animal", pigWean.animal);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
       if (pigWean.price) setValue("price", pigWean.price);
       if (pigWean.comments) setValue("comments", pigWean.comments);
+      if (pigWean.event) setValue("event", pigWean.event.code);
     }
   });
   const [post] = usePostPigWeanMutation();
