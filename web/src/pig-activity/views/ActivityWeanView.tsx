@@ -57,15 +57,16 @@ const ActivityWeanView: React.FC = () => {
     variables: {
       job: params.job
     },
-    onCompleted({ pigWean, pigActivityDefaults }) {
-      //add logic for if only 1 template
+    onCompleted({ pigWean, pigWeanEventTypes, pigActivityDefaults }) {
       const { setValue } = formContext;
+      if (pigWeanEventTypes.length === 1) {
+        setValue("event", pigWeanEventTypes[0].code);
+      } else if (pigWean.event) setValue("event", pigWean.event.code);
       if (isSowFarm && pigWean.animal) setValue("animal", pigWean.animal);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
       if (pigWean.price) setValue("price", pigWean.price);
       if (pigWean.comments) setValue("comments", pigWean.comments);
-      if (pigWean.event) setValue("event", pigWean.event.code);
     }
   });
   const [post] = usePostPigWeanMutation();
