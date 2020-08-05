@@ -26,20 +26,14 @@ function mutation(variables: MutationPostPigWeanArgs) {
           job {
             number
           }
-          animal
           quantity
           smallPigQuantity
           totalWeight
-          price
           comments
         }
         defaults {
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -86,11 +80,9 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       ...standardJournal,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
       Document_No: documentNumberRegex,
-      Item_No: input.animal,
       Description: input.comments || " ",
       Location_Code: job.Site,
       Quantity: input.quantity,
-      Unit_Amount: input.price,
       Weight: input.totalWeight,
       Job_No: input.job,
       Posting_Date: date,
@@ -123,21 +115,13 @@ test("submits data to NAV and creates new user settings and wean documents", asy
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -147,16 +131,10 @@ test("submits data to NAV and creates new user settings and wean documents", asy
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
-    _id: expect.anything(),
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
+    _id: expect.anything()
   });
 
   await expect(
@@ -182,13 +160,7 @@ test("submits data to NAV and updates existing user settings document", async ()
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
       username: user.User_Name,
-      pigJob: undefined,
-      prices: [
-        {
-          animal: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
+      pigJob: undefined
     })
   );
 
@@ -199,39 +171,22 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
+    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    username: user.User_Name,
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
+    username: user.User_Name
   });
 });
 
@@ -254,21 +209,13 @@ test("submits data to NAV and clears existing wean document", async () => {
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -296,21 +243,13 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });

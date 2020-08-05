@@ -205,35 +205,29 @@ type PigPurchaseResult {
 }
 
 type PigWean {
-  animal: String
   event: PigActivityEvent
   job: Job!
   quantity: Int
   smallPigQuantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 
 input PostPigWeanInput {
-  animal: String!
   event: String!
   job: String!
   quantity: Int!
   smallPigQuantity: Int
   totalWeight: Float!
-  price: Float!
   comments: String
 }
 
 input SavePigWeanInput {
-  animal: String
   event: String
   job: String!
   quantity: Int
   smallPigQuantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 

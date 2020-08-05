@@ -43,9 +43,7 @@ export const PigWeanMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      ...(input.animal && { animal: input.animal }),
-      ...(input.price && { price: input.price })
+      username: user.username
     });
 
     return { success: true, pigWean: doc, defaults: userSettings };
@@ -59,29 +57,14 @@ export const PigWeanMutations: MutationResolvers = {
     })) as any;
 
     const job = await dataSources.navJob.getByNo(input.job);
-    console.log({
-      ...standardJournal,
-      Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Document_No: getDocumentNumber("WEAN", user.name),
-      Item_No: input.animal,
-      Description: input.comments,
-      Location_Code: job.Site,
-      Quantity: input.quantity,
-      Unit_Amount: input.price,
-      Weight: input.totalWeight,
-      Job_No: input.job,
-      Meta: input.smallPigQuantity
-    });
     await postItemJournal(
       {
         ...standardJournal,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Document_No: getDocumentNumber("WEAN", user.name),
-        Item_No: input.animal,
         Description: input.comments,
         Location_Code: job.Site,
         Quantity: input.quantity,
-        Unit_Amount: input.price,
         Weight: input.totalWeight,
         Job_No: input.job,
         Meta: input.smallPigQuantity
@@ -90,9 +73,7 @@ export const PigWeanMutations: MutationResolvers = {
     );
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      animal: input.animal,
-      price: input.price
+      username: user.username
     });
 
     const doc =

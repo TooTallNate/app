@@ -266,35 +266,29 @@ export type PigPurchaseResult = {
 
 export type PigWean = {
   __typename?: "PigWean";
-  animal?: Maybe<Scalars["String"]>;
   event?: Maybe<PigActivityEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigWeanInput = {
-  animal: Scalars["String"];
   event: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
-  price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigWeanInput = {
-  animal?: Maybe<Scalars["String"]>;
   event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -845,12 +839,7 @@ export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
 
 export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
-  | "animal"
-  | "quantity"
-  | "smallPigQuantity"
-  | "totalWeight"
-  | "price"
-  | "comments"
+  "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
 > & {
     event?: Maybe<
       { __typename?: "PigActivityEvent" } & Pick<PigActivityEvent, "code">
@@ -872,14 +861,6 @@ export type PigWeanQuery = { __typename?: "Query" } & {
       "code" | "description"
     >
   >;
-  animals: Array<
-    { __typename?: "Item" } & Pick<Item, "number" | "description">
-  >;
-  pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
-    prices: Array<
-      { __typename?: "PriceEntry" } & Pick<PriceEntry, "animal" | "price">
-    >;
-  };
   pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
 };
 
@@ -1003,7 +984,6 @@ export const PigPurchaseFragmentFragmentDoc = gql`
 `;
 export const PigWeanFragmentFragmentDoc = gql`
   fragment PigWeanFragment on PigWean {
-    animal
     event {
       code
     }
@@ -1016,7 +996,6 @@ export const PigWeanFragmentFragmentDoc = gql`
     quantity
     smallPigQuantity
     totalWeight
-    price
     comments
   }
 `;
@@ -1965,16 +1944,6 @@ export const PigWeanDocument = gql`
     pigWeanEventTypes {
       code
       description
-    }
-    animals {
-      number
-      description
-    }
-    pigActivityDefaults {
-      prices {
-        animal
-        price
-      }
     }
     pigWean(job: $job) {
       ...PigWeanFragment

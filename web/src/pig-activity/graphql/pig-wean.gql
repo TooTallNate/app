@@ -1,5 +1,5 @@
 fragment PigWeanFragment on PigWean {
-  animal
+  #animal
   event {
     code
   }
@@ -12,7 +12,7 @@ fragment PigWeanFragment on PigWean {
   quantity
   smallPigQuantity
   totalWeight
-  price
+  #price
   comments
 }
 
@@ -21,16 +21,16 @@ query PigWean($job: String!) {
     code
     description
   }
-  animals {
-    number
-    description
-  }
-  pigActivityDefaults {
-    prices {
-      animal
-      price
-    }
-  }
+  # animals {
+  #   number
+  #   description
+  # }
+  # pigActivityDefaults {
+  #   prices {
+  #     animal
+  #     price
+  #   }
+  # }
   pigWean(job: $job) {
     ...PigWeanFragment
   }

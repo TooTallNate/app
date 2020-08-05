@@ -170,7 +170,6 @@ export const PigPurchaseFactory = Factory.Sync.makeFactory({
 });
 
 export const PigWeanFactory = Factory.Sync.makeFactory({
-  animal: Factory.each(() => oneOf("01", "02", "03")),
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 50, max: 1000 })),
@@ -178,7 +177,6 @@ export const PigWeanFactory = Factory.Sync.makeFactory({
     faker.random.number({ min: 1, max: 50 })
   ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
-  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
@@ -201,7 +199,6 @@ export const UserSettingsFactory = Factory.Sync.makeFactory({
   _id: Factory.each(() => new ObjectId()),
   username: Factory.each(() => faker.internet.userName()),
   pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
-  prices: Factory.each<{ animal: string; price: number }[]>(() => []),
   locations: Factory.each(() => ({
     mode: oneOf("INCLUDE", "EXCLUDE"),
     list: Array.from({ length: faker.random.number({ min: 2, max: 4 }) }, () =>

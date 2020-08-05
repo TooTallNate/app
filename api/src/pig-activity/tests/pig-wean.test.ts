@@ -13,11 +13,9 @@ function query(variables: QueryPigWeanArgs) {
         job {
           number
         }
-        animal
         quantity
         smallPigQuantity
         totalWeight
-        price
         comments
       }
     }`,
@@ -48,9 +46,7 @@ test("returns default form if no record in the database", async () => {
       job: {
         number: job.No
       },
-      animal: null,
       comments: null,
-      price: null,
       quantity: null,
       smallPigQuantity: null,
       totalWeight: null
@@ -72,9 +68,7 @@ test("returns from from the database", async () => {
       job: {
         number: job.No
       },
-      animal: doc.animal,
       comments: doc.comments,
-      price: doc.price,
       quantity: doc.quantity,
       smallPigQuantity: doc.smallPigQuantity,
       totalWeight: doc.totalWeight
