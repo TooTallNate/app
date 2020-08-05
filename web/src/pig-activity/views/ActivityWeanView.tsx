@@ -45,7 +45,6 @@ interface ViewParams {
 const ActivityWeanView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  // const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const formContext = useForm<FormData>({
@@ -60,23 +59,15 @@ const ActivityWeanView: React.FC = () => {
       if (pigWeanEventTypes.length === 1) {
         setValue("event", pigWeanEventTypes[0].code);
       } else if (pigWean.event) setValue("event", pigWean.event.code);
-      // if (isSowFarm && pigWean.animal) setValue("animal", pigWean.animal);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
-      // if (pigWean.price) setValue("price", pigWean.price);
       if (pigWean.comments) setValue("comments", pigWean.comments);
     }
   });
   const [post] = usePostPigWeanMutation();
   const [save] = useSavePigWeanMutation();
   const { setMessage } = useFlash();
-  const {
-    getValues,
-    // setValue,
-    watch,
-    triggerValidation,
-    formState
-  } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -126,19 +117,7 @@ const ActivityWeanView: React.FC = () => {
     }
   };
 
-  // const animal = watch("animal");
   const quantity = watch("quantity") || 0;
-
-  // useEffect(() => {
-  //   if (animal && data) {
-  //     const priceEntry = data.pigActivityDefaults.prices.find(
-  //       n => n.animal === animal
-  //     );
-  //     if (priceEntry && typeof priceEntry.price === "number") {
-  //       setValue("price", priceEntry.price);
-  //     }
-  //   }
-  // }, [data, animal, setValue]);
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {
@@ -181,14 +160,8 @@ const ActivityWeanView: React.FC = () => {
               inventory={data.pigWean.job.inventory || 0}
               deadQuantity={data.pigWean.job.deadQuantity || 0}
             />
-            {/* {isSowFarm && (
-              <AnimalField
-                animals={data.animals.filter(type => type.number !== "03")}
-              />
-            )} */}
             <QuantityAndSmallsField />
             <TotalWeightField />
-            {/* <PriceField /> */}
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
