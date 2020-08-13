@@ -101,8 +101,8 @@ testUnauthenticated(() =>
   })
 );
 
-test("submits data to NAV and creates new user settings and wean documents", async () => {
-  const { input, job, user } = await mockTestData({
+test("submits data to NAV and creates new wean document", async () => {
+  const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -124,17 +124,6 @@ test("submits data to NAV and creates new user settings and wean documents", asy
         job: null
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything()
   });
 
   await expect(
@@ -148,45 +137,6 @@ test("submits data to NAV and creates new user settings and wean documents", asy
     _id: expect.anything(),
     activity: "wean",
     job: job.No
-  });
-});
-
-test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, user, job } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name,
-      pigJob: undefined
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
-      success: true,
-      pigWean: {
-        job: {
-          number: job.No
-        },
-        quantity: null,
-        smallPigQuantity: null,
-        totalWeight: null,
-        comments: null
-      },
-      defaults: {
-        job: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name
   });
 });
 

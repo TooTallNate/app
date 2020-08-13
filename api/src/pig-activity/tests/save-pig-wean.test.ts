@@ -58,7 +58,7 @@ testUnauthenticated(() =>
   })
 );
 
-test("creates new wean and user settings documents", async () => {
+test("creates new wean document", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -81,17 +81,6 @@ test("creates new wean and user settings documents", async () => {
         job: null
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything()
   });
 
   await expect(
@@ -152,44 +141,5 @@ test("updates existing wean document", async () => {
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
     comments: input.comments
-  });
-});
-
-test("updates existing user settings document", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      pigJob: undefined,
-      username: user.User_Name
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    savePigWean: {
-      success: true,
-      pigWean: {
-        job: {
-          number: job.No
-        },
-        quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
-        totalWeight: input.totalWeight,
-        comments: input.comments
-      },
-      defaults: {
-        job: null
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name
   });
 });
