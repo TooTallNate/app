@@ -7,6 +7,8 @@ import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
+import UserSettingsModel from "../../common/models/UserSettings";
+import { exception } from "console";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
@@ -42,19 +44,27 @@ export const PigWeanMutations: MutationResolvers = {
     doc.set(input);
     await doc.save();
 
-    const userSettings = await updateUserSettings({
+    const userSettings = await UserSettingsModel.findOne({
       username: user.username
     });
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigWean: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   },
   async postPigWean(_, { input }, { user, dataSources }) {
     const [
       standardJournal
-    ] = (await dataSources.navItemJournal.getStandardJournal({
+    ] = await dataSources.navItemJournal.getStandardJournal({
       code: input.event,
       template: NavItemJournalTemplate.Wean
-    })) as any;
+    });
+
+    if (!standardJournal) {
+      throw Error(`Event ${input.event} not found.`);
+    }
 
     const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
@@ -72,7 +82,7 @@ export const PigWeanMutations: MutationResolvers = {
       dataSources.navItemJournal
     );
 
-    const userSettings = await updateUserSettings({
+    const userSettings = await UserSettingsModel.findOne({
       username: user.username
     });
 
@@ -86,6 +96,10 @@ export const PigWeanMutations: MutationResolvers = {
     });
     await doc.save();
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigWean: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   }
 };

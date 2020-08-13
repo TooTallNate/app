@@ -29,27 +29,21 @@ import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 
 interface FormData {
   event: string;
-  animal: string;
   quantity: number;
   smallPigQuantity?: number;
   totalWeight: number;
-  price: number;
   comments?: string;
 }
 
 interface ViewParams {
   job: string;
-  barnType: string;
 }
 
 const ActivityWeanView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>({
-    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
-  });
+  const formContext = useForm<FormData>();
   const { loading, data } = usePigWeanQuery({
     variables: {
       job: params.job
