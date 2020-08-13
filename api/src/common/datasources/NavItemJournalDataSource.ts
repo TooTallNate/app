@@ -13,7 +13,7 @@ export default class NavItemJournalDataSource extends NavDataSource {
     return this.post("/ItemJournal", entry);
   }
 
-  getStandardJournal(
+  async getStandardJournal(
     options: StandardJournalOptions
   ): Promise<NavItemJournalEntry[]> {
     let filter = this.buildFilter(f =>
@@ -23,7 +23,11 @@ export default class NavItemJournalDataSource extends NavDataSource {
       )
     );
 
-    return this.get(`/StandardItemJournal?$filter=${filter}`);
+    const lines = await this.get(`/StandardItemJournal?$filter=${filter}`);
+    return lines.map(
+      // We have to strip these out so that submitting these lines to the journal doesn't break.
+      ({ Standard_Journal_Code, Line_No, ...line }: any) => line
+    );
   }
 
   getStandardJournalByCode(
