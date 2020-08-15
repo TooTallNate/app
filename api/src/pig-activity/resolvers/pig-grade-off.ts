@@ -29,6 +29,11 @@ export const PigGradeOffQueries: QueryResolvers = {
     return (
       (await PigGradeOffModel.findOne({ job })) || new PigGradeOffModel({ job })
     );
+  },
+  async pigGradeOffEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.GradeOff
+    );
   }
 };
 

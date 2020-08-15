@@ -55,10 +55,17 @@ export type PigActivityDefaults = {
   prices: Array<PriceEntry>;
 };
 
-export type PigActivityEvent = {
-  __typename?: "PigActivityEvent";
+export type PigWeanEvent = {
+  __typename?: "PigWeanEvent";
   code: Scalars["String"];
   description: Scalars["String"];
+};
+
+export type PigGradeOffEvent = {
+  __typename?: "PigGradeOffEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
 };
 
 export type PriceEntry = {
@@ -266,7 +273,7 @@ export type PigPurchaseResult = {
 
 export type PigWean = {
   __typename?: "PigWean";
-  event?: Maybe<PigActivityEvent>;
+  event?: Maybe<PigWeanEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -311,12 +318,13 @@ export type Query = {
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigGradeOffReasons: Array<Reason>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
   pigWean: PigWean;
-  pigWeanEventTypes: Array<PigActivityEvent>;
+  pigWeanEventTypes: Array<PigWeanEvent>;
   user?: Maybe<User>;
 };
 

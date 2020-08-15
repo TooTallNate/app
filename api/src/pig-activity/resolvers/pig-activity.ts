@@ -2,7 +2,7 @@ import {
   QueryResolvers,
   PigActivityDefaultsResolvers,
   InclusivityMode,
-  PigActivityEventResolvers
+  PigWeanEventResolvers
 } from "../../common/graphql";
 import { NavItemJournalEntry } from "../../common/nav";
 import UserSettingsModel, {
@@ -68,7 +68,7 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
   prices: userSettings => (userSettings ? userSettings.prices : null)
 };
 
-export const PigActivityEvent: PigActivityEventResolvers = {
+export const PigWeanEvent: PigWeanEventResolvers = {
   code: journal => journal.Code,
   description: journal => journal.Description
 };

@@ -3,9 +3,15 @@ type PigActivityDefaults {
   prices: [PriceEntry!]!
 }
 
-type PigActivityEvent {
+type PigWeanEvent {
   code: String!
   description: String!
+}
+
+type PigGradeOffEvent {
+  code: String!
+  description: String!
+  reasons: [Reason!]!
 }
 
 type PriceEntry {
@@ -205,7 +211,7 @@ type PigPurchaseResult {
 }
 
 type PigWean {
-  event: PigActivityEvent
+  event: PigWeanEvent
   job: Job!
   quantity: Int
   smallPigQuantity: Int
@@ -249,7 +255,8 @@ type Query {
   pigMove(job: String!): PigMove!
   pigPurchase(job: String!): PigPurchase!
   pigWean(job: String!): PigWean!
-  pigWeanEventTypes: [PigActivityEvent!]!
+  pigWeanEventTypes: [PigWeanEvent!]!
+  pigGradeOffEventTypes: [PigGradeOffEvent!]!
 }
 
 type Mutation {
