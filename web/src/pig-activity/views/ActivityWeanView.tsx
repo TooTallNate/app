@@ -63,7 +63,10 @@ const ActivityWeanView: React.FC = () => {
   const { setMessage } = useFlash();
   const { getValues, watch, triggerValidation, formState } = formContext;
 
+  const quantity = watch("quantity") || 0;
+
   const onSubmit: OnSubmit<FormData> = async data => {
+    console.log(getValues());
     try {
       await post({
         variables: {
@@ -110,8 +113,6 @@ const ActivityWeanView: React.FC = () => {
       });
     }
   };
-
-  const quantity = watch("quantity") || 0;
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {

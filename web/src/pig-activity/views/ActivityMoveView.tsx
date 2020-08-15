@@ -55,9 +55,7 @@ const ActivityMoveView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>({
-    defaultValues: { toAnimal: isNurseryFinisher ? "01" : undefined }
-  });
+  const formContext = useForm<FormData>();
   const { loading, data } = usePigMoveQuery({
     variables: {
       job: params.job
@@ -91,6 +89,8 @@ const ActivityMoveView: React.FC = () => {
       await post({
         variables: {
           input: {
+            toAnimal: isNurseryFinisher ? "01" : undefined,
+            fromAnimal: isNurseryFinisher ? "01" : undefined,
             ...data,
             fromJob: params.job
           }
@@ -115,6 +115,8 @@ const ActivityMoveView: React.FC = () => {
       await save({
         variables: {
           input: {
+            toAnimal: isNurseryFinisher ? "01" : undefined,
+            fromAnimal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             fromJob: params.job
           }
@@ -134,7 +136,7 @@ const ActivityMoveView: React.FC = () => {
     }
   };
 
-  const animal = watch("toAnimal");
+  const animal = watch("toAnimal") || (isNurseryFinisher ? "01" : undefined);
   const quantity = watch("quantity") || 0;
 
   useEffect(() => {

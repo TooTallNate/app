@@ -43,9 +43,7 @@ const ActivityPurchaseView: React.FC = () => {
   const isSowFarm = params.barnType === "sow-farm";
   const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>({
-    defaultValues: { animal: isNurseryFinisher ? "01" : undefined }
-  });
+  const formContext = useForm<FormData>();
   const { loading, data } = usePigPurchaseQuery({
     variables: {
       job: params.job
@@ -66,11 +64,14 @@ const ActivityPurchaseView: React.FC = () => {
   const { setMessage } = useFlash();
   const { getValues, setValue, watch } = formContext;
 
+  const animal = watch("animal") || (isNurseryFinisher ? "01" : undefined);
+
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
       await post({
         variables: {
           input: {
+            animal: isNurseryFinisher ? "01" : undefined,
             ...data,
             job: params.job
           }
@@ -95,6 +96,7 @@ const ActivityPurchaseView: React.FC = () => {
       await save({
         variables: {
           input: {
+            animal,
             ...getValues(),
             job: params.job
           }
@@ -114,7 +116,6 @@ const ActivityPurchaseView: React.FC = () => {
     }
   };
 
-  const animal = watch("animal");
   useEffect(() => {
     if (animal && data) {
       const priceEntry = data.pigActivityDefaults.prices.find(

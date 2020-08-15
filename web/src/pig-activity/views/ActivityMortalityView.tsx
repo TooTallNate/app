@@ -90,8 +90,8 @@ const ActivityMortalityView: React.FC = () => {
       await post({
         variables: {
           input: {
+            animal: isNurseryFinisher ? "01" : undefined,
             ...data,
-            ...(isNurseryFinisher && { animal: "01" }),
             job: params.job
           }
         }
@@ -115,6 +115,7 @@ const ActivityMortalityView: React.FC = () => {
       await save({
         variables: {
           input: {
+            animal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             job: params.job
           }

@@ -165,7 +165,7 @@ const ActivityGradeOffView: React.FC = () => {
       await save({
         variables: {
           input: {
-            animal,
+            animal: isNurseryFinisher ? "01" : animal,
             pigWeight,
             comments,
             quantities: Object.entries(quantities).map(([code, quantity]) => ({
