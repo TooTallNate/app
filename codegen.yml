@@ -27,6 +27,7 @@ generates:
         PigMove: "../pig-activity/models/PigMove#PigMoveDocument"
         PigPurchase: "../pig-activity/models/PigPurchase#PigPurchaseDocument"
         PigWean: "../pig-activity/models/PigWean#PigWeanDocument"
+        PigActivityEvent: "./nav#NavStandardItemJournal"
         PigActivityDefaults: "./models/UserSettings#UserSettingsDocument"
         FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
     hooks:

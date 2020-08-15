@@ -1,7 +1,8 @@
 import {
   QueryResolvers,
   PigActivityDefaultsResolvers,
-  InclusivityMode
+  InclusivityMode,
+  PigActivityEventResolvers
 } from "../../common/graphql";
 import { NavItemJournalEntry } from "../../common/nav";
 import UserSettingsModel, {
@@ -9,6 +10,7 @@ import UserSettingsModel, {
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
 import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
+import { template } from "@babel/core";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalEntry>,
@@ -64,6 +66,11 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
     }
   },
   prices: userSettings => (userSettings ? userSettings.prices : null)
+};
+
+export const PigActivityEvent: PigActivityEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description
 };
 
 export const PigActivityQueries: QueryResolvers = {

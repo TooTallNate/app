@@ -5,7 +5,8 @@ import { PigWeanResult, MutationPostPigWeanArgs } from "../../common/graphql";
 import {
   PigWeanFactory,
   JobFactory,
-  UserSettingsFactory
+  UserSettingsFactory,
+  StandardJournalWeanFactory
 } from "../../../test/builders";
 import {
   NavItemJournalTemplate,
@@ -25,20 +26,14 @@ function mutation(variables: MutationPostPigWeanArgs) {
           job {
             number
           }
-          animal
           quantity
           smallPigQuantity
           totalWeight
-          price
           comments
         }
         defaults {
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -52,6 +47,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const job = JobFactory.build();
   const input = PigWeanFactory.build({
     job: job.No,
+    event: "FE-DEFAULT",
     ...inputOverrides
   });
 
@@ -60,6 +56,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   );
   const date = format(new Date(), "YYY-MM-dd");
 
+  const standardJournal = StandardJournalWeanFactory.build();
+
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
     .basicAuth(auth)
@@ -67,21 +65,26 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .persist();
 
   nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/StandardItemJournal`)
+    .query({
+      $filter: `((Journal_Template_Name eq 'WEAN') and (Standard_Journal_Code eq '${input.event}'))`
+    })
+    .basicAuth(auth)
+    .reply(200, {
+      value: [standardJournal]
+    })
+    .persist();
+
+  nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Wean,
+      ...standardJournal,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Positive,
       Document_No: documentNumberRegex,
-      Item_No: input.animal,
       Description: input.comments || " ",
       Location_Code: job.Site,
       Quantity: input.quantity,
-      Unit_Amount: input.price,
       Weight: input.totalWeight,
       Job_No: input.job,
-      Gen_Prod_Posting_Group: "WEAN PIGS",
-      Shortcut_Dimension_1_Code: "2",
-      Shortcut_Dimension_2_Code: "213",
       Posting_Date: date,
       Document_Date: date,
       Meta: input.smallPigQuantity
@@ -98,8 +101,8 @@ testUnauthenticated(() =>
   })
 );
 
-test("submits data to NAV and creates new user settings and wean documents", async () => {
-  const { input, job, user } = await mockTestData({
+test("submits data to NAV and creates new wean document", async () => {
+  const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -112,40 +115,15 @@ test("submits data to NAV and creates new user settings and wean documents", asy
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
   });
 
   await expect(
@@ -159,68 +137,6 @@ test("submits data to NAV and creates new user settings and wean documents", asy
     _id: expect.anything(),
     activity: "wean",
     job: job.No
-  });
-});
-
-test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, user, job } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name,
-      pigJob: undefined,
-      prices: [
-        {
-          animal: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigWean: {
-      success: true,
-      pigWean: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        quantity: null,
-        smallPigQuantity: null,
-        totalWeight: null,
-        price: null,
-        comments: null
-      },
-      defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
   });
 });
 
@@ -243,21 +159,13 @@ test("submits data to NAV and clears existing wean document", async () => {
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -285,21 +193,13 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         smallPigQuantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: null,
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });

@@ -3,24 +3,35 @@ import {
   QueryResolvers,
   PigWeanResolvers
 } from "../../common/graphql";
-import {
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavEntryType
-} from "../../common/nav";
+import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
+import UserSettingsModel from "../../common/models/UserSettings";
+import { exception } from "console";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigWean.job);
+  },
+  event(pigWean, _, { dataSources }) {
+    if (pigWean.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigWean.event,
+        template: NavItemJournalTemplate.Wean
+      });
+    }
   }
 };
 
 export const PigWeanQueries: QueryResolvers = {
   async pigWean(_, { job }) {
     return (await PigWeanModel.findOne({ job })) || new PigWeanModel({ job });
+  },
+  async pigWeanEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.Wean
+    );
   }
 };
 
@@ -33,41 +44,46 @@ export const PigWeanMutations: MutationResolvers = {
     doc.set(input);
     await doc.save();
 
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      ...(input.animal && { animal: input.animal }),
-      ...(input.price && { price: input.price })
+    const userSettings = await UserSettingsModel.findOne({
+      username: user.username
     });
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigWean: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   },
   async postPigWean(_, { input }, { user, dataSources }) {
+    const [
+      standardJournal
+    ] = await dataSources.navItemJournal.getStandardJournal({
+      code: input.event,
+      template: NavItemJournalTemplate.Wean
+    });
+
+    if (!standardJournal) {
+      throw Error(`Event ${input.event} not found.`);
+    }
+
     const job = await dataSources.navJob.getByNo(input.job);
     await postItemJournal(
       {
-        Journal_Template_Name: NavItemJournalTemplate.Wean,
+        ...standardJournal,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
         Document_No: getDocumentNumber("WEAN", user.name),
-        Item_No: input.animal,
         Description: input.comments,
         Location_Code: job.Site,
         Quantity: input.quantity,
-        Unit_Amount: input.price,
         Weight: input.totalWeight,
         Job_No: input.job,
-        Gen_Prod_Posting_Group: "WEAN PIGS",
-        Shortcut_Dimension_1_Code: "2",
-        Shortcut_Dimension_2_Code: "213",
         Meta: input.smallPigQuantity
       },
       dataSources.navItemJournal
     );
 
-    const userSettings = await updateUserSettings({
-      username: user.username,
-      animal: input.animal,
-      price: input.price
+    const userSettings = await UserSettingsModel.findOne({
+      username: user.username
     });
 
     const doc =
@@ -80,6 +96,10 @@ export const PigWeanMutations: MutationResolvers = {
     });
     await doc.save();
 
-    return { success: true, pigWean: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigWean: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   }
 };

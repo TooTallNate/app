@@ -36,6 +36,11 @@ type PigActivityDefaults {
   prices: [PriceEntry!]!
 }
 
+type PigActivityEvent {
+  code: String!
+  description: String!
+}
+
 type PriceEntry {
   animal: String!
   price: Float
@@ -228,32 +233,29 @@ type PigPurchaseResult {
 }
 
 type PigWean {
-  animal: String
+  event: PigActivityEvent
   job: Job!
   quantity: Int
   smallPigQuantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 
 input PostPigWeanInput {
-  animal: String!
+  event: String!
   job: String!
   quantity: Int!
   smallPigQuantity: Int
   totalWeight: Float!
-  price: Float!
   comments: String
 }
 
 input SavePigWeanInput {
-  animal: String
+  event: String
   job: String!
   quantity: Int
   smallPigQuantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 
@@ -264,6 +266,7 @@ type PigWeanResult {
 }
 
 type Query {
+  animals: [Item!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendAreas: [Job!]!
   farrowingBackendOperators: [Resource!]!
@@ -277,8 +280,8 @@ type Query {
   pigMortality(job: String!): PigMortality!
   pigMove(job: String!): PigMove!
   pigPurchase(job: String!): PigPurchase!
-  animals: [Item!]!
   pigWean(job: String!): PigWean!
+  pigWeanEventTypes: [PigActivityEvent!]!
   user: User
 }
 
