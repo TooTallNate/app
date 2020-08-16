@@ -127,7 +127,7 @@ export type PigAdjustmentResult = {
 
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigGradeOffEvent>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -639,8 +639,11 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
-  "animal" | "pigWeight" | "comments"
+  "pigWeight" | "comments"
 > & {
+    event?: Maybe<
+      { __typename?: "PigGradeOffEvent" } & Pick<PigGradeOffEvent, "code">
+    >;
     job: { __typename?: "Job" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
@@ -655,8 +658,11 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
-  animals: Array<
-    { __typename?: "Item" } & Pick<Item, "number" | "description">
+  pigGradeOffEventTypes: Array<
+    { __typename?: "PigGradeOffEvent" } & Pick<
+      PigGradeOffEvent,
+      "code" | "description"
+    >
   >;
   pigGradeOffReasons: Array<
     { __typename?: "Reason" } & Pick<Reason, "code" | "description">
@@ -921,7 +927,9 @@ export const PigAdjustmentFragmentFragmentDoc = gql`
 `;
 export const PigGradeOffFragmentFragmentDoc = gql`
   fragment PigGradeOffFragment on PigGradeOff {
-    animal
+    event {
+      code
+    }
     job {
       number
       description
@@ -1248,8 +1256,8 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
-    animals {
-      number
+    pigGradeOffEventTypes {
+      code
       description
     }
     pigGradeOffReasons {

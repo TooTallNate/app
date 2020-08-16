@@ -101,7 +101,7 @@ type PigAdjustmentResult {
 }
 
 type PigGradeOff {
-  animal: String
+  event: PigGradeOffEvent
   job: Job!
   quantities: [PigQuantity!]!
   pigWeight: Float

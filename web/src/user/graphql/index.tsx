@@ -127,7 +127,7 @@ export type PigAdjustmentResult = {
 
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigGradeOffEvent>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;

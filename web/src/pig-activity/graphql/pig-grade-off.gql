@@ -1,5 +1,7 @@
 fragment PigGradeOffFragment on PigGradeOff {
-  animal
+  event {
+    code
+  }
   job {
     number
     description
@@ -15,9 +17,10 @@ fragment PigGradeOffFragment on PigGradeOff {
 }
 
 query PigGradeOff($job: String!) {
-  animals {
-    number
+  pigGradeOffEventTypes {
+    code
     description
+    reason
   }
   pigGradeOffReasons {
     code

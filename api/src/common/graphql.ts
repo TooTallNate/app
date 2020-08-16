@@ -148,7 +148,7 @@ export type PigAdjustmentResult = {
 
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigGradeOffEvent>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -1031,7 +1031,11 @@ export type PigGradeOffResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PigGradeOff"] = ResolversParentTypes["PigGradeOff"]
 > = ResolversObject<{
-  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  event?: Resolver<
+    Maybe<ResolversTypes["PigGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantities?: Resolver<
     Array<ResolversTypes["PigQuantity"]>,
