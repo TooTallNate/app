@@ -49,7 +49,12 @@ export const PigGradeOffQueries: QueryResolvers = {
 export const PigGradeOffEvent: PigGradeOffEventResolvers = {
   code: journal => journal.Code,
   description: journal => journal.Description,
-  reasons: journal => []
+  reasons: journal => {
+    // 1. Fetch the journal lines from NAV.
+    // 2. Extract reason codes
+    // 3. Fetch the reason objects from NAV.
+    return [];
+  }
 };
 
 export const PigGradeOffMutations: MutationResolvers = {
@@ -69,30 +74,30 @@ export const PigGradeOffMutations: MutationResolvers = {
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
   async postPigGradeOff(_, { input }, { user, dataSources }) {
-    const [
-      standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournal({
-      code: input.event,
-      template: NavItemJournalTemplate.GradeOff
-    });
+    const standardJournalLines = await dataSources.navItemJournal.getStandardJournalLines(
+      {
+        code: input.event,
+        template: NavItemJournalTemplate.GradeOff
+      }
+    );
 
-    if (!standardJournal) {
+    if (standardJournalLines.length === 0) {
       throw Error(`Event ${input.event} not found.`);
     }
 
     const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
-      if (entry.quantity > 0) {
+      const line = {}; // use input.code to select the line from the standardJournalLines
+      if (entry.quantity > 0 && line) {
         await postItemJournal(
           {
-            ...standardJournal,
+            ...line,
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
             Entry_Type: NavEntryType.Negative,
             Document_No: getDocumentNumber("GRDOFF", user.name),
             Description: input.comments,
             Location_Code: job.Site,
-            Reason_Code: entry.code as NavReasonCode,
             Quantity: entry.quantity,
             Weight: input.pigWeight * entry.quantity,
             Job_No: input.job,

@@ -63,7 +63,7 @@ export const PigWeanMutations: MutationResolvers = {
   async postPigWean(_, { input }, { user, dataSources }) {
     const [
       standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournal({
+    ] = await dataSources.navItemJournal.getStandardJournalLines({
       code: input.event,
       template: NavItemJournalTemplate.Wean
     });

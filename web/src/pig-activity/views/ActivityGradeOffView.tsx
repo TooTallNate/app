@@ -117,6 +117,9 @@ const ActivityGradeOffView: React.FC = () => {
     }
   }, [triggerValidation, reasons, formState.isSubmitted]);
 
+  const event = watch("event");
+  const eventConfig = undefined; // Find from data.pigGradeOffEventTypes
+
   const onSubmit: OnSubmit<FormData> = async ({
     event,
     pigWeight,

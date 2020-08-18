@@ -1,4 +1,4 @@
-import { NavItemJournalEntry, NavStandardItemJournal } from "../nav";
+import { NavItemJournalLine, NavStandardItemJournal } from "../nav";
 import NavDataSource from "./NavDataSource";
 
 export interface StandardJournalOptions {
@@ -7,15 +7,15 @@ export interface StandardJournalOptions {
 }
 
 export default class NavItemJournalDataSource extends NavDataSource {
-  async postEntry(
-    entry: Partial<NavItemJournalEntry>
-  ): Promise<NavItemJournalEntry> {
+  async postJournalLine(
+    entry: Partial<NavItemJournalLine>
+  ): Promise<NavItemJournalLine> {
     return this.post("/ItemJournal", entry);
   }
 
-  async getStandardJournal(
+  async getStandardJournalLines(
     options: StandardJournalOptions
-  ): Promise<NavItemJournalEntry[]> {
+  ): Promise<NavItemJournalLine[]> {
     let filter = this.buildFilter(f =>
       f.and(
         f.equals("Journal_Template_Name", options.template),

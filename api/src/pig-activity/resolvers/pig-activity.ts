@@ -1,9 +1,8 @@
 import {
   QueryResolvers,
-  PigActivityDefaultsResolvers,
-  InclusivityMode
+  PigActivityDefaultsResolvers
 } from "../../common/graphql";
-import { NavItemJournalEntry } from "../../common/nav";
+import { NavItemJournalLine } from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
@@ -12,14 +11,14 @@ import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDat
 import { template } from "@babel/core";
 
 export function postItemJournal(
-  entry: Partial<NavItemJournalEntry>,
+  entry: Partial<NavItemJournalLine>,
   dataSource: NavItemJournalDataSource
-): Promise<NavItemJournalEntry> {
+): Promise<NavItemJournalLine> {
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
   entry.Description = entry.Description || " ";
-  return dataSource.postEntry(entry);
+  return dataSource.postJournalLine(entry);
 }
 
 export async function updateUserSettings({
