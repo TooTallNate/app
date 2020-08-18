@@ -78,7 +78,7 @@ type PigGradeOff {
 }
 
 input PostPigGradeOffInput {
-  animal: String!
+  event: String!
   job: String!
   quantities: [PigQuantityInput!]!
   pigWeight: Float!
@@ -86,7 +86,7 @@ input PostPigGradeOffInput {
 }
 
 input SavePigGradeOffInput {
-  animal: String
+  event: String
   job: String!
   quantities: [PigOptionalQuantityInput!]
   pigWeight: Float

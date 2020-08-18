@@ -1,7 +1,8 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigWeanResolvers
+  PigWeanResolvers,
+  PigWeanEventResolvers
 } from "../../common/graphql";
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
@@ -33,6 +34,11 @@ export const PigWeanQueries: QueryResolvers = {
       NavItemJournalTemplate.Wean
     );
   }
+};
+
+export const PigWeanEvent: PigWeanEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description
 };
 
 export const PigWeanMutations: MutationResolvers = {

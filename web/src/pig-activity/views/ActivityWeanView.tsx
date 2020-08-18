@@ -61,7 +61,13 @@ const ActivityWeanView: React.FC = () => {
   const [post] = usePostPigWeanMutation();
   const [save] = useSavePigWeanMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, triggerValidation, formState } = formContext;
+  const {
+    getValues,
+    watch,
+    triggerValidation,
+    setValue,
+    formState
+  } = formContext;
 
   const quantity = watch("quantity") || 0;
 

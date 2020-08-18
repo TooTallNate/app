@@ -11,7 +11,8 @@ import {
 import {
   PigGradeOff,
   PigGradeOffQueries,
-  PigGradeOffMutations
+  PigGradeOffMutations,
+  PigGradeOffEvent
 } from "./pig-grade-off";
 import {
   PigMortality,
@@ -53,5 +54,6 @@ export const types = {
   PigMove,
   PigPurchase,
   PigWean,
-  PigWeanEvent
+  PigWeanEvent,
+  PigGradeOffEvent
 };

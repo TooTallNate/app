@@ -18,7 +18,6 @@ import Button from "../../common/components/input/Button";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import AnimalField from "../components/AnimalField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
@@ -32,6 +31,7 @@ import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 import FormGroupContent from "../../common/components/form/FormGroupContent";
 import StackedInput from "../../common/components/input/StackedInput";
 import StackedButton from "../../common/components/input/StackedButton";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 
 function onInputAdded(el: FormFieldInputElement | null) {
   if (el) {
@@ -40,7 +40,7 @@ function onInputAdded(el: FormFieldInputElement | null) {
 }
 
 interface FormData {
-  animal: string;
+  event: string;
   newQuantityReason?: string;
   quantities: { [code: string]: number };
   pigWeight: number;
@@ -70,10 +70,11 @@ const ActivityGradeOffView: React.FC = () => {
     variables: {
       job: params.job
     },
-    onCompleted({ pigGradeOff }) {
+    onCompleted({ pigGradeOff, pigGradeOffEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigGradeOff.animal)
-        setValue("animal", pigGradeOff.animal);
+      if (pigGradeOffEventTypes.length === 1) {
+        setValue("event", pigGradeOffEventTypes[0].code);
+      } else if (pigGradeOff.event) setValue("event", pigGradeOff.event.code);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
       const reasons = pigGradeOff.quantities.map(({ code, quantity }) => {
@@ -117,7 +118,7 @@ const ActivityGradeOffView: React.FC = () => {
   }, [triggerValidation, reasons, formState.isSubmitted]);
 
   const onSubmit: OnSubmit<FormData> = async ({
-    animal,
+    event,
     pigWeight,
     comments,
     quantities
@@ -126,7 +127,7 @@ const ActivityGradeOffView: React.FC = () => {
       await post({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : animal,
+            event,
             pigWeight,
             comments,
             quantities: Object.entries(quantities).map(([code, quantity]) => ({
@@ -153,7 +154,7 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { animal, pigWeight, comments, quantities } = getValues({
+      const { event, pigWeight, comments, quantities } = getValues({
         nest: true
       });
       console.log(
@@ -165,7 +166,7 @@ const ActivityGradeOffView: React.FC = () => {
       await save({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : animal,
+            event,
             pigWeight,
             comments,
             quantities: Object.entries(quantities).map(([code, quantity]) => ({
@@ -203,11 +204,29 @@ const ActivityGradeOffView: React.FC = () => {
               number={data.pigGradeOff.job.number}
               description={data.pigGradeOff.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigGradeOffEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigGradeOff.job.inventory || 0}
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.animals} />}
+            {/*TODO remove */}
+            {/* {isSowFarm && <AnimalField animals={data.animals} />} */}
             <FormGroup>
               <FormGroupLabel>Quantity</FormGroupLabel>
               <FormGroupContent>

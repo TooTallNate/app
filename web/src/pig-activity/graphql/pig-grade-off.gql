@@ -20,7 +20,10 @@ query PigGradeOff($job: String!) {
   pigGradeOffEventTypes {
     code
     description
-    reason
+    reasons {
+      code
+      description
+    }
   }
   pigGradeOffReasons {
     code

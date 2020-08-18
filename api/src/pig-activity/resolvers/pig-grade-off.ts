@@ -1,7 +1,8 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigGradeOffResolvers
+  PigGradeOffResolvers,
+  PigGradeOffEventResolvers
 } from "../../common/graphql";
 import {
   NavItemJournalBatch,
@@ -18,7 +19,15 @@ export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeOff, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigGradeOff.job);
   },
-  quantities: pigGradeOff => pigGradeOff.quantities || []
+  quantities: pigGradeOff => pigGradeOff.quantities || [],
+  event(pigGradeOff, _, { dataSources }) {
+    if (pigGradeOff.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigGradeOff.event,
+        template: NavItemJournalTemplate.GradeOff
+      });
+    }
+  }
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
@@ -35,6 +44,12 @@ export const PigGradeOffQueries: QueryResolvers = {
       NavItemJournalTemplate.GradeOff
     );
   }
+};
+
+export const PigGradeOffEvent: PigGradeOffEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description,
+  reasons: journal => []
 };
 
 export const PigGradeOffMutations: MutationResolvers = {
@@ -54,17 +69,27 @@ export const PigGradeOffMutations: MutationResolvers = {
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
   async postPigGradeOff(_, { input }, { user, dataSources }) {
+    const [
+      standardJournal
+    ] = await dataSources.navItemJournal.getStandardJournal({
+      code: input.event,
+      template: NavItemJournalTemplate.GradeOff
+    });
+
+    if (!standardJournal) {
+      throw Error(`Event ${input.event} not found.`);
+    }
+
     const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
       if (entry.quantity > 0) {
         await postItemJournal(
           {
-            Journal_Template_Name: NavItemJournalTemplate.GradeOff,
+            ...standardJournal,
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
             Entry_Type: NavEntryType.Negative,
             Document_No: getDocumentNumber("GRDOFF", user.name),
-            Item_No: input.animal,
             Description: input.comments,
             Location_Code: job.Site,
             Reason_Code: entry.code as NavReasonCode,

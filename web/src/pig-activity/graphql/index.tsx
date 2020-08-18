@@ -135,7 +135,7 @@ export type PigGradeOff = {
 };
 
 export type PostPigGradeOffInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -143,7 +143,7 @@ export type PostPigGradeOffInput = {
 };
 
 export type SavePigGradeOffInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -662,7 +662,11 @@ export type PigGradeOffQuery = { __typename?: "Query" } & {
     { __typename?: "PigGradeOffEvent" } & Pick<
       PigGradeOffEvent,
       "code" | "description"
-    >
+    > & {
+        reasons: Array<
+          { __typename?: "Reason" } & Pick<Reason, "code" | "description">
+        >;
+      }
   >;
   pigGradeOffReasons: Array<
     { __typename?: "Reason" } & Pick<Reason, "code" | "description">
@@ -1259,6 +1263,10 @@ export const PigGradeOffDocument = gql`
     pigGradeOffEventTypes {
       code
       description
+      reasons {
+        code
+        description
+      }
     }
     pigGradeOffReasons {
       code

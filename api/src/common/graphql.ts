@@ -156,7 +156,7 @@ export type PigGradeOff = {
 };
 
 export type PostPigGradeOffInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -164,7 +164,7 @@ export type PostPigGradeOffInput = {
 };
 
 export type SavePigGradeOffInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
