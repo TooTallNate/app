@@ -9,11 +9,14 @@ import {
   NavItemJournalTemplate,
   NavEntryType,
   NavReason,
-  NavReasonCode
+  NavReasonCode,
+  NavItemJournalLine
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigGradeOffModel from "../models/PigGradeOff";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
+import datasources from "../../common/datasources";
+import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
 
 export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeOff, _, { dataSources }) {
@@ -49,11 +52,18 @@ export const PigGradeOffQueries: QueryResolvers = {
 export const PigGradeOffEvent: PigGradeOffEventResolvers = {
   code: journal => journal.Code,
   description: journal => journal.Description,
-  reasons: journal => {
-    // 1. Fetch the journal lines from NAV.
-    // 2. Extract reason codes
-    // 3. Fetch the reason objects from NAV.
-    return [];
+  async reasons(pigGradeOffEventTypes, _, { dataSources }) {
+    // fetching journal lines
+    const lines = await dataSources.navItemJournal.getStandardJournalLines({
+      code: pigGradeOffEventTypes.Code,
+      template: NavItemJournalTemplate.GradeOff
+    });
+
+    // extract reason codes
+    let reasonCodes = lines.map(line => line.Reason_Code);
+
+    //fetch reason objects from nav
+    return await dataSources.navConfig.getReasonCodeDescList(reasonCodes);
   }
 };
 
@@ -88,7 +98,9 @@ export const PigGradeOffMutations: MutationResolvers = {
     const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
-      const line = {}; // use input.code to select the line from the standardJournalLines
+      const line = standardJournalLines.find(
+        standardJournalLines => standardJournalLines.Reason_Code === entry.code
+      );
       if (entry.quantity > 0 && line) {
         await postItemJournal(
           {
