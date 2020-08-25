@@ -13,7 +13,6 @@ function query(variables: QueryPigGradeOffArgs) {
         job {
           number
         }
-        animal
         quantities {
           code
           quantity
@@ -49,7 +48,6 @@ test("returns default form if no record in the database", async () => {
       job: {
         number: job.No
       },
-      animal: null,
       comments: null,
       quantities: [],
       pigWeight: null
@@ -71,7 +69,6 @@ test("returns from from the database", async () => {
       job: {
         number: job.No
       },
-      animal: doc.animal,
       comments: doc.comments,
       quantities: Array.from(doc.toObject().quantities),
       pigWeight: doc.pigWeight

@@ -319,7 +319,6 @@ export type Query = {
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
   pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigGradeOffReasons: Array<Reason>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
@@ -667,9 +666,6 @@ export type PigGradeOffQuery = { __typename?: "Query" } & {
           { __typename?: "Reason" } & Pick<Reason, "code" | "description">
         >;
       }
-  >;
-  pigGradeOffReasons: Array<
-    { __typename?: "Reason" } & Pick<Reason, "code" | "description">
   >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
@@ -1267,10 +1263,6 @@ export const PigGradeOffDocument = gql`
         code
         description
       }
-    }
-    pigGradeOffReasons {
-      code
-      description
     }
     pigGradeOff(job: $job) {
       ...PigGradeOffFragment

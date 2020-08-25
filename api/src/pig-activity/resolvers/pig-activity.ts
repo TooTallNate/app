@@ -1,6 +1,7 @@
 import {
   QueryResolvers,
-  PigActivityDefaultsResolvers
+  PigActivityDefaultsResolvers,
+  InclusivityMode
 } from "../../common/graphql";
 import { NavItemJournalLine } from "../../common/nav";
 import UserSettingsModel, {

@@ -1,8 +1,4 @@
-import {
-  PigActivityDefaults,
-  PigActivityQueries,
-  PigWeanEvent
-} from "./pig-activity";
+import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
 import {
   PigAdjustment,
   PigAdjustmentQueries,
@@ -25,7 +21,12 @@ import {
   PigPurchaseQueries,
   PigPurchaseMutations
 } from "./pig-purchase";
-import { PigWean, PigWeanQueries, PigWeanMutations } from "./pig-wean";
+import {
+  PigWean,
+  PigWeanEvent,
+  PigWeanQueries,
+  PigWeanMutations
+} from "./pig-wean";
 
 export const queries = {
   ...PigActivityQueries,

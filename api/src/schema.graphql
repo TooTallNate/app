@@ -283,7 +283,6 @@ type Query {
   pigAdjustment(job: String!): PigAdjustment!
   pigGradeOff(job: String!): PigGradeOff!
   pigGradeOffEventTypes: [PigGradeOffEvent!]!
-  pigGradeOffReasons: [Reason!]!
   pigMortality(job: String!): PigMortality!
   pigMove(job: String!): PigMove!
   pigPurchase(job: String!): PigPurchase!

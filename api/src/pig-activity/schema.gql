@@ -247,7 +247,6 @@ type PigWeanResult {
 type Query {
   animals: [Item!]!
   pigActivityJobs: [Job!]!
-  pigGradeOffReasons: [Reason!]!
   pigActivityDefaults: PigActivityDefaults!
   pigAdjustment(job: String!): PigAdjustment!
   pigGradeOff(job: String!): PigGradeOff!
@@ -257,7 +256,6 @@ type Query {
   pigPurchase(job: String!): PigPurchase!
   pigWean(job: String!): PigWean!
   pigWeanEventTypes: [PigWeanEvent!]!
-  
 }
 
 type Mutation {

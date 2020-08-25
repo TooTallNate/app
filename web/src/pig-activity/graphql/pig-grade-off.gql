@@ -25,10 +25,6 @@ query PigGradeOff($job: String!) {
       description
     }
   }
-  pigGradeOffReasons {
-    code
-    description
-  }
   pigGradeOff(job: $job) {
     ...PigGradeOffFragment
   }

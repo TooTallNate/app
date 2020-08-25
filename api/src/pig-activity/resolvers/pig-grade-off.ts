@@ -34,9 +34,6 @@ export const PigGradeOff: PigGradeOffResolvers = {
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
-  async pigGradeOffReasons(_, __, { dataSources }) {
-    return dataSources.navConfig.getReasonCodes("GR-");
-  },
   async pigGradeOff(_, { job }) {
     return (
       (await PigGradeOffModel.findOne({ job })) || new PigGradeOffModel({ job })
@@ -58,10 +55,8 @@ export const PigGradeOffEvent: PigGradeOffEventResolvers = {
       code: pigGradeOffEventTypes.Code,
       template: NavItemJournalTemplate.GradeOff
     });
-
     // extract reason codes
     let reasonCodes = lines.map(line => line.Reason_Code);
-
     //fetch reason objects from nav
     return await dataSources.navConfig.getReasonCodeDescList(reasonCodes);
   }

@@ -340,7 +340,6 @@ export type Query = {
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
   pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigGradeOffReasons: Array<Reason>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
@@ -1280,11 +1279,6 @@ export type QueryResolvers<
   >;
   pigGradeOffEventTypes?: Resolver<
     Array<ResolversTypes["PigGradeOffEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigGradeOffReasons?: Resolver<
-    Array<ResolversTypes["Reason"]>,
     ParentType,
     ContextType
   >;

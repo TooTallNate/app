@@ -22,7 +22,6 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          animal
           quantities {
             code
             quantity
@@ -33,10 +32,6 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
         defaults { 
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -82,7 +77,6 @@ test("creates new gradeOff and user settings documents", async () => {
         job: {
           number: job.No
         },
-        animal: input.animal,
         quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
@@ -90,8 +84,7 @@ test("creates new gradeOff and user settings documents", async () => {
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -101,12 +94,11 @@ test("creates new gradeOff and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    prices: []
+    pigJob: job.No
   });
 
   await expect(
@@ -118,9 +110,9 @@ test("creates new gradeOff and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
+    event: input.event,
     activity: "gradeoff",
     job: job.No,
-    animal: input.animal,
     quantities: input.quantities,
     pigWeight: input.pigWeight,
     comments: input.comments
@@ -144,7 +136,6 @@ test("updates existing gradeOff document", async () => {
         job: {
           number: job.No
         },
-        animal: input.animal,
         quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
@@ -152,8 +143,7 @@ test("updates existing gradeOff document", async () => {
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -165,9 +155,9 @@ test("updates existing gradeOff document", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
+    event: input.event,
     activity: "gradeoff",
     job: job.No,
-    animal: input.animal,
     quantities: input.quantities,
     pigWeight: input.pigWeight,
     comments: input.comments
@@ -183,8 +173,7 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: []
+      username: user.User_Name
     })
   );
 
@@ -195,7 +184,6 @@ test("updates existing user settings document", async () => {
         job: {
           number: job.No
         },
-        animal: input.animal,
         quantities: input.quantities,
         pigWeight: input.pigWeight,
         comments: input.comments
@@ -203,21 +191,16 @@ test("updates existing user settings document", async () => {
       defaults: {
         job: {
           number: job.No
-        },
-        prices: userSettings.toObject().prices
+        }
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
+    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigJob: job.No,
-    prices: userSettings.toObject().prices
+    pigJob: job.No
   });
 });
