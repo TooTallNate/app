@@ -7,9 +7,8 @@ import {
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
-import { postItemJournal, updateUserSettings } from "./pig-activity";
-import { exception } from "console";
 import UserSettingsModel from "../../common/models/UserSettings";
+import { postItemJournal } from "./pig-activity";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {

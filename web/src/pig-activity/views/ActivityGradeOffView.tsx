@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import FormGroup from "../../common/components/form/FormGroup";
+import React from "react";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -21,23 +20,11 @@ import InventoryField from "../components/InventoryField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldInput, {
-  FormFieldInputElement
-} from "../../common/components/form/FormFieldInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
-import FormGroupLabel from "../../common/components/form/FormGroupLabel";
-import FormGroupContent from "../../common/components/form/FormGroupContent";
-import StackedInput from "../../common/components/input/StackedInput";
-import StackedButton from "../../common/components/input/StackedButton";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-
-function onInputAdded(el: FormFieldInputElement | null) {
-  if (el) {
-    el.focus();
-  }
-}
+import FormFieldInput from "../../common/components/form/FormFieldInput";
 
 interface FormData {
   event: string;
@@ -56,8 +43,6 @@ const ActivityGradeOffView: React.FC = () => {
   const params = useParams<ViewParams>();
   const history = useHistory();
 
-  const focusedReason = useRef<string | null>(null);
-
   const formContext = useForm<FormData>({
     defaultValues: {
       quantities: {}
@@ -74,11 +59,16 @@ const ActivityGradeOffView: React.FC = () => {
       } else if (pigGradeOff.event) setValue("event", pigGradeOff.event.code);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
-      // const reasons = pigGradeOff.quantities.map(({ code, quantity }) => {
-      //   setValue(`quantities.${code}`, quantity);
-      //   return code;
-      // });
-      // setReasons(reasons);
+      setTimeout(() => {
+        if (pigGradeOff.quantities)
+          setValue(
+            "quantities",
+            pigGradeOff.quantities.reduce(
+              (obj, q) => ({ ...obj, [q.code]: q.quantity }),
+              {}
+            )
+          );
+      });
     }
   });
   const [post] = usePostPigGradeOffMutation();
@@ -110,10 +100,12 @@ const ActivityGradeOffView: React.FC = () => {
             event,
             pigWeight,
             comments,
-            quantities: Object.entries(quantities).map(([code, quantity]) => ({
-              code,
-              quantity
-            })),
+            quantities: Object.entries(quantities)
+              .filter(([, quantity]) => !!quantity)
+              .map(([code, quantity]) => ({
+                code,
+                quantity
+              })),
             job: params.job
           }
         }
@@ -205,26 +197,15 @@ const ActivityGradeOffView: React.FC = () => {
               inventory={data.pigGradeOff.job.inventory || 0}
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
-            {/*TODO remove */}
-            {/* {isSowFarm && <AnimalField animals={data.animals} />} */}
             {eventConfig &&
               eventConfig.reasons.map(reason => {
                 return (
                   <FormField
                     key={reason.code}
                     name={`quantities.${reason.code}`}
-                    rules={{
-                      required: "This quantity field is required."
-                    }}
                   >
                     <FormFieldLabel>{reason.description}</FormFieldLabel>
-                    <FormFieldInput
-                      ref={
-                        focusedReason.current === reason.code
-                          ? onInputAdded
-                          : null
-                      }
-                    >
+                    <FormFieldInput>
                       <NumberInput />
                     </FormFieldInput>
                     <FormFieldErrors />
