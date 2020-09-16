@@ -101,7 +101,6 @@ export const PigGradeOffMutations: MutationResolvers = {
           {
             ...line,
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-            Entry_Type: NavEntryType.Negative,
             Document_No: getDocumentNumber("GRDOFF", user.name),
             Description: input.comments,
             Location_Code: job.Site,

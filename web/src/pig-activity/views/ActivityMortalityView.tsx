@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Output } from "../../common/components/styled";
+import React, { useRef } from "react";
+import {} from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -15,7 +15,9 @@ import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldInput, {
+  FormFieldInputElement
+} from "../../common/components/form/FormFieldInput";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../../common/components/input/Button";
@@ -23,14 +25,20 @@ import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import AnimalField from "../components/AnimalField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import StaticValue from "../../common/components/input/StaticValue";
+
+function onInputAdded(el: FormFieldInputElement | null) {
+  if (el) {
+    el.focus();
+  }
+}
 
 interface FormData {
-  animal: string;
-  naturalQuantity: number;
-  euthanizedQuantity: number;
+  event: string;
+  quantities: { [code: string]: number };
   comments?: string;
 }
 
@@ -42,56 +50,67 @@ interface ViewParams {
 const ActivityMortalityView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const isSowFarm = params.barnType === "sow-farm";
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
 
-  const formContext = useForm<FormData>();
+  const focusedReason = useRef<string | null>(null);
+
+  const formContext = useForm<FormData>({
+    defaultValues: {
+      quantities: {}
+    }
+  });
   const { loading, data } = usePigMortalityQuery({
     variables: {
       job: params.job
     },
-    onCompleted({ pigMortality }) {
+    onCompleted({ pigMortality, pigMortalityEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigMortality.animal)
-        setValue("animal", pigMortality.animal);
-      if (pigMortality.naturalQuantity)
-        setValue("naturalQuantity", pigMortality.naturalQuantity);
-      if (pigMortality.euthanizedQuantity)
-        setValue("euthanizedQuantity", pigMortality.euthanizedQuantity);
+      if (pigMortalityEventTypes.length === 1) {
+        setValue("event", pigMortalityEventTypes[0].code);
+      } else if (pigMortality.event) setValue("event", pigMortality.event.code);
+      if (pigMortality.quantities)
+        setValue(
+          "quantities",
+          pigMortality.quantities.reduce(
+            (obj, q) => ({ ...obj, [q.code]: q.quantity }),
+            {}
+          )
+        );
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
     }
   });
   const [post] = usePostPigMortalityMutation();
   const [save] = useSavePigMortalityMutation();
   const { setMessage } = useFlash();
-  const { getValues, watch, triggerValidation, formState } = formContext;
+  const { getValues, watch } = formContext;
 
-  const { euthanizedQuantity, naturalQuantity } = watch([
-    "euthanizedQuantity",
-    "naturalQuantity"
-  ]);
-  const totalQuantity = (euthanizedQuantity || 0) + (naturalQuantity || 0);
+  const quantities = watch("quantities") || {};
+  const totalQuantity = Object.values(quantities).reduce<number>(
+    (sum, q = 0) => sum + q,
+    0
+  );
 
-  // Validate quantities if one changes.
-  useEffect(() => {
-    if (formState.isSubmitted) {
-      triggerValidation("euthanizedQuantity");
-      triggerValidation("naturalQuantity");
-    }
-  }, [
-    triggerValidation,
-    formState.isSubmitted,
-    naturalQuantity,
-    euthanizedQuantity
-  ]);
+  const event = watch("event");
+  const eventConfig = data
+    ? data.pigMortalityEventTypes.find(elem => elem.code === event)
+    : undefined;
 
-  const onSubmit: OnSubmit<FormData> = async data => {
+  const onSubmit: OnSubmit<FormData> = async ({
+    event,
+    quantities,
+    comments
+  }) => {
     try {
       await post({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : undefined,
-            ...data,
+            event,
+            quantities: Object.entries(quantities)
+              .filter(([, quantity]) => !!quantity)
+              .map(([code, quantity]) => ({
+                code,
+                quantity
+              })),
+            comments,
             job: params.job
           }
         }
@@ -112,11 +131,18 @@ const ActivityMortalityView: React.FC = () => {
 
   const onSave = async () => {
     try {
+      const { event, quantities, comments } = getValues({
+        nest: true
+      });
       await save({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : undefined,
-            ...getValues(),
+            event,
+            quantities: Object.entries(quantities).map(([code, quantity]) => ({
+              code,
+              quantity
+            })),
+            comments,
             job: params.job
           }
         }
@@ -135,16 +161,6 @@ const ActivityMortalityView: React.FC = () => {
     }
   };
 
-  function quantityRequired(): boolean | string {
-    const euthanizedQuantity = getValues("euthanizedQuantity");
-    const naturalQuantity = getValues("naturalQuantity");
-    return (
-      euthanizedQuantity > 0 ||
-      naturalQuantity > 0 ||
-      "Either the natural quantity or euthanized quantity fields are required."
-    );
-  }
-
   return (
     <View>
       <ViewHeader>
@@ -158,35 +174,52 @@ const ActivityMortalityView: React.FC = () => {
               number={data.pigMortality.job.number}
               description={data.pigMortality.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigMortalityEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigMortality.job.inventory || 0}
               deadQuantity={data.pigMortality.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.animals} />}
-            <FormField
-              name="naturalQuantity"
-              rules={{ validate: { required: quantityRequired } }}
-            >
-              <FormFieldLabel>Natural Death Quantity</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField
-              name="euthanizedQuantity"
-              rules={{ validate: { required: quantityRequired } }}
-            >
-              <FormFieldLabel>Euthanized Quantity</FormFieldLabel>
-              <FormFieldInput>
-                <NumberInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
+            {eventConfig &&
+              eventConfig.reasons.map(reason => {
+                return (
+                  <FormField
+                    key={reason.code}
+                    name={`quantities.${reason.code}`}
+                  >
+                    <FormFieldLabel>{reason.description}</FormFieldLabel>
+                    <FormFieldInput
+                      ref={
+                        focusedReason.current === reason.code
+                          ? onInputAdded
+                          : null
+                      }
+                    >
+                      <NumberInput />
+                    </FormFieldInput>
+                    <FormFieldErrors />
+                  </FormField>
+                );
+              })}
             <FormField name="total-quantity">
               <FormFieldLabel>Total Quantity</FormFieldLabel>
-              <FormFieldInput>
-                <Output>{totalQuantity}</Output>
+              <FormFieldInput noRegister>
+                <StaticValue value={totalQuantity} />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

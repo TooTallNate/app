@@ -68,6 +68,13 @@ export type PigGradeOffEvent = {
   reasons: Array<Reason>;
 };
 
+export type PigMortalityEvent = {
+  __typename?: "PigMortalityEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
+};
+
 export type PriceEntry = {
   __typename?: "PriceEntry";
   animal: Scalars["String"];
@@ -159,26 +166,23 @@ export type PigGradeOffResult = {
 
 export type PigMortality = {
   __typename?: "PigMortality";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigMortalityEvent>;
   job: Job;
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigQuantity>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigMortalityInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigMortalityInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -320,6 +324,7 @@ export type Query = {
   pigGradeOff: PigGradeOff;
   pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigMortality: PigMortality;
+  pigMortalityEventTypes: Array<PigMortalityEvent>;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
   pigWean: PigWean;
@@ -692,13 +697,18 @@ export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
 
 export type PigMortalityFragmentFragment = {
   __typename?: "PigMortality";
-} & Pick<
-  PigMortality,
-  "animal" | "naturalQuantity" | "euthanizedQuantity" | "comments"
-> & {
+} & Pick<PigMortality, "comments"> & {
+    event?: Maybe<
+      { __typename?: "PigMortalityEvent" } & Pick<PigMortalityEvent, "code">
+    >;
     job: { __typename?: "Job" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
+    >;
+    quantities?: Maybe<
+      Array<
+        { __typename?: "PigQuantity" } & Pick<PigQuantity, "code" | "quantity">
+      >
     >;
   };
 
@@ -707,8 +717,15 @@ export type PigMortalityQueryVariables = {
 };
 
 export type PigMortalityQuery = { __typename?: "Query" } & {
-  animals: Array<
-    { __typename?: "Item" } & Pick<Item, "number" | "description">
+  pigMortalityEventTypes: Array<
+    { __typename?: "PigMortalityEvent" } & Pick<
+      PigMortalityEvent,
+      "code" | "description"
+    > & {
+        reasons: Array<
+          { __typename?: "Reason" } & Pick<Reason, "code" | "description">
+        >;
+      }
   >;
   pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
@@ -946,15 +963,19 @@ export const PigGradeOffFragmentFragmentDoc = gql`
 `;
 export const PigMortalityFragmentFragmentDoc = gql`
   fragment PigMortalityFragment on PigMortality {
-    animal
+    event {
+      code
+    }
     job {
       number
       description
       inventory
       deadQuantity
     }
-    naturalQuantity
-    euthanizedQuantity
+    quantities {
+      code
+      quantity
+    }
     comments
   }
 `;
@@ -1425,9 +1446,13 @@ export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptio
 >;
 export const PigMortalityDocument = gql`
   query PigMortality($job: String!) {
-    animals {
-      number
+    pigMortalityEventTypes {
+      code
       description
+      reasons {
+        code
+        description
+      }
     }
     pigMortality(job: $job) {
       ...PigMortalityFragment

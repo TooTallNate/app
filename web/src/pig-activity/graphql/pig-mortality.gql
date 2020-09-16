@@ -1,20 +1,28 @@
 fragment PigMortalityFragment on PigMortality {
-  animal
+  event {
+    code
+  }
   job {
     number
     description
     inventory
     deadQuantity
   }  
-  naturalQuantity
-  euthanizedQuantity
+  quantities {
+    code
+    quantity
+  }
   comments
 }
 
 query PigMortality($job: String!) {
-  animals {
-    number
+  pigMortalityEventTypes {
+    code
     description
+    reasons {
+      code
+      description
+    }
   }
   pigMortality(job: $job) {
     ...PigMortalityFragment
