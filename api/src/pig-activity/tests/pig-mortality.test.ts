@@ -13,9 +13,10 @@ function query(variables: QueryPigMortalityArgs) {
         job {
           number
         }
-        animal
-        euthanizedQuantity
-        naturalQuantity
+        quantities {
+          code
+          quantity
+        }
         comments
       }
     }`,
@@ -46,10 +47,8 @@ test("returns default form if no record in the database", async () => {
       job: {
         number: job.No
       },
-      animal: null,
       comments: null,
-      euthanizedQuantity: null,
-      naturalQuantity: null
+      quantities: []
     }
   });
 });
@@ -68,10 +67,8 @@ test("returns from from the database", async () => {
       job: {
         number: job.No
       },
-      animal: doc.animal,
-      comments: doc.comments,
-      euthanizedQuantity: doc.euthanizedQuantity,
-      naturalQuantity: doc.naturalQuantity
+      quantities: Array.from(doc.toObject().quantities),
+      comments: doc.comments
     }
   });
 });

@@ -14,11 +14,21 @@ import { LinkedErrors } from "@sentry/node/dist/integrations";
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigMortality.job);
+  },
+  quantities: pigMortality => pigMortality.quantities || [],
+  event(pigMortality, _, { dataSources }) {
+    if (pigMortality.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigMortality.event,
+        template: NavItemJournalTemplate.Mortality
+      });
+    }
   }
 };
 
 export const PigMortalityQueries: QueryResolvers = {
   async pigMortality(_, { job }) {
+    console.log(await PigMortalityModel.findOne({ job }));
     return (
       (await PigMortalityModel.findOne({ job })) ||
       new PigMortalityModel({ job })

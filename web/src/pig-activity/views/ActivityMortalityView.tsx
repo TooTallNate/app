@@ -67,14 +67,16 @@ const ActivityMortalityView: React.FC = () => {
       if (pigMortalityEventTypes.length === 1) {
         setValue("event", pigMortalityEventTypes[0].code);
       } else if (pigMortality.event) setValue("event", pigMortality.event.code);
-      if (pigMortality.quantities)
-        setValue(
-          "quantities",
-          pigMortality.quantities.reduce(
-            (obj, q) => ({ ...obj, [q.code]: q.quantity }),
-            {}
-          )
-        );
+      setTimeout(() => {
+        if (pigMortality.quantities)
+          setValue(
+            "quantities",
+            pigMortality.quantities.reduce(
+              (obj, q) => ({ ...obj, [q.code]: q.quantity }),
+              {}
+            )
+          );
+      });
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
     }
   });
@@ -195,6 +197,7 @@ const ActivityMortalityView: React.FC = () => {
               inventory={data.pigMortality.job.inventory || 0}
               deadQuantity={data.pigMortality.job.deadQuantity || 0}
             />
+            st-pig
             {eventConfig &&
               eventConfig.reasons.map(reason => {
                 return (
