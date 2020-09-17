@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-
+import React from "react";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -21,19 +20,11 @@ import InventoryField from "../components/InventoryField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldInput, {
-  FormFieldInputElement
-} from "../../common/components/form/FormFieldInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-
-function onInputAdded(el: FormFieldInputElement | null) {
-  if (el) {
-    el.focus();
-  }
-}
+import FormFieldInput from "../../common/components/form/FormFieldInput";
 
 interface FormData {
   event: string;
@@ -51,8 +42,6 @@ interface ViewParams {
 const ActivityGradeOffView: React.FC = () => {
   const params = useParams<ViewParams>();
   const history = useHistory();
-
-  const focusedReason = useRef<string | null>(null);
 
   const formContext = useForm<FormData>({
     defaultValues: {
@@ -211,13 +200,7 @@ const ActivityGradeOffView: React.FC = () => {
                     name={`quantities.${reason.code}`}
                   >
                     <FormFieldLabel>{reason.description}</FormFieldLabel>
-                    <FormFieldInput
-                      ref={
-                        focusedReason.current === reason.code
-                          ? onInputAdded
-                          : null
-                      }
-                    >
+                    <FormFieldInput>
                       <NumberInput />
                     </FormFieldInput>
                     <FormFieldErrors />
