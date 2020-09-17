@@ -1,34 +1,64 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigGradeOffResolvers
+  PigGradeOffResolvers,
+  PigGradeOffEventResolvers
 } from "../../common/graphql";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
   NavEntryType,
   NavReason,
-  NavReasonCode
+  NavReasonCode,
+  NavItemJournalLine
 } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigGradeOffModel from "../models/PigGradeOff";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
+import datasources from "../../common/datasources";
+import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
 
 export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeOff, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigGradeOff.job);
   },
-  quantities: pigGradeOff => pigGradeOff.quantities || []
+  quantities: pigGradeOff => pigGradeOff.quantities || [],
+  event(pigGradeOff, _, { dataSources }) {
+    if (pigGradeOff.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigGradeOff.event,
+        template: NavItemJournalTemplate.GradeOff
+      });
+    }
+  }
 };
 
 export const PigGradeOffQueries: QueryResolvers = {
-  async pigGradeOffReasons(_, __, { dataSources }) {
-    return dataSources.navConfig.getReasonCodes("GR-");
-  },
   async pigGradeOff(_, { job }) {
     return (
       (await PigGradeOffModel.findOne({ job })) || new PigGradeOffModel({ job })
     );
+  },
+  async pigGradeOffEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.GradeOff
+    );
+  }
+};
+
+export const PigGradeOffEvent: PigGradeOffEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description,
+  async reasons(pigGradeOffEventTypes, _, { dataSources }) {
+    // fetching journal lines
+    const lines = await dataSources.navItemJournal.getStandardJournalLines({
+      code: pigGradeOffEventTypes.Code,
+      template: NavItemJournalTemplate.GradeOff
+    });
+    // extract reason codes
+    let reasonCodes = lines.map(line => line.Reason_Code);
+    //fetch reason objects from nav
+    return await dataSources.navConfig.getReasonCodeDescList(reasonCodes);
   }
 };
 
@@ -49,20 +79,32 @@ export const PigGradeOffMutations: MutationResolvers = {
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
   async postPigGradeOff(_, { input }, { user, dataSources }) {
+    const standardJournalLines = await dataSources.navItemJournal.getStandardJournalLines(
+      {
+        code: input.event,
+        template: NavItemJournalTemplate.GradeOff
+      }
+    );
+
+    if (standardJournalLines.length === 0) {
+      throw Error(`Event ${input.event} not found.`);
+    }
+
     const job = await dataSources.navJob.getByNo(input.job);
 
     for (const entry of input.quantities) {
-      if (entry.quantity > 0) {
+      const line = standardJournalLines.find(
+        standardJournalLines => standardJournalLines.Reason_Code === entry.code
+      );
+      if (entry.quantity > 0 && line) {
         await postItemJournal(
           {
-            Journal_Template_Name: NavItemJournalTemplate.GradeOff,
+            ...line,
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
             Entry_Type: NavEntryType.Negative,
             Document_No: getDocumentNumber("GRDOFF", user.name),
-            Item_No: input.animal,
             Description: input.comments,
             Location_Code: job.Site,
-            Reason_Code: entry.code as NavReasonCode,
             Quantity: entry.quantity,
             Weight: input.pigWeight * entry.quantity,
             Job_No: input.job,

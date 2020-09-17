@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import FormGroup from "../../common/components/form/FormGroup";
+import React from "react";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -18,29 +17,17 @@ import Button from "../../common/components/input/Button";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import AnimalField from "../components/AnimalField";
 import JobField from "../components/JobField";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldInput, {
-  FormFieldInputElement
-} from "../../common/components/form/FormFieldInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
-import FormGroupLabel from "../../common/components/form/FormGroupLabel";
-import FormGroupContent from "../../common/components/form/FormGroupContent";
-import StackedInput from "../../common/components/input/StackedInput";
-import StackedButton from "../../common/components/input/StackedButton";
-
-function onInputAdded(el: FormFieldInputElement | null) {
-  if (el) {
-    el.focus();
-  }
-}
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
 
 interface FormData {
-  animal: string;
+  event: string;
   newQuantityReason?: string;
   quantities: { [code: string]: number };
   pigWeight: number;
@@ -55,11 +42,6 @@ interface ViewParams {
 const ActivityGradeOffView: React.FC = () => {
   const params = useParams<ViewParams>();
   const history = useHistory();
-  const isSowFarm = params.barnType === "sow-farm";
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
-
-  const [reasons, setReasons] = useState<string[]>([]);
-  const focusedReason = useRef<string | null>(null);
 
   const formContext = useForm<FormData>({
     defaultValues: {
@@ -70,29 +52,29 @@ const ActivityGradeOffView: React.FC = () => {
     variables: {
       job: params.job
     },
-    onCompleted({ pigGradeOff }) {
+    onCompleted({ pigGradeOff, pigGradeOffEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigGradeOff.animal)
-        setValue("animal", pigGradeOff.animal);
+      if (pigGradeOffEventTypes.length === 1) {
+        setValue("event", pigGradeOffEventTypes[0].code);
+      } else if (pigGradeOff.event) setValue("event", pigGradeOff.event.code);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
-      const reasons = pigGradeOff.quantities.map(({ code, quantity }) => {
-        setValue(`quantities.${code}`, quantity);
-        return code;
+      setTimeout(() => {
+        if (pigGradeOff.quantities)
+          setValue(
+            "quantities",
+            pigGradeOff.quantities.reduce(
+              (obj, q) => ({ ...obj, [q.code]: q.quantity }),
+              {}
+            )
+          );
       });
-      setReasons(reasons);
     }
   });
   const [post] = usePostPigGradeOffMutation();
   const [save] = useSavePigGradeOffMutation();
   const { setMessage } = useFlash();
-  const {
-    getValues,
-    watch,
-    setValue,
-    triggerValidation,
-    formState
-  } = formContext;
+  const { getValues, watch } = formContext;
 
   const quantities = watch("quantities") || {};
   const totalQuantity = Object.values(quantities).reduce<number>(
@@ -100,24 +82,13 @@ const ActivityGradeOffView: React.FC = () => {
     0
   );
 
-  const newQuantityReason = watch("newQuantityReason");
-
-  useEffect(() => {
-    if (newQuantityReason) {
-      setReasons(reasons => [...reasons, newQuantityReason]);
-      focusedReason.current = newQuantityReason;
-      setValue("newQuantityReason", undefined);
-    }
-  }, [newQuantityReason, setValue, triggerValidation]);
-
-  useEffect(() => {
-    if (formState.isSubmitted) {
-      triggerValidation("newQuantityReason");
-    }
-  }, [triggerValidation, reasons, formState.isSubmitted]);
+  const event = watch("event");
+  const eventConfig = data
+    ? data.pigGradeOffEventTypes.find(elem => elem.code === event)
+    : undefined;
 
   const onSubmit: OnSubmit<FormData> = async ({
-    animal,
+    event,
     pigWeight,
     comments,
     quantities
@@ -126,13 +97,15 @@ const ActivityGradeOffView: React.FC = () => {
       await post({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : animal,
+            event,
             pigWeight,
             comments,
-            quantities: Object.entries(quantities).map(([code, quantity]) => ({
-              code,
-              quantity
-            })),
+            quantities: Object.entries(quantities)
+              .filter(([, quantity]) => !!quantity)
+              .map(([code, quantity]) => ({
+                code,
+                quantity
+              })),
             job: params.job
           }
         }
@@ -153,7 +126,7 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { animal, pigWeight, comments, quantities } = getValues({
+      const { event, pigWeight, comments, quantities } = getValues({
         nest: true
       });
       console.log(
@@ -165,7 +138,7 @@ const ActivityGradeOffView: React.FC = () => {
       await save({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : animal,
+            event,
             pigWeight,
             comments,
             quantities: Object.entries(quantities).map(([code, quantity]) => ({
@@ -203,88 +176,49 @@ const ActivityGradeOffView: React.FC = () => {
               number={data.pigGradeOff.job.number}
               description={data.pigGradeOff.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigGradeOffEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigGradeOff.job.inventory || 0}
               deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.animals} />}
-            <FormGroup>
-              <FormGroupLabel>Quantity</FormGroupLabel>
-              <FormGroupContent>
-                {reasons.map((code, i) => {
-                  const reason = data.pigGradeOffReasons.find(
-                    r => r.code === code
-                  )!;
-                  return (
-                    <FormField
-                      key={code}
-                      name={`quantities.${code}`}
-                      rules={{
-                        required: "This quantity field is required."
-                      }}
-                    >
-                      <FormFieldLabel>{reason.description}</FormFieldLabel>
-                      <div className="flex">
-                        <FormFieldInput
-                          ref={
-                            focusedReason.current === code ? onInputAdded : null
-                          }
-                        >
-                          <NumberInput className="rounded-r-none w-32" />
-                        </FormFieldInput>
-                        <Button
-                          className="rounded-l-none"
-                          onClick={() => {
-                            setReasons(reasons =>
-                              reasons.filter(c => c !== code)
-                            );
-                            triggerValidation("newQuantityReason");
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                      <FormFieldErrors />
-                    </FormField>
-                  );
-                })}
-                <FormField name="totalQuantity">
-                  <FormFieldLabel>Total</FormFieldLabel>
-                  <FormFieldInput noRegister>
-                    <StaticValue value={totalQuantity} />
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-                <FormField
-                  name="newQuantityReason"
-                  rules={{
-                    validate: {
-                      required: () => {
-                        const { quantities = {} } = getValues({ nest: true });
-                        return (
-                          Object.keys(quantities).length > 0 ||
-                          "At least one quantity is required."
-                        );
-                      }
-                    }
-                  }}
-                >
-                  <FormFieldLabel>New Reason</FormFieldLabel>
-                  <FormFieldInput>
-                    <StackedInput orientation="vertical">
-                      {data.pigGradeOffReasons
-                        .filter(({ code }) => !reasons.includes(code))
-                        .map(({ code, description }) => (
-                          <StackedButton value={code} key={code}>
-                            {description}
-                          </StackedButton>
-                        ))}
-                    </StackedInput>
-                  </FormFieldInput>
-                  <FormFieldErrors />
-                </FormField>
-              </FormGroupContent>
-            </FormGroup>
+            {eventConfig &&
+              eventConfig.reasons.map(reason => {
+                return (
+                  <FormField
+                    key={reason.code}
+                    name={`quantities.${reason.code}`}
+                  >
+                    <FormFieldLabel>{reason.description}</FormFieldLabel>
+                    <FormFieldInput>
+                      <NumberInput />
+                    </FormFieldInput>
+                    <FormFieldErrors />
+                  </FormField>
+                );
+              })}
+            <FormField name="totalQuantity">
+              <FormFieldLabel>Total Quantity</FormFieldLabel>
+              <FormFieldInput noRegister>
+                <StaticValue value={totalQuantity} />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <FormField
               name="pigWeight"
               rules={{

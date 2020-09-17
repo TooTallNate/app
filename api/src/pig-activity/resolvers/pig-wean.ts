@@ -1,14 +1,14 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigWeanResolvers
+  PigWeanResolvers,
+  PigWeanEventResolvers
 } from "../../common/graphql";
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigWeanModel from "../models/PigWean";
-import { postItemJournal, updateUserSettings } from "./pig-activity";
 import UserSettingsModel from "../../common/models/UserSettings";
-import { exception } from "console";
+import { postItemJournal } from "./pig-activity";
 
 export const PigWean: PigWeanResolvers = {
   job(pigWean, _, { dataSources }) {
@@ -35,6 +35,11 @@ export const PigWeanQueries: QueryResolvers = {
   }
 };
 
+export const PigWeanEvent: PigWeanEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description
+};
+
 export const PigWeanMutations: MutationResolvers = {
   async savePigWean(_, { input }, { user }) {
     const doc =
@@ -57,7 +62,7 @@ export const PigWeanMutations: MutationResolvers = {
   async postPigWean(_, { input }, { user, dataSources }) {
     const [
       standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournal({
+    ] = await dataSources.navItemJournal.getStandardJournalLines({
       code: input.event,
       template: NavItemJournalTemplate.Wean
     });

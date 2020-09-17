@@ -47,7 +47,7 @@ export interface NavResource {
   Name: string;
 }
 
-export interface NavItemJournalEntry {
+export interface NavItemJournalLine {
   Journal_Template_Name: NavItemJournalTemplate;
   Journal_Batch_Name: NavItemJournalBatch;
   Posting_Date: string;
@@ -69,7 +69,7 @@ export interface NavItemJournalEntry {
   Job_No: string;
 }
 
-export interface NavJobJournalEntry {
+export interface NavJobJournalLine {
   Journal_Template_Name: string;
   Journal_Batch_Name: string;
   Posting_Date: string;

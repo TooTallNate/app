@@ -55,10 +55,17 @@ export type PigActivityDefaults = {
   prices: Array<PriceEntry>;
 };
 
-export type PigActivityEvent = {
-  __typename?: "PigActivityEvent";
+export type PigWeanEvent = {
+  __typename?: "PigWeanEvent";
   code: Scalars["String"];
   description: Scalars["String"];
+};
+
+export type PigGradeOffEvent = {
+  __typename?: "PigGradeOffEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
 };
 
 export type PriceEntry = {
@@ -120,7 +127,7 @@ export type PigAdjustmentResult = {
 
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigGradeOffEvent>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -128,7 +135,7 @@ export type PigGradeOff = {
 };
 
 export type PostPigGradeOffInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -136,7 +143,7 @@ export type PostPigGradeOffInput = {
 };
 
 export type SavePigGradeOffInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -266,7 +273,7 @@ export type PigPurchaseResult = {
 
 export type PigWean = {
   __typename?: "PigWean";
-  event?: Maybe<PigActivityEvent>;
+  event?: Maybe<PigWeanEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -311,12 +318,12 @@ export type Query = {
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
-  pigGradeOffReasons: Array<Reason>;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
   pigWean: PigWean;
-  pigWeanEventTypes: Array<PigActivityEvent>;
+  pigWeanEventTypes: Array<PigWeanEvent>;
   user?: Maybe<User>;
 };
 
@@ -631,8 +638,11 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
-  "animal" | "pigWeight" | "comments"
+  "pigWeight" | "comments"
 > & {
+    event?: Maybe<
+      { __typename?: "PigGradeOffEvent" } & Pick<PigGradeOffEvent, "code">
+    >;
     job: { __typename?: "Job" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
@@ -647,11 +657,15 @@ export type PigGradeOffQueryVariables = {
 };
 
 export type PigGradeOffQuery = { __typename?: "Query" } & {
-  animals: Array<
-    { __typename?: "Item" } & Pick<Item, "number" | "description">
-  >;
-  pigGradeOffReasons: Array<
-    { __typename?: "Reason" } & Pick<Reason, "code" | "description">
+  pigGradeOffEventTypes: Array<
+    { __typename?: "PigGradeOffEvent" } & Pick<
+      PigGradeOffEvent,
+      "code" | "description"
+    > & {
+        reasons: Array<
+          { __typename?: "Reason" } & Pick<Reason, "code" | "description">
+        >;
+      }
   >;
   pigGradeOff: { __typename?: "PigGradeOff" } & PigGradeOffFragmentFragment;
 };
@@ -841,9 +855,7 @@ export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
   "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
 > & {
-    event?: Maybe<
-      { __typename?: "PigActivityEvent" } & Pick<PigActivityEvent, "code">
-    >;
+    event?: Maybe<{ __typename?: "PigWeanEvent" } & Pick<PigWeanEvent, "code">>;
     job: { __typename?: "Job" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
@@ -856,10 +868,7 @@ export type PigWeanQueryVariables = {
 
 export type PigWeanQuery = { __typename?: "Query" } & {
   pigWeanEventTypes: Array<
-    { __typename?: "PigActivityEvent" } & Pick<
-      PigActivityEvent,
-      "code" | "description"
-    >
+    { __typename?: "PigWeanEvent" } & Pick<PigWeanEvent, "code" | "description">
   >;
   pigWean: { __typename?: "PigWean" } & PigWeanFragmentFragment;
 };
@@ -918,7 +927,9 @@ export const PigAdjustmentFragmentFragmentDoc = gql`
 `;
 export const PigGradeOffFragmentFragmentDoc = gql`
   fragment PigGradeOffFragment on PigGradeOff {
-    animal
+    event {
+      code
+    }
     job {
       number
       description
@@ -1245,13 +1256,13 @@ export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOpt
 >;
 export const PigGradeOffDocument = gql`
   query PigGradeOff($job: String!) {
-    animals {
-      number
-      description
-    }
-    pigGradeOffReasons {
+    pigGradeOffEventTypes {
       code
       description
+      reasons {
+        code
+        description
+      }
     }
     pigGradeOff(job: $job) {
       ...PigGradeOffFragment

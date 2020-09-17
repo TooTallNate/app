@@ -34,4 +34,13 @@ export default class NavConfigDataSouce extends NavDataSource {
       )}`
     );
   }
+
+  //new method that gives a list of codes and get's the reason (desc) for each
+  getReasonCodeDescList(codes: string[]): Promise<NavReason[]> {
+    return this.get(
+      `/ReasonCodes?$filter=${this.buildFilter(f =>
+        f.or(...codes.map(code => f.equals("Code", code)))
+      )}`
+    );
+  }
 }

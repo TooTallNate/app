@@ -76,10 +76,17 @@ export type PigActivityDefaults = {
   prices: Array<PriceEntry>;
 };
 
-export type PigActivityEvent = {
-  __typename?: "PigActivityEvent";
+export type PigWeanEvent = {
+  __typename?: "PigWeanEvent";
   code: Scalars["String"];
   description: Scalars["String"];
+};
+
+export type PigGradeOffEvent = {
+  __typename?: "PigGradeOffEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
 };
 
 export type PriceEntry = {
@@ -141,7 +148,7 @@ export type PigAdjustmentResult = {
 
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigGradeOffEvent>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -149,7 +156,7 @@ export type PigGradeOff = {
 };
 
 export type PostPigGradeOffInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -157,7 +164,7 @@ export type PostPigGradeOffInput = {
 };
 
 export type SavePigGradeOffInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -287,7 +294,7 @@ export type PigPurchaseResult = {
 
 export type PigWean = {
   __typename?: "PigWean";
-  event?: Maybe<PigActivityEvent>;
+  event?: Maybe<PigWeanEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -332,12 +339,12 @@ export type Query = {
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
   pigGradeOff: PigGradeOff;
-  pigGradeOffReasons: Array<Reason>;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigMortality: PigMortality;
   pigMove: PigMove;
   pigPurchase: PigPurchase;
   pigWean: PigWean;
-  pigWeanEventTypes: Array<PigActivityEvent>;
+  pigWeanEventTypes: Array<PigWeanEvent>;
   user?: Maybe<User>;
 };
 
@@ -688,7 +695,8 @@ export type ResolversTypes = ResolversObject<{
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
-  PigActivityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
@@ -795,7 +803,8 @@ export type ResolversParentTypes = ResolversObject<{
   Resource: NavResource;
   Location: NavLocation;
   PigActivityDefaults: UserSettingsDocument;
-  PigActivityEvent: NavStandardItemJournal;
+  PigWeanEvent: NavStandardItemJournal;
+  PigGradeOffEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
   Float: Scalars["Float"];
   PigQuantity: PigQuantity;
@@ -945,12 +954,22 @@ export type PigActivityDefaultsResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type PigActivityEventResolvers<
+export type PigWeanEventResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigActivityEvent"] = ResolversParentTypes["PigActivityEvent"]
+  ParentType extends ResolversParentTypes["PigWeanEvent"] = ResolversParentTypes["PigWeanEvent"]
 > = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigGradeOffEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigGradeOffEvent"] = ResolversParentTypes["PigGradeOffEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1011,7 +1030,11 @@ export type PigGradeOffResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PigGradeOff"] = ResolversParentTypes["PigGradeOff"]
 > = ResolversObject<{
-  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  event?: Resolver<
+    Maybe<ResolversTypes["PigGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantities?: Resolver<
     Array<ResolversTypes["PigQuantity"]>,
@@ -1166,7 +1189,7 @@ export type PigWeanResolvers<
   ParentType extends ResolversParentTypes["PigWean"] = ResolversParentTypes["PigWean"]
 > = ResolversObject<{
   event?: Resolver<
-    Maybe<ResolversTypes["PigActivityEvent"]>,
+    Maybe<ResolversTypes["PigWeanEvent"]>,
     ParentType,
     ContextType
   >;
@@ -1254,8 +1277,8 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryPigGradeOffArgs, "job">
   >;
-  pigGradeOffReasons?: Resolver<
-    Array<ResolversTypes["Reason"]>,
+  pigGradeOffEventTypes?: Resolver<
+    Array<ResolversTypes["PigGradeOffEvent"]>,
     ParentType,
     ContextType
   >;
@@ -1284,7 +1307,7 @@ export type QueryResolvers<
     RequireFields<QueryPigWeanArgs, "job">
   >;
   pigWeanEventTypes?: Resolver<
-    Array<ResolversTypes["PigActivityEvent"]>,
+    Array<ResolversTypes["PigWeanEvent"]>,
     ParentType,
     ContextType
   >;
@@ -1511,7 +1534,8 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
-  PigActivityEvent?: PigActivityEventResolvers<ContextType>;
+  PigWeanEvent?: PigWeanEventResolvers<ContextType>;
+  PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;
   PriceEntry?: PriceEntryResolvers<ContextType>;
   PigQuantity?: PigQuantityResolvers<ContextType>;
   PigAdjustment?: PigAdjustmentResolvers<ContextType>;

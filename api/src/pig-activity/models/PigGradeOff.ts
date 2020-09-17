@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 
 export interface PigGradeOffDocument extends PigActivityDocument {
   job: string;
-  animal: string;
+  event: string;
   quantities: {
     code: string;
     quantity: number;
@@ -18,7 +18,7 @@ const PigGradeOffSchema = new Schema({
     required: true,
     unique: true
   },
-  animal: String,
+  event: String,
   quantities: [
     {
       _id: false,

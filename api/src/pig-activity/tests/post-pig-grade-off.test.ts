@@ -8,14 +8,10 @@ import {
 import {
   PigGradeOffFactory,
   JobFactory,
-  UserSettingsFactory
+  UserSettingsFactory,
+  StandardJournalGradeOffFactory
 } from "../../../test/builders";
-import {
-  NavItemJournalTemplate,
-  NavItemJournalBatch,
-  NavEntryType,
-  NavReasonCode
-} from "../../common/nav";
+import { NavItemJournalBatch } from "../../common/nav";
 import { format } from "date-fns";
 import UserSettingsModel from "../../common/models/UserSettings";
 import PigGradeOffModel from "../models/PigGradeOff";
@@ -29,7 +25,6 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
           job {
             number
           }
-          animal
           quantities {
             code
             quantity
@@ -40,10 +35,6 @@ function mutation(variables: MutationPostPigGradeOffArgs) {
         defaults { 
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -74,18 +65,31 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .reply(200, job)
     .persist();
 
+  const standardJournalLines = input.quantities.map(({ code }) =>
+    StandardJournalGradeOffFactory.build({ Reason_Code: code })
+  );
+
+  nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/StandardItemJournal`)
+    .query({
+      $filter: `((Journal_Template_Name eq 'GRADE OFF') and (Standard_Journal_Code eq '${input.event}'))`
+    })
+    .basicAuth(auth)
+    .reply(200, {
+      value: standardJournalLines
+    })
+    .persist();
+
   input.quantities.forEach(({ quantity, code }) => {
     if (quantity > 0) {
+      const line = standardJournalLines.find(line => line.Reason_Code === code);
       nock(process.env.NAV_BASE_URL)
         .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-          Journal_Template_Name: NavItemJournalTemplate.GradeOff,
+          ...line,
           Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-          Entry_Type: NavEntryType.Negative,
           Document_No: documentNumberRegex,
-          Item_No: input.animal,
           Description: input.comments || " ",
           Location_Code: job.Site,
-          Reason_Code: code,
           Quantity: quantity,
           Weight: input.pigWeight * quantity,
           Job_No: input.job,
@@ -122,7 +126,6 @@ test("submits data to NAV and creates new user settings and grade off documents"
         job: {
           number: job.No
         },
-        animal: null,
         quantities: [],
         pigWeight: null,
         comments: null
@@ -130,8 +133,7 @@ test("submits data to NAV and creates new user settings and grade off documents"
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -141,12 +143,11 @@ test("submits data to NAV and creates new user settings and grade off documents"
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    prices: []
+    pigJob: job.No
   });
 
   await expect(
@@ -178,7 +179,6 @@ test("does not quantity if not positive", async () => {
         job: {
           number: job.No
         },
-        animal: null,
         quantities: [],
         pigWeight: null,
         comments: null
@@ -186,8 +186,7 @@ test("does not quantity if not positive", async () => {
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -197,12 +196,11 @@ test("does not quantity if not positive", async () => {
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    prices: []
+    pigJob: job.No
   });
 
   await expect(
@@ -227,13 +225,7 @@ test("submits data to NAV and updates existing user settings document", async ()
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: [
-        {
-          animal: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
+      username: user.User_Name
     })
   );
 
@@ -244,7 +236,6 @@ test("submits data to NAV and updates existing user settings document", async ()
         job: {
           number: job.No
         },
-        animal: null,
         quantities: [],
         pigWeight: null,
         comments: null
@@ -252,22 +243,17 @@ test("submits data to NAV and updates existing user settings document", async ()
       defaults: {
         job: {
           number: job.No
-        },
-        prices: userSettings.toObject().prices
+        }
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
+    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
   ).resolves.toEqual({
     _id: expect.anything(),
     username: user.User_Name,
-    pigJob: job.No,
-    prices: userSettings.toObject().prices
+    pigJob: job.No
   });
 });
 
@@ -289,7 +275,6 @@ test("submits data to NAV and clears existing grade off document", async () => {
         job: {
           number: job.No
         },
-        animal: null,
         quantities: [],
         pigWeight: null,
         comments: null
@@ -297,8 +282,7 @@ test("submits data to NAV and clears existing grade off document", async () => {
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -329,7 +313,6 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        animal: null,
         quantities: [],
         pigWeight: null,
         comments: null
@@ -337,8 +320,7 @@ test("sets description to an empty string if there are no comments", async () =>
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });

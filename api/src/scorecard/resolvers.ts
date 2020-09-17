@@ -5,7 +5,7 @@ import {
   FarrowingBackendScorecardResolvers
 } from "../common/graphql";
 import {
-  NavJobJournalEntry,
+  NavJobJournalLine,
   NavJobJournalTemplate,
   NavJobJournalBatch,
   JobTaskNumber,
@@ -16,9 +16,9 @@ import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
 
 function postJobJournal(
-  entry: Partial<NavJobJournalEntry>,
+  entry: Partial<NavJobJournalLine>,
   dataSource: NavJobJournalDataSource
-): Promise<NavJobJournalEntry> {
+): Promise<NavJobJournalLine> {
   const date = navDate(new Date());
   entry.Posting_Date = date;
   entry.Document_Date = date;
