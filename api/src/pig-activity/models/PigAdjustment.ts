@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 
 export interface PigAdjustmentDocument extends PigActivityDocument {
   job: string;
-  animal: string;
+  event: string;
   quantity: number;
   totalWeight: number;
   price: number;
@@ -16,7 +16,7 @@ const PigAdjustmentSchema = new Schema({
     required: true,
     unique: true
   },
-  animal: String,
+  event: String,
   quantity: Number,
   totalWeight: Number,
   price: Number,

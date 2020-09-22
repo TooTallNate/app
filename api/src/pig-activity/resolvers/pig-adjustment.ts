@@ -1,8 +1,10 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigAdjustmentResolvers
+  PigAdjustmentResolvers,
+  PigAdjustmentEventResolvers
 } from "../../common/graphql";
+import UserSettingsModel from "../../common/models/UserSettings";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
@@ -15,6 +17,14 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 export const PigAdjustment: PigAdjustmentResolvers = {
   job(pigAdjustment, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigAdjustment.job);
+  },
+  event(pigAdjustment, _, { dataSources }) {
+    if (pigAdjustment.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigAdjustment.event,
+        template: NavItemJournalTemplate.Adjustment
+      });
+    }
   }
 };
 
@@ -24,7 +34,17 @@ export const PigAdjustmentQueries: QueryResolvers = {
       (await PigAdjustmentModel.findOne({ job })) ||
       new PigAdjustmentModel({ job })
     );
+  },
+  async pigAdjustmentEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.Adjustment
+    );
   }
+};
+
+export const PigAdjustmentEvent: PigAdjustmentEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description
 };
 
 export const PigAdjustmentMutations: MutationResolvers = {
@@ -37,42 +57,47 @@ export const PigAdjustmentMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.job,
-      ...(input.animal && { animal: input.animal }),
-      ...(input.price && { price: input.price })
+      username: user.username
     });
 
-    return { success: true, pigAdjustment: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigAdjustment: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   },
   async postPigAdjustment(_, { input }, { user, dataSources }) {
     const job = await dataSources.navJob.getByNo(input.job);
 
+    const [
+      standardJournal
+    ] = await dataSources.navItemJournal.getStandardJournalLines({
+      code: input.event,
+      template: NavItemJournalTemplate.Adjustment
+    });
+
+    if (!standardJournal) {
+      throw Error(`Event ${input.event} not found.`);
+    }
+
     await postItemJournal(
       {
-        Journal_Template_Name: NavItemJournalTemplate.Adjustment,
+        ...standardJournal,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Entry_Type:
           input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
         Document_No: getDocumentNumber("ADJ", user.name),
-        Item_No: input.animal,
         Description: input.comments,
         Location_Code: job.Site,
         Quantity: Math.abs(input.quantity),
         Weight: input.totalWeight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        ...(input.quantity > 0 && { Unit_Amount: input.price })
+        Job_No: input.job
       },
       dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      pigJob: input.job,
-      animal: input.animal,
-      ...(input.quantity > 0 && { price: input.price })
+      username: user.username
     });
 
     const doc =

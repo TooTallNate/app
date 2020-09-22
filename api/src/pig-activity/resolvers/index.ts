@@ -2,7 +2,8 @@ import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
 import {
   PigAdjustment,
   PigAdjustmentQueries,
-  PigAdjustmentMutations
+  PigAdjustmentMutations,
+  PigAdjustmentEvent
 } from "./pig-adjustment";
 import {
   PigGradeOff,
@@ -56,5 +57,6 @@ export const types = {
   PigPurchase,
   PigWean,
   PigWeanEvent,
-  PigGradeOffEvent
+  PigGradeOffEvent,
+  PigAdjustmentEvent
 };

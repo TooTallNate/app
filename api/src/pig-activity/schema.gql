@@ -14,6 +14,11 @@ type PigGradeOffEvent {
   reasons: [Reason!]!
 }
 
+type PigAdjustmentEvent {
+  code: String!
+  description: String!
+}
+
 type PriceEntry {
   animal: String!
   price: Float
@@ -36,7 +41,7 @@ input PigOptionalQuantityInput {
 
 
 type PigAdjustment {
-  animal: String
+  event: PigAdjustmentEvent
   job: Job!
   quantity: Int
   totalWeight: Float
@@ -45,7 +50,7 @@ type PigAdjustment {
 }
 
 input PostPigAdjustmentInput {
-  animal: String!
+  event: String!
   job: String!
   quantity: Int!
   totalWeight: Float!
@@ -54,7 +59,7 @@ input PostPigAdjustmentInput {
 }
 
 input SavePigAdjustmentInput {
-  animal: String
+  event: String!
   job: String!
   quantity: Int
   totalWeight: Float
@@ -256,6 +261,7 @@ type Query {
   pigPurchase(job: String!): PigPurchase!
   pigWean(job: String!): PigWean!
   pigWeanEventTypes: [PigWeanEvent!]!
+  pigAdjustmentEventTypes: [PigAdjustmentEvent!]!
 }
 
 type Mutation {
