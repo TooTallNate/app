@@ -51,8 +51,6 @@ const ActivityMortalityView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
 
-  const focusedReason = useRef<string | null>(null);
-
   const formContext = useForm<FormData>({
     defaultValues: {
       quantities: {}
@@ -197,7 +195,6 @@ const ActivityMortalityView: React.FC = () => {
               inventory={data.pigMortality.job.inventory || 0}
               deadQuantity={data.pigMortality.job.deadQuantity || 0}
             />
-            st-pig
             {eventConfig &&
               eventConfig.reasons.map(reason => {
                 return (
@@ -206,13 +203,7 @@ const ActivityMortalityView: React.FC = () => {
                     name={`quantities.${reason.code}`}
                   >
                     <FormFieldLabel>{reason.description}</FormFieldLabel>
-                    <FormFieldInput
-                      ref={
-                        focusedReason.current === reason.code
-                          ? onInputAdded
-                          : null
-                      }
-                    >
+                    <FormFieldInput>
                       <NumberInput />
                     </FormFieldInput>
                     <FormFieldErrors />

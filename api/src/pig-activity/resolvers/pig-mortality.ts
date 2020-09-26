@@ -28,7 +28,6 @@ export const PigMortality: PigMortalityResolvers = {
 
 export const PigMortalityQueries: QueryResolvers = {
   async pigMortality(_, { job }) {
-    console.log(await PigMortalityModel.findOne({ job }));
     return (
       (await PigMortalityModel.findOne({ job })) ||
       new PigMortalityModel({ job })
