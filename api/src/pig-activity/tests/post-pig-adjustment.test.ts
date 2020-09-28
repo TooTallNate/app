@@ -8,7 +8,7 @@ import {
 import {
   PigAdjustmentFactory,
   JobFactory,
-  UserSettingsFactory
+  StandardJournalAdjustmentFactory
 } from "../../../test/builders";
 import {
   NavItemJournalTemplate,
@@ -17,7 +17,6 @@ import {
 } from "../../common/nav";
 import { format } from "date-fns";
 import PigAdjustmentModel from "../models/PigAdjustment";
-import UserSettingsModel from "../../common/models/UserSettings";
 
 function mutation(variables: MutationPostPigAdjustmentArgs) {
   return client.request<PigAdjustmentResult>(
@@ -28,19 +27,13 @@ function mutation(variables: MutationPostPigAdjustmentArgs) {
           job {
             number
           }
-          animal
           quantity
           totalWeight
-          price
           comments
         }
         defaults { 
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -62,6 +55,8 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   );
   const date = format(new Date(), "YYY-MM-dd");
 
+  const standardJournal = StandardJournalAdjustmentFactory.build();
+
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${job.No}%27)`)
     .basicAuth(auth)
@@ -69,23 +64,31 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .persist();
 
   nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/StandardItemJournal`)
+    .query({
+      $filter: `((Journal_Template_Name eq 'QTY ADJ') and (Standard_Journal_Code eq '${input.event}'))`
+    })
+    .basicAuth(auth)
+    .reply(200, {
+      value: [standardJournal]
+    })
+    .persist();
+
+  nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      Journal_Template_Name: NavItemJournalTemplate.Adjustment,
+      ...standardJournal,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
       Entry_Type:
         input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
       Document_No: documentNumberRegex,
-      Item_No: input.animal,
       Description: input.comments || " ",
       Location_Code: job.Site,
       Quantity: Math.abs(input.quantity),
       Weight: input.totalWeight,
       Job_No: input.job,
-      Shortcut_Dimension_1_Code: job.Entity,
-      Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
-      Document_Date: date,
-      ...(input.quantity > 0 && { Unit_Amount: input.price })
+      Document_Date: date
+      //...(input.quantity > 0 && { Unit_Amount: input.price })
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -99,8 +102,8 @@ testUnauthenticated(() =>
   })
 );
 
-test("submits data to NAV and creates new user settings and adjustment documents", async () => {
-  const { input, job, user } = await mockTestData({
+test("submits data to NAV and creates new adjustment document", async () => {
+  const { input, job } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
     }
@@ -113,42 +116,14 @@ test("submits data to NAV and creates new user settings and adjustment documents
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: {
-          number: job.No
-        },
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    pigJob: job.No,
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
   });
 
   await expect(
@@ -162,69 +137,6 @@ test("submits data to NAV and creates new user settings and adjustment documents
     _id: expect.anything(),
     activity: "adjustment",
     job: job.No
-  });
-});
-
-test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: [
-        {
-          animal: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigAdjustment: {
-      success: true,
-      pigAdjustment: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        quantity: null,
-        totalWeight: null,
-        price: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    pigJob: job.No,
-    prices: [
-      {
-        animal: input.animal,
-        price: input.price
-      }
-    ]
   });
 });
 
@@ -247,22 +159,12 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: {
-          number: job.No
-        },
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -293,17 +195,12 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: {
-          number: job.No
-        },
-        prices: []
+        job: null
       }
     }
   });
@@ -323,22 +220,12 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        animal: null,
         quantity: null,
         totalWeight: null,
-        price: null,
         comments: null
       },
       defaults: {
-        job: {
-          number: job.No
-        },
-        prices: [
-          {
-            animal: input.animal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
