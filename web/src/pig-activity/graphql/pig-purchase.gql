@@ -1,5 +1,7 @@
 fragment PigPurchaseFragment on PigPurchase {
-  animal
+  event {
+    code
+  }
   job {
     number
     description
@@ -8,20 +10,13 @@ fragment PigPurchaseFragment on PigPurchase {
   }  
   quantity
   totalWeight
-  price
   comments
 }
 
 query PigPurchase($job: String!) {
-  animals {
-    number
+  pigPurchaseEventTypes {
+    code
     description
-  }
-  pigActivityDefaults {
-    prices {
-      animal
-      price
-    }
   }
   pigPurchase(job: $job) {
     ...PigPurchaseFragment

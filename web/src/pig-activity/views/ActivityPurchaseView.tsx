@@ -17,61 +17,60 @@ import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import AnimalField from "../components/AnimalField";
-import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
+import FormField from "../../common/components/form/FormField";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 
 interface FormData {
-  animal: string;
+  event: string;
   quantity: number;
+  smallPigQuantity?: number;
   totalWeight: number;
-  price: number;
   comments?: string;
 }
 
 interface ViewParams {
   job: string;
-  barnType: string;
 }
 
 const ActivityPurchaseView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const isSowFarm = params.barnType === "sow-farm";
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const formContext = useForm<FormData>();
   const { loading, data } = usePigPurchaseQuery({
     variables: {
       job: params.job
     },
-    onCompleted({ pigPurchase, pigActivityDefaults }) {
+    onCompleted({ pigPurchase, pigPurchaseEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigPurchase.animal)
-        setValue("animal", pigPurchase.animal);
+      if (pigPurchaseEventTypes.length === 1) {
+        setValue("event", pigPurchaseEventTypes[0].code);
+      } else if (pigPurchase.event) setValue("event", pigPurchase.event.code);
       if (pigPurchase.quantity) setValue("quantity", pigPurchase.quantity);
       if (pigPurchase.totalWeight)
         setValue("totalWeight", pigPurchase.totalWeight);
-      if (pigPurchase.price) setValue("price", pigPurchase.price);
       if (pigPurchase.comments) setValue("comments", pigPurchase.comments);
     }
   });
   const [post] = usePostPigPurchaseMutation();
   const [save] = useSavePigPurchaseMutation();
   const { setMessage } = useFlash();
-  const { getValues, setValue, watch } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
-  const animal = watch("animal") || (isNurseryFinisher ? "01" : undefined);
+  const quantity = watch("quantity") || 0;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
       await post({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : undefined,
             ...data,
             job: params.job
           }
@@ -96,7 +95,6 @@ const ActivityPurchaseView: React.FC = () => {
       await save({
         variables: {
           input: {
-            animal,
             ...getValues(),
             job: params.job
           }
@@ -117,15 +115,10 @@ const ActivityPurchaseView: React.FC = () => {
   };
 
   useEffect(() => {
-    if (animal && data) {
-      const priceEntry = data.pigActivityDefaults.prices.find(
-        n => n.animal === animal
-      );
-      if (priceEntry && typeof priceEntry.price === "number") {
-        setValue("price", priceEntry.price);
-      }
+    if (formState.isSubmitted) {
+      triggerValidation("smallPigQuantity");
     }
-  }, [data, animal, setValue]);
+  }, [triggerValidation, quantity, formState.isSubmitted]);
 
   return (
     <View>
@@ -140,14 +133,29 @@ const ActivityPurchaseView: React.FC = () => {
               number={data.pigPurchase.job.number}
               description={data.pigPurchase.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigPurchaseEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigPurchase.job.inventory || 0}
               deadQuantity={data.pigPurchase.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.animals} />}
             <QuantityAndSmallsField />
             <TotalWeightField />
-            <PriceField />
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>

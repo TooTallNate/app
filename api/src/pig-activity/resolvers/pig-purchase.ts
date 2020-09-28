@@ -1,13 +1,11 @@
 import {
   MutationResolvers,
   QueryResolvers,
-  PigPurchaseResolvers
+  PigPurchaseResolvers,
+  PigPurchaseEventResolvers
 } from "../../common/graphql";
-import {
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavEntryType
-} from "../../common/nav";
+import UserSettingsModel from "../../common/models/UserSettings";
+import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigPurchaseModel from "../models/PigPurchase";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
@@ -15,6 +13,14 @@ import { postItemJournal, updateUserSettings } from "./pig-activity";
 export const PigPurchase: PigPurchaseResolvers = {
   job(pigPurchase, _, { dataSources }) {
     return dataSources.navJob.getByNo(pigPurchase.job);
+  },
+  event(pigPurchase, _, { dataSources }) {
+    if (pigPurchase.event) {
+      return dataSources.navItemJournal.getStandardJournalByCode({
+        code: pigPurchase.event,
+        template: NavItemJournalTemplate.Purchase
+      });
+    }
   }
 };
 
@@ -23,7 +29,17 @@ export const PigPurchaseQueries: QueryResolvers = {
     return (
       (await PigPurchaseModel.findOne({ job })) || new PigPurchaseModel({ job })
     );
+  },
+  async pigPurchaseEventTypes(_, __, { dataSources }) {
+    return await dataSources.navItemJournal.getStandardJournals(
+      NavItemJournalTemplate.Purchase
+    );
   }
+};
+
+export const PigPurchaseEvent: PigPurchaseEventResolvers = {
+  code: journal => journal.Code,
+  description: journal => journal.Description
 };
 
 export const PigPurchaseMutations: MutationResolvers = {
@@ -36,39 +52,49 @@ export const PigPurchaseMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      ...(input.animal && { animal: input.animal }),
-      ...(input.price && { price: input.price })
+      username: user.username
     });
 
-    return { success: true, pigPurchase: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigPurchase: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   },
   async postPigPurchase(_, { input }, { user, dataSources }) {
+    const [
+      standardJournalLines
+    ] = await dataSources.navItemJournal.getStandardJournalLines({
+      code: input.event,
+      template: NavItemJournalTemplate.Purchase
+    });
+
+    if (!standardJournalLines) {
+      throw Error(`Event ${input.event} not found`);
+    }
+
     const job = await dataSources.navJob.getByNo(input.job);
-    await postItemJournal(
-      {
-        Journal_Template_Name: NavItemJournalTemplate.Wean,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
-        Document_No: getDocumentNumber("PURCH", user.name),
-        Item_No: input.animal,
-        Description: input.comments,
-        Location_Code: job.Site,
-        Quantity: input.quantity,
-        Unit_Amount: input.price,
-        Weight: input.totalWeight,
-        Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        Meta: input.smallPigQuantity
-      },
-      dataSources.navItemJournal
-    );
+    if (standardJournalLines) {
+      await postItemJournal(
+        {
+          ...standardJournalLines,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Document_No: getDocumentNumber("PURCH", user.name),
+          Description: input.comments,
+          Location_Code: job.Site,
+          Quantity: input.quantity,
+          Weight: input.totalWeight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Meta: input.smallPigQuantity
+        },
+        dataSources.navItemJournal
+      );
+    }
 
     const userSettings = await updateUserSettings({
-      username: user.username,
-      animal: input.animal,
-      price: input.price
+      username: user.username
     });
 
     const doc =
@@ -81,6 +107,10 @@ export const PigPurchaseMutations: MutationResolvers = {
     });
     await doc.save();
 
-    return { success: true, pigPurchase: doc, defaults: userSettings };
+    return {
+      success: true,
+      pigPurchase: doc,
+      defaults: userSettings || new UserSettingsModel()
+    };
   }
 };
