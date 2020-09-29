@@ -178,7 +178,6 @@ const ActivityAdjustmentView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <TotalWeightField />
-            {quantitySign > 0}
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>

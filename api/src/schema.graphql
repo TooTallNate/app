@@ -86,7 +86,6 @@ input PostPigAdjustmentInput {
   job: String!
   quantity: Int!
   totalWeight: Float!
-  price: Float
   comments: String
 }
 
@@ -95,7 +94,6 @@ input SavePigAdjustmentInput {
   job: String!
   quantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 

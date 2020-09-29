@@ -6,7 +6,6 @@ export interface PigAdjustmentDocument extends PigActivityDocument {
   event: string;
   quantity: number;
   totalWeight: number;
-  price: number;
   comments: string;
 }
 
@@ -19,7 +18,6 @@ const PigAdjustmentSchema = new Schema({
   event: String,
   quantity: Number,
   totalWeight: Number,
-  price: Number,
   comments: String
 });
 

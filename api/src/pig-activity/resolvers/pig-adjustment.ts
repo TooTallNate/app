@@ -57,13 +57,14 @@ export const PigAdjustmentMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await updateUserSettings({
-      username: user.username
+      username: user.username,
+      pigJob: input.job
     });
 
     return {
       success: true,
       pigAdjustment: doc,
-      defaults: userSettings || new UserSettingsModel()
+      defaults: userSettings
     };
   },
   async postPigAdjustment(_, { input }, { user, dataSources }) {
@@ -91,13 +92,16 @@ export const PigAdjustmentMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: Math.abs(input.quantity),
         Weight: input.totalWeight,
-        Job_No: input.job
+        Job_No: input.job,
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center
       },
       dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({
-      username: user.username
+      username: user.username,
+      pigJob: input.job
     });
 
     const doc =

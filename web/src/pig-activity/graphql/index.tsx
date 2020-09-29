@@ -111,7 +111,6 @@ export type PostPigAdjustmentInput = {
   job: Scalars["String"];
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -120,7 +119,6 @@ export type SavePigAdjustmentInput = {
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
