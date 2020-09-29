@@ -38,6 +38,7 @@ function mutation(variables: MutationPostPigMoveArgs) {
           job {
             number
           }
+        }
       }
     }`,
     variables
@@ -51,7 +52,6 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const input = PigMoveFactory.build({
     fromJob: fromJob.No,
     toJob: toJob.No,
-    event: "FE-DEFAULT",
     ...inputOverrides
   });
 
@@ -59,7 +59,12 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     `^MOVE${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
   );
   const date = format(new Date(), "YYY-MM-dd");
-  const standardJournal = StandardJournalMoveFactory.build();
+  const standardJournalPos = StandardJournalMoveFactory.build({
+    Entry_Type: NavEntryType.Positive
+  });
+  const standardJournalNeg = StandardJournalMoveFactory.build({
+    Entry_Type: NavEntryType.Negative
+  });
 
   nock(process.env.NAV_BASE_URL)
     .get(`/Company(%27${process.env.NAV_COMPANY}%27)/Jobs(%27${fromJob.No}%27)`)
@@ -80,21 +85,22 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     })
     .basicAuth(auth)
     .reply(200, {
-      value: [standardJournal]
+      value: [standardJournalNeg, standardJournalPos]
     })
     .persist();
 
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      ...standardJournal,
+      ...standardJournalNeg,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Negative,
       Document_No: documentNumberRegex,
       Description: input.comments || " ",
       Location_Code: fromJob.Site,
       Quantity: input.quantity,
       Weight: input.totalWeight,
       Job_No: input.fromJob,
+      Shortcut_Dimension_1_Code: fromJob.Entity,
+      Shortcut_Dimension_2_Code: fromJob.Cost_Center,
       Posting_Date: date,
       Document_Date: date
     })
@@ -103,18 +109,19 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
 
   nock(process.env.NAV_BASE_URL)
     .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-      ...standardJournal,
+      ...standardJournalPos,
       Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      Entry_Type: NavEntryType.Positive,
       Document_No: documentNumberRegex,
       Description: input.comments || " ",
       Location_Code: toJob.Site,
       Quantity: input.quantity,
       Weight: input.totalWeight,
       Job_No: input.toJob,
+      Shortcut_Dimension_1_Code: toJob.Entity,
+      Shortcut_Dimension_2_Code: toJob.Cost_Center,
+      Meta: input.smallPigQuantity,
       Posting_Date: date,
-      Document_Date: date,
-      Meta: input.smallPigQuantity
+      Document_Date: date
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -149,7 +156,9 @@ test("submits data to NAV and creates adjustment document", async () => {
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });
@@ -195,7 +204,9 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });
@@ -230,7 +241,9 @@ test("sets description to an empty string if there are no comments", async () =>
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });

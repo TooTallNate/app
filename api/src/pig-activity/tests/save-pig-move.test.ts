@@ -92,7 +92,9 @@ test("creates new move and user settings documents", async () => {
         comments: input.comments
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });
@@ -102,7 +104,7 @@ test("creates new move and user settings documents", async () => {
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
@@ -155,7 +157,9 @@ test("updates existing move document", async () => {
         comments: input.comments
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });
@@ -203,7 +207,9 @@ test("updates existing user settings document", async () => {
         comments: input.comments
       },
       defaults: {
-        job: null
+        job: {
+          number: fromJob.No
+        }
       }
     }
   });
@@ -211,6 +217,8 @@ test("updates existing user settings document", async () => {
   await expect(
     UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
   ).resolves.toEqual({
-    _id: expect.anything()
+    _id: expect.anything(),
+    username: user.User_Name,
+    pigJob: fromJob.No
   });
 });

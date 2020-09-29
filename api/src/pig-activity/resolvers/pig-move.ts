@@ -67,25 +67,33 @@ export const PigMoveMutations: MutationResolvers = {
     return { success: true, pigMove: doc, defaults: userSettings };
   },
   async postPigMove(_, { input }, { user, dataSources }) {
-    const [
-      standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournalLines({
-      code: input.event,
-      template: NavItemJournalTemplate.Move
-    });
+    const standardJournal = await dataSources.navItemJournal.getStandardJournalLines(
+      {
+        code: input.event,
+        template: NavItemJournalTemplate.Move
+      }
+    );
 
-    if (!standardJournal) {
+    const standardJournalPos = standardJournal.find(
+      item => item.Entry_Type === NavEntryType.Positive
+    );
+
+    const standardJournalNeg = standardJournal.find(
+      item => item.Entry_Type === NavEntryType.Negative
+    );
+
+    if (!standardJournalNeg || !standardJournalPos) {
       throw Error(`Event ${input.event} not found.`);
     }
 
     const docNo = getDocumentNumber("MOVE", user.name);
     const fromJob = await dataSources.navJob.getByNo(input.fromJob);
     const toJob = await dataSources.navJob.getByNo(input.toJob);
+
     await postItemJournal(
       {
-        ...standardJournal,
+        ...standardJournalNeg,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
         Document_No: docNo,
         Description: input.comments,
         Location_Code: fromJob.Site,
@@ -99,9 +107,8 @@ export const PigMoveMutations: MutationResolvers = {
     );
     await postItemJournal(
       {
-        ...standardJournal,
+        ...standardJournalPos,
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Positive,
         Document_No: docNo,
         Description: input.comments,
         Location_Code: toJob.Site,

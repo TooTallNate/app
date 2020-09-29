@@ -211,6 +211,7 @@ export const StandardJournalGradeOffFactory = Factory.Sync.makeFactory({
 
 export const StandardJournalMoveFactory = Factory.Sync.makeFactory({
   Journal_Template_Name: NavItemJournalTemplate.Move,
+  Entry_Type: "",
   Item_No: Factory.each(() => oneOf("01", "02", "03")),
   Description: "",
   Location_Code: "",
