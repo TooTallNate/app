@@ -22,21 +22,14 @@ function mutation(variables: MutationPostPigMoveArgs) {
           toJob {
             number
           }
-          fromAnimal
-          toAnimal
           quantity
           smallPigQuantity
           totalWeight
-          price
           comments
         }
         defaults { 
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -93,24 +86,13 @@ test("creates new move and user settings documents", async () => {
         toJob: {
           number: toJob.No
         },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
-        price: input.price,
         comments: input.comments
       },
       defaults: {
-        job: {
-          number: fromJob.No
-        },
-        prices: [
-          {
-            animal: input.toAnimal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -124,13 +106,7 @@ test("creates new move and user settings documents", async () => {
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: fromJob.No,
-    prices: [
-      {
-        animal: input.toAnimal,
-        price: input.price
-      }
-    ]
+    pigJob: fromJob.No
   });
 
   await expect(
@@ -143,14 +119,12 @@ test("creates new move and user settings documents", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     activity: "move",
+    event: input.event,
     fromJob: fromJob.No,
     toJob: toJob.No,
-    fromAnimal: input.fromAnimal,
-    toAnimal: input.toAnimal,
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
-    price: input.price,
     comments: input.comments
   });
 });
@@ -175,24 +149,13 @@ test("updates existing move document", async () => {
         toJob: {
           number: toJob.No
         },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
-        price: input.price,
         comments: input.comments
       },
       defaults: {
-        job: {
-          number: fromJob.No
-        },
-        prices: [
-          {
-            animal: input.toAnimal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
@@ -202,14 +165,12 @@ test("updates existing move document", async () => {
   ).resolves.toEqual({
     _id: expect.anything(),
     activity: "move",
+    event: input.event,
     fromJob: fromJob.No,
     toJob: toJob.No,
-    fromAnimal: input.fromAnimal,
-    toAnimal: input.toAnimal,
     quantity: input.quantity,
     smallPigQuantity: input.smallPigQuantity,
     totalWeight: input.totalWeight,
-    price: input.price,
     comments: input.comments
   });
 });
@@ -222,13 +183,7 @@ test("updates existing user settings document", async () => {
   });
   const userSettings = await UserSettingsModel.create(
     UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: [
-        {
-          animal: input.toAnimal,
-          price: input.price
-        }
-      ]
+      username: user.User_Name
     })
   );
 
@@ -242,101 +197,20 @@ test("updates existing user settings document", async () => {
         toJob: {
           number: toJob.No
         },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
         quantity: input.quantity,
         smallPigQuantity: input.smallPigQuantity,
         totalWeight: input.totalWeight,
-        price: input.price,
         comments: input.comments
       },
       defaults: {
-        job: {
-          number: fromJob.No
-        },
-        prices: [
-          {
-            animal: input.toAnimal,
-            price: input.price
-          }
-        ]
+        job: null
       }
     }
   });
 
   await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
+    UserSettingsModel.findById(userSettings._id, "username pigJob").lean()
   ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    pigJob: fromJob.No,
-    prices: [
-      {
-        animal: input.toAnimal,
-        price: input.price
-      }
-    ]
-  });
-});
-
-test("does not update price in user settings if not given in input", async () => {
-  const { input, fromJob, toJob, user } = await mockTestData({
-    input: {
-      price: undefined,
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: [
-        {
-          animal: input.fromAnimal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    savePigMove: {
-      success: true,
-      pigMove: {
-        fromJob: {
-          number: fromJob.No
-        },
-        toJob: {
-          number: toJob.No
-        },
-        fromAnimal: input.fromAnimal,
-        toAnimal: input.toAnimal,
-        quantity: input.quantity,
-        smallPigQuantity: input.smallPigQuantity,
-        totalWeight: input.totalWeight,
-        price: null,
-        comments: input.comments
-      },
-      defaults: {
-        job: {
-          number: fromJob.No
-        },
-        prices: userSettings.toObject().prices
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    pigJob: fromJob.No,
-    prices: userSettings.toObject().prices
+    _id: expect.anything()
   });
 });

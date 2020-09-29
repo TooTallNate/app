@@ -144,8 +144,7 @@ export const PigMortalityFactory = Factory.Sync.makeFactory({
 });
 
 export const PigMoveFactory = Factory.Sync.makeFactory({
-  fromAnimal: Factory.each(() => oneOf("01", "02", "03")),
-  toAnimal: Factory.each(() => oneOf("01", "02", "03")),
+  event: Factory.each(() => faker.random.word()),
   fromJob: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   toJob: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 50, max: 1000 })),
@@ -153,7 +152,6 @@ export const PigMoveFactory = Factory.Sync.makeFactory({
     faker.random.number({ min: 1, max: 50 })
   ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
-  price: Factory.each(() => faker.random.number({ min: 30, max: 150 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
@@ -209,6 +207,20 @@ export const StandardJournalGradeOffFactory = Factory.Sync.makeFactory({
   Shortcut_Dimension_1_Code: Factory.each(() => faker.random.alphaNumeric(3)),
   Shortcut_Dimension_2_Code: Factory.each(() => faker.random.alphaNumeric(3)),
   Reason_Code: Factory.each(() => faker.random.word())
+});
+
+export const StandardJournalMoveFactory = Factory.Sync.makeFactory({
+  Journal_Template_Name: NavItemJournalTemplate.Move,
+  Item_No: Factory.each(() => oneOf("01", "02", "03")),
+  Description: "",
+  Location_Code: "",
+  Quantity: 0,
+  Unit_Amount: Factory.each(() => faker.random.number({ min: 50, max: 150 })),
+  Weight: 0,
+  Job_No: "",
+  Gen_Prod_Posting_Group: Factory.each(() => faker.random.word()),
+  Shortcut_Dimension_1_Code: Factory.each(() => faker.random.alphaNumeric(3)),
+  Shortcut_Dimension_2_Code: Factory.each(() => faker.random.alphaNumeric(3))
 });
 
 export const UserSettingsFactory = Factory.Sync.makeFactory({

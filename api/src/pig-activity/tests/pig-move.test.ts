@@ -16,12 +16,9 @@ function query(variables: QueryPigMoveArgs) {
         toJob {
           number
         }
-        fromAnimal
-        toAnimal
         quantity
         smallPigQuantity
         totalWeight
-        price
         comments
       }
     }`,
@@ -60,10 +57,7 @@ test("returns default form if no record in the database", async () => {
         number: fromJob.No
       },
       toJob: null,
-      fromAnimal: null,
-      toAnimal: null,
       comments: null,
-      price: null,
       quantity: null,
       smallPigQuantity: null,
       totalWeight: null
@@ -89,10 +83,7 @@ test("returns from from the database", async () => {
       toJob: {
         number: toJob.No
       },
-      fromAnimal: doc.fromAnimal,
-      toAnimal: doc.toAnimal,
       comments: doc.comments,
-      price: doc.price,
       quantity: doc.quantity,
       smallPigQuantity: doc.smallPigQuantity,
       totalWeight: doc.totalWeight
