@@ -79,7 +79,9 @@ test("creates new adjustment document", async () => {
         comments: input.comments
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });
@@ -124,7 +126,9 @@ test("updates existing adjustment document", async () => {
         comments: input.comments
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });

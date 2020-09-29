@@ -86,9 +86,10 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Quantity: Math.abs(input.quantity),
       Weight: input.totalWeight,
       Job_No: input.job,
+      Shortcut_Dimension_1_Code: job.Entity,
+      Shortcut_Dimension_2_Code: job.Cost_Center,
       Posting_Date: date,
       Document_Date: date
-      //...(input.quantity > 0 && { Unit_Amount: input.price })
     })
     .basicAuth(auth)
     .reply(200, {});
@@ -121,7 +122,9 @@ test("submits data to NAV and creates new adjustment document", async () => {
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });
@@ -164,7 +167,9 @@ test("submits data to NAV and clears existing adjustment document", async () => 
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });
@@ -200,7 +205,9 @@ test("sets entry type to negative adjustment if quantity is negative", async () 
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });
@@ -225,7 +232,9 @@ test("sets description to an empty string if there are no comments", async () =>
         comments: null
       },
       defaults: {
-        job: null
+        job: {
+          number: job.No
+        }
       }
     }
   });

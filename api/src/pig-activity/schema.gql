@@ -45,7 +45,6 @@ type PigAdjustment {
   job: Job!
   quantity: Int
   totalWeight: Float
-  price: Float
   comments: String
 }
 
