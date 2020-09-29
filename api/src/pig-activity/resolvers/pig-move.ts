@@ -60,7 +60,8 @@ export const PigMoveMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await updateUserSettings({
-      username: user.username
+      username: user.username,
+      pigJob: input.fromJob
     });
 
     return { success: true, pigMove: doc, defaults: userSettings };
@@ -90,7 +91,9 @@ export const PigMoveMutations: MutationResolvers = {
         Location_Code: fromJob.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
-        Job_No: input.fromJob
+        Job_No: input.fromJob,
+        Shortcut_Dimension_1_Code: fromJob.Entity,
+        Shortcut_Dimension_2_Code: fromJob.Cost_Center
       },
       dataSources.navItemJournal
     );
@@ -105,13 +108,16 @@ export const PigMoveMutations: MutationResolvers = {
         Quantity: input.quantity,
         Weight: input.totalWeight,
         Job_No: input.toJob,
+        Shortcut_Dimension_1_Code: toJob.Entity,
+        Shortcut_Dimension_2_Code: toJob.Cost_Center,
         Meta: input.smallPigQuantity
       },
       dataSources.navItemJournal
     );
 
     const userSettings = await updateUserSettings({
-      username: user.username
+      username: user.username,
+      pigJob: input.fromJob
     });
 
     const doc =
