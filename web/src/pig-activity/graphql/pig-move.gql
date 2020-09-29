@@ -1,6 +1,7 @@
 fragment PigMoveFragment on PigMove {
-  fromAnimal
-  toAnimal
+  event {
+    code
+  }
   fromJob {
     number
     description
@@ -13,24 +14,17 @@ fragment PigMoveFragment on PigMove {
   quantity
   smallPigQuantity
   totalWeight
-  price
   comments
 }
 
 query PigMove($job: String!) {
-  animals {
-    number
+  pigMoveEventTypes {
+    code
     description
   }
   pigActivityJobs {
     number
     description
-  }
-  pigActivityDefaults {
-    prices {
-      animal
-      price
-    }
   }
   pigMove(job: $job) {
     ...PigMoveFragment
