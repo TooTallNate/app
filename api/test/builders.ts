@@ -46,8 +46,8 @@ export const JobFactory = Factory.Sync.makeFactory<NavJob>({
     faker.random.number({ min: 0, max: 4000 })
   ),
   Dead_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
-  Start_Quantity: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
-  Start_Weight: Factory.each(() => faker.random.number({ min: 0, max: 100 })),
+  Start_Quantity: Factory.each(() => faker.random.number({ min: 1, max: 100 })),
+  Start_Weight: Factory.each(() => faker.random.number({ min: 1, max: 100 })),
   Start_Date: Factory.each(() => format(faker.date.past(), "yyyy-MM-dd"))
 });
 
