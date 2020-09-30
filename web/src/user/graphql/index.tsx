@@ -68,6 +68,12 @@ export type PigGradeOffEvent = {
   reasons: Array<Reason>;
 };
 
+export type PigMoveEvent = {
+  __typename?: "PigMoveEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type PigPurchaseEvent = {
   __typename?: "PigPurchaseEvent";
   code: Scalars["String"];
@@ -204,38 +210,32 @@ export type PigMortalityResult = {
 
 export type PigMove = {
   __typename?: "PigMove";
-  fromAnimal?: Maybe<Scalars["String"]>;
-  toAnimal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigMoveEvent>;
   fromJob: Job;
   toJob?: Maybe<Job>;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigMoveInput = {
-  fromAnimal: Scalars["String"];
-  toAnimal: Scalars["String"];
+  event: Scalars["String"];
   fromJob: Scalars["String"];
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
-  price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigMoveInput = {
-  fromAnimal?: Maybe<Scalars["String"]>;
-  toAnimal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   fromJob: Scalars["String"];
   toJob?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -333,6 +333,7 @@ export type Query = {
   pigMortality: PigMortality;
   pigMortalityEventTypes: Array<PigMortalityEvent>;
   pigMove: PigMove;
+  pigMoveEventTypes: Array<PigMoveEvent>;
   pigPurchase: PigPurchase;
   pigPurchaseEventTypes: Array<PigPurchaseEvent>;
   pigWean: PigWean;

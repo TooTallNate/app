@@ -17,7 +17,12 @@ import {
   PigMortalityMutations,
   PigMortalityEvent
 } from "./pig-mortality";
-import { PigMove, PigMoveQueries, PigMoveMutations } from "./pig-move";
+import {
+  PigMove,
+  PigMoveQueries,
+  PigMoveMutations,
+  PigMoveEvent
+} from "./pig-move";
 import {
   PigPurchase,
   PigPurchaseQueries,
@@ -60,6 +65,7 @@ export const types = {
   PigWean,
   PigWeanEvent,
   PigGradeOffEvent,
+  PigMoveEvent,
   PigPurchaseEvent,
   PigAdjustmentEvent,
   PigMortalityEvent

@@ -25,7 +25,6 @@ import ViewContent from "../../common/components/view/ViewContent";
 import StaticValue from "../../common/components/input/StaticValue";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
@@ -34,13 +33,11 @@ import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 import FormGroup from "../../common/components/form/FormGroup";
 
 interface FormData {
-  fromAnimal: string;
-  toAnimal: string;
+  event: string;
   toJob: string;
   quantity: number;
   smallPigQuantity?: number;
   totalWeight: number;
-  price: number;
   comments?: string;
 }
 
@@ -52,45 +49,33 @@ interface ViewParams {
 const ActivityMoveView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const isSowFarm = params.barnType === "sow-farm";
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const formContext = useForm<FormData>();
   const { loading, data } = usePigMoveQuery({
     variables: {
       job: params.job
     },
-    onCompleted({ pigMove, pigActivityDefaults }) {
+    onCompleted({ pigMove, pigMoveEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigMove.fromAnimal)
-        setValue("fromAnimal", pigMove.fromAnimal as any);
-      if (isSowFarm && pigMove.toAnimal)
-        setValue("toAnimal", pigMove.toAnimal as any);
+      if (pigMoveEventTypes.length === 1) {
+        setValue("event", pigMoveEventTypes[0].code);
+      } else if (pigMove.event) setValue("event", pigMove.event.code);
       if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
       if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
-      if (pigMove.price) setValue("price", pigMove.price);
       if (pigMove.comments) setValue("comments", pigMove.comments);
     }
   });
   const [post] = usePostPigMoveMutation();
   const [save] = useSavePigMoveMutation();
   const { setMessage } = useFlash();
-  const {
-    getValues,
-    setValue,
-    watch,
-    triggerValidation,
-    formState
-  } = formContext;
+  const { getValues, watch, triggerValidation, formState } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
       await post({
         variables: {
           input: {
-            toAnimal: isNurseryFinisher ? "01" : undefined,
-            fromAnimal: isNurseryFinisher ? "01" : undefined,
             ...data,
             fromJob: params.job
           }
@@ -115,8 +100,6 @@ const ActivityMoveView: React.FC = () => {
       await save({
         variables: {
           input: {
-            toAnimal: isNurseryFinisher ? "01" : undefined,
-            fromAnimal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             fromJob: params.job
           }
@@ -136,19 +119,7 @@ const ActivityMoveView: React.FC = () => {
     }
   };
 
-  const animal = watch("toAnimal") || (isNurseryFinisher ? "01" : undefined);
   const quantity = watch("quantity") || 0;
-
-  useEffect(() => {
-    if (animal && data) {
-      const priceEntry = data.pigActivityDefaults.prices.find(
-        n => n.animal === animal
-      );
-      if (priceEntry && typeof priceEntry.price === "number") {
-        setValue("price", priceEntry.price);
-      }
-    }
-  }, [data, animal, setValue]);
 
   // Validate small pig quantity if total quantity changes.
   useEffect(() => {
@@ -196,57 +167,25 @@ const ActivityMoveView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            {isSowFarm && (
-              <FormGroup>
-                <FormGroupLabel>Animal</FormGroupLabel>
-                <FormGroupContent>
-                  <div className="flex">
-                    <FormField
-                      name="fromAnimal"
-                      rules={{ required: "The from animal field is required." }}
-                    >
-                      <FormFieldLabel>From</FormFieldLabel>
-                      <FormFieldInput>
-                        <StackedInput orientation="vertical">
-                          {data.animals.map(type => (
-                            <StackedRadioButton
-                              value={type.number}
-                              key={type.number}
-                            >
-                              {type.description}
-                            </StackedRadioButton>
-                          ))}
-                        </StackedInput>
-                      </FormFieldInput>
-                      <FormFieldErrors />
-                    </FormField>
-                    <HorizontalSpacer />
-                    <FormField
-                      name="toAnimal"
-                      rules={{ required: "The to animal field is required." }}
-                    >
-                      <FormFieldLabel>To</FormFieldLabel>
-                      <FormFieldInput>
-                        <StackedInput orientation="vertical">
-                          {data.animals.map(type => (
-                            <StackedRadioButton
-                              value={type.number}
-                              key={type.number}
-                            >
-                              {type.description}
-                            </StackedRadioButton>
-                          ))}
-                        </StackedInput>
-                      </FormFieldInput>
-                      <FormFieldErrors />
-                    </FormField>
-                  </div>
-                </FormGroupContent>
-              </FormGroup>
-            )}
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigMoveEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <QuantityAndSmallsField />
             <TotalWeightField />
-            <PriceField />
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
