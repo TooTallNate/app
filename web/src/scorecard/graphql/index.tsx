@@ -68,6 +68,12 @@ export type PigGradeOffEvent = {
   reasons: Array<Reason>;
 };
 
+export type PigAdjustmentEvent = {
+  __typename?: "PigAdjustmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type PigMortalityEvent = {
   __typename?: "PigMortalityEvent";
   code: Scalars["String"];
@@ -99,29 +105,26 @@ export type PigOptionalQuantityInput = {
 
 export type PigAdjustment = {
   __typename?: "PigAdjustment";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigAdjustmentEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigAdjustmentInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigAdjustmentInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -321,6 +324,7 @@ export type Query = {
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
+  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
   pigGradeOff: PigGradeOff;
   pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigMortality: PigMortality;

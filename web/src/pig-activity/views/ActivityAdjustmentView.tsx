@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import View from "../../common/components/view/View";
 import Title from "../../common/components/view/ViewTitle";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -22,17 +22,15 @@ import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import AnimalField from "../components/AnimalField";
-import PriceField from "../components/PriceField";
 import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 
 interface FormData {
-  animal: string;
+  event: string;
   quantity: number;
   totalWeight: number;
-  price: number;
   comments?: string;
 }
 
@@ -44,8 +42,6 @@ interface ViewParams {
 const ActivityAdjustmentView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const isSowFarm = params.barnType === "sow-farm";
-  const isNurseryFinisher = params.barnType === "nursery-finisher";
 
   const [quantitySign, setQuantitySign] = useState(1);
   const formContext = useForm<FormData>();
@@ -53,31 +49,31 @@ const ActivityAdjustmentView: React.FC = () => {
     variables: {
       job: params.job
     },
-    onCompleted({ pigAdjustment, pigActivityDefaults }) {
+    onCompleted({ pigAdjustment, pigAdjustmentEventTypes }) {
       const { setValue } = formContext;
-      if (isSowFarm && pigAdjustment.animal)
-        setValue("animal", pigAdjustment.animal);
+      if (pigAdjustmentEventTypes.length === 1) {
+        setValue("event", pigAdjustmentEventTypes[0].code);
+      } else if (pigAdjustment.event)
+        setValue("event", pigAdjustment.event.code);
       if (pigAdjustment.quantity) {
         setValue("quantity", Math.abs(pigAdjustment.quantity));
         setQuantitySign(pigAdjustment.quantity >= 0 ? 1 : -1);
       }
       if (pigAdjustment.totalWeight)
         setValue("totalWeight", pigAdjustment.totalWeight);
-      if (pigAdjustment.price) setValue("price", pigAdjustment.price);
       if (pigAdjustment.comments) setValue("comments", pigAdjustment.comments);
     }
   });
   const [post] = usePostPigAdjustmentMutation();
   const [save] = useSavePigAdjustmentMutation();
   const { setMessage } = useFlash();
-  const { getValues, setValue, watch } = formContext;
+  const { getValues } = formContext;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
       await post({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             quantity: quantitySign * data.quantity,
             job: params.job
@@ -103,7 +99,6 @@ const ActivityAdjustmentView: React.FC = () => {
       await save({
         variables: {
           input: {
-            animal: isNurseryFinisher ? "01" : undefined,
             ...getValues(),
             job: params.job
           }
@@ -123,19 +118,6 @@ const ActivityAdjustmentView: React.FC = () => {
     }
   };
 
-  const animal = watch("animal") || (isNurseryFinisher ? "01" : undefined);
-
-  useEffect(() => {
-    if (animal && data && quantitySign > 0) {
-      const priceEntry = data.pigActivityDefaults.prices.find(
-        n => n.animal === animal
-      );
-      if (priceEntry && typeof priceEntry.price === "number") {
-        setValue("price", priceEntry.price);
-      }
-    }
-  }, [data, animal, setValue, quantitySign]);
-
   return (
     <View>
       <ViewHeader>
@@ -149,11 +131,27 @@ const ActivityAdjustmentView: React.FC = () => {
               number={data.pigAdjustment.job.number}
               description={data.pigAdjustment.job.description}
             />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigAdjustmentEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <InventoryField
               inventory={data.pigAdjustment.job.inventory || 0}
               deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
             />
-            {isSowFarm && <AnimalField animals={data.animals} />}
             <FormField
               name="quantity"
               rules={{
@@ -180,7 +178,6 @@ const ActivityAdjustmentView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <TotalWeightField />
-            {quantitySign > 0 && <PriceField />}
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
