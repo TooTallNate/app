@@ -66,7 +66,6 @@ const ActivityWeanView: React.FC = () => {
   const quantity = watch("quantity") || 0;
 
   const onSubmit: OnSubmit<FormData> = async data => {
-    console.log(getValues());
     try {
       await post({
         variables: {
