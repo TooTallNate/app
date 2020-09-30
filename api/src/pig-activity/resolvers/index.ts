@@ -2,7 +2,8 @@ import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
 import {
   PigAdjustment,
   PigAdjustmentQueries,
-  PigAdjustmentMutations
+  PigAdjustmentMutations,
+  PigAdjustmentEvent
 } from "./pig-adjustment";
 import {
   PigGradeOff,
@@ -13,7 +14,8 @@ import {
 import {
   PigMortality,
   PigMortalityQueries,
-  PigMortalityMutations
+  PigMortalityMutations,
+  PigMortalityEvent
 } from "./pig-mortality";
 import {
   PigMove,
@@ -24,7 +26,8 @@ import {
 import {
   PigPurchase,
   PigPurchaseQueries,
-  PigPurchaseMutations
+  PigPurchaseMutations,
+  PigPurchaseEvent
 } from "./pig-purchase";
 import {
   PigWean,
@@ -62,5 +65,8 @@ export const types = {
   PigWean,
   PigWeanEvent,
   PigGradeOffEvent,
-  PigMoveEvent
+  PigMoveEvent,
+  PigPurchaseEvent,
+  PigAdjustmentEvent,
+  PigMortalityEvent
 };

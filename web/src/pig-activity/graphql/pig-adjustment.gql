@@ -1,6 +1,8 @@
 fragment PigAdjustmentFragment on PigAdjustment {
-  animal
-  job {
+ event {
+   code
+ }
+ job {
     number
     description
     inventory
@@ -8,20 +10,13 @@ fragment PigAdjustmentFragment on PigAdjustment {
   }  
   quantity
   totalWeight
-  price
   comments
 }
 
 query PigAdjustment($job: String!) {
-  animals {
-    number
+  pigAdjustmentEventTypes {
+    code
     description
-  }
-  pigActivityDefaults {
-    prices {
-      animal
-      price
-    }
   }
   pigAdjustment(job: $job) {
     ...PigAdjustmentFragment

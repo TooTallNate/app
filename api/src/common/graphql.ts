@@ -95,6 +95,25 @@ export type PigMoveEvent = {
   description: Scalars["String"];
 };
 
+export type PigPurchaseEvent = {
+  __typename?: "PigPurchaseEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type PigAdjustmentEvent = {
+  __typename?: "PigAdjustmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type PigMortalityEvent = {
+  __typename?: "PigMortalityEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
+};
+
 export type PriceEntry = {
   __typename?: "PriceEntry";
   animal: Scalars["String"];
@@ -119,29 +138,26 @@ export type PigOptionalQuantityInput = {
 
 export type PigAdjustment = {
   __typename?: "PigAdjustment";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigAdjustmentEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigAdjustmentInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigAdjustmentInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -186,26 +202,23 @@ export type PigGradeOffResult = {
 
 export type PigMortality = {
   __typename?: "PigMortality";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigMortalityEvent>;
   job: Job;
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigQuantity>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigMortalityInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigMortalityInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
-  naturalQuantity?: Maybe<Scalars["Int"]>;
-  euthanizedQuantity?: Maybe<Scalars["Int"]>;
+  quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -256,32 +269,29 @@ export type PigMoveResult = {
 
 export type PigPurchase = {
   __typename?: "PigPurchase";
-  animal?: Maybe<Scalars["String"]>;
+  event?: Maybe<PigPurchaseEvent>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigPurchaseInput = {
-  animal: Scalars["String"];
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
-  price: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigPurchaseInput = {
-  animal?: Maybe<Scalars["String"]>;
+  event: Scalars["String"];
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
-  price?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -338,12 +348,15 @@ export type Query = {
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
+  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
   pigGradeOff: PigGradeOff;
   pigGradeOffEventTypes: Array<PigGradeOffEvent>;
   pigMortality: PigMortality;
+  pigMortalityEventTypes: Array<PigMortalityEvent>;
   pigMove: PigMove;
   pigMoveEventTypes: Array<PigMoveEvent>;
   pigPurchase: PigPurchase;
+  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
   pigWean: PigWean;
   pigWeanEventTypes: Array<PigWeanEvent>;
   user?: Maybe<User>;
@@ -699,6 +712,9 @@ export type ResolversTypes = ResolversObject<{
   PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigMoveEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  PigPurchaseEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  PigAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  PigMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
@@ -808,6 +824,9 @@ export type ResolversParentTypes = ResolversObject<{
   PigWeanEvent: NavStandardItemJournal;
   PigGradeOffEvent: NavStandardItemJournal;
   PigMoveEvent: NavStandardItemJournal;
+  PigPurchaseEvent: NavStandardItemJournal;
+  PigAdjustmentEvent: NavStandardItemJournal;
+  PigMortalityEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
   Float: Scalars["Float"];
   PigQuantity: PigQuantity;
@@ -985,6 +1004,34 @@ export type PigMoveEventResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type PigPurchaseEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigPurchaseEvent"] = ResolversParentTypes["PigPurchaseEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigAdjustmentEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigAdjustmentEvent"] = ResolversParentTypes["PigAdjustmentEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PigMortalityEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PigMortalityEvent"] = ResolversParentTypes["PigMortalityEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type PriceEntryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PriceEntry"] = ResolversParentTypes["PriceEntry"]
@@ -1007,7 +1054,11 @@ export type PigAdjustmentResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PigAdjustment"] = ResolversParentTypes["PigAdjustment"]
 > = ResolversObject<{
-  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  event?: Resolver<
+    Maybe<ResolversTypes["PigAdjustmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   totalWeight?: Resolver<
@@ -1015,7 +1066,6 @@ export type PigAdjustmentResolvers<
     ParentType,
     ContextType
   >;
-  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
@@ -1080,15 +1130,14 @@ export type PigMortalityResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PigMortality"] = ResolversParentTypes["PigMortality"]
 > = ResolversObject<{
-  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  naturalQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
+  event?: Resolver<
+    Maybe<ResolversTypes["PigMortalityEvent"]>,
     ParentType,
     ContextType
   >;
-  euthanizedQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantities?: Resolver<
+    Maybe<Array<ResolversTypes["PigQuantity"]>>,
     ParentType,
     ContextType
   >;
@@ -1158,7 +1207,11 @@ export type PigPurchaseResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["PigPurchase"] = ResolversParentTypes["PigPurchase"]
 > = ResolversObject<{
-  animal?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  event?: Resolver<
+    Maybe<ResolversTypes["PigPurchaseEvent"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   smallPigQuantity?: Resolver<
@@ -1171,7 +1224,6 @@ export type PigPurchaseResolvers<
     ParentType,
     ContextType
   >;
-  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
@@ -1281,6 +1333,11 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryPigAdjustmentArgs, "job">
   >;
+  pigAdjustmentEventTypes?: Resolver<
+    Array<ResolversTypes["PigAdjustmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
   pigGradeOff?: Resolver<
     ResolversTypes["PigGradeOff"],
     ParentType,
@@ -1298,6 +1355,11 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryPigMortalityArgs, "job">
   >;
+  pigMortalityEventTypes?: Resolver<
+    Array<ResolversTypes["PigMortalityEvent"]>,
+    ParentType,
+    ContextType
+  >;
   pigMove?: Resolver<
     ResolversTypes["PigMove"],
     ParentType,
@@ -1314,6 +1376,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPigPurchaseArgs, "job">
+  >;
+  pigPurchaseEventTypes?: Resolver<
+    Array<ResolversTypes["PigPurchaseEvent"]>,
+    ParentType,
+    ContextType
   >;
   pigWean?: Resolver<
     ResolversTypes["PigWean"],
@@ -1552,6 +1619,9 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PigWeanEvent?: PigWeanEventResolvers<ContextType>;
   PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;
   PigMoveEvent?: PigMoveEventResolvers<ContextType>;
+  PigPurchaseEvent?: PigPurchaseEventResolvers<ContextType>;
+  PigAdjustmentEvent?: PigAdjustmentEventResolvers<ContextType>;
+  PigMortalityEvent?: PigMortalityEventResolvers<ContextType>;
   PriceEntry?: PriceEntryResolvers<ContextType>;
   PigQuantity?: PigQuantityResolvers<ContextType>;
   PigAdjustment?: PigAdjustmentResolvers<ContextType>;
