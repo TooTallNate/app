@@ -44,9 +44,7 @@ const ActivityGradeOffView: React.FC = () => {
   const history = useHistory();
 
   const formContext = useForm<FormData>({
-    defaultValues: {
-      quantities: {}
-    }
+    defaultValues: { quantities: {} }
   });
   const { loading, data } = usePigGradeOffQuery({
     variables: {
@@ -60,7 +58,7 @@ const ActivityGradeOffView: React.FC = () => {
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
       setTimeout(() => {
-        if (pigGradeOff.quantities)
+        if (pigGradeOff.quantities) {
           setValue(
             "quantities",
             pigGradeOff.quantities.reduce(
@@ -68,7 +66,8 @@ const ActivityGradeOffView: React.FC = () => {
               {}
             )
           );
-      });
+        }
+      }, 100);
     }
   });
   const [post] = usePostPigGradeOffMutation();
@@ -76,8 +75,7 @@ const ActivityGradeOffView: React.FC = () => {
   const { setMessage } = useFlash();
   const { getValues, watch } = formContext;
 
-  const quantities = watch("quantities") || {};
-  console.log(quantities);
+  const quantities = watch("quantities");
   const totalQuantity = Object.values(quantities).reduce<number>(
     (sum, q = 0) => sum + q,
     0

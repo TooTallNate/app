@@ -62,6 +62,8 @@ const ActivityMoveView: React.FC = () => {
       } else if (pigMove.event) setValue("event", pigMove.event.code);
       if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
+      if (pigMove.smallPigQuantity)
+        setValue("smallPigQuantity", pigMove.smallPigQuantity);
       if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
       if (pigMove.comments) setValue("comments", pigMove.comments);
     }

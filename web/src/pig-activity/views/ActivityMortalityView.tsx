@@ -74,7 +74,7 @@ const ActivityMortalityView: React.FC = () => {
               {}
             )
           );
-      });
+      }, 100);
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
     }
   });

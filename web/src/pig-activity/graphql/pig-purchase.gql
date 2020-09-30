@@ -9,6 +9,7 @@ fragment PigPurchaseFragment on PigPurchase {
     deadQuantity
   }  
   quantity
+  smallPigQuantity
   totalWeight
   comments
 }

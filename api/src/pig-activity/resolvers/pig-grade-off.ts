@@ -68,6 +68,7 @@ export const PigGradeOffMutations: MutationResolvers = {
       (await PigGradeOffModel.findOne({
         job: input.job
       })) || new PigGradeOffModel();
+    console.log(input);
     doc.set(input);
     await doc.save();
 

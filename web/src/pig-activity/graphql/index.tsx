@@ -815,7 +815,7 @@ export type PostPigMoveMutation = { __typename?: "Mutation" } & {
 
 export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
   PigPurchase,
-  "quantity" | "totalWeight" | "comments"
+  "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
 > & {
     event?: Maybe<
       { __typename?: "PigPurchaseEvent" } & Pick<PigPurchaseEvent, "code">
@@ -1010,6 +1010,7 @@ export const PigPurchaseFragmentFragmentDoc = gql`
       deadQuantity
     }
     quantity
+    smallPigQuantity
     totalWeight
     comments
   }

@@ -54,6 +54,8 @@ const ActivityPurchaseView: React.FC = () => {
         setValue("event", pigPurchaseEventTypes[0].code);
       } else if (pigPurchase.event) setValue("event", pigPurchase.event.code);
       if (pigPurchase.quantity) setValue("quantity", pigPurchase.quantity);
+      if (pigPurchase.smallPigQuantity)
+        setValue("smallPigQuantity", pigPurchase.smallPigQuantity);
       if (pigPurchase.totalWeight)
         setValue("totalWeight", pigPurchase.totalWeight);
       if (pigPurchase.comments) setValue("comments", pigPurchase.comments);
