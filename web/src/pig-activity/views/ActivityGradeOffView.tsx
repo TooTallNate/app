@@ -77,6 +77,7 @@ const ActivityGradeOffView: React.FC = () => {
   const { getValues, watch } = formContext;
 
   const quantities = watch("quantities") || {};
+  console.log(quantities);
   const totalQuantity = Object.values(quantities).reduce<number>(
     (sum, q = 0) => sum + q,
     0
@@ -129,12 +130,6 @@ const ActivityGradeOffView: React.FC = () => {
       const { event, pigWeight, comments, quantities } = getValues({
         nest: true
       });
-      console.log(
-        Object.entries(quantities).map(([code, quantity]) => ({
-          code,
-          quantity
-        }))
-      );
       await save({
         variables: {
           input: {

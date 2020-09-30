@@ -14,6 +14,12 @@ type PigGradeOffEvent {
   reasons: [Reason!]!
 }
 
+type PigMortalityEvent {
+  code: String!
+  description: String!
+  reasons: [Reason!]!
+}
+
 type PriceEntry {
   animal: String!
   price: Float
@@ -101,26 +107,23 @@ type PigGradeOffResult {
 
 
 type PigMortality {
-  animal: String
+  event: PigMortalityEvent
   job: Job!
-  naturalQuantity: Int
-  euthanizedQuantity: Int
+  quantities: [PigQuantity!]
   comments: String
 }
 
 input PostPigMortalityInput {
-  animal: String!
+  event: String!
   job: String!
-  naturalQuantity: Int
-  euthanizedQuantity: Int
+  quantities: [PigQuantityInput!]
   comments: String
 }
 
 input SavePigMortalityInput {
-  animal: String
+  event: String
   job: String!
-  naturalQuantity: Int
-  euthanizedQuantity: Int
+  quantities: [PigOptionalQuantityInput!]
   comments: String
 }
 
@@ -256,6 +259,7 @@ type Query {
   pigPurchase(job: String!): PigPurchase!
   pigWean(job: String!): PigWean!
   pigWeanEventTypes: [PigWeanEvent!]!
+  pigMortalityEventTypes: [PigMortalityEvent!]!
 }
 
 type Mutation {
