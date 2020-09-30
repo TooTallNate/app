@@ -3,9 +3,11 @@ import { Schema } from "mongoose";
 
 export interface PigMortalityDocument extends PigActivityDocument {
   job: string;
-  animal: string;
-  naturalQuantity: number;
-  euthanizedQuantity: number;
+  event: string;
+  quantities: {
+    code: string;
+    quantity: number;
+  }[];
   totalWeight: number;
   comments: string;
 }
@@ -16,9 +18,14 @@ const PigMortalitySchema = new Schema({
     required: true,
     unique: true
   },
-  animal: String,
-  naturalQuantity: Number,
-  euthanizedQuantity: Number,
+  event: String,
+  quantities: [
+    {
+      _id: false,
+      code: String,
+      quantity: Number
+    }
+  ],
   totalWeight: Number,
   comments: String
 });

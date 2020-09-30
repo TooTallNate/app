@@ -8,7 +8,8 @@ import {
 import {
   PigMortalityFactory,
   JobFactory,
-  UserSettingsFactory
+  UserSettingsFactory,
+  StandardJournalMortalityFactory
 } from "../../../test/builders";
 import {
   NavItemJournalTemplate,
@@ -30,18 +31,15 @@ function mutation(variables: MutationPostPigMortalityArgs) {
           job {
             number
           }
-          animal
-          naturalQuantity
-          euthanizedQuantity
+          quantities {
+            code
+            quantity
+          }
           comments
         }
         defaults {
           job {
             number
-          }
-          prices {
-            animal
-            price
           }
         }
       }
@@ -61,7 +59,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
   const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
   const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
   const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
-  const pigWeight = startWeight + growthFactor * barnDays;
+  const weight = startWeight + growthFactor * barnDays;
 
   const documentNumberRegex = new RegExp(
     `^MORT${user.Full_Name.slice(0, 4)}${format(new Date(), "yyMMddHH")}\\d{4}$`
@@ -74,53 +72,43 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     .reply(200, job)
     .persist();
 
-  if (input.euthanizedQuantity > 0) {
-    nock(process.env.NAV_BASE_URL)
-      .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: documentNumberRegex,
-        Item_No: input.animal,
-        Description: input.comments || " ",
-        Location_Code: job.Site,
-        Quantity: input.euthanizedQuantity,
-        Weight: input.euthanizedQuantity * pigWeight,
-        Job_No: input.job,
-        Gen_Prod_Posting_Group: "DEADS",
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        Posting_Date: date,
-        Document_Date: date,
-        Reason_Code: NavReasonCode.Euthanized
-      })
-      .basicAuth(auth)
-      .reply(200, {});
-  }
+  const standardJournalLines = input.quantities.map(({ code }) =>
+    StandardJournalMortalityFactory.build({ Reason_Code: code })
+  );
 
-  if (input.naturalQuantity > 0) {
-    nock(process.env.NAV_BASE_URL)
-      .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
-        Journal_Template_Name: NavItemJournalTemplate.Mortality,
-        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-        Entry_Type: NavEntryType.Negative,
-        Document_No: documentNumberRegex,
-        Item_No: input.animal,
-        Description: input.comments || " ",
-        Location_Code: job.Site,
-        Quantity: input.naturalQuantity,
-        Weight: input.naturalQuantity * pigWeight,
-        Job_No: input.job,
-        Gen_Prod_Posting_Group: "DEADS",
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
-        Posting_Date: date,
-        Document_Date: date,
-        Reason_Code: NavReasonCode.NaturalDeath
-      })
-      .basicAuth(auth)
-      .reply(200, {});
-  }
+  nock(process.env.NAV_BASE_URL)
+    .get(`/Company(%27${process.env.NAV_COMPANY}%27)/StandardItemJournal`)
+    .query({
+      $filter: `((Journal_Template_Name eq 'MORTALITY') and (Standard_Journal_Code eq '${input.event}'))`
+    })
+    .basicAuth(auth)
+    .reply(200, {
+      value: standardJournalLines
+    })
+    .persist();
+
+  input.quantities.forEach(({ quantity, code }) => {
+    if (quantity > 0) {
+      const line = standardJournalLines.find(line => line.Reason_Code === code);
+      nock(process.env.NAV_BASE_URL)
+        .post(`/Company(%27${process.env.NAV_COMPANY}%27)/ItemJournal`, {
+          ...line,
+          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+          Document_No: documentNumberRegex,
+          Description: input.comments || " ",
+          Location_Code: job.Site,
+          Quantity: quantity,
+          Weight: quantity * weight,
+          Job_No: input.job,
+          Shortcut_Dimension_1_Code: job.Entity,
+          Shortcut_Dimension_2_Code: job.Cost_Center,
+          Posting_Date: date,
+          Document_Date: date
+        })
+        .basicAuth(auth)
+        .reply(200, {});
+    }
+  });
 
   return { user, job, input };
 }
@@ -145,16 +133,13 @@ test("submits data to NAV and creates new user settings and mortality documents"
         job: {
           number: job.No
         },
-        animal: null,
-        naturalQuantity: null,
-        euthanizedQuantity: null,
+        quantities: [],
         comments: null
       },
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -164,12 +149,11 @@ test("submits data to NAV and creates new user settings and mortality documents"
       {
         username: user.User_Name
       },
-      "pigJob prices"
+      "pigJob"
     ).lean()
   ).resolves.toEqual({
     _id: expect.anything(),
-    pigJob: job.No,
-    prices: []
+    pigJob: job.No
   });
 
   await expect(
@@ -186,58 +170,6 @@ test("submits data to NAV and creates new user settings and mortality documents"
   });
 });
 
-test("submits data to NAV and updates existing user settings document", async () => {
-  const { input, job, user } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3)
-    }
-  });
-  const userSettings = await UserSettingsModel.create(
-    UserSettingsFactory.build({
-      username: user.User_Name,
-      prices: [
-        {
-          animal: input.animal,
-          price: faker.random.number({ min: 30, max: 150 })
-        }
-      ]
-    })
-  );
-
-  await expect(mutation({ input })).resolves.toEqual({
-    postPigMortality: {
-      success: true,
-      pigMortality: {
-        job: {
-          number: job.No
-        },
-        animal: null,
-        naturalQuantity: null,
-        euthanizedQuantity: null,
-        comments: null
-      },
-      defaults: {
-        job: {
-          number: job.No
-        },
-        prices: userSettings.toObject().prices
-      }
-    }
-  });
-
-  await expect(
-    UserSettingsModel.findById(
-      userSettings._id,
-      "username pigJob prices"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything(),
-    username: user.User_Name,
-    pigJob: job.No,
-    prices: userSettings.toObject().prices
-  });
-});
-
 test("submits data to NAV and clears existing mortality document", async () => {
   const { input, job } = await mockTestData({
     input: {
@@ -245,8 +177,7 @@ test("submits data to NAV and clears existing mortality document", async () => {
     }
   });
   const mortalityDoc = await PigMortalityModel.create({
-    job: job.No,
-    naturalQuantity: input.naturalQuantity
+    job: job.No
   });
 
   await expect(mutation({ input })).resolves.toEqual({
@@ -256,16 +187,13 @@ test("submits data to NAV and clears existing mortality document", async () => {
         job: {
           number: job.No
         },
-        animal: null,
-        naturalQuantity: null,
-        euthanizedQuantity: null,
+        quantities: [],
         comments: null
       },
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
@@ -279,36 +207,6 @@ test("submits data to NAV and clears existing mortality document", async () => {
     _id: expect.anything(),
     activity: "mortality",
     job: job.No
-  });
-});
-
-test("does not submit euthanized quantity if 0", async () => {
-  const { input } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3),
-      euthanizedQuantity: 0
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toMatchObject({
-    postPigMortality: {
-      success: true
-    }
-  });
-});
-
-test("does not submit natural quantity if 0", async () => {
-  const { input } = await mockTestData({
-    input: {
-      comments: faker.lorem.words(3),
-      naturalQuantity: 0
-    }
-  });
-
-  await expect(mutation({ input })).resolves.toMatchObject({
-    postPigMortality: {
-      success: true
-    }
   });
 });
 
@@ -326,16 +224,13 @@ test("sets description to an empty string if there are no comments", async () =>
         job: {
           number: job.No
         },
-        animal: null,
-        naturalQuantity: null,
-        euthanizedQuantity: null,
+        quantities: [],
         comments: null
       },
       defaults: {
         job: {
           number: job.No
-        },
-        prices: []
+        }
       }
     }
   });
