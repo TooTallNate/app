@@ -51,7 +51,7 @@ export const PigPurchaseMutations: MutationResolvers = {
     doc.set(input);
     await doc.save();
 
-    const userSettings = await updateUserSettings({
+    const userSettings = await UserSettingsModel.findOne({
       username: user.username
     });
 
@@ -74,24 +74,23 @@ export const PigPurchaseMutations: MutationResolvers = {
     }
 
     const job = await dataSources.navJob.getByNo(input.job);
-    if (standardJournalLines) {
-      await postItemJournal(
-        {
-          ...standardJournalLines,
-          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-          Document_No: getDocumentNumber("PURCH", user.name),
-          Description: input.comments,
-          Location_Code: job.Site,
-          Quantity: input.quantity,
-          Weight: input.totalWeight,
-          Job_No: input.job,
-          Shortcut_Dimension_1_Code: job.Entity,
-          Shortcut_Dimension_2_Code: job.Cost_Center,
-          Meta: input.smallPigQuantity
-        },
-        dataSources.navItemJournal
-      );
-    }
+
+    await postItemJournal(
+      {
+        ...standardJournalLines,
+        Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+        Document_No: getDocumentNumber("PURCH", user.name),
+        Description: input.comments || " ",
+        Location_Code: job.Site,
+        Quantity: input.quantity,
+        Weight: input.totalWeight,
+        Job_No: input.job,
+        Shortcut_Dimension_1_Code: job.Entity,
+        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Meta: input.smallPigQuantity
+      },
+      dataSources.navItemJournal
+    );
 
     const userSettings = await updateUserSettings({
       username: user.username

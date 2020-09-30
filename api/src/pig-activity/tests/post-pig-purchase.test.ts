@@ -52,6 +52,7 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
     job: job.No,
     ...inputOverrides
   });
+  const date = format(new Date(), "YYY-MM-dd");
 
   const documentNumberRegex = new RegExp(
     `^PURCH${user.Full_Name.slice(0, 3)}${format(
@@ -91,7 +92,9 @@ async function mockTestData({ input: inputOverrides = {} } = {}) {
       Job_No: input.job,
       Shortcut_Dimension_1_Code: job.Entity,
       Shortcut_Dimension_2_Code: job.Cost_Center,
-      Meta: input.smallPigQuantity
+      Meta: input.smallPigQuantity,
+      Posting_Date: date,
+      Document_Date: date
     })
     .basicAuth(auth)
     .reply(200, {});

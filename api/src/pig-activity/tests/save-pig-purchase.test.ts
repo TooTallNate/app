@@ -61,7 +61,7 @@ testUnauthenticated(() =>
   })
 );
 
-test("creates new purchase and user settings documents", async () => {
+test("creates new user settings document", async () => {
   const { input, job, user } = await mockTestData({
     input: {
       comments: faker.lorem.words(3)
@@ -84,17 +84,6 @@ test("creates new purchase and user settings documents", async () => {
         job: null
       }
     }
-  });
-
-  await expect(
-    UserSettingsModel.findOne(
-      {
-        username: user.User_Name
-      },
-      "pigJob"
-    ).lean()
-  ).resolves.toEqual({
-    _id: expect.anything()
   });
 
   await expect(
