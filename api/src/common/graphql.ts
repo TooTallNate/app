@@ -345,6 +345,10 @@ export type Query = {
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   locations: Array<Location>;
+  nurseryFinisherArea?: Maybe<Job>;
+  nurseryFinisherAreas: Array<Job>;
+  nurseryFinisherOperators: Array<Resource>;
+  nurseryFinisherScorecard?: Maybe<NurseryFinisherScorecard>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -367,6 +371,14 @@ export type QueryFarrowingBackendAreaArgs = {
 };
 
 export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
+};
+
+export type QueryNurseryFinisherAreaArgs = {
+  area: Scalars["String"];
+};
+
+export type QueryNurseryFinisherScorecardArgs = {
   area: Scalars["String"];
 };
 
@@ -399,6 +411,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  postNurseryFinisherScorecard: NurseryFinisherScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -406,6 +419,7 @@ export type Mutation = {
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  saveNurseryFinisherScorecard: NurseryFinisherScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
@@ -422,6 +436,10 @@ export type MutationLoginArgs = {
 
 export type MutationPostFarrowingBackendScorecardArgs = {
   input: PostFarrowingBackendScorecardInput;
+};
+
+export type MutationPostNurseryFinisherScorecardArgs = {
+  input: PostNurseryFinisherScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -450,6 +468,10 @@ export type MutationPostPigWeanArgs = {
 
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
+};
+
+export type MutationSaveNurseryFinisherScorecardArgs = {
+  input: SaveNurseryFinisherScorecardInput;
 };
 
 export type MutationSavePigAdjustmentArgs = {
@@ -531,6 +553,46 @@ export type SaveFarrowingBackendScorecardInput = {
 
 export type FarrowingBackendScorecardResult = {
   __typename?: "FarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
+};
+
+export type NurseryFinisherScorecard = {
+  __typename?: "NurseryFinisherScorecard";
+  area: Job;
+  operator?: Maybe<Resource>;
+  sows: ScorecardEntry;
+  piglets: ScorecardEntry;
+  feed: ScorecardEntry;
+  water: ScorecardEntry;
+  crate: ScorecardEntry;
+  room: ScorecardEntry;
+};
+
+export type PostNurseryFinisherScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntryInput;
+  piglets: ScorecardEntryInput;
+  feed: ScorecardEntryInput;
+  water: ScorecardEntryInput;
+  crate: ScorecardEntryInput;
+  room: ScorecardEntryInput;
+};
+
+export type SaveNurseryFinisherScorecardInput = {
+  area: Scalars["String"];
+  operator?: Maybe<Scalars["String"]>;
+  sows?: Maybe<ScorecardEntryInput>;
+  piglets?: Maybe<ScorecardEntryInput>;
+  feed?: Maybe<ScorecardEntryInput>;
+  water?: Maybe<ScorecardEntryInput>;
+  crate?: Maybe<ScorecardEntryInput>;
+  room?: Maybe<ScorecardEntryInput>;
+};
+
+export type NurseryFinisherScorecardResult = {
+  __typename?: "NurseryFinisherScorecardResult";
   success: Scalars["Boolean"];
   scorecard: FarrowingBackendScorecard;
 };
@@ -788,6 +850,19 @@ export type ResolversTypes = ResolversObject<{
       scorecard: ResolversTypes["FarrowingBackendScorecard"];
     }
   >;
+  NurseryFinisherScorecard: ResolverTypeWrapper<
+    Omit<NurseryFinisherScorecard, "area" | "operator"> & {
+      area: ResolversTypes["Job"];
+      operator?: Maybe<ResolversTypes["Resource"]>;
+    }
+  >;
+  PostNurseryFinisherScorecardInput: PostNurseryFinisherScorecardInput;
+  SaveNurseryFinisherScorecardInput: SaveNurseryFinisherScorecardInput;
+  NurseryFinisherScorecardResult: ResolverTypeWrapper<
+    Omit<NurseryFinisherScorecardResult, "scorecard"> & {
+      scorecard: ResolversTypes["FarrowingBackendScorecard"];
+    }
+  >;
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: ResolverTypeWrapper<
     Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
@@ -886,6 +961,19 @@ export type ResolversParentTypes = ResolversObject<{
   SaveFarrowingBackendScorecardInput: SaveFarrowingBackendScorecardInput;
   FarrowingBackendScorecardResult: Omit<
     FarrowingBackendScorecardResult,
+    "scorecard"
+  > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
+  NurseryFinisherScorecard: Omit<
+    NurseryFinisherScorecard,
+    "area" | "operator"
+  > & {
+    area: ResolversParentTypes["Job"];
+    operator?: Maybe<ResolversParentTypes["Resource"]>;
+  };
+  PostNurseryFinisherScorecardInput: PostNurseryFinisherScorecardInput;
+  SaveNurseryFinisherScorecardInput: SaveNurseryFinisherScorecardInput;
+  NurseryFinisherScorecardResult: Omit<
+    NurseryFinisherScorecardResult,
     "scorecard"
   > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
   SetAreaOperatorInput: SetAreaOperatorInput;
@@ -1317,6 +1405,28 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  nurseryFinisherArea?: Resolver<
+    Maybe<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryNurseryFinisherAreaArgs, "area">
+  >;
+  nurseryFinisherAreas?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType
+  >;
+  nurseryFinisherOperators?: Resolver<
+    Array<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType
+  >;
+  nurseryFinisherScorecard?: Resolver<
+    Maybe<ResolversTypes["NurseryFinisherScorecard"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryNurseryFinisherScorecardArgs, "area">
+  >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
     ParentType,
@@ -1413,6 +1523,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
   >;
+  postNurseryFinisherScorecard?: Resolver<
+    ResolversTypes["NurseryFinisherScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostNurseryFinisherScorecardArgs, "input">
+  >;
   postPigAdjustment?: Resolver<
     ResolversTypes["PigAdjustmentResult"],
     ParentType,
@@ -1454,6 +1570,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationSaveFarrowingBackendScorecardArgs, "input">
+  >;
+  saveNurseryFinisherScorecard?: Resolver<
+    ResolversTypes["NurseryFinisherScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSaveNurseryFinisherScorecardArgs, "input">
   >;
   savePigAdjustment?: Resolver<
     ResolversTypes["PigAdjustmentResult"],
@@ -1536,6 +1658,38 @@ export type FarrowingBackendScorecardResolvers<
 export type FarrowingBackendScorecardResultResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["FarrowingBackendScorecardResult"] = ResolversParentTypes["FarrowingBackendScorecardResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  scorecard?: Resolver<
+    ResolversTypes["FarrowingBackendScorecard"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type NurseryFinisherScorecardResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["NurseryFinisherScorecard"] = ResolversParentTypes["NurseryFinisherScorecard"]
+> = ResolversObject<{
+  area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  operator?: Resolver<
+    Maybe<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType
+  >;
+  sows?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  piglets?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  feed?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  water?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  crate?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  room?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type NurseryFinisherScorecardResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["NurseryFinisherScorecardResult"] = ResolversParentTypes["NurseryFinisherScorecardResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   scorecard?: Resolver<
@@ -1641,6 +1795,10 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   ScorecardEntry?: ScorecardEntryResolvers<ContextType>;
   FarrowingBackendScorecard?: FarrowingBackendScorecardResolvers<ContextType>;
   FarrowingBackendScorecardResult?: FarrowingBackendScorecardResultResolvers<
+    ContextType
+  >;
+  NurseryFinisherScorecard?: NurseryFinisherScorecardResolvers<ContextType>;
+  NurseryFinisherScorecardResult?: NurseryFinisherScorecardResultResolvers<
     ContextType
   >;
   SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;

@@ -324,6 +324,10 @@ export type Query = {
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   locations: Array<Location>;
+  nurseryFinisherArea?: Maybe<Job>;
+  nurseryFinisherAreas: Array<Job>;
+  nurseryFinisherOperators: Array<Resource>;
+  nurseryFinisherScorecard?: Maybe<NurseryFinisherScorecard>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -346,6 +350,14 @@ export type QueryFarrowingBackendAreaArgs = {
 };
 
 export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
+};
+
+export type QueryNurseryFinisherAreaArgs = {
+  area: Scalars["String"];
+};
+
+export type QueryNurseryFinisherScorecardArgs = {
   area: Scalars["String"];
 };
 
@@ -378,6 +390,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  postNurseryFinisherScorecard: NurseryFinisherScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -385,6 +398,7 @@ export type Mutation = {
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  saveNurseryFinisherScorecard: NurseryFinisherScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
@@ -401,6 +415,10 @@ export type MutationLoginArgs = {
 
 export type MutationPostFarrowingBackendScorecardArgs = {
   input: PostFarrowingBackendScorecardInput;
+};
+
+export type MutationPostNurseryFinisherScorecardArgs = {
+  input: PostNurseryFinisherScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -429,6 +447,10 @@ export type MutationPostPigWeanArgs = {
 
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
+};
+
+export type MutationSaveNurseryFinisherScorecardArgs = {
+  input: SaveNurseryFinisherScorecardInput;
 };
 
 export type MutationSavePigAdjustmentArgs = {
@@ -510,6 +532,46 @@ export type SaveFarrowingBackendScorecardInput = {
 
 export type FarrowingBackendScorecardResult = {
   __typename?: "FarrowingBackendScorecardResult";
+  success: Scalars["Boolean"];
+  scorecard: FarrowingBackendScorecard;
+};
+
+export type NurseryFinisherScorecard = {
+  __typename?: "NurseryFinisherScorecard";
+  area: Job;
+  operator?: Maybe<Resource>;
+  sows: ScorecardEntry;
+  piglets: ScorecardEntry;
+  feed: ScorecardEntry;
+  water: ScorecardEntry;
+  crate: ScorecardEntry;
+  room: ScorecardEntry;
+};
+
+export type PostNurseryFinisherScorecardInput = {
+  area: Scalars["String"];
+  operator: Scalars["String"];
+  sows: ScorecardEntryInput;
+  piglets: ScorecardEntryInput;
+  feed: ScorecardEntryInput;
+  water: ScorecardEntryInput;
+  crate: ScorecardEntryInput;
+  room: ScorecardEntryInput;
+};
+
+export type SaveNurseryFinisherScorecardInput = {
+  area: Scalars["String"];
+  operator?: Maybe<Scalars["String"]>;
+  sows?: Maybe<ScorecardEntryInput>;
+  piglets?: Maybe<ScorecardEntryInput>;
+  feed?: Maybe<ScorecardEntryInput>;
+  water?: Maybe<ScorecardEntryInput>;
+  crate?: Maybe<ScorecardEntryInput>;
+  room?: Maybe<ScorecardEntryInput>;
+};
+
+export type NurseryFinisherScorecardResult = {
+  __typename?: "NurseryFinisherScorecardResult";
   success: Scalars["Boolean"];
   scorecard: FarrowingBackendScorecard;
 };

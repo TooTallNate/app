@@ -48,6 +48,44 @@ type FarrowingBackendScorecardResult {
   scorecard: FarrowingBackendScorecard!
 }
 
+type NurseryFinisherScorecard {
+  area: Job!
+  operator: Resource
+  sows: ScorecardEntry!
+  piglets: ScorecardEntry!
+  feed: ScorecardEntry!
+  water: ScorecardEntry!
+  crate: ScorecardEntry!
+  room: ScorecardEntry!
+}
+
+input PostNurseryFinisherScorecardInput {
+  area: String!
+  operator: String!
+  sows: ScorecardEntryInput!
+  piglets: ScorecardEntryInput!
+  feed: ScorecardEntryInput!
+  water: ScorecardEntryInput!
+  crate: ScorecardEntryInput!
+  room: ScorecardEntryInput!
+}
+
+input SaveNurseryFinisherScorecardInput {
+  area: String!
+  operator: String
+  sows: ScorecardEntryInput
+  piglets: ScorecardEntryInput
+  feed: ScorecardEntryInput
+  water: ScorecardEntryInput
+  crate: ScorecardEntryInput
+  room: ScorecardEntryInput
+}
+
+type NurseryFinisherScorecardResult {
+  success: Boolean!
+  scorecard: FarrowingBackendScorecard!
+}
+
 
 input SetAreaOperatorInput {
   area: String!
@@ -66,10 +104,16 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
+  nurseryFinisherScorecard(area: String!): NurseryFinisherScorecard
+  nurseryFinisherAreas: [Job!]!
+  nurseryFinisherArea(area: String!): Job
+  nurseryFinisherOperators: [Resource!]!
 }
 
 type Mutation {
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
+  postNurseryFinisherScorecard(input: PostNurseryFinisherScorecardInput!): NurseryFinisherScorecardResult!
+  saveNurseryFinisherScorecard(input: SaveNurseryFinisherScorecardInput!): NurseryFinisherScorecardResult!
 }
