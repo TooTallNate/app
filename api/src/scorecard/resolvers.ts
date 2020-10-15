@@ -62,6 +62,12 @@ export const queries: QueryResolvers = {
     return dataSources.navResource.getAll({
       groups: ["FARROW-BE"]
     });
+  },
+  growFinishJobs(_, __, { dataSources }) {
+    return dataSources.navJob.getAll({
+      isOpen: true,
+      postingGroups: ["NURSGROWSITE"]
+    });
   }
 };
 

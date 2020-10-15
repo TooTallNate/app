@@ -283,11 +283,8 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendOperators: [Resource!]!
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
+  growFinishJobs: [Job!]!
   locations: [Location!]!
-  nurseryFinisherArea(area: String!): Job
-  nurseryFinisherAreas: [Job!]!
-  nurseryFinisherOperators: [Resource!]!
-  nurseryFinisherScorecard(area: String!): NurseryFinisherScorecard
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!
@@ -309,7 +306,6 @@ type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  postNurseryFinisherScorecard(input: PostNurseryFinisherScorecardInput!): NurseryFinisherScorecardResult!
   postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
   postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
   postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
@@ -317,7 +313,6 @@ type Mutation {
   postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
   postPigWean(input: PostPigWeanInput!): PigWeanResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  saveNurseryFinisherScorecard(input: SaveNurseryFinisherScorecardInput!): NurseryFinisherScorecardResult!
   savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
   savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
   savePigMortality(input: SavePigMortalityInput!): PigMortalityResult!
@@ -376,18 +371,7 @@ type FarrowingBackendScorecardResult {
   scorecard: FarrowingBackendScorecard!
 }
 
-type NurseryFinisherScorecard {
-  area: Job!
-  operator: Resource
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
-}
-
-input PostNurseryFinisherScorecardInput {
+input PostGrowFinishScorecardInput {
   area: String!
   operator: String!
   sows: ScorecardEntryInput!
@@ -398,7 +382,7 @@ input PostNurseryFinisherScorecardInput {
   room: ScorecardEntryInput!
 }
 
-input SaveNurseryFinisherScorecardInput {
+input SaveGrowFinishInput {
   area: String!
   operator: String
   sows: ScorecardEntryInput
@@ -409,7 +393,7 @@ input SaveNurseryFinisherScorecardInput {
   room: ScorecardEntryInput
 }
 
-type NurseryFinisherScorecardResult {
+type GrowFinishScorecardResult {
   success: Boolean!
   scorecard: FarrowingBackendScorecard!
 }
