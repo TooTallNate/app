@@ -1,0 +1,15 @@
+fragment GrowFinishJobFields on Job {
+  number
+  description
+  inventory
+  deadQuantity
+}
+
+query GrowFinishJobs {
+  growFinishJobs {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+}

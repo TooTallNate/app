@@ -596,6 +596,22 @@ export type UpdateUserLocationsResult = {
   locations: UserLocations;
 };
 
+export type GrowFinishJobFieldsFragment = { __typename?: "Job" } & Pick<
+  Job,
+  "number" | "description" | "inventory" | "deadQuantity"
+>;
+
+export type GrowFinishJobsQueryVariables = {};
+
+export type GrowFinishJobsQuery = { __typename?: "Query" } & {
+  growFinishJobs: Array<
+    { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >
+  >;
+};
+
 export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
   Job,
   "number" | "description"
@@ -719,6 +735,14 @@ export type SetAreaOperatorMutation = { __typename?: "Mutation" } & {
   };
 };
 
+export const GrowFinishJobFieldsFragmentDoc = gql`
+  fragment GrowFinishJobFields on Job {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+`;
 export const FarrowingBackendAreaFieldsFragmentDoc = gql`
   fragment FarrowingBackendAreaFields on Job {
     number
@@ -763,6 +787,64 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
+export const GrowFinishJobsDocument = gql`
+  query GrowFinishJobs {
+    growFinishJobs {
+      number
+      description
+      inventory
+      deadQuantity
+    }
+  }
+`;
+
+/**
+ * __useGrowFinishJobsQuery__
+ *
+ * To run a query within a React component, call `useGrowFinishJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGrowFinishJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGrowFinishJobsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGrowFinishJobsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GrowFinishJobsQuery,
+    GrowFinishJobsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GrowFinishJobsQuery,
+    GrowFinishJobsQueryVariables
+  >(GrowFinishJobsDocument, baseOptions);
+}
+export function useGrowFinishJobsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GrowFinishJobsQuery,
+    GrowFinishJobsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GrowFinishJobsQuery,
+    GrowFinishJobsQueryVariables
+  >(GrowFinishJobsDocument, baseOptions);
+}
+export type GrowFinishJobsQueryHookResult = ReturnType<
+  typeof useGrowFinishJobsQuery
+>;
+export type GrowFinishJobsLazyQueryHookResult = ReturnType<
+  typeof useGrowFinishJobsLazyQuery
+>;
+export type GrowFinishJobsQueryResult = ApolloReactCommon.QueryResult<
+  GrowFinishJobsQuery,
+  GrowFinishJobsQueryVariables
+>;
 export const FarrowingBackendScorecardAreasDocument = gql`
   query FarrowingBackendScorecardAreas {
     areas: farrowingBackendAreas {
