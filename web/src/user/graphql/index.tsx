@@ -325,6 +325,7 @@ export type Query = {
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   growFinishJobs: Array<Job>;
   locations: Array<Location>;
+  personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;

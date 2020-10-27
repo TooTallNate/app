@@ -1,5 +1,11 @@
 import React from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import {
+  Route,
+  RouteComponentProps,
+  Switch,
+  useHistory,
+  useRouteMatch
+} from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
 import ViewHeader from "../../../common/components/view/ViewHeader";
@@ -14,31 +20,55 @@ import FormFieldErrors from "../../../common/components/form/FormFieldErrors";
 import ViewContent from "../../../common/components/view/ViewContent";
 import InventoryField from "../../../pig-activity/components/InventoryField";
 import { useGrowFinishJobsQuery } from "../../graphql";
+import Button from "../../../common/components/input/Button";
+import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
+import {
+  GrowFinishScorecardProvider,
+  useGrowFinish
+} from "../../contexts/growFinish";
+import ScorecardMetadataView from "./ScorecardMetadataView";
 
 interface FormData {
   job: string;
 }
 
 const ScorecardJobView: React.FC = () => {
-  const history = useHistory();
+  const { updateForm } = useGrowFinish();
   const match = useRouteMatch();
+  const history = useHistory();
   const formContext = useForm<FormData>();
-  const { data, loading } = useGrowFinishJobsQuery({
-    // onCompleted({ growFinishJobs: defaults }) {
-    //   if (defaults[0].number) {
-    //     formContext.setValue("job", defaults[0].number);
-    //   }
-    // }
-  });
+  const { data, loading } = useGrowFinishJobsQuery({});
+
+  console.log(match);
 
   const onSubmit: OnSubmit<FormData> = data => {
-    history.push(`${match.url}/${data.job}`);
+    updateForm({ job: data.job });
+    history.push(`${match.path}/metadata`);
   };
 
-  const jobNumber = formContext.watch("job");
-  const job = data
-    ? data.growFinishJobs.find(job => job.number === jobNumber)
-    : undefined;
+  // const onSave = async () => {
+  //   try {
+  //     await save({
+  //       variables: {
+  //         input: {
+  //           ...getValues(),
+  //           job: params.job
+  //         }
+  //       }
+  //     });
+  //     setMessage({
+  //       message: "Entry saved successfully.",
+  //       level: "success",
+  //       timeout: 2000
+  //     });
+  //     history.push("/");
+  //   } catch (e) {
+  //     setMessage({
+  //       message: e.toString(),
+  //       level: "error"
+  //     });
+  //   }
+  // };
 
   return (
     <View>
@@ -66,13 +96,14 @@ const ScorecardJobView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            {job && (
-              <InventoryField
-                inventory={job.inventory || 0}
-                deadQuantity={job.deadQuantity || 0}
-              />
-            )}
             <FormSubmit>Continue</FormSubmit>
+            {/* <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
+                Save
+              </Button>
+              <HorizontalSpacer />
+              <FormSubmit />
+            </div> */}
           </Form>
         )}
       </ViewContent>

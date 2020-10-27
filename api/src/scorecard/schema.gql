@@ -94,6 +94,7 @@ type Query {
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
   growFinishJobs: [Job!]!
+  personResponsible: [Resource!]!
 }
 
 type Mutation {

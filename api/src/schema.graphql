@@ -285,6 +285,7 @@ type Query {
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   growFinishJobs: [Job!]!
   locations: [Location!]!
+  personResponsible: [Resource!]!
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!

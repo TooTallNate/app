@@ -325,6 +325,7 @@ export type Query = {
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   growFinishJobs: Array<Job>;
   locations: Array<Location>;
+  personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -612,6 +613,14 @@ export type GrowFinishJobsQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type PersonResponsibleQueryVariables = {};
+
+export type PersonResponsibleQuery = { __typename?: "Query" } & {
+  personResponsible: Array<
+    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+  >;
+};
+
 export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
   Job,
   "number" | "description"
@@ -844,6 +853,62 @@ export type GrowFinishJobsLazyQueryHookResult = ReturnType<
 export type GrowFinishJobsQueryResult = ApolloReactCommon.QueryResult<
   GrowFinishJobsQuery,
   GrowFinishJobsQueryVariables
+>;
+export const PersonResponsibleDocument = gql`
+  query PersonResponsible {
+    personResponsible {
+      name
+      number
+    }
+  }
+`;
+
+/**
+ * __usePersonResponsibleQuery__
+ *
+ * To run a query within a React component, call `usePersonResponsibleQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePersonResponsibleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePersonResponsibleQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePersonResponsibleQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PersonResponsibleQuery,
+    PersonResponsibleQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    PersonResponsibleQuery,
+    PersonResponsibleQueryVariables
+  >(PersonResponsibleDocument, baseOptions);
+}
+export function usePersonResponsibleLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PersonResponsibleQuery,
+    PersonResponsibleQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    PersonResponsibleQuery,
+    PersonResponsibleQueryVariables
+  >(PersonResponsibleDocument, baseOptions);
+}
+export type PersonResponsibleQueryHookResult = ReturnType<
+  typeof usePersonResponsibleQuery
+>;
+export type PersonResponsibleLazyQueryHookResult = ReturnType<
+  typeof usePersonResponsibleLazyQuery
+>;
+export type PersonResponsibleQueryResult = ApolloReactCommon.QueryResult<
+  PersonResponsibleQuery,
+  PersonResponsibleQueryVariables
 >;
 export const FarrowingBackendScorecardAreasDocument = gql`
   query FarrowingBackendScorecardAreas {
