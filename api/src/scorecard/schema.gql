@@ -102,5 +102,5 @@ type Mutation {
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   # postGrowFinishScorecard(input: PostGrowFinishScorecardInput!): GrowFinishScorecardResult!
-  # saveGrowFinishScorecard(input: SaveGrowFinishScorecardInput!): GrowFinishScorecardResult!
+  saveGrowFinishScorecard(input: SaveGrowFinishScorecardInput!): GrowFinishScorecardResult!
 }

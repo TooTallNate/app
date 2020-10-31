@@ -22,7 +22,8 @@ const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   const [job, setJob] = useState<string | null>(null);
 
-  const [formConfig, setFormConfig] = useState<object>({});
+  const [saveMethod] = useSavemutation();
+  // const [formConfig, setFormConfig] = useState<object>({});
   const [formState, setFormState] = useState<FormValues>({});
 
   const updateForm = useCallback(
@@ -40,8 +41,11 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   //import these
   // add these to the context
-  const save = useCallback();
+  const save = useCallback(() => {
+    await saveMethod(formState);
+  }, [formState, saveMethod]);
   //execute save request to send to server
+
   const submit = useCallback();
   //validate all values and execute submit to server
 
