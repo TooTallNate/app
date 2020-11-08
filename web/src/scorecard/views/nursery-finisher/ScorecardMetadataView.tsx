@@ -17,6 +17,7 @@ import FormFieldErrors from "../../../common/components/form/FormFieldErrors";
 import TypeaheadInput from "../../../common/components/input/TypeaheadInput";
 import ViewHeader from "../../../common/components/view/ViewHeader";
 import BackButton from "../../../common/components/view/BackButton";
+import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
 
 interface FormData {
   personResponsible: string;
@@ -58,23 +59,10 @@ const ScorecardMetadataView: React.FC<RouteComponentProps> = ({ match }) => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <FormSubmit> Continue</FormSubmit>
-            {/* <div className="flex">
-            <Button className="w-full" type="button" onClick={onSave}>
-              Save
-            </Button>
-            <HorizontalSpacer />
-            <FormSubmit />
-          </div> */}
-            {/* <GrowFinishScorecardProvider>
-              <Switch>
-                <Route
-                  exact
-                  path={`${match.url}`}
-                  component={ScorecardMetadataView}
-                />
-              </Switch>
-            </GrowFinishScorecardProvider> */}
+            <div className="flex">
+              <HorizontalSpacer />
+              <FormSubmit> Continue</FormSubmit>
+            </div>
           </Form>
         )}
       </ViewContent>

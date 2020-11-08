@@ -323,7 +323,9 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  growFinishJob?: Maybe<Job>;
   growFinishJobs: Array<Job>;
+  listJobs: Array<Job>;
   locations: Array<Location>;
   personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
@@ -349,6 +351,10 @@ export type QueryFarrowingBackendAreaArgs = {
 
 export type QueryFarrowingBackendScorecardArgs = {
   area: Scalars["String"];
+};
+
+export type QueryGrowFinishJobArgs = {
+  number: Scalars["String"];
 };
 
 export type QueryPigAdjustmentArgs = {
@@ -393,6 +399,7 @@ export type Mutation = {
   savePigMove: PigMoveResult;
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
+  saveScorecard: ScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
@@ -457,6 +464,10 @@ export type MutationSavePigWeanArgs = {
   input: SavePigWeanInput;
 };
 
+export type MutationSaveScorecardArgs = {
+  input: SaveScorecardInput;
+};
+
 export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
 };
@@ -516,32 +527,27 @@ export type FarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
-export type PostGrowFinishScorecardInput = {
-  area: Scalars["String"];
+export type PostScorecardInput = {
+  job: Scalars["String"];
   operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
 };
 
-export type SaveGrowFinishInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
+export type SaveScorecardInput = {
+  job: Scalars["String"];
+  operator: Scalars["String"];
 };
 
-export type GrowFinishScorecardResult = {
-  __typename?: "GrowFinishScorecardResult";
+export type ScorecardResult = {
+  __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+  scorecard: Scorecard;
+};
+
+export type Scorecard = {
+  __typename?: "Scorecard";
+  job: Job;
+  date?: Maybe<Scalars["String"]>;
+  operator?: Maybe<Resource>;
 };
 
 export type SetAreaOperatorInput = {

@@ -283,7 +283,9 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendOperators: [Resource!]!
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
+  growFinishJob(number: String!): Job
   growFinishJobs: [Job!]!
+  listJobs: [Job!]!
   locations: [Location!]!
   personResponsible: [Resource!]!
   pigActivityDefaults: PigActivityDefaults!
@@ -320,6 +322,7 @@ type Mutation {
   savePigMove(input: SavePigMoveInput!): PigMoveResult!
   savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
   savePigWean(input: SavePigWeanInput!): PigWeanResult!
+  saveScorecard(input: SaveScorecardInput!): ScorecardResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
@@ -372,31 +375,25 @@ type FarrowingBackendScorecardResult {
   scorecard: FarrowingBackendScorecard!
 }
 
-input PostGrowFinishScorecardInput {
-  area: String!
+input PostScorecardInput {
+  job: String!
   operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
 }
 
-input SaveGrowFinishInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
+input SaveScorecardInput {
+  job: String!
+  operator: String!
 }
 
-type GrowFinishScorecardResult {
+type ScorecardResult {
   success: Boolean!
-  scorecard: FarrowingBackendScorecard!
+  scorecard: Scorecard!
+}
+
+type Scorecard {
+  job: Job!
+  date: String
+  operator: Resource
 }
 
 input SetAreaOperatorInput {

@@ -3,12 +3,18 @@ import React, {
   useContext,
   useState,
   useCallback,
-  useEffect
+  useEffect,
+  useRef
 } from "react";
+import { useHistory } from "react-router-dom";
+import { useSaveScorecardMutation } from "../graphql";
 
 export interface GrowFinishContextValue {
+  job?: string;
   formState: FormValues;
+  setJob(job?: string): void;
   updateForm(values?: FormValues): void;
+  submit(): Promise<void>;
 }
 
 export interface FormValues {
@@ -20,11 +26,14 @@ export interface FormValues {
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
-  const [job, setJob] = useState<string | null>(null);
+  const jobLoaded = useRef(true);
+  const [job, setJobInternal] = useState<string | undefined>();
 
-  const [saveMethod] = useSavemutation();
+  const [saveMethod] = useSaveScorecardMutation();
+  // const [submitMethod] = postScorecard();
   // const [formConfig, setFormConfig] = useState<object>({});
   const [formState, setFormState] = useState<FormValues>({});
+  const history = useHistory();
 
   const updateForm = useCallback(
     (values: Partial<FormValues> = {}) =>
@@ -32,25 +41,40 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     []
   );
 
+  //does this need to be async()?
+  useEffect(() => {
+    if (jobLoaded.current) {
+      // saveMethod(formState);
+    }
+  }, [formState, saveMethod]);
+
   // add this to the context
-  const setJob = useCallback(() => {
+  const setJob = useCallback((job?: string) => {
+    jobLoaded.current = false;
     // Set the job state
+    setJobInternal(job);
     // Load the form config
     // Load the form state
+    jobLoaded.current = true;
   }, []);
 
   //import these
   // add these to the context
-  const save = useCallback(() => {
-    await saveMethod(formState);
-  }, [formState, saveMethod]);
-  //execute save request to send to server
+  //move this up to the useEffect
+  // const save = useCallback(async () => {
+  //   await saveMethod(formState);
+  // }, [formState, history, saveMethod]);
+  // //execute save request to send to server
 
-  const submit = useCallback();
-  //validate all values and execute submit to server
+  const submit = useCallback(async () => {
+    // await submitMethod(formState);
+    history.push("/");
+  }, [history]);
 
   return (
-    <GrowFinishContext.Provider value={{ formState, updateForm }}>
+    <GrowFinishContext.Provider
+      value={{ job, formState, updateForm, submit, setJob }}
+    >
       {children}
     </GrowFinishContext.Provider>
   );

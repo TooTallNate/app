@@ -3,8 +3,18 @@ fragment GrowFinishJobFields on Job {
   description
 }
 
-query GrowFinishJobs {
-  growFinishJobs {
+fragment ScorecardFields on Scorecard {
+  job {
+    number
+  }
+  date
+  operator {
+    number
+  }
+}
+
+query ScorecardJobs {
+  jobs: listJobs {
     number
     description
   }
@@ -14,5 +24,35 @@ query PersonResponsible {
   personResponsible {
     name
     number
+  }
+}
+
+query NurseryFinisherScorecard($job: String!) {
+  job: growFinishJob(number: $job) {
+    number
+    personResponsible {
+      name
+      number
+    }
+  }
+  # scorecardConfig(job: $job) {
+  #   # pages?
+  # }
+  # scorecardData(job: $job) {
+  #   job {
+  #     number
+  #   }
+  #   date
+  #   operator
+  #   # array of inputs
+  # }
+}
+
+mutation saveScorecard($input: SaveScorecardInput!) {
+  saveScorecard(input: $input) {
+    success
+    scorecard {
+      ...ScorecardFields
+    }
   }
 }
