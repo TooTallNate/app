@@ -16,7 +16,7 @@ import {
 import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
-import GrowFinishScorecardModel from "./models/GrowFinishScorecard";
+import GrowFinishScorecardModel from "./models/Scorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalLine>,
@@ -68,12 +68,6 @@ export const queries: QueryResolvers = {
   farrowingBackendOperators(_, __, { dataSources }) {
     return dataSources.navResource.getAll({
       groups: ["FARROW-BE"]
-    });
-  },
-  growFinishJobs(_, __, { dataSources }) {
-    return dataSources.navJob.getAll({
-      isOpen: true,
-      postingGroups: ["NURSGROWSITE"]
     });
   },
   async scorecardPages(_, { job }, { dataSources }) {
@@ -153,17 +147,17 @@ export const mutations: MutationResolvers = {
 
     return { success: true, scorecard: doc };
   },
-  // async saveScorecard(_, { input }) {
-  //   let doc = await GrowFinishScorecardModel.findOne({
-  //     job: input.job
-  //   });
-  //   if (!doc) {
-  //     doc = new GrowFinishScorecardModel(input);
-  //   } else {
-  //     await doc.save();
-  //     return { success: true, scorecard: doc };
-  //   }
-  // },
+  async saveScorecard(_, { input }) {
+    let doc = await GrowFinishScorecardModel.findOne({
+      job: input.job
+    });
+    if (!doc) {
+      doc = new GrowFinishScorecardModel(input);
+    } else {
+      await doc.save();
+      return { success: true, scorecard: doc };
+    }
+  },
   // async postGrowFinishScorecard(_, { input }) {
   //   let doc =
   //     (await GrowFinishScorecardModel.findOne({

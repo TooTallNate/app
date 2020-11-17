@@ -49,6 +49,104 @@ export type Location = {
   name: Scalars["String"];
 };
 
+export type JobFilter = {
+  group?: Maybe<Scalars["String"]>;
+};
+
+export type ResourceFilter = {
+  group?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
+};
+
+export type Query = {
+  __typename?: "Query";
+  animals: Array<Item>;
+  farrowingBackendArea?: Maybe<Job>;
+  farrowingBackendAreas: Array<Job>;
+  farrowingBackendOperators: Array<Resource>;
+  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  growFinishJobs: Array<Job>;
+  job?: Maybe<Job>;
+  jobs: Array<Job>;
+  locations: Array<Location>;
+  personResponsible: Array<Resource>;
+  pigActivityDefaults: PigActivityDefaults;
+  pigActivityJobs: Array<Job>;
+  pigAdjustment: PigAdjustment;
+  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
+  pigGradeOff: PigGradeOff;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
+  pigMortality: PigMortality;
+  pigMortalityEventTypes: Array<PigMortalityEvent>;
+  pigMove: PigMove;
+  pigMoveEventTypes: Array<PigMoveEvent>;
+  pigPurchase: PigPurchase;
+  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
+  pigWean: PigWean;
+  pigWeanEventTypes: Array<PigWeanEvent>;
+  resource?: Maybe<Resource>;
+  resources: Array<Resource>;
+  scorecard?: Maybe<Scorecard>;
+  scorecardPages: Array<ScorecardPage>;
+  user?: Maybe<User>;
+};
+
+export type QueryFarrowingBackendAreaArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFarrowingBackendScorecardArgs = {
+  area: Scalars["String"];
+};
+
+export type QueryJobArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryJobsArgs = {
+  input?: Maybe<JobFilter>;
+};
+
+export type QueryPigAdjustmentArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigGradeOffArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMortalityArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMoveArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigWeanArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryResourceArgs = {
+  code: Scalars["String"];
+};
+
+export type QueryResourcesArgs = {
+  input?: Maybe<ResourceFilter>;
+};
+
+export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardPagesArgs = {
+  job: Scalars["String"];
+};
+
 export type PigActivityDefaults = {
   __typename?: "PigActivityDefaults";
   job?: Maybe<Job>;
@@ -316,76 +414,6 @@ export type PigWeanResult = {
   defaults: PigActivityDefaults;
 };
 
-export type Query = {
-  __typename?: "Query";
-  animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  growFinishJob?: Maybe<Job>;
-  growFinishJobs: Array<Job>;
-  listJobs: Array<Job>;
-  locations: Array<Location>;
-  personResponsible: Array<Resource>;
-  pigActivityDefaults: PigActivityDefaults;
-  pigActivityJobs: Array<Job>;
-  pigAdjustment: PigAdjustment;
-  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
-  pigGradeOff: PigGradeOff;
-  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigMortality: PigMortality;
-  pigMortalityEventTypes: Array<PigMortalityEvent>;
-  pigMove: PigMove;
-  pigMoveEventTypes: Array<PigMoveEvent>;
-  pigPurchase: PigPurchase;
-  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
-  pigWean: PigWean;
-  pigWeanEventTypes: Array<PigWeanEvent>;
-  scorecardPages: Array<ScorecardPage>;
-  user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
-};
-
-export type QueryGrowFinishJobArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryPigAdjustmentArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigGradeOffArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMortalityArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMoveArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigPurchaseArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigWeanArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryScorecardPagesArgs = {
-  job: Scalars["String"];
-};
-
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
@@ -557,7 +585,7 @@ export type PostScorecardInput = {
 
 export type SaveScorecardInput = {
   job: Scalars["String"];
-  operator: Scalars["String"];
+  operator?: Maybe<Scalars["String"]>;
 };
 
 export type ScorecardResult = {

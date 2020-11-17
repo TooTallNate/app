@@ -31,6 +31,47 @@ type Location {
   name: String!
 }
 
+input JobFilter {
+  group: String
+}
+
+input ResourceFilter {
+  group: String
+  type: String
+}
+
+type Query {
+  animals: [Item!]!
+  farrowingBackendArea(number: String!): Job
+  farrowingBackendAreas: [Job!]!
+  farrowingBackendOperators: [Resource!]!
+  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
+  growFinishJobs: [Job!]!
+  job(number: String!): Job
+  jobs(input: JobFilter): [Job!]!
+  locations: [Location!]!
+  personResponsible: [Resource!]!
+  pigActivityDefaults: PigActivityDefaults!
+  pigActivityJobs: [Job!]!
+  pigAdjustment(job: String!): PigAdjustment!
+  pigAdjustmentEventTypes: [PigAdjustmentEvent!]!
+  pigGradeOff(job: String!): PigGradeOff!
+  pigGradeOffEventTypes: [PigGradeOffEvent!]!
+  pigMortality(job: String!): PigMortality!
+  pigMortalityEventTypes: [PigMortalityEvent!]!
+  pigMove(job: String!): PigMove!
+  pigMoveEventTypes: [PigMoveEvent!]!
+  pigPurchase(job: String!): PigPurchase!
+  pigPurchaseEventTypes: [PigPurchaseEvent!]!
+  pigWean(job: String!): PigWean!
+  pigWeanEventTypes: [PigWeanEvent!]!
+  resource(code: String!): Resource
+  resources(input: ResourceFilter): [Resource!]!
+  scorecard(job: String!): Scorecard
+  scorecardPages(job: String!): [ScorecardPage!]!
+  user: User
+}
+
 type PigActivityDefaults {
   job: Job
   prices: [PriceEntry!]!
@@ -277,35 +318,6 @@ type PigWeanResult {
   defaults: PigActivityDefaults!
 }
 
-type Query {
-  animals: [Item!]!
-  farrowingBackendArea(number: String!): Job
-  farrowingBackendAreas: [Job!]!
-  farrowingBackendOperators: [Resource!]!
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
-  growFinishJob(number: String!): Job
-  growFinishJobs: [Job!]!
-  listJobs: [Job!]!
-  locations: [Location!]!
-  personResponsible: [Resource!]!
-  pigActivityDefaults: PigActivityDefaults!
-  pigActivityJobs: [Job!]!
-  pigAdjustment(job: String!): PigAdjustment!
-  pigAdjustmentEventTypes: [PigAdjustmentEvent!]!
-  pigGradeOff(job: String!): PigGradeOff!
-  pigGradeOffEventTypes: [PigGradeOffEvent!]!
-  pigMortality(job: String!): PigMortality!
-  pigMortalityEventTypes: [PigMortalityEvent!]!
-  pigMove(job: String!): PigMove!
-  pigMoveEventTypes: [PigMoveEvent!]!
-  pigPurchase(job: String!): PigPurchase!
-  pigPurchaseEventTypes: [PigPurchaseEvent!]!
-  pigWean(job: String!): PigWean!
-  pigWeanEventTypes: [PigWeanEvent!]!
-  scorecardPages(job: String!): [ScorecardPage!]!
-  user: User
-}
-
 type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
@@ -398,7 +410,7 @@ input PostScorecardInput {
 
 input SaveScorecardInput {
   job: String!
-  operator: String!
+  operator: String
 }
 
 type ScorecardResult {

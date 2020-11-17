@@ -3,7 +3,8 @@ import {
   ReasonResolvers,
   ResourceResolvers,
   LocationResolvers,
-  ItemResolvers
+  ItemResolvers,
+  QueryResolvers
 } from "./graphql";
 
 const Resource: ResourceResolvers = {
@@ -34,6 +35,26 @@ const Reason: ReasonResolvers = {
 const Location: LocationResolvers = {
   code: location => location.Code,
   name: location => location.Name
+};
+
+export const queries: QueryResolvers = {
+  jobs(_, { input }, { dataSources }) {
+    return dataSources.navJob.getAll({
+      isOpen: true,
+      ...(input.group && { postingGroups: [input.group] })
+    });
+  },
+  job(_, { number }, { dataSources }) {
+    return dataSources.navJob.getByNo(number);
+  },
+  resources(_, __, { dataSources }) {
+    return dataSources.navResource.getAll({
+      groups: ["NURSGROWSITE"]
+    });
+  },
+  resource(_, { code }, { dataSources }) {
+    return dataSources.navResource.getByCode(code);
+  }
 };
 
 export const types = {
