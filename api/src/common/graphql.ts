@@ -16,6 +16,7 @@ import { PigPurchaseDocument } from "../pig-activity/models/PigPurchase";
 import { PigWeanDocument } from "../pig-activity/models/PigWean";
 import { UserSettingsDocument } from "./models/UserSettings";
 import { FarrowingBackendScorecardDocument } from "../scorecard/models/FarrowingBackendScorecard";
+import { GrowFinishScorecardDocument } from "../scorecard/models/GrowFinishScorecard";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -344,7 +345,9 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  growFinishJob?: Maybe<Job>;
   growFinishJobs: Array<Job>;
+  listJobs: Array<Job>;
   locations: Array<Location>;
   personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
@@ -361,6 +364,7 @@ export type Query = {
   pigPurchaseEventTypes: Array<PigPurchaseEvent>;
   pigWean: PigWean;
   pigWeanEventTypes: Array<PigWeanEvent>;
+  scorecardPages: Array<ScorecardPage>;
   user?: Maybe<User>;
 };
 
@@ -370,6 +374,10 @@ export type QueryFarrowingBackendAreaArgs = {
 
 export type QueryFarrowingBackendScorecardArgs = {
   area: Scalars["String"];
+};
+
+export type QueryGrowFinishJobArgs = {
+  number: Scalars["String"];
 };
 
 export type QueryPigAdjustmentArgs = {
@@ -396,6 +404,10 @@ export type QueryPigWeanArgs = {
   job: Scalars["String"];
 };
 
+export type QueryScorecardPagesArgs = {
+  job: Scalars["String"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
@@ -414,6 +426,7 @@ export type Mutation = {
   savePigMove: PigMoveResult;
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
+  saveScorecard: ScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
@@ -478,6 +491,10 @@ export type MutationSavePigWeanArgs = {
   input: SavePigWeanInput;
 };
 
+export type MutationSaveScorecardArgs = {
+  input: SaveScorecardInput;
+};
+
 export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
 };
@@ -537,32 +554,45 @@ export type FarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
-export type PostGrowFinishScorecardInput = {
-  area: Scalars["String"];
+export type ScorecardElement = {
+  __typename?: "ScorecardElement";
+  label: Scalars["String"];
+  code: Scalars["String"];
+};
+
+export type ScorecardPage = {
+  __typename?: "ScorecardPage";
+  title?: Maybe<Scalars["String"]>;
+  elements: Array<ScorecardElement>;
+};
+
+export type ScorecardJob = {
+  __typename?: "ScorecardJob";
+  number: Scalars["String"];
+  personResponsible: Scalars["String"];
+};
+
+export type PostScorecardInput = {
+  job: Scalars["String"];
   operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
 };
 
-export type SaveGrowFinishInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
+export type SaveScorecardInput = {
+  job: Scalars["String"];
+  operator: Scalars["String"];
 };
 
-export type GrowFinishScorecardResult = {
-  __typename?: "GrowFinishScorecardResult";
+export type ScorecardResult = {
+  __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+  scorecard: Scorecard;
+};
+
+export type Scorecard = {
+  __typename?: "Scorecard";
+  job: Job;
+  date?: Maybe<Scalars["String"]>;
+  operator?: Maybe<Resource>;
 };
 
 export type SetAreaOperatorInput = {
@@ -818,11 +848,20 @@ export type ResolversTypes = ResolversObject<{
       scorecard: ResolversTypes["FarrowingBackendScorecard"];
     }
   >;
-  PostGrowFinishScorecardInput: PostGrowFinishScorecardInput;
-  SaveGrowFinishInput: SaveGrowFinishInput;
-  GrowFinishScorecardResult: ResolverTypeWrapper<
-    Omit<GrowFinishScorecardResult, "scorecard"> & {
-      scorecard: ResolversTypes["FarrowingBackendScorecard"];
+  ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
+  ScorecardPage: ResolverTypeWrapper<ScorecardPage>;
+  ScorecardJob: ResolverTypeWrapper<ScorecardJob>;
+  PostScorecardInput: PostScorecardInput;
+  SaveScorecardInput: SaveScorecardInput;
+  ScorecardResult: ResolverTypeWrapper<
+    Omit<ScorecardResult, "scorecard"> & {
+      scorecard: ResolversTypes["Scorecard"];
+    }
+  >;
+  Scorecard: ResolverTypeWrapper<
+    Omit<Scorecard, "job" | "operator"> & {
+      job: ResolversTypes["Job"];
+      operator?: Maybe<ResolversTypes["Resource"]>;
     }
   >;
   SetAreaOperatorInput: SetAreaOperatorInput;
@@ -925,10 +964,17 @@ export type ResolversParentTypes = ResolversObject<{
     FarrowingBackendScorecardResult,
     "scorecard"
   > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
-  PostGrowFinishScorecardInput: PostGrowFinishScorecardInput;
-  SaveGrowFinishInput: SaveGrowFinishInput;
-  GrowFinishScorecardResult: Omit<GrowFinishScorecardResult, "scorecard"> & {
-    scorecard: ResolversParentTypes["FarrowingBackendScorecard"];
+  ScorecardElement: ScorecardElement;
+  ScorecardPage: ScorecardPage;
+  ScorecardJob: ScorecardJob;
+  PostScorecardInput: PostScorecardInput;
+  SaveScorecardInput: SaveScorecardInput;
+  ScorecardResult: Omit<ScorecardResult, "scorecard"> & {
+    scorecard: ResolversParentTypes["Scorecard"];
+  };
+  Scorecard: Omit<Scorecard, "job" | "operator"> & {
+    job: ResolversParentTypes["Job"];
+    operator?: Maybe<ResolversParentTypes["Resource"]>;
   };
   SetAreaOperatorInput: SetAreaOperatorInput;
   SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
@@ -1354,11 +1400,18 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFarrowingBackendScorecardArgs, "area">
   >;
+  growFinishJob?: Resolver<
+    Maybe<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGrowFinishJobArgs, "number">
+  >;
   growFinishJobs?: Resolver<
     Array<ResolversTypes["Job"]>,
     ParentType,
     ContextType
   >;
+  listJobs?: Resolver<Array<ResolversTypes["Job"]>, ParentType, ContextType>;
   locations?: Resolver<
     Array<ResolversTypes["Location"]>,
     ParentType,
@@ -1444,6 +1497,12 @@ export type QueryResolvers<
     Array<ResolversTypes["PigWeanEvent"]>,
     ParentType,
     ContextType
+  >;
+  scorecardPages?: Resolver<
+    Array<ResolversTypes["ScorecardPage"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryScorecardPagesArgs, "job">
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 }>;
@@ -1543,6 +1602,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSavePigWeanArgs, "input">
   >;
+  saveScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSaveScorecardArgs, "input">
+  >;
   setAreaOperator?: Resolver<
     ResolversTypes["SetAreaOperatorResult"],
     ParentType,
@@ -1598,13 +1663,58 @@ export type FarrowingBackendScorecardResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type GrowFinishScorecardResultResolvers<
+export type ScorecardElementResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["GrowFinishScorecardResult"] = ResolversParentTypes["GrowFinishScorecardResult"]
+  ParentType extends ResolversParentTypes["ScorecardElement"] = ResolversParentTypes["ScorecardElement"]
+> = ResolversObject<{
+  label?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardPageResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardPage"] = ResolversParentTypes["ScorecardPage"]
+> = ResolversObject<{
+  title?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  elements?: Resolver<
+    Array<ResolversTypes["ScorecardElement"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardJobResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardJob"] = ResolversParentTypes["ScorecardJob"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  personResponsible?: Resolver<
+    ResolversTypes["String"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardResult"] = ResolversParentTypes["ScorecardResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  scorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecard"],
+  scorecard?: Resolver<ResolversTypes["Scorecard"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Scorecard"] = ResolversParentTypes["Scorecard"]
+> = ResolversObject<{
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  date?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  operator?: Resolver<
+    Maybe<ResolversTypes["Resource"]>,
     ParentType,
     ContextType
   >;
@@ -1708,7 +1818,11 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FarrowingBackendScorecardResult?: FarrowingBackendScorecardResultResolvers<
     ContextType
   >;
-  GrowFinishScorecardResult?: GrowFinishScorecardResultResolvers<ContextType>;
+  ScorecardElement?: ScorecardElementResolvers<ContextType>;
+  ScorecardPage?: ScorecardPageResolvers<ContextType>;
+  ScorecardJob?: ScorecardJobResolvers<ContextType>;
+  ScorecardResult?: ScorecardResultResolvers<ContextType>;
+  Scorecard?: ScorecardResolvers<ContextType>;
   SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
   UserLocations?: UserLocationsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

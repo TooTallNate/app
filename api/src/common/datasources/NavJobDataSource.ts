@@ -1,4 +1,4 @@
-import { NavJob } from "../nav";
+import { NavJob, NavJobTask } from "../nav";
 import NavDataSource from "./NavDataSource";
 import { BooleanFilterExpression } from "../nav/filter";
 
@@ -66,5 +66,11 @@ export default class PigJobNavDataSource extends NavDataSource {
         }
       }
     );
+  }
+
+  getJobTasks(template: string): Promise<NavJobTask[]> {
+    let filter = this.buildFilter(f => f.equals("Job_No", template));
+
+    return this.get(`/JobTasks?$filter=${filter}`);
   }
 }

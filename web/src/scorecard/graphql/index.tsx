@@ -323,7 +323,9 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
+  growFinishJob?: Maybe<Job>;
   growFinishJobs: Array<Job>;
+  listJobs: Array<Job>;
   locations: Array<Location>;
   personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
@@ -340,6 +342,7 @@ export type Query = {
   pigPurchaseEventTypes: Array<PigPurchaseEvent>;
   pigWean: PigWean;
   pigWeanEventTypes: Array<PigWeanEvent>;
+  scorecardPages: Array<ScorecardPage>;
   user?: Maybe<User>;
 };
 
@@ -349,6 +352,10 @@ export type QueryFarrowingBackendAreaArgs = {
 
 export type QueryFarrowingBackendScorecardArgs = {
   area: Scalars["String"];
+};
+
+export type QueryGrowFinishJobArgs = {
+  number: Scalars["String"];
 };
 
 export type QueryPigAdjustmentArgs = {
@@ -375,6 +382,10 @@ export type QueryPigWeanArgs = {
   job: Scalars["String"];
 };
 
+export type QueryScorecardPagesArgs = {
+  job: Scalars["String"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
@@ -393,6 +404,7 @@ export type Mutation = {
   savePigMove: PigMoveResult;
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
+  saveScorecard: ScorecardResult;
   setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
@@ -457,6 +469,10 @@ export type MutationSavePigWeanArgs = {
   input: SavePigWeanInput;
 };
 
+export type MutationSaveScorecardArgs = {
+  input: SaveScorecardInput;
+};
+
 export type MutationSetAreaOperatorArgs = {
   input: SetAreaOperatorInput;
 };
@@ -516,32 +532,45 @@ export type FarrowingBackendScorecardResult = {
   scorecard: FarrowingBackendScorecard;
 };
 
-export type PostGrowFinishScorecardInput = {
-  area: Scalars["String"];
+export type ScorecardElement = {
+  __typename?: "ScorecardElement";
+  label: Scalars["String"];
+  code: Scalars["String"];
+};
+
+export type ScorecardPage = {
+  __typename?: "ScorecardPage";
+  title?: Maybe<Scalars["String"]>;
+  elements: Array<ScorecardElement>;
+};
+
+export type ScorecardJob = {
+  __typename?: "ScorecardJob";
+  number: Scalars["String"];
+  personResponsible: Scalars["String"];
+};
+
+export type PostScorecardInput = {
+  job: Scalars["String"];
   operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
 };
 
-export type SaveGrowFinishInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
+export type SaveScorecardInput = {
+  job: Scalars["String"];
+  operator: Scalars["String"];
 };
 
-export type GrowFinishScorecardResult = {
-  __typename?: "GrowFinishScorecardResult";
+export type ScorecardResult = {
+  __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+  scorecard: Scorecard;
+};
+
+export type Scorecard = {
+  __typename?: "Scorecard";
+  job: Job;
+  date?: Maybe<Scalars["String"]>;
+  operator?: Maybe<Resource>;
 };
 
 export type SetAreaOperatorInput = {
@@ -599,18 +628,21 @@ export type UpdateUserLocationsResult = {
 
 export type GrowFinishJobFieldsFragment = { __typename?: "Job" } & Pick<
   Job,
-  "number" | "description" | "inventory" | "deadQuantity"
+  "number" | "description"
 >;
 
-export type GrowFinishJobsQueryVariables = {};
+export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & Pick<
+  Scorecard,
+  "date"
+> & {
+    job: { __typename?: "Job" } & Pick<Job, "number">;
+    operator?: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
+  };
 
-export type GrowFinishJobsQuery = { __typename?: "Query" } & {
-  growFinishJobs: Array<
-    { __typename?: "Job" } & Pick<
-      Job,
-      "number" | "description" | "inventory" | "deadQuantity"
-    >
-  >;
+export type ScorecardJobsQueryVariables = {};
+
+export type ScorecardJobsQuery = { __typename?: "Query" } & {
+  jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
 };
 
 export type PersonResponsibleQueryVariables = {};
@@ -619,6 +651,32 @@ export type PersonResponsibleQuery = { __typename?: "Query" } & {
   personResponsible: Array<
     { __typename?: "Resource" } & Pick<Resource, "name" | "number">
   >;
+};
+
+export type NurseryFinisherScorecardQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
+  job?: Maybe<
+    { __typename?: "Job" } & Pick<Job, "number"> & {
+        personResponsible: { __typename?: "Resource" } & Pick<
+          Resource,
+          "name" | "number"
+        >;
+      }
+  >;
+};
+
+export type SaveScorecardMutationVariables = {
+  input: SaveScorecardInput;
+};
+
+export type SaveScorecardMutation = { __typename?: "Mutation" } & {
+  saveScorecard: { __typename?: "ScorecardResult" } & Pick<
+    ScorecardResult,
+    "success"
+  > & { scorecard: { __typename?: "Scorecard" } & ScorecardFieldsFragment };
 };
 
 export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
@@ -748,8 +806,17 @@ export const GrowFinishJobFieldsFragmentDoc = gql`
   fragment GrowFinishJobFields on Job {
     number
     description
-    inventory
-    deadQuantity
+  }
+`;
+export const ScorecardFieldsFragmentDoc = gql`
+  fragment ScorecardFields on Scorecard {
+    job {
+      number
+    }
+    date
+    operator {
+      number
+    }
   }
 `;
 export const FarrowingBackendAreaFieldsFragmentDoc = gql`
@@ -796,63 +863,61 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
-export const GrowFinishJobsDocument = gql`
-  query GrowFinishJobs {
-    growFinishJobs {
+export const ScorecardJobsDocument = gql`
+  query ScorecardJobs {
+    jobs: listJobs {
       number
       description
-      inventory
-      deadQuantity
     }
   }
 `;
 
 /**
- * __useGrowFinishJobsQuery__
+ * __useScorecardJobsQuery__
  *
- * To run a query within a React component, call `useGrowFinishJobsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGrowFinishJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useScorecardJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGrowFinishJobsQuery({
+ * const { data, loading, error } = useScorecardJobsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGrowFinishJobsQuery(
+export function useScorecardJobsQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GrowFinishJobsQuery,
-    GrowFinishJobsQueryVariables
+    ScorecardJobsQuery,
+    ScorecardJobsQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    GrowFinishJobsQuery,
-    GrowFinishJobsQueryVariables
-  >(GrowFinishJobsDocument, baseOptions);
+    ScorecardJobsQuery,
+    ScorecardJobsQueryVariables
+  >(ScorecardJobsDocument, baseOptions);
 }
-export function useGrowFinishJobsLazyQuery(
+export function useScorecardJobsLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GrowFinishJobsQuery,
-    GrowFinishJobsQueryVariables
+    ScorecardJobsQuery,
+    ScorecardJobsQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    GrowFinishJobsQuery,
-    GrowFinishJobsQueryVariables
-  >(GrowFinishJobsDocument, baseOptions);
+    ScorecardJobsQuery,
+    ScorecardJobsQueryVariables
+  >(ScorecardJobsDocument, baseOptions);
 }
-export type GrowFinishJobsQueryHookResult = ReturnType<
-  typeof useGrowFinishJobsQuery
+export type ScorecardJobsQueryHookResult = ReturnType<
+  typeof useScorecardJobsQuery
 >;
-export type GrowFinishJobsLazyQueryHookResult = ReturnType<
-  typeof useGrowFinishJobsLazyQuery
+export type ScorecardJobsLazyQueryHookResult = ReturnType<
+  typeof useScorecardJobsLazyQuery
 >;
-export type GrowFinishJobsQueryResult = ApolloReactCommon.QueryResult<
-  GrowFinishJobsQuery,
-  GrowFinishJobsQueryVariables
+export type ScorecardJobsQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardJobsQuery,
+  ScorecardJobsQueryVariables
 >;
 export const PersonResponsibleDocument = gql`
   query PersonResponsible {
@@ -909,6 +974,120 @@ export type PersonResponsibleLazyQueryHookResult = ReturnType<
 export type PersonResponsibleQueryResult = ApolloReactCommon.QueryResult<
   PersonResponsibleQuery,
   PersonResponsibleQueryVariables
+>;
+export const NurseryFinisherScorecardDocument = gql`
+  query NurseryFinisherScorecard($job: String!) {
+    job: growFinishJob(number: $job) {
+      number
+      personResponsible {
+        name
+        number
+      }
+    }
+  }
+`;
+
+/**
+ * __useNurseryFinisherScorecardQuery__
+ *
+ * To run a query within a React component, call `useNurseryFinisherScorecardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNurseryFinisherScorecardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNurseryFinisherScorecardQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function useNurseryFinisherScorecardQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    NurseryFinisherScorecardQuery,
+    NurseryFinisherScorecardQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    NurseryFinisherScorecardQuery,
+    NurseryFinisherScorecardQueryVariables
+  >(NurseryFinisherScorecardDocument, baseOptions);
+}
+export function useNurseryFinisherScorecardLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    NurseryFinisherScorecardQuery,
+    NurseryFinisherScorecardQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    NurseryFinisherScorecardQuery,
+    NurseryFinisherScorecardQueryVariables
+  >(NurseryFinisherScorecardDocument, baseOptions);
+}
+export type NurseryFinisherScorecardQueryHookResult = ReturnType<
+  typeof useNurseryFinisherScorecardQuery
+>;
+export type NurseryFinisherScorecardLazyQueryHookResult = ReturnType<
+  typeof useNurseryFinisherScorecardLazyQuery
+>;
+export type NurseryFinisherScorecardQueryResult = ApolloReactCommon.QueryResult<
+  NurseryFinisherScorecardQuery,
+  NurseryFinisherScorecardQueryVariables
+>;
+export const SaveScorecardDocument = gql`
+  mutation saveScorecard($input: SaveScorecardInput!) {
+    saveScorecard(input: $input) {
+      success
+      scorecard {
+        ...ScorecardFields
+      }
+    }
+  }
+  ${ScorecardFieldsFragmentDoc}
+`;
+export type SaveScorecardMutationFn = ApolloReactCommon.MutationFunction<
+  SaveScorecardMutation,
+  SaveScorecardMutationVariables
+>;
+
+/**
+ * __useSaveScorecardMutation__
+ *
+ * To run a mutation, you first call `useSaveScorecardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveScorecardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveScorecardMutation, { data, loading, error }] = useSaveScorecardMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSaveScorecardMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SaveScorecardMutation,
+    SaveScorecardMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SaveScorecardMutation,
+    SaveScorecardMutationVariables
+  >(SaveScorecardDocument, baseOptions);
+}
+export type SaveScorecardMutationHookResult = ReturnType<
+  typeof useSaveScorecardMutation
+>;
+export type SaveScorecardMutationResult = ApolloReactCommon.MutationResult<
+  SaveScorecardMutation
+>;
+export type SaveScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SaveScorecardMutation,
+  SaveScorecardMutationVariables
 >;
 export const FarrowingBackendScorecardAreasDocument = gql`
   query FarrowingBackendScorecardAreas {

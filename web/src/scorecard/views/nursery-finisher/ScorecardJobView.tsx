@@ -19,7 +19,7 @@ import FormSubmit from "../../../common/components/form/FormSubmit";
 import FormFieldErrors from "../../../common/components/form/FormFieldErrors";
 import ViewContent from "../../../common/components/view/ViewContent";
 import InventoryField from "../../../pig-activity/components/InventoryField";
-import { useGrowFinishJobsQuery } from "../../graphql";
+import { useScorecardJobsQuery } from "../../graphql";
 import Button from "../../../common/components/input/Button";
 import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
 import {
@@ -33,42 +33,18 @@ interface FormData {
 }
 
 const ScorecardJobView: React.FC = () => {
-  const { updateForm } = useGrowFinish();
+  const { setJob } = useGrowFinish();
   const match = useRouteMatch();
   const history = useHistory();
   const formContext = useForm<FormData>();
-  const { data, loading } = useGrowFinishJobsQuery({});
+  const { data, loading } = useScorecardJobsQuery({});
 
   console.log(match);
 
   const onSubmit: OnSubmit<FormData> = data => {
-    updateForm({ job: data.job });
+    setJob(data.job);
     history.push(`${match.path}/metadata`);
   };
-
-  // const onSave = async () => {
-  //   try {
-  //     await save({
-  //       variables: {
-  //         input: {
-  //           ...getValues(),
-  //           job: params.job
-  //         }
-  //       }
-  //     });
-  //     setMessage({
-  //       message: "Entry saved successfully.",
-  //       level: "success",
-  //       timeout: 2000
-  //     });
-  //     history.push("/");
-  //   } catch (e) {
-  //     setMessage({
-  //       message: e.toString(),
-  //       level: "error"
-  //     });
-  //   }
-  // };
 
   return (
     <View>
@@ -88,7 +64,7 @@ const ScorecardJobView: React.FC = () => {
               <FormFieldInput>
                 <TypeaheadInput
                   sort="desc"
-                  items={data.growFinishJobs.map(job => ({
+                  items={data.jobs.map(job => ({
                     value: job.number,
                     title: `${job.number} ${job.description}`
                   }))}

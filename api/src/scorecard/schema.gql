@@ -48,31 +48,62 @@ type FarrowingBackendScorecardResult {
   scorecard: FarrowingBackendScorecard!
 }
 
-input PostGrowFinishScorecardInput {
-  area: String!
+type ScorecardElement {
+  label: String!
+  code: String!
+}
+
+type ScorecardPage {
+  title: String
+  elements: [ScorecardElement!]!
+}
+
+type ScorecardJob {
+  number: String!
+  #TODO change to resource
+  personResponsible: String!
+  # scorecardPages: [ScorecardPage!]!
+}
+
+# type GrowFinishScorecard {
+#   job: Job!
+#   operator: Resource
+# }
+
+# input PostGrowFinishScorecardInput {
+#   job: String!
+#   operator: String!
+# }
+
+# input SaveGrowFinishScorecardInput {
+#   job: String!
+#   operator: String
+# }
+
+# type GrowFinishScorecardResult {
+#   success: Boolean!
+#   scorecard: GrowFinishScorecard!
+# }
+
+input PostScorecardInput {
+  job: String!
   operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
 }
 
-input SaveGrowFinishInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
+input SaveScorecardInput {
+  job: String!
+  operator: String!
 }
 
-type GrowFinishScorecardResult {
+type ScorecardResult {
   success: Boolean!
-  scorecard: FarrowingBackendScorecard!
+  scorecard: Scorecard!
+}
+
+type Scorecard {
+  job: Job!
+  date: String
+  operator: Resource
 }
 
 
@@ -86,15 +117,17 @@ type SetAreaOperatorResult {
   area: Job!
 }
 
-
-
 type Query {
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
   growFinishJobs: [Job!]!
+  # add support for this job input
+  scorecardPages(job: String!): [ScorecardPage!]!
   personResponsible: [Resource!]!
+  listJobs: [Job!]!
+  growFinishJob(number: String!): Job
 }
 
 type Mutation {
@@ -102,5 +135,9 @@ type Mutation {
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   # postGrowFinishScorecard(input: PostGrowFinishScorecardInput!): GrowFinishScorecardResult!
-  saveGrowFinishScorecard(input: SaveGrowFinishScorecardInput!): GrowFinishScorecardResult!
+  # saveGrowFinishScorecard(input: SaveGrowFinishScorecardInput!): GrowFinishScorecardResult!
+  saveScorecard(input: SaveScorecardInput!): ScorecardResult!
+  # add this when we get to post
+  # postScoreCard(input: PostScorecardInput!): ScorecardResult!
+
 }

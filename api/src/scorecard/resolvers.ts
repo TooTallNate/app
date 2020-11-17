@@ -2,7 +2,9 @@ import {
   MutationResolvers,
   QueryResolvers,
   ScorecardEntry,
-  FarrowingBackendScorecardResolvers
+  FarrowingBackendScorecardResolvers,
+  ScorecardJobResolvers,
+  ScorecardPageResolvers
 } from "../common/graphql";
 import {
   NavJobJournalLine,
@@ -14,6 +16,7 @@ import {
 import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
+import GrowFinishScorecardModel from "./models/GrowFinishScorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalLine>,
@@ -55,9 +58,13 @@ export const queries: QueryResolvers = {
       postingGroups: ["FARROW-BE"]
     });
   },
+  //refactor to job
   farrowingBackendArea(_, { number }, { dataSources }) {
     return dataSources.navJob.getByNo(number);
   },
+  // job(_, { number }, { dataSources }) {
+  //   return dataSources.navJob.getByNo(number);
+  // },
   farrowingBackendOperators(_, __, { dataSources }) {
     return dataSources.navResource.getAll({
       groups: ["FARROW-BE"]
@@ -68,6 +75,26 @@ export const queries: QueryResolvers = {
       isOpen: true,
       postingGroups: ["NURSGROWSITE"]
     });
+  },
+  async scorecardPages(_, { job }, { dataSources }) {
+    const tasks = await dataSources.navJob.getJobTasks(job);
+    return tasks.reduce((pages, task) => {
+      if (task.Job_Task_Type === "Heading") {
+        pages.push({
+          title: task.Description,
+          elements: []
+        });
+      } else if (task.Job_Task_Type === "Posting") {
+        const page = pages.slice(-1)[0];
+        if (page) {
+          page.elements.push({
+            label: task.Description,
+            code: task.Job_Task_No.substring(4)
+          });
+        }
+      }
+      return pages;
+    }, []);
   }
 };
 
@@ -126,6 +153,28 @@ export const mutations: MutationResolvers = {
 
     return { success: true, scorecard: doc };
   },
+  // async saveScorecard(_, { input }) {
+  //   let doc = await GrowFinishScorecardModel.findOne({
+  //     job: input.job
+  //   });
+  //   if (!doc) {
+  //     doc = new GrowFinishScorecardModel(input);
+  //   } else {
+  //     await doc.save();
+  //     return { success: true, scorecard: doc };
+  //   }
+  // },
+  // async postGrowFinishScorecard(_, { input }) {
+  //   let doc =
+  //     (await GrowFinishScorecardModel.findOne({
+  //       job: input.job
+  //     })) || new GrowFinishScorecardModel();
+  //   doc.overwrite({
+  //     job: input.job
+  //   });
+  //   await doc.save();
+  //   return { success: true, scorecard: doc };
+  // },
   async setAreaOperator(_, { input }, { dataSources }) {
     const area = await dataSources.navJob.updatePersonResponsible(
       input.area,

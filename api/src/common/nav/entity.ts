@@ -89,3 +89,13 @@ export interface NavStandardItemJournal {
   Code: string;
   Description: string;
 }
+
+export interface NavJobTask {
+  Job_No: string;
+  Job_Task_No: string;
+  Description: string;
+  Job_Task_Type: string;
+  WIP_Total: number;
+  Totaling: number;
+  Job_Posting_Group: string;
+}
