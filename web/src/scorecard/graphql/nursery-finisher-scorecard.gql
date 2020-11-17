@@ -14,9 +14,10 @@ fragment ScorecardFields on Scorecard {
 }
 
 query ScorecardJobs {
-  jobs: listJobs {
+  jobs(input: { group: "NURSGROWSITE" }) {
     number
     description
+  
   }
 }
 
@@ -28,8 +29,9 @@ query PersonResponsible {
 }
 
 query NurseryFinisherScorecard($job: String!) {
-  job: growFinishJob(number: $job) {
+  job: job(number: $job) {
     number
+    # what is the scorecard term for operator?
     personResponsible {
       name
       number

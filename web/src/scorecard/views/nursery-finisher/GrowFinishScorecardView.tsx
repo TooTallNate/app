@@ -3,7 +3,7 @@ import { RouteComponentProps, Route, Redirect } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import ScorecardJobView from "./ScorecardJobView";
 import { GrowFinishScorecardProvider } from "../../contexts/growFinish";
-import ScorecardMetadataView from "./ScorecardMetadataView";
+import ScorecardSubmitView from "./ScorecardSubmitView";
 
 const GrowFinishScorecardView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
@@ -12,8 +12,8 @@ const GrowFinishScorecardView: React.FC<RouteComponentProps> = ({ match }) => {
         <Route exact path={`${match.url}/job`} component={ScorecardJobView} />
         <Route
           exact
-          path={`${match.url}/job/metadata`}
-          component={ScorecardMetadataView}
+          path={`${match.url}/job/submit`}
+          component={ScorecardSubmitView}
         />
         <Redirect to={`${match.url}/job`} />
       </Switch>

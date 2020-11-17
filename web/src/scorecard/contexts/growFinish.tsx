@@ -17,11 +17,7 @@ export interface GrowFinishContextValue {
   submit(): Promise<void>;
 }
 
-export interface FormValues {
-  job?: string;
-  date?: Date;
-  personResponsible?: String;
-}
+export interface FormValues {}
 
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
@@ -43,10 +39,17 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   //does this need to be async()?
   useEffect(() => {
-    if (jobLoaded.current) {
-      // saveMethod(formState);
+    if (jobLoaded.current && job) {
+      saveMethod({
+        variables: {
+          input: {
+            ...formState,
+            job: job
+          }
+        }
+      });
     }
-  }, [formState, saveMethod]);
+  }, [formState, job, history, saveMethod]);
 
   // add this to the context
   const setJob = useCallback((job?: string) => {
@@ -57,14 +60,6 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     // Load the form state
     jobLoaded.current = true;
   }, []);
-
-  //import these
-  // add these to the context
-  //move this up to the useEffect
-  // const save = useCallback(async () => {
-  //   await saveMethod(formState);
-  // }, [formState, history, saveMethod]);
-  // //execute save request to send to server
 
   const submit = useCallback(async () => {
     // await submitMethod(formState);

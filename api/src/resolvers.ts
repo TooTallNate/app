@@ -7,7 +7,8 @@ export default {
   Query: {
     ...users.queries,
     ...scorecard.queries,
-    ...pigActivity.queries
+    ...pigActivity.queries,
+    ...common.queries
   },
   Mutation: {
     ...users.mutations,

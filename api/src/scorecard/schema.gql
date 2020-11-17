@@ -75,7 +75,7 @@ input PostScorecardInput {
 
 input SaveScorecardInput {
   job: String!
-  operator: String!
+  operator: String
 }
 
 type ScorecardResult {
@@ -86,7 +86,10 @@ type ScorecardResult {
 type Scorecard {
   job: Job!
   date: String
+  
   operator: Resource
+  # pages
+  # data
 }
 
 
@@ -100,25 +103,23 @@ type SetAreaOperatorResult {
   area: Job!
 }
 
-
-
 type Query {
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
+  # remove this when common is working
   growFinishJobs: [Job!]!
   personResponsible: [Resource!]!
-  listJobs: [Job!]!
-  growFinishJob(number: String!): Job
+
+
+  scorecard(job: String!): Scorecard
 }
 
 type Mutation {
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  # postGrowFinishScorecard(input: PostGrowFinishScorecardInput!): GrowFinishScorecardResult!
-  # saveGrowFinishScorecard(input: SaveGrowFinishScorecardInput!): GrowFinishScorecardResult!
   saveScorecard(input: SaveScorecardInput!): ScorecardResult!
   # add this when we get to post
   # postScoreCard(input: PostScorecardInput!): ScorecardResult!

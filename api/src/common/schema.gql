@@ -30,3 +30,20 @@ type Location {
   code: String!
   name: String!
 }
+
+input JobFilter {
+  group: String
+}
+
+input ResourceFilter {
+  group: String
+  type: String
+}
+
+type Query {
+  resources(input: ResourceFilter): [Resource!]!
+  resource(code: String!): Resource
+  jobs(input: JobFilter): [Job!]!
+  job(number: String!): Job
+}
+
