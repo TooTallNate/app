@@ -37,6 +37,13 @@ query NurseryFinisherScorecard($job: String!) {
       number
     }
   }
+  scorecardPages(job: $job) {
+    title
+    elements {
+      label
+      code
+    }
+  }
   # scorecardConfig(job: $job) {
   #   # pages?
   # }
