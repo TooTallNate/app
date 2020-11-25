@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
 import ViewHeader from "../../../common/components/view/ViewHeader";
@@ -14,53 +14,47 @@ import FormFieldErrors from "../../../common/components/form/FormFieldErrors";
 import ViewContent from "../../../common/components/view/ViewContent";
 import { useScorecardJobsQuery } from "../../graphql";
 import { useGrowFinish } from "../../contexts/growFinish";
+import ScorecardYesNo from "../../components/ScorecardYesNo";
 
 interface FormData {
   job: string;
 }
-R;
 
 const ScorecardJobView: React.FC = () => {
-  const { setJob } = useGrowFinish();
-  const match = useRouteMatch();
-  const history = useHistory();
-  const formContext = useForm<FormData>();
-  const { data, loading } = useScorecardJobsQuery({});
+  const params = useParams<{ page: string }>();
+  const { formConfig } = useGrowFinish();
+  const formContext = useForm();
 
-  const onSubmit: OnSubmit<FormData> = data => {
-    setJob(data.job);
-    history.push(`${match.path}/page/1`);
-  };
+  const pageNumber = parseInt(params.page);
+  const pageConfig = formConfig[pageNumber - 1];
+
+  console.log(formContext.getValues());
 
   return (
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Job Selection</Title>
+        <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
       </ViewHeader>
-      <ViewContent loading={loading}>
-        {data && (
-          <Form context={formContext} onSubmit={onSubmit}>
-            <FormField
-              name="job"
-              rules={{
-                required: "The job field is required."
-              }}
-            >
-              <FormFieldInput>
-                <TypeaheadInput
-                  sort="desc"
-                  items={data.jobs.map(job => ({
-                    value: job.number,
-                    title: `${job.number} ${job.description}`
-                  }))}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormSubmit>Continue</FormSubmit>
-          </Form>
-        )}
+      <ViewContent>
+        <Form context={formContext}>
+          {pageConfig &&
+            pageConfig.elements.map(element => {
+              switch (element.code) {
+                case "YN":
+                  return (
+                    <ScorecardYesNo
+                      key={element.label}
+                      label={element.label}
+                      name="test"
+                    />
+                  );
+                default:
+                  return null;
+              }
+            })}
+          <FormSubmit>Continue</FormSubmit>
+        </Form>
       </ViewContent>
     </View>
   );

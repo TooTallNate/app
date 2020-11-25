@@ -4,6 +4,7 @@ import { Switch } from "react-router-dom";
 import ScorecardJobView from "./ScorecardJobView";
 import { GrowFinishScorecardProvider } from "../../contexts/growFinish";
 import ScorecardSubmitView from "./ScorecardSubmitView";
+import ScorecardPageView from "./ScorecardPageView";
 
 const GrowFinishScorecardView: React.FC<RouteComponentProps> = ({ match }) => {
   return (
@@ -11,6 +12,10 @@ const GrowFinishScorecardView: React.FC<RouteComponentProps> = ({ match }) => {
       <Switch>
         <Route exact path={`${match.url}/job`} component={ScorecardJobView} />
         {/* Add a view with route /job/:page. This view takes title and elements from page list in form config */}
+        <Route
+          path={`${match.url}/job/page/:page`}
+          component={ScorecardPageView}
+        />
         <Route
           exact
           path={`${match.url}/job/submit`}

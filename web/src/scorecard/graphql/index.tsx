@@ -694,6 +694,16 @@ export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
         >;
       }
   >;
+  scorecardPages: Array<
+    { __typename?: "ScorecardPage" } & Pick<ScorecardPage, "title"> & {
+        elements: Array<
+          { __typename?: "ScorecardElement" } & Pick<
+            ScorecardElement,
+            "label" | "code"
+          >
+        >;
+      }
+  >;
 };
 
 export type SaveScorecardMutationVariables = {
@@ -1010,6 +1020,13 @@ export const NurseryFinisherScorecardDocument = gql`
       personResponsible {
         name
         number
+      }
+    }
+    scorecardPages(job: $job) {
+      title
+      elements {
+        label
+        code
       }
     }
   }

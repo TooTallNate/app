@@ -4,15 +4,19 @@ import React, {
   useState,
   useCallback,
   useEffect,
-  useRef
+  useRef,
+  useMemo
 } from "react";
 import { useHistory } from "react-router-dom";
-import { useSaveScorecardMutation } from "../graphql";
+import {
+  useSaveScorecardMutation,
+  useNurseryFinisherScorecardLazyQuery
+} from "../graphql";
 
 export interface GrowFinishContextValue {
   job?: string;
-  formConfig?: FormConfig;
   formState: FormValues;
+  formConfig: FormPage[];
   setJob(job?: string): void;
   updateForm(values?: FormValues): void;
   submit(): Promise<void>;
@@ -25,6 +29,14 @@ export interface FormConfig {
 
 export interface FormValues {}
 
+export interface FormPage {
+  title?: string | null;
+  elements: {
+    label: string;
+    code: string;
+  }[];
+}
+
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
@@ -33,6 +45,7 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   // Lazy query hook for the scorecard job and pages.
 
+  const [loadJob, { data }] = useNurseryFinisherScorecardLazyQuery();
   const [saveMethod] = useSaveScorecardMutation();
   // const [submitMethod] = postScorecard();
   // const [formConfig, setFormConfig] = useState<object>({});
@@ -60,25 +73,31 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   }, [formState, job, history, saveMethod]);
 
   // add this to the context
-  const setJob = useCallback((job?: string) => {
-    jobLoaded.current = false;
-    // Set the job state
-    setJobInternal(job);
-    //call function returned from useLazyNFQuery here
-    // Load the form config
-    // Load the form state
-    jobLoaded.current = true;
-  }, []);
+  const setJob = useCallback(
+    (job?: string) => {
+      jobLoaded.current = false;
+      setJobInternal(job);
+      if (job) {
+        loadJob({ variables: { job } });
+      }
+      jobLoaded.current = true;
+    },
+    [loadJob]
+  );
 
   const submit = useCallback(async () => {
     // await submitMethod(formState);
     history.push("/");
   }, [history]);
 
-  // Add formconfig to provider.
+  const formConfig = useMemo<FormPage[]>(
+    () => (data && data.scorecardPages) || [],
+    [data]
+  );
+
   return (
     <GrowFinishContext.Provider
-      value={{ job, formState, updateForm, submit, setJob }}
+      value={{ job, formState, formConfig, updateForm, submit, setJob }}
     >
       {children}
     </GrowFinishContext.Provider>
