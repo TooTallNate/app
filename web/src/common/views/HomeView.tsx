@@ -17,12 +17,10 @@ const HomeView: React.FC = () => {
           <StackedNavLink to="/pigs/sow-farm">
             Sow Farm Pig Activity
           </StackedNavLink>
-          <StackedNavLink to="/scorecard">
+          <StackedNavLink to="/old-scorecard">
             Backend Farrowing Scorecard
           </StackedNavLink>
-          <StackedNavLink to="/grow-finish-scorecard">
-            Grow/Finish Scorecard
-          </StackedNavLink>
+          <StackedNavLink to="/scorecard">Grow/Finish Scorecard</StackedNavLink>
         </StackedNav>
       </ViewContent>
     </View>

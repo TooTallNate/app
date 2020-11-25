@@ -2,18 +2,30 @@ import { Schema, model, Document } from "mongoose";
 
 export interface ScorecardDocument extends Document {
   job: string;
-  operator: string;
-  date: string;
+  data: {
+    elementId: string;
+    numericValue: number;
+    stringValue: string;
+  }[];
 }
 
 const ScorecardSchema = new Schema(
   {
-    area: {
+    job: {
       type: String,
-      require: true,
+      required: true,
       unique: true
     },
-    operator: String
+    data: [
+      {
+        elementId: {
+          type: String,
+          required: true
+        },
+        numericValue: Number,
+        stringValue: String
+      }
+    ]
   },
   {
     timestamps: true

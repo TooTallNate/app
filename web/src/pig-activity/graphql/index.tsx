@@ -23,6 +23,7 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  location: Location;
 };
 
 export type Item = {
@@ -50,7 +51,8 @@ export type Location = {
 };
 
 export type JobFilter = {
-  group?: Maybe<Scalars["String"]>;
+  groups?: Maybe<Array<Scalars["String"]>>;
+  locations?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type ResourceFilter = {
@@ -562,8 +564,10 @@ export type FarrowingBackendScorecardResult = {
 
 export type ScorecardElement = {
   __typename?: "ScorecardElement";
+  id: Scalars["ID"];
   label: Scalars["String"];
   code: Scalars["String"];
+  order: Scalars["Int"];
 };
 
 export type ScorecardPage = {
@@ -583,9 +587,15 @@ export type PostScorecardInput = {
   operator: Scalars["String"];
 };
 
+export type ScorecardElementResponseInput = {
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
+};
+
 export type SaveScorecardInput = {
   job: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
+  data: Array<ScorecardElementResponseInput>;
 };
 
 export type ScorecardResult = {
@@ -594,11 +604,17 @@ export type ScorecardResult = {
   scorecard: Scorecard;
 };
 
+export type ScorecardElementResponse = {
+  __typename?: "ScorecardElementResponse";
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
+};
+
 export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
-  date?: Maybe<Scalars["String"]>;
-  operator?: Maybe<Resource>;
+  data: Array<ScorecardElementResponse>;
 };
 
 export type SetAreaOperatorInput = {

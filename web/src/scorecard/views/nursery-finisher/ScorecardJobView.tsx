@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
@@ -18,18 +18,20 @@ import { useGrowFinish } from "../../contexts/growFinish";
 interface FormData {
   job: string;
 }
-R;
 
 const ScorecardJobView: React.FC = () => {
   const { setJob } = useGrowFinish();
-  const match = useRouteMatch();
   const history = useHistory();
   const formContext = useForm<FormData>();
   const { data, loading } = useScorecardJobsQuery({});
 
+  useEffect(() => {
+    setJob(undefined);
+  }, [setJob]);
+
   const onSubmit: OnSubmit<FormData> = data => {
     setJob(data.job);
-    history.push(`${match.path}/page/1`);
+    history.push(`/scorecard/${data.job}/page/1`);
   };
 
   return (

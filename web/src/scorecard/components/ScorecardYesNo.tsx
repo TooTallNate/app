@@ -9,17 +9,19 @@ import StackedRadioButton from "../../common/components/input/StackedRadioButton
 
 export interface ScorecardYesNoProps {
   label: string;
-  name: string;
+  id: string;
 }
 
-const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, name }) => {
+const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, id }) => {
+  const name = `${id}.numericValue`;
+
   return (
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput>
         <StackedInput orientation="horizontal">
-          <StackedRadioButton value="yes">Yes</StackedRadioButton>
-          <StackedRadioButton value="no">No</StackedRadioButton>
+          <StackedRadioButton value={1}>Yes</StackedRadioButton>
+          <StackedRadioButton value={-1}>No</StackedRadioButton>
         </StackedInput>
       </FormFieldInput>
       <FormFieldErrors />

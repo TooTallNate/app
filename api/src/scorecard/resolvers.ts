@@ -2,7 +2,8 @@ import {
   MutationResolvers,
   QueryResolvers,
   ScorecardEntry,
-  FarrowingBackendScorecardResolvers
+  FarrowingBackendScorecardResolvers,
+  ScorecardResolvers
 } from "../common/graphql";
 import {
   NavJobJournalLine,
@@ -14,7 +15,7 @@ import {
 import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
-import GrowFinishScorecardModel from "./models/Scorecard";
+import ScorecardModel from "./models/Scorecard";
 
 function postJobJournal(
   entry: Partial<NavJobJournalLine>,
@@ -43,6 +44,12 @@ const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
   room: scorecard => scorecard.room || {}
 };
 
+const Scorecard: ScorecardResolvers = {
+  job(scorecard, _, { dataSources }) {
+    return dataSources.navJob.getByNo(scorecard.job);
+  }
+};
+
 export const queries: QueryResolvers = {
   async farrowingBackendScorecard(_, { area }) {
     return (
@@ -68,6 +75,9 @@ export const queries: QueryResolvers = {
       groups: ["FARROW-BE"]
     });
   },
+  async scorecard(_, { job }) {
+    return await ScorecardModel.findOne({ job });
+  },
   async scorecardPages(_, { job }, { dataSources }) {
     const tasks = await dataSources.navJob.getJobTasks(job);
     return tasks.reduce((pages, task) => {
@@ -80,8 +90,10 @@ export const queries: QueryResolvers = {
         const page = pages.slice(-1)[0];
         if (page) {
           page.elements.push({
+            id: task.Job_Task_No,
             label: task.Description,
-            code: task.Job_Task_No.substring(4)
+            code: task.Job_Task_No.substring(4),
+            order: parseInt(task.Job_Task_No) || 0
           });
         }
       }
@@ -146,15 +158,16 @@ export const mutations: MutationResolvers = {
     return { success: true, scorecard: doc };
   },
   async saveScorecard(_, { input }) {
-    let doc = await GrowFinishScorecardModel.findOne({
+    let doc = await ScorecardModel.findOne({
       job: input.job
     });
     if (!doc) {
-      doc = new GrowFinishScorecardModel(input);
+      doc = new ScorecardModel(input);
     } else {
-      await doc.save();
-      return { success: true, scorecard: doc };
+      doc.overwrite(input);
     }
+    await doc.save();
+    return { success: true, scorecard: doc };
   },
   // async postGrowFinishScorecard(_, { input }) {
   //   let doc =
@@ -178,5 +191,6 @@ export const mutations: MutationResolvers = {
 };
 
 export const types = {
+  Scorecard,
   FarrowingBackendScorecard
 };

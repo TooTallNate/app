@@ -23,6 +23,7 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  location: Location;
 };
 
 export type Item = {
@@ -50,7 +51,8 @@ export type Location = {
 };
 
 export type JobFilter = {
-  group?: Maybe<Scalars["String"]>;
+  groups?: Maybe<Array<Scalars["String"]>>;
+  locations?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type ResourceFilter = {
@@ -562,8 +564,10 @@ export type FarrowingBackendScorecardResult = {
 
 export type ScorecardElement = {
   __typename?: "ScorecardElement";
+  id: Scalars["ID"];
   label: Scalars["String"];
   code: Scalars["String"];
+  order: Scalars["Int"];
 };
 
 export type ScorecardPage = {
@@ -583,9 +587,15 @@ export type PostScorecardInput = {
   operator: Scalars["String"];
 };
 
+export type ScorecardElementResponseInput = {
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
+};
+
 export type SaveScorecardInput = {
   job: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
+  data: Array<ScorecardElementResponseInput>;
 };
 
 export type ScorecardResult = {
@@ -594,11 +604,17 @@ export type ScorecardResult = {
   scorecard: Scorecard;
 };
 
+export type ScorecardElementResponse = {
+  __typename?: "ScorecardElementResponse";
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
+};
+
 export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
-  date?: Maybe<Scalars["String"]>;
-  operator?: Maybe<Resource>;
+  data: Array<ScorecardElementResponse>;
 };
 
 export type SetAreaOperatorInput = {
@@ -654,18 +670,15 @@ export type UpdateUserLocationsResult = {
   locations: UserLocations;
 };
 
-export type GrowFinishJobFieldsFragment = { __typename?: "Job" } & Pick<
-  Job,
-  "number" | "description"
->;
-
-export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & Pick<
-  Scorecard,
-  "date"
-> & {
-    job: { __typename?: "Job" } & Pick<Job, "number">;
-    operator?: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
-  };
+export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
+  job: { __typename?: "Job" } & Pick<Job, "number">;
+  data: Array<
+    { __typename?: "ScorecardElementResponse" } & Pick<
+      ScorecardElementResponse,
+      "elementId" | "numericValue" | "stringValue"
+    >
+  >;
+};
 
 export type ScorecardJobsQueryVariables = {};
 
@@ -673,11 +686,19 @@ export type ScorecardJobsQuery = { __typename?: "Query" } & {
   jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
 };
 
-export type PersonResponsibleQueryVariables = {};
+export type ScorecardPigJobsQueryVariables = {
+  location: Scalars["String"];
+};
 
-export type PersonResponsibleQuery = { __typename?: "Query" } & {
-  personResponsible: Array<
-    { __typename?: "Resource" } & Pick<Resource, "name" | "number">
+export type ScorecardPigJobsQuery = { __typename?: "Query" } & {
+  jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
+};
+
+export type ScorecardPeopleQueryVariables = {};
+
+export type ScorecardPeopleQuery = { __typename?: "Query" } & {
+  people: Array<
+    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
   >;
 };
 
@@ -688,9 +709,10 @@ export type NurseryFinisherScorecardQueryVariables = {
 export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
   job?: Maybe<
     { __typename?: "Job" } & Pick<Job, "number"> & {
+        location: { __typename?: "Location" } & Pick<Location, "code">;
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
-          "name" | "number"
+          "number"
         >;
       }
   >;
@@ -699,11 +721,12 @@ export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
         elements: Array<
           { __typename?: "ScorecardElement" } & Pick<
             ScorecardElement,
-            "label" | "code"
+            "id" | "label" | "code" | "order"
           >
         >;
       }
   >;
+  scorecard?: Maybe<{ __typename?: "Scorecard" } & ScorecardFieldsFragment>;
 };
 
 export type SaveScorecardMutationVariables = {
@@ -840,20 +863,15 @@ export type SetAreaOperatorMutation = { __typename?: "Mutation" } & {
   };
 };
 
-export const GrowFinishJobFieldsFragmentDoc = gql`
-  fragment GrowFinishJobFields on Job {
-    number
-    description
-  }
-`;
 export const ScorecardFieldsFragmentDoc = gql`
-  fragment ScorecardFields on Scorecard {
+  fragment scorecardFields on Scorecard {
     job {
       number
     }
-    date
-    operator {
-      number
+    data {
+      elementId
+      numericValue
+      stringValue
     }
   }
 `;
@@ -903,7 +921,7 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
 `;
 export const ScorecardJobsDocument = gql`
   query ScorecardJobs {
-    jobs(input: { group: "NURSGROWSITE" }) {
+    jobs(input: { groups: ["NURSGROWSITE"] }) {
       number
       description
     }
@@ -957,79 +975,146 @@ export type ScorecardJobsQueryResult = ApolloReactCommon.QueryResult<
   ScorecardJobsQuery,
   ScorecardJobsQueryVariables
 >;
-export const PersonResponsibleDocument = gql`
-  query PersonResponsible {
-    personResponsible {
-      name
+export const ScorecardPigJobsDocument = gql`
+  query ScorecardPigJobs($location: String!) {
+    jobs(
+      input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }
+    ) {
       number
+      description
     }
   }
 `;
 
 /**
- * __usePersonResponsibleQuery__
+ * __useScorecardPigJobsQuery__
  *
- * To run a query within a React component, call `usePersonResponsibleQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonResponsibleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useScorecardPigJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardPigJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePersonResponsibleQuery({
+ * const { data, loading, error } = useScorecardPigJobsQuery({
+ *   variables: {
+ *      location: // value for 'location'
+ *   },
+ * });
+ */
+export function useScorecardPigJobsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ScorecardPigJobsQuery,
+    ScorecardPigJobsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    ScorecardPigJobsQuery,
+    ScorecardPigJobsQueryVariables
+  >(ScorecardPigJobsDocument, baseOptions);
+}
+export function useScorecardPigJobsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ScorecardPigJobsQuery,
+    ScorecardPigJobsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ScorecardPigJobsQuery,
+    ScorecardPigJobsQueryVariables
+  >(ScorecardPigJobsDocument, baseOptions);
+}
+export type ScorecardPigJobsQueryHookResult = ReturnType<
+  typeof useScorecardPigJobsQuery
+>;
+export type ScorecardPigJobsLazyQueryHookResult = ReturnType<
+  typeof useScorecardPigJobsLazyQuery
+>;
+export type ScorecardPigJobsQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardPigJobsQuery,
+  ScorecardPigJobsQueryVariables
+>;
+export const ScorecardPeopleDocument = gql`
+  query ScorecardPeople {
+    people: resources(input: { type: "Person" }) {
+      number
+      name
+    }
+  }
+`;
+
+/**
+ * __useScorecardPeopleQuery__
+ *
+ * To run a query within a React component, call `useScorecardPeopleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardPeopleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScorecardPeopleQuery({
  *   variables: {
  *   },
  * });
  */
-export function usePersonResponsibleQuery(
+export function useScorecardPeopleQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    PersonResponsibleQuery,
-    PersonResponsibleQueryVariables
+    ScorecardPeopleQuery,
+    ScorecardPeopleQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    PersonResponsibleQuery,
-    PersonResponsibleQueryVariables
-  >(PersonResponsibleDocument, baseOptions);
+    ScorecardPeopleQuery,
+    ScorecardPeopleQueryVariables
+  >(ScorecardPeopleDocument, baseOptions);
 }
-export function usePersonResponsibleLazyQuery(
+export function useScorecardPeopleLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    PersonResponsibleQuery,
-    PersonResponsibleQueryVariables
+    ScorecardPeopleQuery,
+    ScorecardPeopleQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    PersonResponsibleQuery,
-    PersonResponsibleQueryVariables
-  >(PersonResponsibleDocument, baseOptions);
+    ScorecardPeopleQuery,
+    ScorecardPeopleQueryVariables
+  >(ScorecardPeopleDocument, baseOptions);
 }
-export type PersonResponsibleQueryHookResult = ReturnType<
-  typeof usePersonResponsibleQuery
+export type ScorecardPeopleQueryHookResult = ReturnType<
+  typeof useScorecardPeopleQuery
 >;
-export type PersonResponsibleLazyQueryHookResult = ReturnType<
-  typeof usePersonResponsibleLazyQuery
+export type ScorecardPeopleLazyQueryHookResult = ReturnType<
+  typeof useScorecardPeopleLazyQuery
 >;
-export type PersonResponsibleQueryResult = ApolloReactCommon.QueryResult<
-  PersonResponsibleQuery,
-  PersonResponsibleQueryVariables
+export type ScorecardPeopleQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardPeopleQuery,
+  ScorecardPeopleQueryVariables
 >;
 export const NurseryFinisherScorecardDocument = gql`
   query NurseryFinisherScorecard($job: String!) {
     job: job(number: $job) {
       number
+      location {
+        code
+      }
       personResponsible {
-        name
         number
       }
     }
     scorecardPages(job: $job) {
       title
       elements {
+        id
         label
         code
+        order
       }
     }
+    scorecard(job: $job) {
+      ...scorecardFields
+    }
   }
+  ${ScorecardFieldsFragmentDoc}
 `;
 
 /**
@@ -1085,7 +1170,7 @@ export const SaveScorecardDocument = gql`
     saveScorecard(input: $input) {
       success
       scorecard {
-        ...ScorecardFields
+        ...scorecardFields
       }
     }
   }

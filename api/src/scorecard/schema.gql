@@ -49,8 +49,10 @@ type FarrowingBackendScorecardResult {
 }
 
 type ScorecardElement {
+  id: ID!
   label: String!
   code: String!
+  order: Int!
 }
 
 type ScorecardPage {
@@ -91,9 +93,15 @@ input PostScorecardInput {
   operator: String!
 }
 
+input ScorecardElementResponseInput {
+  elementId: ID!
+  numericValue: Float
+  stringValue: String
+}
+
 input SaveScorecardInput {
   job: String!
-  operator: String
+  data: [ScorecardElementResponseInput!]!
 }
 
 type ScorecardResult {
@@ -101,13 +109,15 @@ type ScorecardResult {
   scorecard: Scorecard!
 }
 
+type ScorecardElementResponse {
+  elementId: ID!
+  numericValue: Float
+  stringValue: String
+}
+
 type Scorecard {
   job: Job!
-  date: String
-  
-  operator: Resource
-  # pages
-  # data
+  data: [ScorecardElementResponse!]!
 }
 
 

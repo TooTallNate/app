@@ -19,7 +19,10 @@ const Job: JobResolvers = {
     return dataSources.navResource.getByCode(job.Person_Responsible);
   },
   inventory: job => job.Inventory_Left,
-  deadQuantity: job => job.Dead_Quantity
+  deadQuantity: job => job.Dead_Quantity,
+  async location(job, _, { dataSources }) {
+    return dataSources.navLocation.getByCode(job.Site);
+  }
 };
 
 const Item: ItemResolvers = {
@@ -41,15 +44,17 @@ export const queries: QueryResolvers = {
   jobs(_, { input }, { dataSources }) {
     return dataSources.navJob.getAll({
       isOpen: true,
-      ...(input.group && { postingGroups: [input.group] })
+      ...(input.groups && { postingGroups: input.groups }),
+      ...(input.locations && { includeLocations: input.locations })
     });
   },
   job(_, { number }, { dataSources }) {
     return dataSources.navJob.getByNo(number);
   },
-  resources(_, __, { dataSources }) {
+  resources(_, { input }, { dataSources }) {
     return dataSources.navResource.getAll({
-      groups: ["NURSGROWSITE"]
+      ...(input.group && { groups: [input.group] }),
+      ...(input.type && { type: input.type })
     });
   },
   resource(_, { code }, { dataSources }) {

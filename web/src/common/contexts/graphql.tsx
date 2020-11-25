@@ -12,7 +12,8 @@ import {
   PigMortality,
   PigMove,
   PigPurchase,
-  Item
+  Item,
+  Scorecard
 } from "../../user/graphql";
 import { Location } from "../../pig-activity/graphql";
 
@@ -47,6 +48,8 @@ const cache = new InMemoryCache({
         return `PigPurchase:${(object as PigPurchase).job.number}`;
       case "PigWean":
         return `PigWean:${(object as PigWean).job.number}`;
+      case "Scorecard":
+        return `Scorecard:${(object as Scorecard).job.number}`;
       default:
         return defaultDataIdFromObject(object); // fall back to default handling
     }

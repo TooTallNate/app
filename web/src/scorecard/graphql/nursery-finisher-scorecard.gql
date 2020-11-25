@@ -1,66 +1,64 @@
-fragment GrowFinishJobFields on Job {
-  number
-  description
-}
-
-fragment ScorecardFields on Scorecard {
+fragment scorecardFields on Scorecard {
   job {
     number
   }
-  date
-  operator {
-    number
+  data {
+    elementId
+    numericValue
+    stringValue
   }
 }
 
 query ScorecardJobs {
-  jobs(input: { group: "NURSGROWSITE" }) {
+  jobs(input: { groups: ["NURSGROWSITE"] }) {
     number
     description
   }
 }
 
-query PersonResponsible {
-  personResponsible {
-    name
+query ScorecardPigJobs($location: String!) {
+  jobs(input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }) {
     number
+    description
+  }
+}
+
+query ScorecardPeople {
+  people: resources(input: { type: "Person" }) {
+    number
+    name
   }
 }
 
 query NurseryFinisherScorecard($job: String!) {
   job: job(number: $job) {
     number
-    # what is the scorecard term for operator?
+    location {
+      code
+    }
     personResponsible {
-      name
       number
     }
   }
   scorecardPages(job: $job) {
     title
     elements {
+      id
       label
       code
+      order
     }
+  },
+  scorecard(job: $job) {
+    ...scorecardFields
   }
-  # scorecardConfig(job: $job) {
-  #   # pages?
-  # }
-  # scorecardData(job: $job) {
-  #   job {
-  #     number
-  #   }
-  #   date
-  #   operator
-  #   # array of inputs
-  # }
 }
 
 mutation saveScorecard($input: SaveScorecardInput!) {
   saveScorecard(input: $input) {
     success
     scorecard {
-      ...ScorecardFields
+      ...scorecardFields
     }
   }
 }

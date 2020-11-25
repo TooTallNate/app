@@ -4,91 +4,123 @@ import React, {
   useState,
   useCallback,
   useEffect,
-  useRef,
   useMemo
 } from "react";
-import { useHistory } from "react-router-dom";
 import {
-  useSaveScorecardMutation,
-  useNurseryFinisherScorecardLazyQuery
+  useNurseryFinisherScorecardLazyQuery,
+  useSaveScorecardMutation
 } from "../graphql";
 
 export interface GrowFinishContextValue {
-  job?: string;
+  job?: Job;
+  loadingJob: boolean;
   formState: FormValues;
   formConfig: FormPage[];
   setJob(job?: string): void;
-  updateForm(values?: FormValues): void;
+  saveProgress(values?: FormValues): Promise<void>;
   submit(): Promise<void>;
 }
 
-export interface FormConfig {
-  //form title
-  //list of pages
+export interface Job {
+  number: string;
+  location: string;
+  caretaker: string;
 }
 
-export interface FormValues {}
+export interface FormValues {
+  [id: string]:
+    | undefined
+    | {
+        numericValue?: number;
+        stringValue?: string;
+      };
+}
 
 export interface FormPage {
   title?: string | null;
   elements: {
+    id: string;
     label: string;
     code: string;
+    order: number;
   }[];
 }
 
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
-  const jobLoaded = useRef(true);
-  const [job, setJobInternal] = useState<string | undefined>();
-
-  // Lazy query hook for the scorecard job and pages.
-
-  const [loadJob, { data }] = useNurseryFinisherScorecardLazyQuery();
-  const [saveMethod] = useSaveScorecardMutation();
-  // const [submitMethod] = postScorecard();
-  // const [formConfig, setFormConfig] = useState<object>({});
+  const [jobNumber, setJob] = useState<string | undefined>();
   const [formState, setFormState] = useState<FormValues>({});
-  const history = useHistory();
 
-  const updateForm = useCallback(
-    (values: Partial<FormValues> = {}) =>
-      setFormState(prev => ({ ...prev, ...values })),
-    []
-  );
-
-  //does this need to be async()?
-  useEffect(() => {
-    if (jobLoaded.current && job) {
-      saveMethod({
-        variables: {
-          input: {
-            ...formState,
-            job: job
-          }
-        }
-      });
-    }
-  }, [formState, job, history, saveMethod]);
-
-  // add this to the context
-  const setJob = useCallback(
-    (job?: string) => {
-      jobLoaded.current = false;
-      setJobInternal(job);
-      if (job) {
-        loadJob({ variables: { job } });
+  const [
+    loadJob,
+    { data, loading: loadingJob }
+  ] = useNurseryFinisherScorecardLazyQuery({
+    onCompleted(data) {
+      const state: FormValues = {};
+      if (data.scorecard) {
+        data.scorecard.data.forEach(({ elementId, ...entry }) => {
+          state[elementId] = {
+            numericValue:
+              typeof entry.numericValue === "number"
+                ? entry.numericValue
+                : undefined,
+            stringValue:
+              typeof entry.stringValue === "string"
+                ? entry.stringValue
+                : undefined
+          };
+        });
       }
-      jobLoaded.current = true;
+      setFormState(state);
+    }
+  });
+
+  const [save] = useSaveScorecardMutation({});
+
+  const saveProgress = useCallback(
+    async (values: Partial<FormValues> = {}) => {
+      if (jobNumber) {
+        setFormState(prev => ({ ...prev, ...values }));
+        await save({
+          variables: {
+            input: {
+              job: jobNumber,
+              data: Object.entries(formState).map(([key, value]) => ({
+                elementId: key,
+                ...value
+              }))
+            }
+          }
+        });
+      }
     },
-    [loadJob]
+    [formState, jobNumber, save]
   );
+
+  useEffect(() => {
+    if (jobNumber) {
+      loadJob({ variables: { job: jobNumber } });
+    } else {
+      setFormState({});
+    }
+  }, [jobNumber, loadJob]);
 
   const submit = useCallback(async () => {
     // await submitMethod(formState);
-    history.push("/");
-  }, [history]);
+  }, []);
+
+  const job = useMemo(
+    () =>
+      data && data.job
+        ? {
+            number: data.job.number,
+            location: data.job.location.code,
+            caretaker: data.job.personResponsible.number
+          }
+        : undefined,
+    [data]
+  );
 
   const formConfig = useMemo<FormPage[]>(
     () => (data && data.scorecardPages) || [],
@@ -97,7 +129,15 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   return (
     <GrowFinishContext.Provider
-      value={{ job, formState, formConfig, updateForm, submit, setJob }}
+      value={{
+        job,
+        loadingJob,
+        formState,
+        formConfig,
+        saveProgress,
+        submit,
+        setJob
+      }}
     >
       {children}
     </GrowFinishContext.Provider>

@@ -9,6 +9,7 @@ type Job {
   personResponsible: Resource!
   inventory: Int
   deadQuantity: Int
+  location: Location!
 }
 
 type Item {
@@ -32,7 +33,8 @@ type Location {
 }
 
 input JobFilter {
-  group: String
+  groups: [String!]
+  locations: [String!]
 }
 
 input ResourceFilter {
