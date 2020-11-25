@@ -11,10 +11,16 @@ import { useSaveScorecardMutation } from "../graphql";
 
 export interface GrowFinishContextValue {
   job?: string;
+  formConfig?: FormConfig;
   formState: FormValues;
   setJob(job?: string): void;
   updateForm(values?: FormValues): void;
   submit(): Promise<void>;
+}
+
+export interface FormConfig {
+  //form title
+  //list of pages
 }
 
 export interface FormValues {}
@@ -24,6 +30,8 @@ const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   const jobLoaded = useRef(true);
   const [job, setJobInternal] = useState<string | undefined>();
+
+  // Lazy query hook for the scorecard job and pages.
 
   const [saveMethod] = useSaveScorecardMutation();
   // const [submitMethod] = postScorecard();
@@ -56,6 +64,7 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     jobLoaded.current = false;
     // Set the job state
     setJobInternal(job);
+    //call function returned from useLazyNFQuery here
     // Load the form config
     // Load the form state
     jobLoaded.current = true;
@@ -66,6 +75,7 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     history.push("/");
   }, [history]);
 
+  // Add formconfig to provider.
   return (
     <GrowFinishContext.Provider
       value={{ job, formState, updateForm, submit, setJob }}

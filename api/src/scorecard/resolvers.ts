@@ -2,9 +2,7 @@ import {
   MutationResolvers,
   QueryResolvers,
   ScorecardEntry,
-  FarrowingBackendScorecardResolvers,
-  ScorecardJobResolvers,
-  ScorecardPageResolvers
+  FarrowingBackendScorecardResolvers
 } from "../common/graphql";
 import {
   NavJobJournalLine,

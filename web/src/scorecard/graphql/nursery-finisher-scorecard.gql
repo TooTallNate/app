@@ -17,7 +17,6 @@ query ScorecardJobs {
   jobs(input: { group: "NURSGROWSITE" }) {
     number
     description
-  
   }
 }
 
@@ -37,7 +36,7 @@ query NurseryFinisherScorecard($job: String!) {
       number
     }
   }
-  # scorecardConfig(job: $job) {
+  # scorecardPages(job: $job) {
   #   # pages?
   # }
   # scorecardData(job: $job) {

@@ -10,6 +10,7 @@ const GrowFinishScorecardView: React.FC<RouteComponentProps> = ({ match }) => {
     <GrowFinishScorecardProvider>
       <Switch>
         <Route exact path={`${match.url}/job`} component={ScorecardJobView} />
+        {/* Add a view with route /job/:page. This view takes title and elements from page list in form config */}
         <Route
           exact
           path={`${match.url}/job/submit`}
