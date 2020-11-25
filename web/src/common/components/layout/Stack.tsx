@@ -9,7 +9,7 @@ interface StackProps {
 
 const Stack: React.FC<StackProps> = ({ children, className, spacing }) => {
   return (
-    <div className={className}>
+    <div className={`min-h-full flex flex-col ${className}`}>
       {Children.map(children, (child, i) =>
         i === 0 ? (
           child

@@ -11,11 +11,18 @@ import ViewContent from "../../../common/components/view/ViewContent";
 import { useGrowFinish } from "../../contexts/growFinish";
 import ScorecardPageComponent from "../../components/ScorecardPageComponent";
 
-const ScorecardJobView: React.FC = () => {
+const ScorecardPageView: React.FC = () => {
   const params = useParams<{ page: string; job: string }>();
   const history = useHistory();
 
-  const { formConfig, setJob, saveProgress, job, loadingJob } = useGrowFinish();
+  const {
+    formConfig,
+    formState,
+    setJob,
+    saveProgress,
+    job,
+    loadingJob
+  } = useGrowFinish();
   const formContext = useForm();
 
   // Refresh context on page reload
@@ -23,14 +30,18 @@ const ScorecardJobView: React.FC = () => {
     setJob(params.job);
   }, [params.job, setJob]);
 
-  const pageNumber = parseInt(params.page);
+  // useEffect(() => {
+  //   formContext.setValue(Object.entries(formState));
+  // }, [formContext, formState]);
+
+  const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
-  const pageConfig = formConfig[pageNumber - 1];
+  const pageConfig = formConfig[pageNumber];
 
   const onSubmit: OnSubmit<Record<string, any>> = async data => {
     await saveProgress(data);
     if (pageNumber + 1 < pageCount) {
-      history.push(`/scorecard/${params.job}/page/${pageNumber + 1}`);
+      history.push(`/scorecard/${params.job}/page/${pageNumber + 2}`);
     } else {
       history.push(`/scorecard/${params.job}/submit`);
     }
@@ -49,6 +60,7 @@ const ScorecardJobView: React.FC = () => {
               pageConfig.elements.map(element => (
                 <ScorecardPageComponent key={element.id} {...element} />
               ))}
+            <div className="flex-grow" />
             <FormSubmit>Continue</FormSubmit>
           </Form>
         )}
@@ -57,4 +69,4 @@ const ScorecardJobView: React.FC = () => {
   );
 };
 
-export default ScorecardJobView;
+export default ScorecardPageView;

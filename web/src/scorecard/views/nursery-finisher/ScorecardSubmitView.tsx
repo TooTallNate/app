@@ -16,7 +16,7 @@ const ScorecardSubmitView: React.FC = () => {
         <Title>Submit</Title>
       </ViewHeader>
       <ViewContent>
-        <div>{job}</div>
+        <div>{JSON.stringify(job)}</div>
         <div>{JSON.stringify(formState)}</div>
       </ViewContent>
     </View>

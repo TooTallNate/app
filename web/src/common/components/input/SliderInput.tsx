@@ -131,7 +131,8 @@ const SliderInput = forwardRef<SliderInputRef, SliderInputProps>(
 
           {/* Styled Range Input */}
           <input
-            {...{ value, min, max, step, ...props }}
+            {...{ min, max, step, ...props }}
+            value={value || 0}
             ref={inputElement}
             onChange={e => {
               const value = e.target.valueAsNumber;
