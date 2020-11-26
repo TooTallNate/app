@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
@@ -24,15 +24,17 @@ const ScorecardPageView: React.FC = () => {
     loadingJob
   } = useGrowFinish();
   const formContext = useForm();
+  const { setValue } = formContext;
 
-  // Refresh context on page reload
+  // Refresh job on page reload.
   useEffect(() => {
     setJob(params.job);
   }, [params.job, setJob]);
 
-  // useEffect(() => {
-  //   formContext.setValue(Object.entries(formState));
-  // }, [formContext, formState]);
+  // Update form fields from context when page changes.
+  useEffect(() => {
+    Object.entries(formState).forEach(([key, value]) => setValue(key, value));
+  }, [setValue, formState, params.page]);
 
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;

@@ -4,11 +4,13 @@ import React, {
   useState,
   useCallback,
   useEffect,
-  useMemo
+  useMemo,
+  useRef
 } from "react";
 import {
   useNurseryFinisherScorecardLazyQuery,
-  useSaveScorecardMutation
+  useSaveScorecardMutation,
+  NurseryFinisherScorecardQuery
 } from "../graphql";
 
 export interface GrowFinishContextValue {
@@ -49,82 +51,97 @@ export interface FormPage {
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
 const GrowFinishScorecardProvider: React.FC = ({ children }) => {
+  const lastFormState = useRef<FormValues>({});
   const [jobNumber, setJob] = useState<string | undefined>();
-  const [formState, setFormState] = useState<FormValues>({});
+  const [formState, setFormState] = useState<FormValues>(lastFormState.current);
 
   const [
     loadJob,
-    { data, loading: loadingJob }
-  ] = useNurseryFinisherScorecardLazyQuery({
-    onCompleted(data) {
-      const state: FormValues = {};
-      if (data.scorecard) {
-        data.scorecard.data.forEach(({ elementId, ...entry }) => {
-          state[elementId] = {
-            numericValue:
-              typeof entry.numericValue === "number"
-                ? entry.numericValue
-                : undefined,
-            stringValue:
-              typeof entry.stringValue === "string"
-                ? entry.stringValue
-                : undefined
-          };
-        });
-      }
-      setFormState(state);
-    }
-  });
+    { data: scorecardResult, loading: loadingJob }
+  ] = useNurseryFinisherScorecardLazyQuery();
+
+  // Only use the lazy query result if it matches the selected job number.
+  // There is some delay until the results are loaded.
+  let data: NurseryFinisherScorecardQuery | undefined;
+  if (
+    scorecardResult &&
+    scorecardResult.job &&
+    scorecardResult.job.number === jobNumber
+  ) {
+    data = scorecardResult;
+  }
 
   const [save] = useSaveScorecardMutation({});
 
-  const saveProgress = useCallback(
-    async (values: Partial<FormValues> = {}) => {
-      if (jobNumber) {
-        setFormState(prev => ({ ...prev, ...values }));
-        await save({
-          variables: {
-            input: {
-              job: jobNumber,
-              data: Object.entries(formState).map(([key, value]) => ({
-                elementId: key,
-                ...value
-              }))
-            }
-          }
-        });
-      }
-    },
-    [formState, jobNumber, save]
-  );
+  // Update the from state when a new scorecard is loaded.
+  useEffect(() => {
+    const state: FormValues = {};
+    if (data && data.scorecard) {
+      data.scorecard.data.forEach(({ elementId, ...entry }) => {
+        state[elementId] = {
+          numericValue:
+            typeof entry.numericValue === "number"
+              ? entry.numericValue
+              : undefined,
+          stringValue:
+            typeof entry.stringValue === "string"
+              ? entry.stringValue
+              : undefined
+        };
+      });
+    }
+    lastFormState.current = state;
+    setFormState(state);
+  }, [data]);
 
+  // Load job information when the job number changes.
   useEffect(() => {
     if (jobNumber) {
       loadJob({ variables: { job: jobNumber } });
-    } else {
-      setFormState({});
     }
   }, [jobNumber, loadJob]);
+
+  // Save form state when it changes.
+  useEffect(() => {
+    if (jobNumber && lastFormState.current !== formState) {
+      lastFormState.current = formState;
+      save({
+        variables: {
+          input: {
+            job: jobNumber,
+            data: Object.entries(formState).map(([key, value]) => ({
+              elementId: key,
+              ...value
+            }))
+          }
+        }
+      });
+    }
+  }, [formState, jobNumber, save]);
 
   const submit = useCallback(async () => {
     // await submitMethod(formState);
   }, []);
 
+  const saveProgress = useCallback(async (values: Partial<FormValues> = {}) => {
+    setFormState(prev => ({ ...prev, ...values }));
+  }, []);
+
   const job = useMemo(
     () =>
-      data && data.job
+      jobNumber && data && data.job
         ? {
             number: data.job.number,
             location: data.job.location.code,
             caretaker: data.job.personResponsible.number
           }
         : undefined,
-    [data]
+    [data, jobNumber]
   );
 
   const formConfig = useMemo<FormPage[]>(
-    () => (data && data.scorecardPages) || [],
-    [data]
+    () => (jobNumber && data && data.scorecardPages) || [],
+    [data, jobNumber]
   );
 
   return (
