@@ -10,13 +10,27 @@ import FormSubmit from "../../../common/components/form/FormSubmit";
 import ViewContent from "../../../common/components/view/ViewContent";
 import { useGrowFinish } from "../../contexts/growFinish";
 import ScorecardPageComponent from "../../components/ScorecardPageComponent";
+import Button from "../../../common/components/input/Button";
+import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
+import { useFlash } from "../../../common/contexts/flash";
+import { useSaveScorecardMutation } from "../../graphql";
 
 const ScorecardPageView: React.FC = () => {
   const params = useParams<{ page: string; job: string }>();
   const history = useHistory();
 
-  const { formConfig, setJob, saveProgress, job, loadingJob } = useGrowFinish();
+  const {
+    formConfig,
+    formState,
+    setJob,
+    saveProgress,
+    job,
+    loadingJob
+  } = useGrowFinish();
   const formContext = useForm();
+  const { setMessage } = useFlash();
+
+  const [save] = useSaveScorecardMutation();
 
   // Refresh job on page reload.
   useEffect(() => {
@@ -36,6 +50,33 @@ const ScorecardPageView: React.FC = () => {
     }
   };
 
+  const onSave = async () => {
+    try {
+      await save({
+        variables: {
+          input: {
+            job: params.job,
+            data: Object.entries(formState).map(([key, value]) => ({
+              elementId: key,
+              ...value
+            }))
+          }
+        }
+      });
+      setMessage({
+        message: "Entry saved successfully.",
+        level: "success",
+        timeout: 2000
+      });
+      history.push("/");
+    } catch (e) {
+      setMessage({
+        message: e.toString(),
+        level: "error"
+      });
+    }
+  };
+
   return (
     <View>
       <ViewHeader>
@@ -51,7 +92,13 @@ const ScorecardPageView: React.FC = () => {
                 <ScorecardPageComponent key={element.id} {...element} />
               ))}
             <div className="flex-grow" />
-            <FormSubmit>Continue</FormSubmit>
+            <div className="flex">
+              <Button className="w-full" type="button" onClick={onSave}>
+                Save
+              </Button>
+              <HorizontalSpacer />
+              <FormSubmit>Continue</FormSubmit>
+            </div>
           </Form>
         )}
       </ViewContent>
