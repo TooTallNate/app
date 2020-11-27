@@ -19,18 +19,12 @@ const ScorecardPageView: React.FC = () => {
   const params = useParams<{ page: string; job: string }>();
   const history = useHistory();
 
-  const {
-    formConfig,
-    formState,
-    setJob,
-    saveProgress,
-    job,
-    loadingJob
-  } = useGrowFinish();
+  const { formConfig, setJob, saveProgress, job, loadingJob } = useGrowFinish();
   const formContext = useForm();
   const { setMessage } = useFlash();
+  const { getValues } = formContext;
 
-  const [save] = useSaveScorecardMutation();
+  // const [save] = useSaveScorecardMutation();
 
   // Refresh job on page reload.
   useEffect(() => {
@@ -52,17 +46,7 @@ const ScorecardPageView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      await save({
-        variables: {
-          input: {
-            job: params.job,
-            data: Object.entries(formState).map(([key, value]) => ({
-              elementId: key,
-              ...value
-            }))
-          }
-        }
-      });
+      saveProgress(getValues());
       setMessage({
         message: "Entry saved successfully.",
         level: "success",

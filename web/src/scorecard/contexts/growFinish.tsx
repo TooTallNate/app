@@ -101,31 +101,29 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     }
   }, [jobNumber, loadJob]);
 
-  // Save form state when it changes.
-  useEffect(() => {
-    if (jobNumber && lastFormState.current !== formState) {
-      lastFormState.current = formState;
-      save({
-        variables: {
-          input: {
-            job: jobNumber,
-            data: Object.entries(formState).map(([key, value]) => ({
-              elementId: key,
-              ...value
-            }))
-          }
-        }
-      });
-    }
-  }, [formState, jobNumber, save]);
-
   const submit = useCallback(async () => {
     // await submitMethod(formState);
   }, []);
 
-  const saveProgress = useCallback(async (values: Partial<FormValues> = {}) => {
-    setFormState(prev => ({ ...prev, ...values }));
-  }, []);
+  const saveProgress = useCallback(
+    async (values: Partial<FormValues> = {}) => {
+      setFormState(prev => ({ ...prev, ...values }));
+      if (jobNumber) {
+        await save({
+          variables: {
+            input: {
+              job: jobNumber,
+              data: Object.entries(formState).map(([key, value]) => ({
+                elementId: key,
+                ...value
+              }))
+            }
+          }
+        });
+      }
+    },
+    [formState, jobNumber, save]
+  );
 
   const job = useMemo(
     () =>
