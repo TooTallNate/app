@@ -6,7 +6,7 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPeopleQuery } from "../graphql/index";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useGrowFinish, FormValue } from "../contexts/growFinish";
 import { useFormContext } from "react-hook-form";
 
 export interface ScorecardCaretakerProps {
@@ -18,15 +18,22 @@ const ScorecardCaretaker: React.FC<ScorecardCaretakerProps> = ({
   label,
   id
 }) => {
-  const { job } = useGrowFinish();
+  const { job, formState } = useGrowFinish();
   const { setValue } = useFormContext();
   const { data } = useScorecardPeopleQuery();
-
   const name = `${id}.stringValue`;
+  const elementState = formState[id] || {};
 
   useEffect(() => {
-    setValue(name, job ? job.caretaker : null);
-  }, [job, name, setValue]);
+    setValue(
+      name,
+      elementState.stringValue
+        ? elementState.stringValue
+        : job
+        ? job.caretaker
+        : undefined
+    );
+  }, [elementState, id, job, name, setValue]);
 
   return (
     <FormField name={name}>
@@ -43,5 +50,7 @@ const ScorecardCaretaker: React.FC<ScorecardCaretakerProps> = ({
     </FormField>
   );
 };
+
+export const isComplete = ({ stringValue }: FormValue) => !!stringValue;
 
 export default ScorecardCaretaker;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -8,6 +8,8 @@ import SliderInput from "../../common/components/input/SliderInput";
 import VerticalSpacer from "../../common/components/layout/VerticalSpacer";
 import { Spacing } from "../../common/components/layout/spacing";
 import MultilineTextInput from "../../common/components/input/MultilineTextInput";
+import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { useFormContext } from "react-hook-form";
 
 export interface ScorecardScoresProps {
   label: string;
@@ -24,8 +26,22 @@ const ScorecardScores: React.FC<ScorecardScoresProps> = ({
   max,
   step
 }) => {
+  const { formState } = useGrowFinish();
+  const { setValue } = useFormContext();
   const scoreName = `${id}.numericValue`;
   const commentsName = `${id}.stringValue`;
+  const elementState = formState[id] || {};
+
+  useEffect(() => {
+    setValue(
+      scoreName,
+      elementState.numericValue ? elementState.numericValue : min
+    );
+    setValue(
+      commentsName,
+      elementState.stringValue ? elementState.stringValue : undefined
+    );
+  }, [commentsName, elementState, id, min, scoreName, setValue]);
 
   return (
     <>
@@ -46,5 +62,8 @@ const ScorecardScores: React.FC<ScorecardScoresProps> = ({
     </>
   );
 };
+
+export const isComplete = ({ numericValue }: FormValue) =>
+  typeof numericValue === "number";
 
 export default ScorecardScores;

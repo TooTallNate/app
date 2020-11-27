@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -6,6 +6,8 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPeopleQuery } from "../graphql/index";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { useFormContext } from "react-hook-form";
 
 export interface ScorecardSupervisorProps {
   label: string;
@@ -17,8 +19,18 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
   id
 }) => {
   const { data } = useScorecardPeopleQuery();
+  const { formState } = useGrowFinish();
+  const { setValue } = useFormContext();
 
   const name = `${id}.stringValue`;
+  const elementState = formState[id] || {};
+
+  useEffect(() => {
+    setValue(
+      name,
+      elementState.stringValue ? elementState.stringValue : undefined
+    );
+  }, [elementState, id, name, setValue]);
 
   return (
     <FormField name={name}>
@@ -35,5 +47,7 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
     </FormField>
   );
 };
+
+export const isComplete = ({ stringValue }: FormValue) => !!stringValue;
 
 export default ScorecardSupervisor;

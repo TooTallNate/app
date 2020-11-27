@@ -60,6 +60,7 @@ const ScorecardJobView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <div className="flex-grow" />
             <FormSubmit>Continue</FormSubmit>
           </Form>
         )}

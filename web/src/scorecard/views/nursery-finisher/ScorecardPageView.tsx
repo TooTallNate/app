@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
 import ViewHeader from "../../../common/components/view/ViewHeader";
@@ -15,26 +15,13 @@ const ScorecardPageView: React.FC = () => {
   const params = useParams<{ page: string; job: string }>();
   const history = useHistory();
 
-  const {
-    formConfig,
-    formState,
-    setJob,
-    saveProgress,
-    job,
-    loadingJob
-  } = useGrowFinish();
+  const { formConfig, setJob, saveProgress, job, loadingJob } = useGrowFinish();
   const formContext = useForm();
-  const { setValue } = formContext;
 
   // Refresh job on page reload.
   useEffect(() => {
     setJob(params.job);
   }, [params.job, setJob]);
-
-  // Update form fields from context when page changes.
-  useEffect(() => {
-    Object.entries(formState).forEach(([key, value]) => setValue(key, value));
-  }, [setValue, formState, params.page]);
 
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
@@ -54,6 +41,7 @@ const ScorecardPageView: React.FC = () => {
       <ViewHeader>
         <BackButton />
         <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
+        <Link to={`/scorecard/${params.job}/submit`}>Submit</Link>
       </ViewHeader>
       <ViewContent loading={loadingJob}>
         {job && (

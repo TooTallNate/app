@@ -29,13 +29,13 @@ export interface Job {
   caretaker: string;
 }
 
+export interface FormValue {
+  numericValue?: number;
+  stringValue?: string;
+}
+
 export interface FormValues {
-  [id: string]:
-    | undefined
-    | {
-        numericValue?: number;
-        stringValue?: string;
-      };
+  [id: string]: FormValue | undefined;
 }
 
 export interface FormPage {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -6,6 +6,8 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StackedInput from "../../common/components/input/StackedInput";
 import StackedRadioButton from "../../common/components/input/StackedRadioButton";
+import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { useFormContext } from "react-hook-form";
 
 export interface ScorecardYesNoProps {
   label: string;
@@ -13,7 +15,17 @@ export interface ScorecardYesNoProps {
 }
 
 const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, id }) => {
+  const { formState } = useGrowFinish();
+  const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
+  const elementState = formState[id] || {};
+
+  useEffect(() => {
+    setValue(
+      name,
+      elementState.numericValue ? elementState.numericValue : undefined
+    );
+  }, [elementState, id, name, setValue]);
 
   return (
     <FormField name={name}>
@@ -28,5 +40,8 @@ const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, id }) => {
     </FormField>
   );
 };
+
+export const isComplete = ({ numericValue }: FormValue) =>
+  typeof numericValue === "number";
 
 export default ScorecardYesNo;

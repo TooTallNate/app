@@ -35,12 +35,13 @@ function Form<T = Record<string, any>>({
     const { handleSubmit } = context;
     return (
       <FormContext {...context}>
-        <form
-          onSubmit={onSubmit && handleSubmit(onSubmit)}
-          className={`child:mb-4 min-h-full ${className}`}
+        <Stack
+          className={`min-h-full ${className}`}
+          spacing={Spacing.XS}
+          root={<form onSubmit={onSubmit && handleSubmit(onSubmit)} />}
         >
-          <Stack spacing={Spacing.XS}>{children}</Stack>
-        </form>
+          {children}
+        </Stack>
       </FormContext>
     );
   } else {

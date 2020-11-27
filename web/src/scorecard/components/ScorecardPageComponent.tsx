@@ -1,10 +1,23 @@
 import React from "react";
-import ScorecardYesNo from "./ScorecardYesNo";
-import ScorecardPigJob from "./ScorecardPigJob";
-import ScorecardCaretaker from "./ScorecardCaretaker";
-import ScorecardSupervisor from "./ScorecardSupervisor";
-import ScorecardScores from "./ScorecardScores";
-import ScorecardNumberInput from "./ScorecardNumberInput";
+import ScorecardYesNo, {
+  isComplete as isYesNoComplete
+} from "./ScorecardYesNo";
+import ScorecardPigJob, {
+  isComplete as isPigJobComplete
+} from "./ScorecardPigJob";
+import ScorecardCaretaker, {
+  isComplete as isCaretakerComplete
+} from "./ScorecardCaretaker";
+import ScorecardSupervisor, {
+  isComplete as isSupervisorComplete
+} from "./ScorecardSupervisor";
+import ScorecardScores, {
+  isComplete as isScoresComplete
+} from "./ScorecardScores";
+import ScorecardNumberInput, {
+  isComplete as isNumperComplete
+} from "./ScorecardNumberInput";
+import { FormValue } from "../contexts/growFinish";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -36,6 +49,22 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
     default:
       return null;
   }
+};
+
+const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
+  YN: isYesNoComplete,
+  JOB: isPigJobComplete,
+  CARETAKER: isCaretakerComplete,
+  SUPERVISOR: isSupervisorComplete,
+  SCORE5: isScoresComplete,
+  SCORE10: isScoresComplete,
+  HEALTH: isNumperComplete,
+  TEMP: isNumperComplete
+};
+
+export const isElementComplete = (code: string, values: FormValue) => {
+  const fn = isCompleteMap[code];
+  return !!fn && fn(values);
 };
 
 export default ScorecardPageComponent;

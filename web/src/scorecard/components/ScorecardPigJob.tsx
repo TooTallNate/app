@@ -6,7 +6,8 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPigJobsLazyQuery } from "../graphql/index";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useGrowFinish, FormValue } from "../contexts/growFinish";
+import { useFormContext } from "react-hook-form";
 
 export interface ScorecardPigJobProps {
   label: string;
@@ -14,16 +15,24 @@ export interface ScorecardPigJobProps {
 }
 
 const ScorecardPigJob: React.FC<ScorecardPigJobProps> = ({ label, id }) => {
-  const { job } = useGrowFinish();
+  const { job, formState } = useGrowFinish();
+  const { setValue } = useFormContext();
   const [loadJobs, { data }] = useScorecardPigJobsLazyQuery();
-
   const name = `${id}.stringValue`;
+  const elementState = formState[id] || {};
 
   useEffect(() => {
     if (job) {
       loadJobs({ variables: { location: job.location } });
     }
   }, [job, loadJobs]);
+
+  useEffect(() => {
+    setValue(
+      name,
+      elementState.stringValue ? elementState.stringValue : undefined
+    );
+  }, [elementState, id, name, setValue]);
 
   return (
     <FormField name={name}>
@@ -40,5 +49,7 @@ const ScorecardPigJob: React.FC<ScorecardPigJobProps> = ({ label, id }) => {
     </FormField>
   );
 };
+
+export const isComplete = ({ stringValue }: FormValue) => !!stringValue;
 
 export default ScorecardPigJob;
