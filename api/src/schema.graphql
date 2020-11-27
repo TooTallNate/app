@@ -330,6 +330,7 @@ type Mutation {
   postPigMove(input: PostPigMoveInput!): PigMoveResult!
   postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
   postPigWean(input: PostPigWeanInput!): PigWeanResult!
+  postScorecard(input: PostScorecardInput!): ScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
   savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
@@ -337,7 +338,7 @@ type Mutation {
   savePigMove(input: SavePigMoveInput!): PigMoveResult!
   savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
   savePigWean(input: SavePigWeanInput!): PigWeanResult!
-  saveScorecard(input: SaveScorecardInput!): ScorecardResult!
+  saveScorecard(input: PostScorecardInput!): ScorecardResult!
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
@@ -407,18 +408,13 @@ type ScorecardJob {
   personResponsible: String!
 }
 
-input PostScorecardInput {
-  job: String!
-  operator: String!
-}
-
 input ScorecardElementResponseInput {
   elementId: ID!
   numericValue: Float
   stringValue: String
 }
 
-input SaveScorecardInput {
+input PostScorecardInput {
   job: String!
   data: [ScorecardElementResponseInput!]!
 }

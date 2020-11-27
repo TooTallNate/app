@@ -54,8 +54,17 @@ query NurseryFinisherScorecard($job: String!) {
   }
 }
 
-mutation saveScorecard($input: SaveScorecardInput!) {
+mutation SaveScorecard($input: PostScorecardInput!) {
   saveScorecard(input: $input) {
+    success
+    scorecard {
+      ...scorecardFields
+    }
+  }
+}
+
+mutation PostScorecard($input: PostScorecardInput!) {
+  postScorecard(input: $input) {
     success
     scorecard {
       ...scorecardFields

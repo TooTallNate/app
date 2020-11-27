@@ -87,19 +87,13 @@ type ScorecardJob {
 #   scorecard: GrowFinishScorecard!
 # }
 
-input PostScorecardInput {
-  job: String!
-  #scorecardPages: [ScorecardPage]
-  operator: String!
-}
-
 input ScorecardElementResponseInput {
   elementId: ID!
   numericValue: Float
   stringValue: String
 }
 
-input SaveScorecardInput {
+input PostScorecardInput {
   job: String!
   data: [ScorecardElementResponseInput!]!
 }
@@ -148,7 +142,6 @@ type Mutation {
   setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  saveScorecard(input: SaveScorecardInput!): ScorecardResult!
-  # add this when we get to post
-  # postScoreCard(input: PostScorecardInput!): ScorecardResult!
+  saveScorecard(input: PostScorecardInput!): ScorecardResult!
+  postScorecard(input: PostScorecardInput!): ScorecardResult!
 }

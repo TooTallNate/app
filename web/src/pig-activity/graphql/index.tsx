@@ -427,6 +427,7 @@ export type Mutation = {
   postPigMove: PigMoveResult;
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
+  postScorecard: ScorecardResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
@@ -471,6 +472,10 @@ export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
+};
+
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
 };
@@ -500,7 +505,7 @@ export type MutationSavePigWeanArgs = {
 };
 
 export type MutationSaveScorecardArgs = {
-  input: SaveScorecardInput;
+  input: PostScorecardInput;
 };
 
 export type MutationSetAreaOperatorArgs = {
@@ -582,18 +587,13 @@ export type ScorecardJob = {
   personResponsible: Scalars["String"];
 };
 
-export type PostScorecardInput = {
-  job: Scalars["String"];
-  operator: Scalars["String"];
-};
-
 export type ScorecardElementResponseInput = {
   elementId: Scalars["ID"];
   numericValue?: Maybe<Scalars["Float"]>;
   stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type SaveScorecardInput = {
+export type PostScorecardInput = {
   job: Scalars["String"];
   data: Array<ScorecardElementResponseInput>;
 };

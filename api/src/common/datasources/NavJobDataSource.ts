@@ -68,8 +68,8 @@ export default class PigJobNavDataSource extends NavDataSource {
     );
   }
 
-  getJobTasks(template: string): Promise<NavJobTask[]> {
-    let filter = this.buildFilter(f => f.equals("Job_No", template));
+  getJobTasks(number: string): Promise<NavJobTask[]> {
+    let filter = this.buildFilter(f => f.equals("Job_No", number));
 
     return this.get(`/JobTasks?$filter=${filter}`);
   }

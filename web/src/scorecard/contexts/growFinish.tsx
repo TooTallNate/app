@@ -10,7 +10,8 @@ import React, {
 import {
   useNurseryFinisherScorecardLazyQuery,
   useSaveScorecardMutation,
-  NurseryFinisherScorecardQuery
+  NurseryFinisherScorecardQuery,
+  usePostScorecardMutation
 } from "../graphql";
 
 export interface GrowFinishContextValue {
@@ -59,6 +60,8 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     loadJob,
     { data: scorecardResult, loading: loadingJob }
   ] = useNurseryFinisherScorecardLazyQuery();
+  const [save] = useSaveScorecardMutation();
+  const [submitForm] = usePostScorecardMutation();
 
   // Only use the lazy query result if it matches the selected job number.
   // There is some delay until the results are loaded.
@@ -70,8 +73,6 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   ) {
     data = scorecardResult;
   }
-
-  const [save] = useSaveScorecardMutation({});
 
   // Update the from state when a new scorecard is loaded.
   useEffect(() => {
@@ -102,8 +103,20 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   }, [jobNumber, loadJob]);
 
   const submit = useCallback(async () => {
-    // await submitMethod(formState);
-  }, []);
+    if (jobNumber) {
+      await submitForm({
+        variables: {
+          input: {
+            job: jobNumber,
+            data: Object.entries(formState).map(([key, value]) => ({
+              elementId: key,
+              ...value
+            }))
+          }
+        }
+      });
+    }
+  }, [formState, jobNumber, submitForm]);
 
   const saveProgress = useCallback(
     async (values: Partial<FormValues> = {}) => {

@@ -16,7 +16,8 @@ export enum NavJobJournalTemplate {
 }
 
 export enum NavJobJournalBatch {
-  FarrowBackend = "FARROW-BE"
+  FarrowBackend = "FARROW-BE",
+  FarmApp = "FARMAPP"
 }
 
 export enum NavReasonCode {

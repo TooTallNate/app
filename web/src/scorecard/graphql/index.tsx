@@ -427,6 +427,7 @@ export type Mutation = {
   postPigMove: PigMoveResult;
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
+  postScorecard: ScorecardResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
@@ -471,6 +472,10 @@ export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
+};
+
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
 };
@@ -500,7 +505,7 @@ export type MutationSavePigWeanArgs = {
 };
 
 export type MutationSaveScorecardArgs = {
-  input: SaveScorecardInput;
+  input: PostScorecardInput;
 };
 
 export type MutationSetAreaOperatorArgs = {
@@ -582,18 +587,13 @@ export type ScorecardJob = {
   personResponsible: Scalars["String"];
 };
 
-export type PostScorecardInput = {
-  job: Scalars["String"];
-  operator: Scalars["String"];
-};
-
 export type ScorecardElementResponseInput = {
   elementId: Scalars["ID"];
   numericValue?: Maybe<Scalars["Float"]>;
   stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type SaveScorecardInput = {
+export type PostScorecardInput = {
   job: Scalars["String"];
   data: Array<ScorecardElementResponseInput>;
 };
@@ -730,11 +730,22 @@ export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
 };
 
 export type SaveScorecardMutationVariables = {
-  input: SaveScorecardInput;
+  input: PostScorecardInput;
 };
 
 export type SaveScorecardMutation = { __typename?: "Mutation" } & {
   saveScorecard: { __typename?: "ScorecardResult" } & Pick<
+    ScorecardResult,
+    "success"
+  > & { scorecard: { __typename?: "Scorecard" } & ScorecardFieldsFragment };
+};
+
+export type PostScorecardMutationVariables = {
+  input: PostScorecardInput;
+};
+
+export type PostScorecardMutation = { __typename?: "Mutation" } & {
+  postScorecard: { __typename?: "ScorecardResult" } & Pick<
     ScorecardResult,
     "success"
   > & { scorecard: { __typename?: "Scorecard" } & ScorecardFieldsFragment };
@@ -1166,7 +1177,7 @@ export type NurseryFinisherScorecardQueryResult = ApolloReactCommon.QueryResult<
   NurseryFinisherScorecardQueryVariables
 >;
 export const SaveScorecardDocument = gql`
-  mutation saveScorecard($input: SaveScorecardInput!) {
+  mutation saveScorecard($input: PostScorecardInput!) {
     saveScorecard(input: $input) {
       success
       scorecard {
@@ -1218,6 +1229,60 @@ export type SaveScorecardMutationResult = ApolloReactCommon.MutationResult<
 export type SaveScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SaveScorecardMutation,
   SaveScorecardMutationVariables
+>;
+export const PostScorecardDocument = gql`
+  mutation postScorecard($input: PostScorecardInput!) {
+    postScorecard(input: $input) {
+      success
+      scorecard {
+        ...scorecardFields
+      }
+    }
+  }
+  ${ScorecardFieldsFragmentDoc}
+`;
+export type PostScorecardMutationFn = ApolloReactCommon.MutationFunction<
+  PostScorecardMutation,
+  PostScorecardMutationVariables
+>;
+
+/**
+ * __usePostScorecardMutation__
+ *
+ * To run a mutation, you first call `usePostScorecardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostScorecardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postScorecardMutation, { data, loading, error }] = usePostScorecardMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostScorecardMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PostScorecardMutation,
+    PostScorecardMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    PostScorecardMutation,
+    PostScorecardMutationVariables
+  >(PostScorecardDocument, baseOptions);
+}
+export type PostScorecardMutationHookResult = ReturnType<
+  typeof usePostScorecardMutation
+>;
+export type PostScorecardMutationResult = ApolloReactCommon.MutationResult<
+  PostScorecardMutation
+>;
+export type PostScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PostScorecardMutation,
+  PostScorecardMutationVariables
 >;
 export const FarrowingBackendScorecardAreasDocument = gql`
   query FarrowingBackendScorecardAreas {

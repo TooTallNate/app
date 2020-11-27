@@ -449,6 +449,7 @@ export type Mutation = {
   postPigMove: PigMoveResult;
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
+  postScorecard: ScorecardResult;
   saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
@@ -493,6 +494,10 @@ export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
+};
+
 export type MutationSaveFarrowingBackendScorecardArgs = {
   input: SaveFarrowingBackendScorecardInput;
 };
@@ -522,7 +527,7 @@ export type MutationSavePigWeanArgs = {
 };
 
 export type MutationSaveScorecardArgs = {
-  input: SaveScorecardInput;
+  input: PostScorecardInput;
 };
 
 export type MutationSetAreaOperatorArgs = {
@@ -604,18 +609,13 @@ export type ScorecardJob = {
   personResponsible: Scalars["String"];
 };
 
-export type PostScorecardInput = {
-  job: Scalars["String"];
-  operator: Scalars["String"];
-};
-
 export type ScorecardElementResponseInput = {
   elementId: Scalars["ID"];
   numericValue?: Maybe<Scalars["Float"]>;
   stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type SaveScorecardInput = {
+export type PostScorecardInput = {
   job: Scalars["String"];
   data: Array<ScorecardElementResponseInput>;
 };
@@ -898,9 +898,8 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   ScorecardPage: ResolverTypeWrapper<ScorecardPage>;
   ScorecardJob: ResolverTypeWrapper<ScorecardJob>;
-  PostScorecardInput: PostScorecardInput;
   ScorecardElementResponseInput: ScorecardElementResponseInput;
-  SaveScorecardInput: SaveScorecardInput;
+  PostScorecardInput: PostScorecardInput;
   ScorecardResult: ResolverTypeWrapper<
     Omit<ScorecardResult, "scorecard"> & {
       scorecard: ResolversTypes["Scorecard"];
@@ -1014,9 +1013,8 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars["ID"];
   ScorecardPage: ScorecardPage;
   ScorecardJob: ScorecardJob;
-  PostScorecardInput: PostScorecardInput;
   ScorecardElementResponseInput: ScorecardElementResponseInput;
-  SaveScorecardInput: SaveScorecardInput;
+  PostScorecardInput: PostScorecardInput;
   ScorecardResult: Omit<ScorecardResult, "scorecard"> & {
     scorecard: ResolversParentTypes["Scorecard"];
   };
@@ -1629,6 +1627,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationPostPigWeanArgs, "input">
+  >;
+  postScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostScorecardArgs, "input">
   >;
   saveFarrowingBackendScorecard?: Resolver<
     ResolversTypes["FarrowingBackendScorecardResult"],

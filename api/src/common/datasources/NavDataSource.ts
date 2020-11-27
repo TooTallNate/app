@@ -1,7 +1,8 @@
 import {
   RESTDataSource,
   RequestOptions,
-  Response
+  Response,
+  Request
 } from "apollo-datasource-rest";
 import { GraphqlContext } from "../../context";
 import { ApolloError, AuthenticationError } from "apollo-server-express";
@@ -27,6 +28,13 @@ export default class NavDataSource extends RESTDataSource<GraphqlContext> {
 
   protected buildFilter(fn: FilterFunction) {
     return compileFilter(fn);
+  }
+
+  protected didReceiveResponse(response: Response, request: Request) {
+    if (process.env.NODE_ENV === "production") {
+      logger.info(`${request.method} ${request.url} ${response.status}`);
+    }
+    return super.didReceiveResponse(response, request);
   }
 
   // Convert ODATA response to a more typical REST response.

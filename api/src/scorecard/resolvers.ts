@@ -3,7 +3,8 @@ import {
   QueryResolvers,
   ScorecardEntry,
   FarrowingBackendScorecardResolvers,
-  ScorecardResolvers
+  ScorecardResolvers,
+  ScorecardElementResponseInput
 } from "../common/graphql";
 import {
   NavJobJournalLine,
@@ -16,6 +17,7 @@ import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
 import ScorecardModel from "./models/Scorecard";
+import { isFriday } from "date-fns";
 
 function postJobJournal(
   entry: Partial<NavJobJournalLine>,
@@ -169,17 +171,51 @@ export const mutations: MutationResolvers = {
     await doc.save();
     return { success: true, scorecard: doc };
   },
-  // async postGrowFinishScorecard(_, { input }) {
-  //   let doc =
-  //     (await GrowFinishScorecardModel.findOne({
-  //       job: input.job
-  //     })) || new GrowFinishScorecardModel();
-  //   doc.overwrite({
-  //     job: input.job
-  //   });
-  //   await doc.save();
-  //   return { success: true, scorecard: doc };
-  // },
+  async postScorecard(_, { input }, { dataSources, user }) {
+    const job = await dataSources.navJob.getByNo(input.job);
+    const jobTasks = (await dataSources.navJob.getJobTasks(job.No)).filter(
+      task => task.Job_Task_Type === "Posting"
+    );
+
+    const docNo = getDocumentNumber("SCR", user.name);
+    const caretaker = input.data.find(element =>
+      element.elementId.includes("CARETAKER")
+    ) || { stringValue: job.Person_Responsible };
+
+    for (const task of jobTasks) {
+      const element = input.data.find(
+        element => element.elementId === task.Job_Task_No
+      );
+      if (element) {
+        await postJobJournal(
+          {
+            Journal_Template_Name: NavJobJournalTemplate.Job,
+            Journal_Batch_Name: NavJobJournalBatch.FarmApp,
+            Document_No: docNo,
+            Job_No: job.No,
+            Location_Code: job.Site,
+            Job_Task_No: task.Job_Task_No,
+            No: caretaker.stringValue,
+            Quantity: element.numericValue || 1,
+            Description: element.stringValue || " "
+          },
+          dataSources.navJobJournal
+        );
+      }
+    }
+
+    const doc =
+      (await ScorecardModel.findOne({
+        job: input.job
+      })) || new ScorecardModel();
+    doc.overwrite({
+      job: input.job,
+      data: []
+    });
+    await doc.save();
+
+    return { success: true, scorecard: doc };
+  },
   async setAreaOperator(_, { input }, { dataSources }) {
     const area = await dataSources.navJob.updatePersonResponsible(
       input.area,
