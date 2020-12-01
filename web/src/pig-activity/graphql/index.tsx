@@ -23,6 +23,7 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  startDate?: Maybe<Scalars["String"]>;
   location: Location;
 };
 

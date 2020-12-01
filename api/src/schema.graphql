@@ -9,6 +9,7 @@ type Job {
   personResponsible: Resource!
   inventory: Int
   deadQuantity: Int
+  startDate: String
   location: Location!
 }
 

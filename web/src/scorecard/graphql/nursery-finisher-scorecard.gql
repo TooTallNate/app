@@ -9,6 +9,14 @@ fragment scorecardFields on Scorecard {
   }
 }
 
+query ScorecardJob($job: String!) {
+  job(number: $job) {
+    number
+    description
+    startDate
+  }
+}
+
 query ScorecardJobs {
   jobs(input: { groups: ["NURSGROWSITE"] }) {
     number
@@ -39,6 +47,7 @@ query NurseryFinisherScorecard($job: String!) {
     personResponsible {
       number
     }
+    startDate
   }
   scorecardPages(job: $job) {
     title

@@ -23,6 +23,7 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  startDate?: Maybe<Scalars["String"]>;
   location: Location;
 };
 
@@ -680,6 +681,16 @@ export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
   >;
 };
 
+export type ScorecardJobQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type ScorecardJobQuery = { __typename?: "Query" } & {
+  job?: Maybe<
+    { __typename?: "Job" } & Pick<Job, "number" | "description" | "startDate">
+  >;
+};
+
 export type ScorecardJobsQueryVariables = {};
 
 export type ScorecardJobsQuery = { __typename?: "Query" } & {
@@ -708,7 +719,7 @@ export type NurseryFinisherScorecardQueryVariables = {
 
 export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
   job?: Maybe<
-    { __typename?: "Job" } & Pick<Job, "number"> & {
+    { __typename?: "Job" } & Pick<Job, "number" | "startDate"> & {
         location: { __typename?: "Location" } & Pick<Location, "code">;
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
@@ -930,6 +941,64 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
+export const ScorecardJobDocument = gql`
+  query ScorecardJob($job: String!) {
+    job(number: $job) {
+      number
+      description
+      startDate
+    }
+  }
+`;
+
+/**
+ * __useScorecardJobQuery__
+ *
+ * To run a query within a React component, call `useScorecardJobQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScorecardJobQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function useScorecardJobQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ScorecardJobQuery,
+    ScorecardJobQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    ScorecardJobQuery,
+    ScorecardJobQueryVariables
+  >(ScorecardJobDocument, baseOptions);
+}
+export function useScorecardJobLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ScorecardJobQuery,
+    ScorecardJobQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ScorecardJobQuery,
+    ScorecardJobQueryVariables
+  >(ScorecardJobDocument, baseOptions);
+}
+export type ScorecardJobQueryHookResult = ReturnType<
+  typeof useScorecardJobQuery
+>;
+export type ScorecardJobLazyQueryHookResult = ReturnType<
+  typeof useScorecardJobLazyQuery
+>;
+export type ScorecardJobQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardJobQuery,
+  ScorecardJobQueryVariables
+>;
 export const ScorecardJobsDocument = gql`
   query ScorecardJobs {
     jobs(input: { groups: ["NURSGROWSITE"] }) {
@@ -1111,6 +1180,7 @@ export const NurseryFinisherScorecardDocument = gql`
       personResponsible {
         number
       }
+      startDate
     }
     scorecardPages(job: $job) {
       title
@@ -1177,7 +1247,7 @@ export type NurseryFinisherScorecardQueryResult = ApolloReactCommon.QueryResult<
   NurseryFinisherScorecardQueryVariables
 >;
 export const SaveScorecardDocument = gql`
-  mutation saveScorecard($input: PostScorecardInput!) {
+  mutation SaveScorecard($input: PostScorecardInput!) {
     saveScorecard(input: $input) {
       success
       scorecard {
@@ -1231,7 +1301,7 @@ export type SaveScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions
   SaveScorecardMutationVariables
 >;
 export const PostScorecardDocument = gql`
-  mutation postScorecard($input: PostScorecardInput!) {
+  mutation PostScorecard($input: PostScorecardInput!) {
     postScorecard(input: $input) {
       success
       scorecard {

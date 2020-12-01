@@ -20,6 +20,7 @@ const Job: JobResolvers = {
   },
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity,
+  startDate: job => job.Start_Date,
   async location(job, _, { dataSources }) {
     return dataSources.navLocation.getByCode(job.Site);
   }

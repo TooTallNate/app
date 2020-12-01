@@ -45,6 +45,7 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  startDate?: Maybe<Scalars["String"]>;
   location: Location;
 };
 
@@ -1053,6 +1054,11 @@ export type JobResolvers<
   inventory?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   deadQuantity?: Resolver<
     Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  startDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
