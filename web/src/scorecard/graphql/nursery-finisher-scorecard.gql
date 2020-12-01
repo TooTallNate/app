@@ -14,6 +14,7 @@ query ScorecardJob($job: String!) {
     number
     description
     startDate
+    deadQuantity
   }
 }
 

@@ -681,11 +681,11 @@ export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
   >;
 };
 
-export type ScorecardJobQueryVariables = {
+export type ScorecardPigJobQueryVariables = {
   job: Scalars["String"];
 };
 
-export type ScorecardJobQuery = { __typename?: "Query" } & {
+export type ScorecardPigJobQuery = { __typename?: "Query" } & {
   job?: Maybe<
     { __typename?: "Job" } & Pick<Job, "number" | "description" | "startDate">
   >;
@@ -941,8 +941,8 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
-export const ScorecardJobDocument = gql`
-  query ScorecardJob($job: String!) {
+export const ScorecardPigJobDocument = gql`
+  query ScorecardPigJob($job: String!) {
     job(number: $job) {
       number
       description
@@ -952,52 +952,52 @@ export const ScorecardJobDocument = gql`
 `;
 
 /**
- * __useScorecardJobQuery__
+ * __useScorecardPigJobQuery__
  *
- * To run a query within a React component, call `useScorecardJobQuery` and pass it any options that fit your needs.
- * When your component renders, `useScorecardJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useScorecardPigJobQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardPigJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useScorecardJobQuery({
+ * const { data, loading, error } = useScorecardPigJobQuery({
  *   variables: {
  *      job: // value for 'job'
  *   },
  * });
  */
-export function useScorecardJobQuery(
+export function useScorecardPigJobQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    ScorecardJobQuery,
-    ScorecardJobQueryVariables
+    ScorecardPigJobQuery,
+    ScorecardPigJobQueryVariables
   >
 ) {
   return ApolloReactHooks.useQuery<
-    ScorecardJobQuery,
-    ScorecardJobQueryVariables
-  >(ScorecardJobDocument, baseOptions);
+    ScorecardPigJobQuery,
+    ScorecardPigJobQueryVariables
+  >(ScorecardPigJobDocument, baseOptions);
 }
-export function useScorecardJobLazyQuery(
+export function useScorecardPigJobLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    ScorecardJobQuery,
-    ScorecardJobQueryVariables
+    ScorecardPigJobQuery,
+    ScorecardPigJobQueryVariables
   >
 ) {
   return ApolloReactHooks.useLazyQuery<
-    ScorecardJobQuery,
-    ScorecardJobQueryVariables
-  >(ScorecardJobDocument, baseOptions);
+    ScorecardPigJobQuery,
+    ScorecardPigJobQueryVariables
+  >(ScorecardPigJobDocument, baseOptions);
 }
-export type ScorecardJobQueryHookResult = ReturnType<
-  typeof useScorecardJobQuery
+export type ScorecardPigJobQueryHookResult = ReturnType<
+  typeof useScorecardPigJobQuery
 >;
-export type ScorecardJobLazyQueryHookResult = ReturnType<
-  typeof useScorecardJobLazyQuery
+export type ScorecardPigJobLazyQueryHookResult = ReturnType<
+  typeof useScorecardPigJobLazyQuery
 >;
-export type ScorecardJobQueryResult = ApolloReactCommon.QueryResult<
-  ScorecardJobQuery,
-  ScorecardJobQueryVariables
+export type ScorecardPigJobQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardPigJobQuery,
+  ScorecardPigJobQueryVariables
 >;
 export const ScorecardJobsDocument = gql`
   query ScorecardJobs {
