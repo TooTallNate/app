@@ -5,16 +5,16 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useGrowFinish, FormValue } from "../contexts/growFinish";
+import { useGrowFinish } from "../contexts/growFinish";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 
-export interface ScorecardWeeksOnFeedProps {
+export interface ScorecardMortalityProps {
   label: string;
   id: string;
 }
 
-const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
+const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   label,
   id
 }) => {
@@ -38,19 +38,14 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    let weeksOnFeed;
-    if (data && data.job && data.job.startDate) {
-      const today = new Date();
-      const postingDate = new Date(data.job.startDate);
-      const diff = Math.abs(today.valueOf() - postingDate.valueOf());
-      weeksOnFeed = Math.floor(Math.ceil(diff / (1000 * 3600 * 24)) / 7);
+    if (data && data.job && data.job.deadQuantity) {
+      setValue(name, data.job.deadQuantity);
     } else {
-      weeksOnFeed = undefined;
+      setValue(name, "Unknown");
     }
-    setValue(name, weeksOnFeed);
   }, [data, setValue, name]);
 
-  let weeksOnFeed = watch(name);
+  let deadQuantity = watch(name);
 
   return (
     <FormField name={name}>
@@ -58,7 +53,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
       <FormFieldInput noRegister>
         <StaticValue
           value={
-            typeof weeksOnFeed === "number" ? `${weeksOnFeed} weeks` : "Unknown"
+            typeof deadQuantity === "number" ? `${data?.job?.deadQuantity} deads` : "Unknown"
           }
         />
       </FormFieldInput>
@@ -67,4 +62,4 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   );
 };
 
-export default ScorecardWeeksOnFeed;
+export default ScorecardMortality;

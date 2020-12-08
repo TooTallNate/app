@@ -9,7 +9,7 @@ fragment scorecardFields on Scorecard {
   }
 }
 
-query ScorecardJob($job: String!) {
+query ScorecardPigJob($job: String!) {
   job(number: $job) {
     number
     description
@@ -48,7 +48,6 @@ query NurseryFinisherScorecard($job: String!) {
     personResponsible {
       number
     }
-    startDate
   }
   scorecardPages(job: $job) {
     title

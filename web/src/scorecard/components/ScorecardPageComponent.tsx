@@ -18,9 +18,9 @@ import ScorecardNumberInput, {
   isComplete as isNumperComplete
 } from "./ScorecardNumberInput";
 import { FormValue } from "../contexts/growFinish";
-import ScorecardWeeksOnFeed, {
-  isComplete as isWeeksOnFeedComplete
-} from "./ScorecardWeeksOnFeed";
+import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
+import ScorecardMortalityToDate from "./ScorecardMortality";
+import ScorecardMortality from "./ScorecardMortality";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -51,6 +51,8 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardNumberInput {...props} min={-30} max={110} />;
     case "WEEKSONFEED":
       return <ScorecardWeeksOnFeed {...props} />;
+    case "MORTALITY":
+      return <ScorecardMortality {...props} />;
     default:
       return null;
   }
@@ -64,8 +66,7 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   SCORE5: isScoresComplete,
   SCORE10: isScoresComplete,
   HEALTH: isNumperComplete,
-  TEMP: isNumperComplete,
-  WEEKSONFEED: isWeeksOnFeedComplete
+  TEMP: isNumperComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {

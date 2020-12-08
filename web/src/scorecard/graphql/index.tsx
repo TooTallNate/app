@@ -687,7 +687,10 @@ export type ScorecardPigJobQueryVariables = {
 
 export type ScorecardPigJobQuery = { __typename?: "Query" } & {
   job?: Maybe<
-    { __typename?: "Job" } & Pick<Job, "number" | "description" | "startDate">
+    { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "startDate" | "deadQuantity"
+    >
   >;
 };
 
@@ -719,7 +722,7 @@ export type NurseryFinisherScorecardQueryVariables = {
 
 export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
   job?: Maybe<
-    { __typename?: "Job" } & Pick<Job, "number" | "startDate"> & {
+    { __typename?: "Job" } & Pick<Job, "number"> & {
         location: { __typename?: "Location" } & Pick<Location, "code">;
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
@@ -947,6 +950,7 @@ export const ScorecardPigJobDocument = gql`
       number
       description
       startDate
+      deadQuantity
     }
   }
 `;
@@ -1180,7 +1184,6 @@ export const NurseryFinisherScorecardDocument = gql`
       personResponsible {
         number
       }
-      startDate
     }
     scorecardPages(job: $job) {
       title
