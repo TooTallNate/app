@@ -14,7 +14,7 @@ import ScorecardSupervisor, {
 import ScorecardScores, {
   isComplete as isScoresComplete
 } from "./ScorecardScores";
-import ScorecardNumberInput, {
+import ScorecardHealthInput, {
   isComplete as isNumperComplete
 } from "./ScorecardNumberInput";
 import { FormValue } from "../contexts/growFinish";
@@ -22,6 +22,7 @@ import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
 import ScorecardMortality from "./ScorecardMortality";
 import ScorecardPostingDate from "./ScorecardPostingDate";
 import ScorecardTargetTemp from "./ScorecardTargetTemp";
+import ScorecardTempInput from "./ScorecardTemp";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -47,9 +48,9 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
     case "SCORE10":
       return <ScorecardScores {...props} min={1} max={10} step={1} />;
     case "HEALTH":
-      return <ScorecardNumberInput {...props} min={0} max={100} />;
+      return <ScorecardHealthInput {...props} min={0} max={100} />;
     case "TEMP":
-      return <ScorecardNumberInput {...props} min={-30} max={110} />;
+      return <ScorecardTempInput {...props} />;
     case "WEEKSONFEED":
       return <ScorecardWeeksOnFeed {...props} />;
     case "MORTALITY":

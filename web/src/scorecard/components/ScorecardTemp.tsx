@@ -8,19 +8,12 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import { FormValue, useGrowFinish } from "../contexts/growFinish";
 import { useFormContext } from "react-hook-form";
 
-export interface ScorecardHealthInputProps {
+export interface ScorecardTempProps {
   label: string;
   id: string;
-  min: number;
-  max: number;
 }
 
-const ScorecardHealthInput: React.FC<ScorecardHealthInputProps> = ({
-  label,
-  id,
-  min,
-  max
-}) => {
+const ScorecardTempInput: React.FC<ScorecardTempProps> = ({ label, id }) => {
   const { formState } = useGrowFinish();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
@@ -38,16 +31,16 @@ const ScorecardHealthInput: React.FC<ScorecardHealthInputProps> = ({
       name={name}
       rules={{
         min: {
-          value: min,
-          message: `Must be at least ${min}.`
+          value: -30,
+          message: `Must be at least -30ºF.`
         },
         max: {
-          value: max,
-          message: `Must be at most ${max}.`
+          value: 110,
+          message: `Must be at most 110ºF.`
         }
       }}
     >
-      <FormFieldLabel>{label} (%)</FormFieldLabel>
+      <FormFieldLabel>{label} (ºF)</FormFieldLabel>
       <FormFieldInput>
         <NumberInput className="w-16" />
       </FormFieldInput>
@@ -59,4 +52,4 @@ const ScorecardHealthInput: React.FC<ScorecardHealthInputProps> = ({
 export const isComplete = ({ numericValue }: FormValue) =>
   typeof numericValue === "number";
 
-export default ScorecardHealthInput;
+export default ScorecardTempInput;
