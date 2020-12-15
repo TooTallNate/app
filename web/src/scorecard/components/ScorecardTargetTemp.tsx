@@ -4,37 +4,35 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { useScorecardPigJobLazyQuery } from "../graphql/index";
+import { useScorecardTargetTempLazyQuery } from "../graphql/index";
 import { useGrowFinish } from "../contexts/growFinish";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
-import TextInput from "../../common/components/input/TextInput";
 
-export interface ScorecardPostingDateProps {
+export interface ScorecardTargetTempProps {
   label: string;
   id: string;
 }
 
-const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
+const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   label,
   id
 }) => {
   const { formState } = useGrowFinish();
   const { setValue, register, unregister, watch } = useFormContext();
-  const [loadJob, { data }] = useScorecardPigJobLazyQuery();
-  const name = `${id}.stringValue`;
-  console.log(name);
+  const [loadResource, { data }] = useScorecardTargetTempLazyQuery();
+  const name = `${id}.numericValue`;
   const [, jobElement] =
-    Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
-    [];
+    Object.entries(formState).find(
+      ([id, entry]) => id.slice(4) === "WEEKSONFEED"
+    ) || [];
 
   useEffect(() => {
-    if (jobElement && jobElement.stringValue) {
-      loadJob({ variables: { job: jobElement.stringValue } });
+    if (jobElement && jobElement.numericValue) {
+      const weeksOnFeed = `${jobElement.numericValue}TARGETTEMP`;
+      loadResource({ variables: { code: weeksOnFeed } });
     }
-  }, [jobElement, loadJob]);
-
-  console.log(name);
+  }, [jobElement, loadResource]);
 
   useEffect(() => {
     register({ name, type: "custom" });
@@ -42,14 +40,14 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    if (data && data.job && data.job.startDate) {
-      setValue(name, data.job.startDate);
+    if (data && data.resource) {
+      setValue(name, data.resource.unitPrice);
     } else {
-      setValue(name, "Enter Date");
+      setValue(name, undefined);
     }
   }, [data, setValue, name]);
 
-  let startDate = watch(name);
+  let targetTemp = watch(name);
 
   return (
     <FormField name={name}>
@@ -57,16 +55,13 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
       <FormFieldInput noRegister>
         <StaticValue
           value={
-            typeof startDate === "string" && (data && data.job)
-              ? `${data.job.startDate}`
-              : "Enter Date"
+            typeof targetTemp === "number" ? `${targetTemp} Degrees` : "Unknown"
           }
         />
-        <TextInput />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
   );
 };
 
-export default ScorecardPostingDate;
+export default ScorecardTargetTemp;

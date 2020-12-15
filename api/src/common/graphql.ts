@@ -65,6 +65,7 @@ export type Resource = {
   __typename?: "Resource";
   number: Scalars["String"];
   name: Scalars["String"];
+  unitPrice?: Maybe<Scalars["Float"]>;
 };
 
 export type Location = {
@@ -812,6 +813,7 @@ export type ResolversTypes = ResolversObject<{
   Item: ResolverTypeWrapper<NavItem>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Location: ResolverTypeWrapper<NavLocation>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -824,7 +826,6 @@ export type ResolversTypes = ResolversObject<{
   PigAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
   PigQuantityInput: PigQuantityInput;
   PigOptionalQuantityInput: PigOptionalQuantityInput;
@@ -939,6 +940,7 @@ export type ResolversParentTypes = ResolversObject<{
   Item: NavItem;
   Reason: NavReason;
   Resource: NavResource;
+  Float: Scalars["Float"];
   Location: NavLocation;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -951,7 +953,6 @@ export type ResolversParentTypes = ResolversObject<{
   PigAdjustmentEvent: NavStandardItemJournal;
   PigMortalityEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
-  Float: Scalars["Float"];
   PigQuantity: PigQuantity;
   PigQuantityInput: PigQuantityInput;
   PigOptionalQuantityInput: PigOptionalQuantityInput;
@@ -1090,6 +1091,7 @@ export type ResourceResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

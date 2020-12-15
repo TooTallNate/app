@@ -9,7 +9,8 @@ import {
 
 const Resource: ResourceResolvers = {
   number: resource => resource.No,
-  name: resource => resource.Name
+  name: resource => resource.Name,
+  unitPrice: resource => resource.Unit_Price
 };
 
 const Job: JobResolvers = {
@@ -58,8 +59,10 @@ export const queries: QueryResolvers = {
       ...(input.type && { type: input.type })
     });
   },
-  resource(_, { code }, { dataSources }) {
-    return dataSources.navResource.getByCode(code);
+  async resource(_, { code }, { dataSources }) {
+    const result = await dataSources.navResource.getByCode(code);
+    console.log(result);
+    return result;
   }
 };
 

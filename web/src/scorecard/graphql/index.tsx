@@ -43,6 +43,7 @@ export type Resource = {
   __typename?: "Resource";
   number: Scalars["String"];
   name: Scalars["String"];
+  unitPrice?: Maybe<Scalars["Float"]>;
 };
 
 export type Location = {
@@ -681,6 +682,19 @@ export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
   >;
 };
 
+export type ScorecardTargetTempQueryVariables = {
+  code: Scalars["String"];
+};
+
+export type ScorecardTargetTempQuery = { __typename?: "Query" } & {
+  resource?: Maybe<
+    { __typename?: "Resource" } & Pick<
+      Resource,
+      "number" | "name" | "unitPrice"
+    >
+  >;
+};
+
 export type ScorecardPigJobQueryVariables = {
   job: Scalars["String"];
 };
@@ -944,6 +958,64 @@ export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
+export const ScorecardTargetTempDocument = gql`
+  query ScorecardTargetTemp($code: String!) {
+    resource(code: $code) {
+      number
+      name
+      unitPrice
+    }
+  }
+`;
+
+/**
+ * __useScorecardTargetTempQuery__
+ *
+ * To run a query within a React component, call `useScorecardTargetTempQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardTargetTempQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScorecardTargetTempQuery({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useScorecardTargetTempQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    ScorecardTargetTempQuery,
+    ScorecardTargetTempQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    ScorecardTargetTempQuery,
+    ScorecardTargetTempQueryVariables
+  >(ScorecardTargetTempDocument, baseOptions);
+}
+export function useScorecardTargetTempLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ScorecardTargetTempQuery,
+    ScorecardTargetTempQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    ScorecardTargetTempQuery,
+    ScorecardTargetTempQueryVariables
+  >(ScorecardTargetTempDocument, baseOptions);
+}
+export type ScorecardTargetTempQueryHookResult = ReturnType<
+  typeof useScorecardTargetTempQuery
+>;
+export type ScorecardTargetTempLazyQueryHookResult = ReturnType<
+  typeof useScorecardTargetTempLazyQuery
+>;
+export type ScorecardTargetTempQueryResult = ApolloReactCommon.QueryResult<
+  ScorecardTargetTempQuery,
+  ScorecardTargetTempQueryVariables
+>;
 export const ScorecardPigJobDocument = gql`
   query ScorecardPigJob($job: String!) {
     job(number: $job) {

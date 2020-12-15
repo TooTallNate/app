@@ -9,6 +9,14 @@ fragment scorecardFields on Scorecard {
   }
 }
 
+query ScorecardTargetTemp($code: String!) {
+  resource(code: $code) {
+    number
+    name
+    unitPrice
+  }
+}
+
 query ScorecardPigJob($job: String!) {
   job(number: $job) {
     number

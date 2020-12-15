@@ -45,6 +45,7 @@ export interface NavLocation {
 export interface NavResource {
   No: string;
   Name: string;
+  Unit_Price: number;
 }
 
 export interface NavItemJournalLine {

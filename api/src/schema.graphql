@@ -26,6 +26,7 @@ type Reason {
 type Resource {
   number: String!
   name: String!
+  unitPrice: Float
 }
 
 type Location {

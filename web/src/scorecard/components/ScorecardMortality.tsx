@@ -53,7 +53,9 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
       <FormFieldInput noRegister>
         <StaticValue
           value={
-            typeof deadQuantity === "number" ? `${data?.job?.deadQuantity} deads` : "Unknown"
+            typeof deadQuantity === "number" && (data && data.job)
+              ? `${data.job.deadQuantity} deads`
+              : "Unknown"
           }
         />
       </FormFieldInput>

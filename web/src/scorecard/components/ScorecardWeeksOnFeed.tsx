@@ -5,7 +5,7 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useGrowFinish, FormValue } from "../contexts/growFinish";
+import { useGrowFinish } from "../contexts/growFinish";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 

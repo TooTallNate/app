@@ -21,6 +21,7 @@ import { FormValue } from "../contexts/growFinish";
 import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
 import ScorecardMortality from "./ScorecardMortality";
 import ScorecardPostingDate from "./ScorecardPostingDate";
+import ScorecardTargetTemp from "./ScorecardTargetTemp";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -55,6 +56,8 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardMortality {...props} />;
     // case "POSTDATE":
     //   return <ScorecardPostingDate {...props} />;
+    case "TEMPTARGET":
+      return <ScorecardTargetTemp {...props} />;
     default:
       return null;
   }
