@@ -23,7 +23,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   const { setValue, register, unregister, watch } = useFormContext();
   const [loadJob, { data }] = useScorecardPigJobLazyQuery();
   const name = `${id}.stringValue`;
-  console.log(name);
+  const elementState = formState[id];
   const [, jobElement] =
     Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
     [];
@@ -33,8 +33,6 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
       loadJob({ variables: { job: jobElement.stringValue } });
     }
   }, [jobElement, loadJob]);
-
-  console.log(name);
 
   useEffect(() => {
     register({ name, type: "custom" });
@@ -55,14 +53,18 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput noRegister>
-        <StaticValue
-          value={
-            typeof startDate === "string" && (data && data.job)
-              ? `${data.job.startDate}`
-              : "Enter Date"
+        <StaticValue value="DD/MM/YYYY" />
+        <TextInput
+          name="dateField"
+          ref={
+            register({
+              pattern: {
+                value: /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)\d{2}/,
+                message: 'Not a valid date format'
+              }
+            })
           }
         />
-        <TextInput />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
