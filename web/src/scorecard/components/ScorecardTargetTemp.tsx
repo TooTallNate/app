@@ -23,13 +23,18 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   const [loadResource, { data }] = useScorecardTargetTempLazyQuery();
   const name = `${id}.numericValue`;
   const [, jobElement] =
-    Object.entries(formState).find(
-      ([id, entry]) => id.slice(4) === "WEEKSONFEED"
-    ) || [];
+    Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
+    [];
+
+  //calculate weeks on feed, use that to query resource
 
   useEffect(() => {
     if (jobElement && jobElement.numericValue) {
-      const weeksOnFeed = `${jobElement.numericValue}TARGETTEMP`;
+      let weeksOnFeed = "16TARGETTEMP";
+      if (jobElement.numericValue >= 16 || !jobElement.numericValue) {
+        weeksOnFeed = `${jobElement.numericValue}TARGETTEMP`;
+      }
+      console.log();
       loadResource({ variables: { code: weeksOnFeed } });
     }
   }, [jobElement, loadResource]);
@@ -42,8 +47,6 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   useEffect(() => {
     if (data && data.resource) {
       setValue(name, data.resource.unitPrice);
-    } else {
-      setValue(name, undefined);
     }
   }, [data, setValue, name]);
 
@@ -53,11 +56,7 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput noRegister>
-        <StaticValue
-          value={
-            typeof targetTemp === "number" ? `${targetTemp} Degrees` : "Unknown"
-          }
-        />
+        <StaticValue value={targetTemp} />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

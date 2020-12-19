@@ -52,7 +52,7 @@
     "apollo-datasource-rest": "0.9.2",
     "apollo-server-express": "2.14.1",
     "connect-mongo": "3.0.0",
-    "date-fns": "2.9.0",
+    "date-fns": "2.16.1",
     "dotenv": "8.1.0",
     "downshift": "5.0.3",
     "express-session": "1.16.2",

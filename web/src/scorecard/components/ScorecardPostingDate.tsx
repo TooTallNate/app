@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import isMatch from "date-fns/isMatch";
+import format from "date-fns/format";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -15,56 +17,41 @@ export interface ScorecardPostingDateProps {
   id: string;
 }
 
+const DATEFORMAT = "MM/dd/yyyy";
+
 const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   label,
   id
 }) => {
   const { formState } = useGrowFinish();
-  const { setValue, register, unregister, watch } = useFormContext();
-  const [loadJob, { data }] = useScorecardPigJobLazyQuery();
+  const { setValue } = useFormContext();
   const name = `${id}.stringValue`;
-  const elementState = formState[id];
-  const [, jobElement] =
-    Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
-    [];
+  const elementState = formState[id] || {};
 
   useEffect(() => {
-    if (jobElement && jobElement.stringValue) {
-      loadJob({ variables: { job: jobElement.stringValue } });
-    }
-  }, [jobElement, loadJob]);
-
-  useEffect(() => {
-    register({ name, type: "custom" });
-    return () => unregister(name);
-  }, [register, name, unregister]);
-
-  useEffect(() => {
-    if (data && data.job && data.job.startDate) {
-      setValue(name, data.job.startDate);
-    } else {
-      setValue(name, "Enter Date");
-    }
-  }, [data, setValue, name]);
-
-  let startDate = watch(name);
+    setValue(
+      name,
+      elementState.stringValue
+        ? elementState.stringValue
+        : format(new Date(), DATEFORMAT)
+    );
+  }, [elementState, name, setValue]);
 
   return (
-    <FormField name={name}>
+    <FormField
+      name={name}
+      rules={{
+        validate: {
+          isDate: (value: string) =>
+            !value ||
+            isMatch(value, DATEFORMAT) ||
+            "Date must be in format MM/DD/YYYY"
+        }
+      }}
+    >
       <FormFieldLabel>{label}</FormFieldLabel>
-      <FormFieldInput noRegister>
-        <StaticValue value="DD/MM/YYYY" />
-        <TextInput
-          name="dateField"
-          ref={
-            register({
-              pattern: {
-                value: /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)\d{2}/,
-                message: 'Not a valid date format'
-              }
-            })
-          }
-        />
+      <FormFieldInput>
+        <TextInput />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
