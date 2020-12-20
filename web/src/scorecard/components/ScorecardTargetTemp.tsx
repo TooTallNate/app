@@ -48,11 +48,9 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
       } else {
         setWeeksOnFeed(tempWeeks);
       }
-    } else {
-      setWeeksOnFeed(16);
+      const resourceNo = `${weeksOnFeed}TARGETTEMP`;
+      loadResource({ variables: { code: resourceNo } });
     }
-    const resourceNo = `${weeksOnFeed}TARGETTEMP`;
-    loadResource({ variables: { code: resourceNo } });
   }, [jobData, weeksOnFeed, loadResource]);
 
   useEffect(() => {
@@ -65,14 +63,15 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
     register({ name, type: "custom" });
     return () => unregister(name);
   }, [register, name, unregister]);
-
   let targetTemp = watch(name);
 
   return (
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput noRegister>
-        <StaticValue value={targetTemp} />
+        <StaticValue value={
+            typeof targetTemp === "number" ? `${targetTemp} Degrees` : ""
+          } />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
