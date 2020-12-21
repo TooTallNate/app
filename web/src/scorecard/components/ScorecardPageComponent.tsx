@@ -55,8 +55,8 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardWeeksOnFeed {...props} />;
     case "MORTALITY":
       return <ScorecardMortality {...props} />;
-    // case "POSTDATE":
-    //   return <ScorecardPostingDate {...props} />;
+    case "POSTDATE":
+      return <ScorecardPostingDate {...props} />;
     case "TEMPTARGET":
       return <ScorecardTargetTemp {...props} />;
     default:
