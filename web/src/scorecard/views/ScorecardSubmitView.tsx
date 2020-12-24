@@ -1,22 +1,22 @@
 import React from "react";
-import { useGrowFinish } from "../../contexts/growFinish";
-import ViewContent from "../../../common/components/view/ViewContent";
-import View from "../../../common/components/view/View";
-import Title from "../../../common/components/view/ViewTitle";
-import ViewHeader from "../../../common/components/view/ViewHeader";
-import BackButton from "../../../common/components/view/BackButton";
-import Button from "../../../common/components/input/Button";
-import Stack from "../../../common/components/layout/Stack";
+import { useScorecard } from "../contexts/scorecard";
+import ViewContent from "../../common/components/view/ViewContent";
+import View from "../../common/components/view/View";
+import Title from "../../common/components/view/ViewTitle";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import BackButton from "../../common/components/view/BackButton";
+import Button from "../../common/components/input/Button";
+import Stack from "../../common/components/layout/Stack";
 import { useHistory, Link, useRouteMatch } from "react-router-dom";
-import { isElementComplete } from "../../components/ScorecardPageComponent";
+import { isElementComplete } from "../components/ScorecardPageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 const ScorecardSubmitView: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const { formConfig, formState, submit, saveProgress } = useGrowFinish();
+  const { formConfig, formState, submit, saveProgress } = useScorecard();
 
   const onSave = async () => {
     await saveProgress();

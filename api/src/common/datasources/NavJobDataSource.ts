@@ -10,6 +10,16 @@ export interface JobFilter {
 }
 
 export default class PigJobNavDataSource extends NavDataSource {
+  getPostingGroups(prefix?: string) {
+    let odataFilter;
+    if (prefix) {
+      odataFilter = this.buildFilter(f => f.startsWith("Code", prefix));
+    }
+    const filterStr = odataFilter ? `$filter=${odataFilter}` : "";
+
+    return this.get(`/JobPostingGroups?${filterStr}`);
+  }
+
   getByNo(no: string): Promise<NavJob | undefined> {
     return this.get(`/Jobs('${no}')`);
   }

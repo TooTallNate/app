@@ -5,7 +5,7 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 
@@ -18,7 +18,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   label,
   id
 }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue, register, unregister, watch } = useFormContext();
   const [loadJob, { data }] = useScorecardPigJobLazyQuery();
   const name = `${id}.numericValue`;

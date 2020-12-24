@@ -5,7 +5,7 @@ import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 
 export interface ScorecardNumberInputProps {
@@ -21,7 +21,7 @@ const ScorecardNumberInput: React.FC<ScorecardNumberInputProps> = ({
   min,
   max
 }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
   const { numericValue } = formState[id] || {};

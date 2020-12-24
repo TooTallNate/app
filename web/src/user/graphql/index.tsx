@@ -64,14 +64,9 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
-  personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -90,16 +85,8 @@ export type Query = {
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
   scorecardConfig?: Maybe<ScorecardConfig>;
-  scorecardPages: Array<ScorecardPage>;
+  scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -147,10 +134,6 @@ export type QueryScorecardArgs = {
 };
 
 export type QueryScorecardConfigArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryScorecardPagesArgs = {
   job: Scalars["String"];
 };
 
@@ -425,7 +408,6 @@ export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -433,7 +415,6 @@ export type Mutation = {
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
   postScorecard: ScorecardResult;
-  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
@@ -441,16 +422,11 @@ export type Mutation = {
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
   saveScorecard: ScorecardResult;
-  setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -481,10 +457,6 @@ export type MutationPostScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: SaveFarrowingBackendScorecardInput;
-};
-
 export type MutationSavePigAdjustmentArgs = {
   input: SavePigAdjustmentInput;
 };
@@ -513,63 +485,14 @@ export type MutationSaveScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSetAreaOperatorArgs = {
-  input: SetAreaOperatorInput;
-};
-
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
 };
 
-export type ScorecardEntry = {
-  __typename?: "ScorecardEntry";
-  score?: Maybe<Scalars["Int"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type ScorecardEntryInput = {
-  score: Scalars["Int"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type FarrowingBackendScorecard = {
-  __typename?: "FarrowingBackendScorecard";
-  area: Job;
-  operator?: Maybe<Resource>;
-  sows: ScorecardEntry;
-  piglets: ScorecardEntry;
-  feed: ScorecardEntry;
-  water: ScorecardEntry;
-  crate: ScorecardEntry;
-  room: ScorecardEntry;
-};
-
-export type PostFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
-};
-
-export type SaveFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
-};
-
-export type FarrowingBackendScorecardResult = {
-  __typename?: "FarrowingBackendScorecardResult";
-  success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+export type ScorecardGroup = {
+  __typename?: "ScorecardGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type ScorecardElement = {
@@ -592,12 +515,6 @@ export type ScorecardConfig = {
   pages: Array<ScorecardPage>;
 };
 
-export type ScorecardJob = {
-  __typename?: "ScorecardJob";
-  number: Scalars["String"];
-  personResponsible: Scalars["String"];
-};
-
 export type ScorecardElementResponseInput = {
   elementId: Scalars["ID"];
   numericValue?: Maybe<Scalars["Float"]>;
@@ -612,7 +529,7 @@ export type PostScorecardInput = {
 export type ScorecardResult = {
   __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: Scorecard;
+  scorecard?: Maybe<Scorecard>;
 };
 
 export type ScorecardElementResponse = {
@@ -626,17 +543,6 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
-};
-
-export type SetAreaOperatorInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-};
-
-export type SetAreaOperatorResult = {
-  __typename?: "SetAreaOperatorResult";
-  success: Scalars["Boolean"];
-  area: Job;
 };
 
 export type UserLocations = {

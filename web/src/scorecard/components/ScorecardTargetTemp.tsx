@@ -8,7 +8,7 @@ import {
   useScorecardPigJobLazyQuery,
   useScorecardTargetTempLazyQuery
 } from "../graphql/index";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 
@@ -21,7 +21,7 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   label,
   id
 }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue, register, unregister, watch } = useFormContext();
   const [loadResource, { data }] = useScorecardTargetTempLazyQuery();
   const [loadJob, { data: jobData }] = useScorecardPigJobLazyQuery();

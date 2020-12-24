@@ -64,14 +64,9 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
-  personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -90,16 +85,8 @@ export type Query = {
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
   scorecardConfig?: Maybe<ScorecardConfig>;
-  scorecardPages: Array<ScorecardPage>;
+  scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -147,10 +134,6 @@ export type QueryScorecardArgs = {
 };
 
 export type QueryScorecardConfigArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryScorecardPagesArgs = {
   job: Scalars["String"];
 };
 
@@ -425,7 +408,6 @@ export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -433,7 +415,6 @@ export type Mutation = {
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
   postScorecard: ScorecardResult;
-  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
@@ -441,16 +422,11 @@ export type Mutation = {
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
   saveScorecard: ScorecardResult;
-  setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -481,10 +457,6 @@ export type MutationPostScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: SaveFarrowingBackendScorecardInput;
-};
-
 export type MutationSavePigAdjustmentArgs = {
   input: SavePigAdjustmentInput;
 };
@@ -513,63 +485,14 @@ export type MutationSaveScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSetAreaOperatorArgs = {
-  input: SetAreaOperatorInput;
-};
-
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
 };
 
-export type ScorecardEntry = {
-  __typename?: "ScorecardEntry";
-  score?: Maybe<Scalars["Int"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type ScorecardEntryInput = {
-  score: Scalars["Int"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type FarrowingBackendScorecard = {
-  __typename?: "FarrowingBackendScorecard";
-  area: Job;
-  operator?: Maybe<Resource>;
-  sows: ScorecardEntry;
-  piglets: ScorecardEntry;
-  feed: ScorecardEntry;
-  water: ScorecardEntry;
-  crate: ScorecardEntry;
-  room: ScorecardEntry;
-};
-
-export type PostFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
-};
-
-export type SaveFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
-};
-
-export type FarrowingBackendScorecardResult = {
-  __typename?: "FarrowingBackendScorecardResult";
-  success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+export type ScorecardGroup = {
+  __typename?: "ScorecardGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type ScorecardElement = {
@@ -592,12 +515,6 @@ export type ScorecardConfig = {
   pages: Array<ScorecardPage>;
 };
 
-export type ScorecardJob = {
-  __typename?: "ScorecardJob";
-  number: Scalars["String"];
-  personResponsible: Scalars["String"];
-};
-
 export type ScorecardElementResponseInput = {
   elementId: Scalars["ID"];
   numericValue?: Maybe<Scalars["Float"]>;
@@ -612,7 +529,7 @@ export type PostScorecardInput = {
 export type ScorecardResult = {
   __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: Scorecard;
+  scorecard?: Maybe<Scorecard>;
 };
 
 export type ScorecardElementResponse = {
@@ -626,17 +543,6 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
-};
-
-export type SetAreaOperatorInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-};
-
-export type SetAreaOperatorResult = {
-  __typename?: "SetAreaOperatorResult";
-  success: Scalars["Boolean"];
-  area: Job;
 };
 
 export type UserLocations = {
@@ -691,6 +597,17 @@ export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
   >;
 };
 
+export type ScorecardGroupsQueryVariables = {};
+
+export type ScorecardGroupsQuery = { __typename?: "Query" } & {
+  scorecardGroups: Array<
+    { __typename?: "ScorecardGroup" } & Pick<
+      ScorecardGroup,
+      "code" | "description"
+    >
+  >;
+};
+
 export type ScorecardTargetTempQueryVariables = {
   code: Scalars["String"];
 };
@@ -717,7 +634,9 @@ export type ScorecardPigJobQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type ScorecardJobsQueryVariables = {};
+export type ScorecardJobsQueryVariables = {
+  group: Scalars["String"];
+};
 
 export type ScorecardJobsQuery = { __typename?: "Query" } & {
   jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
@@ -739,11 +658,11 @@ export type ScorecardPeopleQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type NurseryFinisherScorecardQueryVariables = {
+export type ScorecardQueryVariables = {
   job: Scalars["String"];
 };
 
-export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
+export type ScorecardQuery = { __typename?: "Query" } & {
   job?: Maybe<
     { __typename?: "Job" } & Pick<Job, "number"> & {
         location: { __typename?: "Location" } & Pick<Location, "code">;
@@ -779,7 +698,9 @@ export type SaveScorecardMutation = { __typename?: "Mutation" } & {
   saveScorecard: { __typename?: "ScorecardResult" } & Pick<
     ScorecardResult,
     "success"
-  > & { scorecard: { __typename?: "Scorecard" } & ScorecardFieldsFragment };
+  > & {
+      scorecard?: Maybe<{ __typename?: "Scorecard" } & ScorecardFieldsFragment>;
+    };
 };
 
 export type PostScorecardMutationVariables = {
@@ -790,130 +711,9 @@ export type PostScorecardMutation = { __typename?: "Mutation" } & {
   postScorecard: { __typename?: "ScorecardResult" } & Pick<
     ScorecardResult,
     "success"
-  > & { scorecard: { __typename?: "Scorecard" } & ScorecardFieldsFragment };
-};
-
-export type FarrowingBackendAreaFieldsFragment = { __typename?: "Job" } & Pick<
-  Job,
-  "number" | "description"
-> & {
-    personResponsible: { __typename?: "Resource" } & Pick<
-      Resource,
-      "name" | "number"
-    >;
-  };
-
-export type FarrowingBackendScorecardFieldsFragment = {
-  __typename?: "FarrowingBackendScorecard";
-} & {
-  area: { __typename?: "Job" } & Pick<Job, "number">;
-  operator?: Maybe<{ __typename?: "Resource" } & Pick<Resource, "number">>;
-  sows: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-  piglets: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-  feed: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-  water: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-  crate: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-  room: { __typename?: "ScorecardEntry" } & Pick<
-    ScorecardEntry,
-    "score" | "comments"
-  >;
-};
-
-export type FarrowingBackendScorecardAreasQueryVariables = {};
-
-export type FarrowingBackendScorecardAreasQuery = { __typename?: "Query" } & {
-  areas: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
-};
-
-export type FarrowingBackendScorecardQueryVariables = {
-  area: Scalars["String"];
-};
-
-export type FarrowingBackendScorecardQuery = { __typename?: "Query" } & {
-  area?: Maybe<
-    { __typename?: "Job" } & Pick<Job, "number" | "description"> & {
-        personResponsible: { __typename?: "Resource" } & Pick<
-          Resource,
-          "number"
-        >;
-      }
-  >;
-  operators: Array<
-    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
-  >;
-  scorecard?: Maybe<
-    {
-      __typename?: "FarrowingBackendScorecard";
-    } & FarrowingBackendScorecardFieldsFragment
-  >;
-};
-
-export type FarrowingBackendOperatorsQueryVariables = {
-  area: Scalars["String"];
-};
-
-export type FarrowingBackendOperatorsQuery = { __typename?: "Query" } & {
-  area?: Maybe<{ __typename?: "Job" } & FarrowingBackendAreaFieldsFragment>;
-  operators: Array<
-    { __typename?: "Resource" } & Pick<Resource, "number" | "name">
-  >;
-};
-
-export type PostFarrowingBackendScorecardMutationVariables = {
-  input: PostFarrowingBackendScorecardInput;
-};
-
-export type PostFarrowingBackendScorecardMutation = {
-  __typename?: "Mutation";
-} & {
-  postFarrowingBackendScorecard: {
-    __typename?: "FarrowingBackendScorecardResult";
-  } & Pick<FarrowingBackendScorecardResult, "success"> & {
-      scorecard: {
-        __typename?: "FarrowingBackendScorecard";
-      } & FarrowingBackendScorecardFieldsFragment;
+  > & {
+      scorecard?: Maybe<{ __typename?: "Scorecard" } & ScorecardFieldsFragment>;
     };
-};
-
-export type SaveFarrowingBackendScorecardMutationVariables = {
-  input: SaveFarrowingBackendScorecardInput;
-};
-
-export type SaveFarrowingBackendScorecardMutation = {
-  __typename?: "Mutation";
-} & {
-  saveFarrowingBackendScorecard: {
-    __typename?: "FarrowingBackendScorecardResult";
-  } & Pick<FarrowingBackendScorecardResult, "success"> & {
-      scorecard: {
-        __typename?: "FarrowingBackendScorecard";
-      } & FarrowingBackendScorecardFieldsFragment;
-    };
-};
-
-export type SetAreaOperatorMutationVariables = {
-  input: SetAreaOperatorInput;
-};
-
-export type SetAreaOperatorMutation = { __typename?: "Mutation" } & {
-  setAreaOperator: { __typename?: "SetAreaOperatorResult" } & {
-    area: { __typename?: "Job" } & FarrowingBackendAreaFieldsFragment;
-  };
 };
 
 export const ScorecardFieldsFragmentDoc = gql`
@@ -928,50 +728,62 @@ export const ScorecardFieldsFragmentDoc = gql`
     }
   }
 `;
-export const FarrowingBackendAreaFieldsFragmentDoc = gql`
-  fragment FarrowingBackendAreaFields on Job {
-    number
-    description
-    personResponsible {
-      name
-      number
+export const ScorecardGroupsDocument = gql`
+  query ScorecardGroups {
+    scorecardGroups {
+      code
+      description
     }
   }
 `;
-export const FarrowingBackendScorecardFieldsFragmentDoc = gql`
-  fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
-    area {
-      number
-    }
-    operator {
-      number
-    }
-    sows {
-      score
-      comments
-    }
-    piglets {
-      score
-      comments
-    }
-    feed {
-      score
-      comments
-    }
-    water {
-      score
-      comments
-    }
-    crate {
-      score
-      comments
-    }
-    room {
-      score
-      comments
-    }
-  }
-`;
+
+/**
+ * __useScorecardGroupsQuery__
+ *
+ * To run a query within a React component, call `useScorecardGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScorecardGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useScorecardGroupsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ScorecardGroupsQuery,
+    ScorecardGroupsQueryVariables
+  >
+) {
+  return Apollo.useQuery<ScorecardGroupsQuery, ScorecardGroupsQueryVariables>(
+    ScorecardGroupsDocument,
+    baseOptions
+  );
+}
+export function useScorecardGroupsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ScorecardGroupsQuery,
+    ScorecardGroupsQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    ScorecardGroupsQuery,
+    ScorecardGroupsQueryVariables
+  >(ScorecardGroupsDocument, baseOptions);
+}
+export type ScorecardGroupsQueryHookResult = ReturnType<
+  typeof useScorecardGroupsQuery
+>;
+export type ScorecardGroupsLazyQueryHookResult = ReturnType<
+  typeof useScorecardGroupsLazyQuery
+>;
+export type ScorecardGroupsQueryResult = Apollo.QueryResult<
+  ScorecardGroupsQuery,
+  ScorecardGroupsQueryVariables
+>;
 export const ScorecardTargetTempDocument = gql`
   query ScorecardTargetTemp($code: String!) {
     resource(code: $code) {
@@ -1090,8 +902,8 @@ export type ScorecardPigJobQueryResult = Apollo.QueryResult<
   ScorecardPigJobQueryVariables
 >;
 export const ScorecardJobsDocument = gql`
-  query ScorecardJobs {
-    jobs(input: { groups: ["SURVEYNG"] }) {
+  query ScorecardJobs($group: String!) {
+    jobs(input: { groups: [$group] }) {
       number
       description
     }
@@ -1110,11 +922,12 @@ export const ScorecardJobsDocument = gql`
  * @example
  * const { data, loading, error } = useScorecardJobsQuery({
  *   variables: {
+ *      group: // value for 'group'
  *   },
  * });
  */
 export function useScorecardJobsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     ScorecardJobsQuery,
     ScorecardJobsQueryVariables
   >
@@ -1260,8 +1073,8 @@ export type ScorecardPeopleQueryResult = Apollo.QueryResult<
   ScorecardPeopleQuery,
   ScorecardPeopleQueryVariables
 >;
-export const NurseryFinisherScorecardDocument = gql`
-  query NurseryFinisherScorecard($job: String!) {
+export const ScorecardDocument = gql`
+  query Scorecard($job: String!) {
     job: job(number: $job) {
       number
       location {
@@ -1293,52 +1106,47 @@ export const NurseryFinisherScorecardDocument = gql`
 `;
 
 /**
- * __useNurseryFinisherScorecardQuery__
+ * __useScorecardQuery__
  *
- * To run a query within a React component, call `useNurseryFinisherScorecardQuery` and pass it any options that fit your needs.
- * When your component renders, `useNurseryFinisherScorecardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useScorecardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useNurseryFinisherScorecardQuery({
+ * const { data, loading, error } = useScorecardQuery({
  *   variables: {
  *      job: // value for 'job'
  *   },
  * });
  */
-export function useNurseryFinisherScorecardQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    NurseryFinisherScorecardQuery,
-    NurseryFinisherScorecardQueryVariables
-  >
+export function useScorecardQuery(
+  baseOptions: Apollo.QueryHookOptions<ScorecardQuery, ScorecardQueryVariables>
 ) {
-  return Apollo.useQuery<
-    NurseryFinisherScorecardQuery,
-    NurseryFinisherScorecardQueryVariables
-  >(NurseryFinisherScorecardDocument, baseOptions);
+  return Apollo.useQuery<ScorecardQuery, ScorecardQueryVariables>(
+    ScorecardDocument,
+    baseOptions
+  );
 }
-export function useNurseryFinisherScorecardLazyQuery(
+export function useScorecardLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    NurseryFinisherScorecardQuery,
-    NurseryFinisherScorecardQueryVariables
+    ScorecardQuery,
+    ScorecardQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<
-    NurseryFinisherScorecardQuery,
-    NurseryFinisherScorecardQueryVariables
-  >(NurseryFinisherScorecardDocument, baseOptions);
+  return Apollo.useLazyQuery<ScorecardQuery, ScorecardQueryVariables>(
+    ScorecardDocument,
+    baseOptions
+  );
 }
-export type NurseryFinisherScorecardQueryHookResult = ReturnType<
-  typeof useNurseryFinisherScorecardQuery
+export type ScorecardQueryHookResult = ReturnType<typeof useScorecardQuery>;
+export type ScorecardLazyQueryHookResult = ReturnType<
+  typeof useScorecardLazyQuery
 >;
-export type NurseryFinisherScorecardLazyQueryHookResult = ReturnType<
-  typeof useNurseryFinisherScorecardLazyQuery
->;
-export type NurseryFinisherScorecardQueryResult = Apollo.QueryResult<
-  NurseryFinisherScorecardQuery,
-  NurseryFinisherScorecardQueryVariables
+export type ScorecardQueryResult = Apollo.QueryResult<
+  ScorecardQuery,
+  ScorecardQueryVariables
 >;
 export const SaveScorecardDocument = gql`
   mutation SaveScorecard($input: PostScorecardInput!) {
@@ -1447,354 +1255,4 @@ export type PostScorecardMutationResult = Apollo.MutationResult<
 export type PostScorecardMutationOptions = Apollo.BaseMutationOptions<
   PostScorecardMutation,
   PostScorecardMutationVariables
->;
-export const FarrowingBackendScorecardAreasDocument = gql`
-  query FarrowingBackendScorecardAreas {
-    areas: farrowingBackendAreas {
-      number
-      description
-    }
-  }
-`;
-
-/**
- * __useFarrowingBackendScorecardAreasQuery__
- *
- * To run a query within a React component, call `useFarrowingBackendScorecardAreasQuery` and pass it any options that fit your needs.
- * When your component renders, `useFarrowingBackendScorecardAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFarrowingBackendScorecardAreasQuery({
- *   variables: {
- *   },
- * });
- */
-export function useFarrowingBackendScorecardAreasQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    FarrowingBackendScorecardAreasQuery,
-    FarrowingBackendScorecardAreasQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    FarrowingBackendScorecardAreasQuery,
-    FarrowingBackendScorecardAreasQueryVariables
-  >(FarrowingBackendScorecardAreasDocument, baseOptions);
-}
-export function useFarrowingBackendScorecardAreasLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FarrowingBackendScorecardAreasQuery,
-    FarrowingBackendScorecardAreasQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    FarrowingBackendScorecardAreasQuery,
-    FarrowingBackendScorecardAreasQueryVariables
-  >(FarrowingBackendScorecardAreasDocument, baseOptions);
-}
-export type FarrowingBackendScorecardAreasQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardAreasQuery
->;
-export type FarrowingBackendScorecardAreasLazyQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardAreasLazyQuery
->;
-export type FarrowingBackendScorecardAreasQueryResult = Apollo.QueryResult<
-  FarrowingBackendScorecardAreasQuery,
-  FarrowingBackendScorecardAreasQueryVariables
->;
-export const FarrowingBackendScorecardDocument = gql`
-  query FarrowingBackendScorecard($area: String!) {
-    area: farrowingBackendArea(number: $area) {
-      number
-      description
-      personResponsible {
-        number
-      }
-    }
-    operators: farrowingBackendOperators {
-      number
-      name
-    }
-    scorecard: farrowingBackendScorecard(area: $area) {
-      ...FarrowingBackendScorecardFields
-    }
-  }
-  ${FarrowingBackendScorecardFieldsFragmentDoc}
-`;
-
-/**
- * __useFarrowingBackendScorecardQuery__
- *
- * To run a query within a React component, call `useFarrowingBackendScorecardQuery` and pass it any options that fit your needs.
- * When your component renders, `useFarrowingBackendScorecardQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFarrowingBackendScorecardQuery({
- *   variables: {
- *      area: // value for 'area'
- *   },
- * });
- */
-export function useFarrowingBackendScorecardQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FarrowingBackendScorecardQuery,
-    FarrowingBackendScorecardQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    FarrowingBackendScorecardQuery,
-    FarrowingBackendScorecardQueryVariables
-  >(FarrowingBackendScorecardDocument, baseOptions);
-}
-export function useFarrowingBackendScorecardLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FarrowingBackendScorecardQuery,
-    FarrowingBackendScorecardQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    FarrowingBackendScorecardQuery,
-    FarrowingBackendScorecardQueryVariables
-  >(FarrowingBackendScorecardDocument, baseOptions);
-}
-export type FarrowingBackendScorecardQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardQuery
->;
-export type FarrowingBackendScorecardLazyQueryHookResult = ReturnType<
-  typeof useFarrowingBackendScorecardLazyQuery
->;
-export type FarrowingBackendScorecardQueryResult = Apollo.QueryResult<
-  FarrowingBackendScorecardQuery,
-  FarrowingBackendScorecardQueryVariables
->;
-export const FarrowingBackendOperatorsDocument = gql`
-  query FarrowingBackendOperators($area: String!) {
-    area: farrowingBackendArea(number: $area) {
-      ...FarrowingBackendAreaFields
-    }
-    operators: farrowingBackendOperators {
-      number
-      name
-    }
-  }
-  ${FarrowingBackendAreaFieldsFragmentDoc}
-`;
-
-/**
- * __useFarrowingBackendOperatorsQuery__
- *
- * To run a query within a React component, call `useFarrowingBackendOperatorsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFarrowingBackendOperatorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFarrowingBackendOperatorsQuery({
- *   variables: {
- *      area: // value for 'area'
- *   },
- * });
- */
-export function useFarrowingBackendOperatorsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >(FarrowingBackendOperatorsDocument, baseOptions);
-}
-export function useFarrowingBackendOperatorsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    FarrowingBackendOperatorsQuery,
-    FarrowingBackendOperatorsQueryVariables
-  >(FarrowingBackendOperatorsDocument, baseOptions);
-}
-export type FarrowingBackendOperatorsQueryHookResult = ReturnType<
-  typeof useFarrowingBackendOperatorsQuery
->;
-export type FarrowingBackendOperatorsLazyQueryHookResult = ReturnType<
-  typeof useFarrowingBackendOperatorsLazyQuery
->;
-export type FarrowingBackendOperatorsQueryResult = Apollo.QueryResult<
-  FarrowingBackendOperatorsQuery,
-  FarrowingBackendOperatorsQueryVariables
->;
-export const PostFarrowingBackendScorecardDocument = gql`
-  mutation PostFarrowingBackendScorecard(
-    $input: PostFarrowingBackendScorecardInput!
-  ) {
-    postFarrowingBackendScorecard(input: $input) {
-      success
-      scorecard {
-        ...FarrowingBackendScorecardFields
-      }
-    }
-  }
-  ${FarrowingBackendScorecardFieldsFragmentDoc}
-`;
-export type PostFarrowingBackendScorecardMutationFn = Apollo.MutationFunction<
-  PostFarrowingBackendScorecardMutation,
-  PostFarrowingBackendScorecardMutationVariables
->;
-
-/**
- * __usePostFarrowingBackendScorecardMutation__
- *
- * To run a mutation, you first call `usePostFarrowingBackendScorecardMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostFarrowingBackendScorecardMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [postFarrowingBackendScorecardMutation, { data, loading, error }] = usePostFarrowingBackendScorecardMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function usePostFarrowingBackendScorecardMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    PostFarrowingBackendScorecardMutation,
-    PostFarrowingBackendScorecardMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    PostFarrowingBackendScorecardMutation,
-    PostFarrowingBackendScorecardMutationVariables
-  >(PostFarrowingBackendScorecardDocument, baseOptions);
-}
-export type PostFarrowingBackendScorecardMutationHookResult = ReturnType<
-  typeof usePostFarrowingBackendScorecardMutation
->;
-export type PostFarrowingBackendScorecardMutationResult = Apollo.MutationResult<
-  PostFarrowingBackendScorecardMutation
->;
-export type PostFarrowingBackendScorecardMutationOptions = Apollo.BaseMutationOptions<
-  PostFarrowingBackendScorecardMutation,
-  PostFarrowingBackendScorecardMutationVariables
->;
-export const SaveFarrowingBackendScorecardDocument = gql`
-  mutation SaveFarrowingBackendScorecard(
-    $input: SaveFarrowingBackendScorecardInput!
-  ) {
-    saveFarrowingBackendScorecard(input: $input) {
-      success
-      scorecard {
-        ...FarrowingBackendScorecardFields
-      }
-    }
-  }
-  ${FarrowingBackendScorecardFieldsFragmentDoc}
-`;
-export type SaveFarrowingBackendScorecardMutationFn = Apollo.MutationFunction<
-  SaveFarrowingBackendScorecardMutation,
-  SaveFarrowingBackendScorecardMutationVariables
->;
-
-/**
- * __useSaveFarrowingBackendScorecardMutation__
- *
- * To run a mutation, you first call `useSaveFarrowingBackendScorecardMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSaveFarrowingBackendScorecardMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [saveFarrowingBackendScorecardMutation, { data, loading, error }] = useSaveFarrowingBackendScorecardMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSaveFarrowingBackendScorecardMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SaveFarrowingBackendScorecardMutation,
-    SaveFarrowingBackendScorecardMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    SaveFarrowingBackendScorecardMutation,
-    SaveFarrowingBackendScorecardMutationVariables
-  >(SaveFarrowingBackendScorecardDocument, baseOptions);
-}
-export type SaveFarrowingBackendScorecardMutationHookResult = ReturnType<
-  typeof useSaveFarrowingBackendScorecardMutation
->;
-export type SaveFarrowingBackendScorecardMutationResult = Apollo.MutationResult<
-  SaveFarrowingBackendScorecardMutation
->;
-export type SaveFarrowingBackendScorecardMutationOptions = Apollo.BaseMutationOptions<
-  SaveFarrowingBackendScorecardMutation,
-  SaveFarrowingBackendScorecardMutationVariables
->;
-export const SetAreaOperatorDocument = gql`
-  mutation SetAreaOperator($input: SetAreaOperatorInput!) {
-    setAreaOperator(input: $input) {
-      area {
-        ...FarrowingBackendAreaFields
-      }
-    }
-  }
-  ${FarrowingBackendAreaFieldsFragmentDoc}
-`;
-export type SetAreaOperatorMutationFn = Apollo.MutationFunction<
-  SetAreaOperatorMutation,
-  SetAreaOperatorMutationVariables
->;
-
-/**
- * __useSetAreaOperatorMutation__
- *
- * To run a mutation, you first call `useSetAreaOperatorMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetAreaOperatorMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [setAreaOperatorMutation, { data, loading, error }] = useSetAreaOperatorMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSetAreaOperatorMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SetAreaOperatorMutation,
-    SetAreaOperatorMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    SetAreaOperatorMutation,
-    SetAreaOperatorMutationVariables
-  >(SetAreaOperatorDocument, baseOptions);
-}
-export type SetAreaOperatorMutationHookResult = ReturnType<
-  typeof useSetAreaOperatorMutation
->;
-export type SetAreaOperatorMutationResult = Apollo.MutationResult<
-  SetAreaOperatorMutation
->;
-export type SetAreaOperatorMutationOptions = Apollo.BaseMutationOptions<
-  SetAreaOperatorMutation,
-  SetAreaOperatorMutationVariables
 >;

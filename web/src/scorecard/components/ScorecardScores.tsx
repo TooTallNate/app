@@ -8,7 +8,7 @@ import SliderInput from "../../common/components/input/SliderInput";
 import VerticalSpacer from "../../common/components/layout/VerticalSpacer";
 import { Spacing } from "../../common/components/layout/spacing";
 import MultilineTextInput from "../../common/components/input/MultilineTextInput";
-import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 
 export interface ScorecardScoresProps {
@@ -26,7 +26,7 @@ const ScorecardScores: React.FC<ScorecardScoresProps> = ({
   max,
   step
 }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const scoreName = `${id}.numericValue`;
   const commentsName = `${id}.stringValue`;

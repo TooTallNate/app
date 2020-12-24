@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import ScorecardYesNo, {
   isComplete as isYesNoComplete
 } from "./ScorecardYesNo";
@@ -17,7 +17,7 @@ import ScorecardScores, {
 import ScorecardNumberInput, {
   isComplete as isNumperComplete
 } from "./ScorecardNumberInput";
-import { FormValue } from "../contexts/growFinish";
+import { FormValue } from "../contexts/scorecard";
 import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
 import ScorecardMortality from "./ScorecardMortality";
 import ScorecardPostingDate from "./ScorecardPostingDate";

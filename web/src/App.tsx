@@ -1,13 +1,12 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import ActivityView from "./pig-activity/views/ActivityView";
-import OldScorecardView from "./scorecard/views/ScorecardView";
 import HomeView from "./common/views/HomeView";
 import LoginView from "./user/views/LoginView";
 import MainNav from "./common/components/view/MainNav";
 import { useAuth } from "./user/contexts/auth";
 import AccountRouterView from "./user/views/AccountRouterView";
-import ScorecardsRouterView from "./scorecard/views/nursery-finisher/ScorecardsRouterView";
+import ScorecardsRouterView from "./scorecard/views/ScorecardsRouterView";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -27,7 +26,6 @@ const AuthenticatedApp: React.FC = () => {
         <Route exact path="/" component={HomeView} />
         <Route path="/pigs" component={ActivityView} />
         <Route path="/scorecard" component={ScorecardsRouterView} />
-        <Route path="/old-scorecard" component={OldScorecardView} />
         <Route path="/account" component={AccountRouterView} />
         <Redirect to="/" />
       </Switch>

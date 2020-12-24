@@ -8,13 +8,13 @@ import React, {
   useRef
 } from "react";
 import {
-  useNurseryFinisherScorecardLazyQuery,
+  useScorecardLazyQuery,
   useSaveScorecardMutation,
-  NurseryFinisherScorecardQuery,
+  ScorecardQuery,
   usePostScorecardMutation
 } from "../graphql";
 
-export interface GrowFinishContextValue {
+export interface ScorecardContextValue {
   job?: Job;
   loadingJob: boolean;
   formState: FormValues;
@@ -48,29 +48,30 @@ export interface FormPage {
   }[];
 }
 
-const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
+const ScorecardContext = createContext<ScorecardContextValue | null>(null);
 
-export interface GrowFinishScorecardProviderProps {
+export interface ScorecardProviderProps {
   job: string;
 }
 
-const GrowFinishScorecardProvider: React.FC<
-  GrowFinishScorecardProviderProps
-> = ({ children, job: jobNumber }) => {
+const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
+  children,
+  job: jobNumber
+}) => {
   const lastFormState = useRef<FormValues>({});
   const [formState, setFormState] = useState<FormValues>(lastFormState.current);
 
   const [
     loadJob,
     { data: scorecardResult, loading: loadingJob }
-  ] = useNurseryFinisherScorecardLazyQuery();
+  ] = useScorecardLazyQuery();
 
   const [save] = useSaveScorecardMutation();
   const [submitForm] = usePostScorecardMutation();
 
   // Only use the lazy query result if it matches the selected job number.
   // There is some delay until the results are loaded.
-  let data: NurseryFinisherScorecardQuery | undefined;
+  let data: ScorecardQuery | undefined;
   if (
     scorecardResult &&
     scorecardResult.job &&
@@ -166,7 +167,7 @@ const GrowFinishScorecardProvider: React.FC<
   );
 
   return (
-    <GrowFinishContext.Provider
+    <ScorecardContext.Provider
       value={{
         job,
         loadingJob,
@@ -177,18 +178,16 @@ const GrowFinishScorecardProvider: React.FC<
       }}
     >
       {children}
-    </GrowFinishContext.Provider>
+    </ScorecardContext.Provider>
   );
 };
 
-const useGrowFinish = () => {
-  const context = useContext(GrowFinishContext);
+const useScorecard = () => {
+  const context = useContext(ScorecardContext);
   if (!context) {
-    throw new Error(
-      "useGrowFinish must be a descendant of GrowFinishScorecardProvider."
-    );
+    throw new Error("useScorecard must be a descendant of ScorecardProvider.");
   }
   return context;
 };
 
-export { GrowFinishScorecardProvider, useGrowFinish };
+export { ScorecardProvider, useScorecard };

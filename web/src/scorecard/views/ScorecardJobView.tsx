@@ -1,30 +1,34 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import Title from "../../../common/components/view/ViewTitle";
-import View from "../../../common/components/view/View";
-import ViewHeader from "../../../common/components/view/ViewHeader";
-import FormField from "../../../common/components/form/FormField";
-import FormFieldInput from "../../../common/components/form/FormFieldInput";
-import BackButton from "../../../common/components/view/BackButton";
-import TypeaheadInput from "../../../common/components/input/TypeaheadInput";
-import Form from "../../../common/components/form/Form";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import FormField from "../../common/components/form/FormField";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import BackButton from "../../common/components/view/BackButton";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import Form from "../../common/components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormSubmit from "../../../common/components/form/FormSubmit";
-import FormFieldErrors from "../../../common/components/form/FormFieldErrors";
-import ViewContent from "../../../common/components/view/ViewContent";
-import { useScorecardJobsQuery } from "../../graphql";
+import FormSubmit from "../../common/components/form/FormSubmit";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import ViewContent from "../../common/components/view/ViewContent";
+import { useScorecardJobsQuery } from "../graphql";
 
 interface FormData {
   job: string;
 }
 
 const ScorecardJobView: React.FC = () => {
+  const match = useRouteMatch();
+  const params = useParams<{ group: string }>();
   const history = useHistory();
   const formContext = useForm<FormData>();
-  const { data, loading } = useScorecardJobsQuery({});
+  const { data, loading } = useScorecardJobsQuery({
+    variables: { group: params.group }
+  });
 
   const onSubmit: OnSubmit<FormData> = data => {
-    history.push(`/scorecard/${data.job}/page/1`);
+    history.push(`${match.url}/${data.job}/page/1`);
   };
 
   return (

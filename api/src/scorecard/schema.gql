@@ -1,51 +1,6 @@
-type ScorecardEntry {
-  score: Int
-  comments: String
-}
-
-input ScorecardEntryInput {
-  score: Int!
-  comments: String
-}
-
-
-type FarrowingBackendScorecard {
-  area: Job!
-  operator: Resource
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
-}
-
-
-input PostFarrowingBackendScorecardInput {
-  area: String!
-  operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
-}
-
-input SaveFarrowingBackendScorecardInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
-}
-
-type FarrowingBackendScorecardResult {
-  success: Boolean!
-  scorecard: FarrowingBackendScorecard!
+type ScorecardGroup {
+  code: String!
+  description: String!
 }
 
 type ScorecardElement {
@@ -65,11 +20,6 @@ type ScorecardConfig {
   pages: [ScorecardPage!]!
 }
 
-type ScorecardJob {
-  number: String!
-  personResponsible: String!
-}
-
 input ScorecardElementResponseInput {
   elementId: ID!
   numericValue: Float
@@ -83,7 +33,7 @@ input PostScorecardInput {
 
 type ScorecardResult {
   success: Boolean!
-  scorecard: Scorecard!
+  scorecard: Scorecard
 }
 
 type ScorecardElementResponse {
@@ -97,33 +47,13 @@ type Scorecard {
   data: [ScorecardElementResponse!]!
 }
 
-
-input SetAreaOperatorInput {
-  area: String!
-  operator: String!
-}
-
-type SetAreaOperatorResult {
-  success: Boolean!
-  area: Job!
-}
-
 type Query {
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
-  farrowingBackendAreas: [Job!]!
-  farrowingBackendArea(number: String!): Job
-  farrowingBackendOperators: [Resource!]!
-  scorecardPages(job: String!): [ScorecardPage!]!
-  personResponsible: [Resource!]!
-
+  scorecardGroups: [ScorecardGroup!]!
   scorecardConfig(job: String!): ScorecardConfig
   scorecard(job: String!): Scorecard
 }
 
 type Mutation {
-  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
-  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
 }

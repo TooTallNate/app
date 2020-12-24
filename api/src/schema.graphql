@@ -46,14 +46,9 @@ input ResourceFilter {
 
 type Query {
   animals: [Item!]!
-  farrowingBackendArea(number: String!): Job
-  farrowingBackendAreas: [Job!]!
-  farrowingBackendOperators: [Resource!]!
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
   locations: [Location!]!
-  personResponsible: [Resource!]!
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!
@@ -72,7 +67,7 @@ type Query {
   resources(input: ResourceFilter): [Resource!]!
   scorecard(job: String!): Scorecard
   scorecardConfig(job: String!): ScorecardConfig
-  scorecardPages(job: String!): [ScorecardPage!]!
+  scorecardGroups: [ScorecardGroup!]!
   user: User
 }
 
@@ -325,7 +320,6 @@ type PigWeanResult {
 type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
-  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
   postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
   postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
@@ -333,7 +327,6 @@ type Mutation {
   postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
   postPigWean(input: PostPigWeanInput!): PigWeanResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
-  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
   savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
   savePigMortality(input: SavePigMortalityInput!): PigMortalityResult!
@@ -341,56 +334,12 @@ type Mutation {
   savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
   savePigWean(input: SavePigWeanInput!): PigWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
-  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
 
-type ScorecardEntry {
-  score: Int
-  comments: String
-}
-
-input ScorecardEntryInput {
-  score: Int!
-  comments: String
-}
-
-type FarrowingBackendScorecard {
-  area: Job!
-  operator: Resource
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
-}
-
-input PostFarrowingBackendScorecardInput {
-  area: String!
-  operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
-}
-
-input SaveFarrowingBackendScorecardInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
-}
-
-type FarrowingBackendScorecardResult {
-  success: Boolean!
-  scorecard: FarrowingBackendScorecard!
+type ScorecardGroup {
+  code: String!
+  description: String!
 }
 
 type ScorecardElement {
@@ -410,11 +359,6 @@ type ScorecardConfig {
   pages: [ScorecardPage!]!
 }
 
-type ScorecardJob {
-  number: String!
-  personResponsible: String!
-}
-
 input ScorecardElementResponseInput {
   elementId: ID!
   numericValue: Float
@@ -428,7 +372,7 @@ input PostScorecardInput {
 
 type ScorecardResult {
   success: Boolean!
-  scorecard: Scorecard!
+  scorecard: Scorecard
 }
 
 type ScorecardElementResponse {
@@ -440,16 +384,6 @@ type ScorecardElementResponse {
 type Scorecard {
   job: Job!
   data: [ScorecardElementResponse!]!
-}
-
-input SetAreaOperatorInput {
-  area: String!
-  operator: String!
-}
-
-type SetAreaOperatorResult {
-  success: Boolean!
-  area: Job!
 }
 
 type UserLocations {

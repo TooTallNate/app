@@ -1,33 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useHistory, useParams, Link, useRouteMatch } from "react-router-dom";
-import Title from "../../../common/components/view/ViewTitle";
-import View from "../../../common/components/view/View";
-import ViewHeader from "../../../common/components/view/ViewHeader";
-import BackButton from "../../../common/components/view/BackButton";
-import Form from "../../../common/components/form/Form";
+import Title from "../../common/components/view/ViewTitle";
+import View from "../../common/components/view/View";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import BackButton from "../../common/components/view/BackButton";
+import Form from "../../common/components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
-import FormSubmit from "../../../common/components/form/FormSubmit";
-import ViewContent from "../../../common/components/view/ViewContent";
-import { useGrowFinish } from "../../contexts/growFinish";
-import ScorecardPageComponent from "../../components/ScorecardPageComponent";
-import Button from "../../../common/components/input/Button";
-import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
-import { useFlash } from "../../../common/contexts/flash";
+import FormSubmit from "../../common/components/form/FormSubmit";
+import ViewContent from "../../common/components/view/ViewContent";
+import { useScorecard } from "../contexts/scorecard";
+import ScorecardPageComponent from "../components/ScorecardPageComponent";
+import Button from "../../common/components/input/Button";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import { useFlash } from "../../common/contexts/flash";
 
 const ScorecardPageView: React.FC = () => {
-  const id = useRef(Math.random());
   const match = useRouteMatch();
   const params = useParams<{ page: string }>();
   const history = useHistory();
 
-  const { formConfig, saveProgress, job, loadingJob } = useGrowFinish();
+  const { formConfig, saveProgress, job, loadingJob } = useScorecard();
   const formContext = useForm();
   const { setMessage } = useFlash();
   const { getValues } = formContext;
-
-  useEffect(() => {
-    console.log(id.current, match);
-  }, [match]);
 
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
