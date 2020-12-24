@@ -83,7 +83,6 @@ const GrowFinishScorecardProvider: React.FC<
   useEffect(() => {
     if (data && data.scorecard) {
       const state: FormValues = {};
-      console.log("updating");
       data.scorecard.data.forEach(({ elementId, ...entry }) => {
         state[elementId] = {
           numericValue:
@@ -109,7 +108,6 @@ const GrowFinishScorecardProvider: React.FC<
   // When form state changes, save to server.
   useEffect(() => {
     if (jobNumber && lastFormState.current !== formState) {
-      console.log("saving...");
       save({
         variables: {
           input: {

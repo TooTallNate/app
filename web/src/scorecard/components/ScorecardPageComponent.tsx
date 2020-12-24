@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import ScorecardYesNo, {
   isComplete as isYesNoComplete
 } from "./ScorecardYesNo";

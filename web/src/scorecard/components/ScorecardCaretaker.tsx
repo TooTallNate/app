@@ -22,18 +22,11 @@ const ScorecardCaretaker: React.FC<ScorecardCaretakerProps> = ({
   const { setValue } = useFormContext();
   const { data } = useScorecardPeopleQuery();
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue
-        ? elementState.stringValue
-        : job
-        ? job.caretaker
-        : undefined
-    );
-  }, [elementState, id, job, name, setValue]);
+    setValue(name, stringValue ? stringValue : job ? job.caretaker : undefined);
+  }, [job, name, setValue, stringValue]);
 
   return (
     <FormField name={name}>

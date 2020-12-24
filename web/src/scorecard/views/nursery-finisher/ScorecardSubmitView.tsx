@@ -7,13 +7,13 @@ import ViewHeader from "../../../common/components/view/ViewHeader";
 import BackButton from "../../../common/components/view/BackButton";
 import Button from "../../../common/components/input/Button";
 import Stack from "../../../common/components/layout/Stack";
-import { useParams, useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useRouteMatch } from "react-router-dom";
 import { isElementComplete } from "../../components/ScorecardPageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
 
 const ScorecardSubmitView: React.FC = () => {
-  const params = useParams<{ job: string }>();
+  const match = useRouteMatch();
   const history = useHistory();
 
   const { formConfig, formState, submit, saveProgress } = useGrowFinish();
@@ -54,7 +54,7 @@ const ScorecardSubmitView: React.FC = () => {
                     className="h-12 border-t border-b border-gray-500"
                   >
                     <td>
-                      <Link to={`/scorecard/${params.job}/page/${i + 1}`}>
+                      <Link to={match.path.replace("submit", `page/${i + 1}`)}>
                         {page.title ||
                           (page.elements[0] && page.elements[0].label)}
                       </Link>

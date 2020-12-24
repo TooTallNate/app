@@ -30,18 +30,15 @@ const ScorecardScores: React.FC<ScorecardScoresProps> = ({
   const { setValue } = useFormContext();
   const scoreName = `${id}.numericValue`;
   const commentsName = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue, numericValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      scoreName,
-      elementState.numericValue ? elementState.numericValue : min
-    );
-    setValue(
-      commentsName,
-      elementState.stringValue ? elementState.stringValue : undefined
-    );
-  }, [commentsName, elementState, id, min, scoreName, setValue]);
+    setValue(scoreName, numericValue ? numericValue : min);
+  }, [min, numericValue, scoreName, setValue]);
+
+  useEffect(() => {
+    setValue(commentsName, stringValue ? stringValue : undefined);
+  }, [commentsName, setValue, stringValue]);
 
   return (
     <>

@@ -63,6 +63,7 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
     register({ name, type: "custom" });
     return () => unregister(name);
   }, [register, name, unregister]);
+
   let targetTemp = watch(name);
 
   return (

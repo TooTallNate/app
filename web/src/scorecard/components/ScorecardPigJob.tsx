@@ -19,7 +19,7 @@ const ScorecardPigJob: React.FC<ScorecardPigJobProps> = ({ label, id }) => {
   const { setValue } = useFormContext();
   const [loadJobs, { data }] = useScorecardPigJobsLazyQuery();
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
     if (job) {
@@ -28,11 +28,8 @@ const ScorecardPigJob: React.FC<ScorecardPigJobProps> = ({ label, id }) => {
   }, [job, loadJobs]);
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue ? elementState.stringValue : undefined
-    );
-  }, [elementState, id, name, setValue]);
+    setValue(name, stringValue);
+  }, [stringValue, name, setValue]);
 
   return (
     <FormField name={name}>

@@ -18,14 +18,11 @@ const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, id }) => {
   const { formState } = useGrowFinish();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
-  const elementState = formState[id] || {};
+  const { numericValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.numericValue ? elementState.numericValue : undefined
-    );
-  }, [elementState, id, name, setValue]);
+    setValue(name, numericValue);
+  }, [numericValue, name, setValue]);
 
   return (
     <FormField name={name}>

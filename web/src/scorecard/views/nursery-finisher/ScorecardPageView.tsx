@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useHistory, useParams, Link, useRouteMatch } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
@@ -15,6 +15,7 @@ import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer
 import { useFlash } from "../../../common/contexts/flash";
 
 const ScorecardPageView: React.FC = () => {
+  const id = useRef(Math.random());
   const match = useRouteMatch();
   const params = useParams<{ page: string }>();
   const history = useHistory();
@@ -23,6 +24,10 @@ const ScorecardPageView: React.FC = () => {
   const formContext = useForm();
   const { setMessage } = useFlash();
   const { getValues } = formContext;
+
+  useEffect(() => {
+    console.log(id.current, match);
+  }, [match]);
 
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
@@ -33,7 +38,7 @@ const ScorecardPageView: React.FC = () => {
     if (pageNumber + 1 < pageCount) {
       history.push(match.path.replace(":page", `${pageNumber + 2}`));
     } else {
-      history.push(match.path.replace(":page", "submit"));
+      history.push(match.path.replace("page/:page", "submit"));
     }
   };
 
@@ -59,7 +64,7 @@ const ScorecardPageView: React.FC = () => {
       <ViewHeader>
         <BackButton />
         <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
-        <Link to={`/scorecard/${params.job}/submit`}>Submit</Link>
+        <Link to={match.path.replace("page/:page", "submit")}>Submit</Link>
       </ViewHeader>
       <ViewContent loading={loadingJob}>
         {job && (

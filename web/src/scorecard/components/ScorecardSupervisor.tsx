@@ -23,14 +23,11 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
   const { setValue } = useFormContext();
 
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue ? elementState.stringValue : undefined
-    );
-  }, [elementState, id, name, setValue]);
+    setValue(name, stringValue);
+  }, [stringValue, name, setValue]);
 
   return (
     <FormField name={name}>

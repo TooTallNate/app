@@ -24,16 +24,11 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   const { formState } = useGrowFinish();
   const { setValue } = useFormContext();
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue
-        ? elementState.stringValue
-        : format(new Date(), DATEFORMAT)
-    );
-  }, [elementState, name, setValue]);
+    setValue(name, stringValue ? stringValue : format(new Date(), DATEFORMAT));
+  }, [name, setValue, stringValue]);
 
   return (
     <FormField
