@@ -205,7 +205,8 @@ export const mutations: MutationResolvers = {
             Job_Task_No: task.Job_Task_No,
             No: caretaker.stringValue,
             Quantity: element.numericValue || 1,
-            Description: element.stringValue || " "
+            Description: element.stringValue || " ",
+            Work_Type_Code: job.Job_Posting_Group
           },
           dataSources.navJobJournal
         );
