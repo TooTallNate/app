@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
-import * as ApolloReactCommon from "@apollo/react-common";
-import * as ApolloReactHooks from "@apollo/react-hooks";
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -69,7 +68,6 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  growFinishJobs: Array<Job>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -91,6 +89,7 @@ export type Query = {
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardPages: Array<ScorecardPage>;
   user?: Maybe<User>;
 };
@@ -144,6 +143,10 @@ export type QueryResourcesArgs = {
 };
 
 export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardConfigArgs = {
   job: Scalars["String"];
 };
 
@@ -583,6 +586,12 @@ export type ScorecardPage = {
   elements: Array<ScorecardElement>;
 };
 
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
+};
+
 export type ScorecardJob = {
   __typename?: "ScorecardJob";
   number: Scalars["String"];
@@ -774,23 +783,20 @@ export const LocationsDocument = gql`
  * });
  */
 export function useLocationsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    LocationsQuery,
-    LocationsQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<LocationsQuery, LocationsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<LocationsQuery, LocationsQueryVariables>(
+  return Apollo.useQuery<LocationsQuery, LocationsQueryVariables>(
     LocationsDocument,
     baseOptions
   );
 }
 export function useLocationsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     LocationsQuery,
     LocationsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
+  return Apollo.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
     LocationsDocument,
     baseOptions
   );
@@ -799,7 +805,7 @@ export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
 export type LocationsLazyQueryHookResult = ReturnType<
   typeof useLocationsLazyQuery
 >;
-export type LocationsQueryResult = ApolloReactCommon.QueryResult<
+export type LocationsQueryResult = Apollo.QueryResult<
   LocationsQuery,
   LocationsQueryVariables
 >;
@@ -813,7 +819,7 @@ export const UpdateLocationsDocument = gql`
   }
   ${UserLocationsFieldsFragmentDoc}
 `;
-export type UpdateLocationsMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateLocationsMutationFn = Apollo.MutationFunction<
   UpdateLocationsMutation,
   UpdateLocationsMutationVariables
 >;
@@ -836,12 +842,12 @@ export type UpdateLocationsMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateLocationsMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateLocationsMutation,
     UpdateLocationsMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateLocationsMutation,
     UpdateLocationsMutationVariables
   >(UpdateLocationsDocument, baseOptions);
@@ -849,10 +855,10 @@ export function useUpdateLocationsMutation(
 export type UpdateLocationsMutationHookResult = ReturnType<
   typeof useUpdateLocationsMutation
 >;
-export type UpdateLocationsMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateLocationsMutationResult = Apollo.MutationResult<
   UpdateLocationsMutation
 >;
-export type UpdateLocationsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationsMutation,
   UpdateLocationsMutationVariables
 >;
@@ -866,7 +872,7 @@ export const LoginDocument = gql`
   }
   ${UserPartsFragmentDoc}
 `;
-export type LoginMutationFn = ApolloReactCommon.MutationFunction<
+export type LoginMutationFn = Apollo.MutationFunction<
   LoginMutation,
   LoginMutationVariables
 >;
@@ -889,21 +895,19 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useLoginMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     LoginMutation,
     LoginMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
     LoginDocument,
     baseOptions
   );
 }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = ApolloReactCommon.MutationResult<
-  LoginMutation
->;
-export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
 >;
@@ -932,30 +936,24 @@ export const UserDocument = gql`
  * });
  */
 export function useUserQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export function useUserLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UserQuery,
-    UserQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = ApolloReactCommon.QueryResult<
-  UserQuery,
-  UserQueryVariables
->;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const LogoutDocument = gql`
   mutation Logout {
     logout {
@@ -963,7 +961,7 @@ export const LogoutDocument = gql`
     }
   }
 `;
-export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
+export type LogoutMutationFn = Apollo.MutationFunction<
   LogoutMutation,
   LogoutMutationVariables
 >;
@@ -985,21 +983,19 @@ export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useLogoutMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     LogoutMutation,
     LogoutMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
     LogoutDocument,
     baseOptions
   );
 }
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = ApolloReactCommon.MutationResult<
-  LogoutMutation
->;
-export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
   LogoutMutation,
   LogoutMutationVariables
 >;

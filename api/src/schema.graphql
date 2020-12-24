@@ -50,7 +50,6 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendOperators: [Resource!]!
   farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
-  growFinishJobs: [Job!]!
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
   locations: [Location!]!
@@ -72,6 +71,7 @@ type Query {
   resource(code: String!): Resource
   resources(input: ResourceFilter): [Resource!]!
   scorecard(job: String!): Scorecard
+  scorecardConfig(job: String!): ScorecardConfig
   scorecardPages(job: String!): [ScorecardPage!]!
   user: User
 }
@@ -403,6 +403,11 @@ type ScorecardElement {
 type ScorecardPage {
   title: String
   elements: [ScorecardElement!]!
+}
+
+type ScorecardConfig {
+  job: Job!
+  pages: [ScorecardPage!]!
 }
 
 type ScorecardJob {

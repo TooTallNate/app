@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
-import * as ApolloReactCommon from "@apollo/react-common";
-import * as ApolloReactHooks from "@apollo/react-hooks";
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -69,7 +68,6 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  growFinishJobs: Array<Job>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -91,6 +89,7 @@ export type Query = {
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardPages: Array<ScorecardPage>;
   user?: Maybe<User>;
 };
@@ -144,6 +143,10 @@ export type QueryResourcesArgs = {
 };
 
 export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardConfigArgs = {
   job: Scalars["String"];
 };
 
@@ -583,6 +586,12 @@ export type ScorecardPage = {
   elements: Array<ScorecardElement>;
 };
 
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
+};
+
 export type ScorecardJob = {
   __typename?: "ScorecardJob";
   number: Scalars["String"];
@@ -744,15 +753,20 @@ export type NurseryFinisherScorecardQuery = { __typename?: "Query" } & {
         >;
       }
   >;
-  scorecardPages: Array<
-    { __typename?: "ScorecardPage" } & Pick<ScorecardPage, "title"> & {
-        elements: Array<
-          { __typename?: "ScorecardElement" } & Pick<
-            ScorecardElement,
-            "id" | "label" | "code" | "order"
-          >
-        >;
-      }
+  scorecardConfig?: Maybe<
+    { __typename?: "ScorecardConfig" } & {
+      job: { __typename?: "Job" } & Pick<Job, "number">;
+      pages: Array<
+        { __typename?: "ScorecardPage" } & Pick<ScorecardPage, "title"> & {
+            elements: Array<
+              { __typename?: "ScorecardElement" } & Pick<
+                ScorecardElement,
+                "id" | "label" | "code" | "order"
+              >
+            >;
+          }
+      >;
+    }
   >;
   scorecard?: Maybe<{ __typename?: "Scorecard" } & ScorecardFieldsFragment>;
 };
@@ -985,23 +999,23 @@ export const ScorecardTargetTempDocument = gql`
  * });
  */
 export function useScorecardTargetTempQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     ScorecardTargetTempQuery,
     ScorecardTargetTempQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     ScorecardTargetTempQuery,
     ScorecardTargetTempQueryVariables
   >(ScorecardTargetTempDocument, baseOptions);
 }
 export function useScorecardTargetTempLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ScorecardTargetTempQuery,
     ScorecardTargetTempQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ScorecardTargetTempQuery,
     ScorecardTargetTempQueryVariables
   >(ScorecardTargetTempDocument, baseOptions);
@@ -1012,7 +1026,7 @@ export type ScorecardTargetTempQueryHookResult = ReturnType<
 export type ScorecardTargetTempLazyQueryHookResult = ReturnType<
   typeof useScorecardTargetTempLazyQuery
 >;
-export type ScorecardTargetTempQueryResult = ApolloReactCommon.QueryResult<
+export type ScorecardTargetTempQueryResult = Apollo.QueryResult<
   ScorecardTargetTempQuery,
   ScorecardTargetTempQueryVariables
 >;
@@ -1044,23 +1058,23 @@ export const ScorecardPigJobDocument = gql`
  * });
  */
 export function useScorecardPigJobQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     ScorecardPigJobQuery,
     ScorecardPigJobQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ScorecardPigJobQuery,
-    ScorecardPigJobQueryVariables
-  >(ScorecardPigJobDocument, baseOptions);
+  return Apollo.useQuery<ScorecardPigJobQuery, ScorecardPigJobQueryVariables>(
+    ScorecardPigJobDocument,
+    baseOptions
+  );
 }
 export function useScorecardPigJobLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ScorecardPigJobQuery,
     ScorecardPigJobQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ScorecardPigJobQuery,
     ScorecardPigJobQueryVariables
   >(ScorecardPigJobDocument, baseOptions);
@@ -1071,13 +1085,13 @@ export type ScorecardPigJobQueryHookResult = ReturnType<
 export type ScorecardPigJobLazyQueryHookResult = ReturnType<
   typeof useScorecardPigJobLazyQuery
 >;
-export type ScorecardPigJobQueryResult = ApolloReactCommon.QueryResult<
+export type ScorecardPigJobQueryResult = Apollo.QueryResult<
   ScorecardPigJobQuery,
   ScorecardPigJobQueryVariables
 >;
 export const ScorecardJobsDocument = gql`
   query ScorecardJobs {
-    jobs(input: { groups: ["NURSGROWSITE"] }) {
+    jobs(input: { groups: ["SURVEYNG"] }) {
       number
       description
     }
@@ -1100,26 +1114,26 @@ export const ScorecardJobsDocument = gql`
  * });
  */
 export function useScorecardJobsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ScorecardJobsQuery,
     ScorecardJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ScorecardJobsQuery,
-    ScorecardJobsQueryVariables
-  >(ScorecardJobsDocument, baseOptions);
+  return Apollo.useQuery<ScorecardJobsQuery, ScorecardJobsQueryVariables>(
+    ScorecardJobsDocument,
+    baseOptions
+  );
 }
 export function useScorecardJobsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ScorecardJobsQuery,
     ScorecardJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    ScorecardJobsQuery,
-    ScorecardJobsQueryVariables
-  >(ScorecardJobsDocument, baseOptions);
+  return Apollo.useLazyQuery<ScorecardJobsQuery, ScorecardJobsQueryVariables>(
+    ScorecardJobsDocument,
+    baseOptions
+  );
 }
 export type ScorecardJobsQueryHookResult = ReturnType<
   typeof useScorecardJobsQuery
@@ -1127,7 +1141,7 @@ export type ScorecardJobsQueryHookResult = ReturnType<
 export type ScorecardJobsLazyQueryHookResult = ReturnType<
   typeof useScorecardJobsLazyQuery
 >;
-export type ScorecardJobsQueryResult = ApolloReactCommon.QueryResult<
+export type ScorecardJobsQueryResult = Apollo.QueryResult<
   ScorecardJobsQuery,
   ScorecardJobsQueryVariables
 >;
@@ -1159,23 +1173,23 @@ export const ScorecardPigJobsDocument = gql`
  * });
  */
 export function useScorecardPigJobsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     ScorecardPigJobsQuery,
     ScorecardPigJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ScorecardPigJobsQuery,
-    ScorecardPigJobsQueryVariables
-  >(ScorecardPigJobsDocument, baseOptions);
+  return Apollo.useQuery<ScorecardPigJobsQuery, ScorecardPigJobsQueryVariables>(
+    ScorecardPigJobsDocument,
+    baseOptions
+  );
 }
 export function useScorecardPigJobsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ScorecardPigJobsQuery,
     ScorecardPigJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ScorecardPigJobsQuery,
     ScorecardPigJobsQueryVariables
   >(ScorecardPigJobsDocument, baseOptions);
@@ -1186,7 +1200,7 @@ export type ScorecardPigJobsQueryHookResult = ReturnType<
 export type ScorecardPigJobsLazyQueryHookResult = ReturnType<
   typeof useScorecardPigJobsLazyQuery
 >;
-export type ScorecardPigJobsQueryResult = ApolloReactCommon.QueryResult<
+export type ScorecardPigJobsQueryResult = Apollo.QueryResult<
   ScorecardPigJobsQuery,
   ScorecardPigJobsQueryVariables
 >;
@@ -1215,23 +1229,23 @@ export const ScorecardPeopleDocument = gql`
  * });
  */
 export function useScorecardPeopleQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     ScorecardPeopleQuery,
     ScorecardPeopleQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    ScorecardPeopleQuery,
-    ScorecardPeopleQueryVariables
-  >(ScorecardPeopleDocument, baseOptions);
+  return Apollo.useQuery<ScorecardPeopleQuery, ScorecardPeopleQueryVariables>(
+    ScorecardPeopleDocument,
+    baseOptions
+  );
 }
 export function useScorecardPeopleLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     ScorecardPeopleQuery,
     ScorecardPeopleQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     ScorecardPeopleQuery,
     ScorecardPeopleQueryVariables
   >(ScorecardPeopleDocument, baseOptions);
@@ -1242,7 +1256,7 @@ export type ScorecardPeopleQueryHookResult = ReturnType<
 export type ScorecardPeopleLazyQueryHookResult = ReturnType<
   typeof useScorecardPeopleLazyQuery
 >;
-export type ScorecardPeopleQueryResult = ApolloReactCommon.QueryResult<
+export type ScorecardPeopleQueryResult = Apollo.QueryResult<
   ScorecardPeopleQuery,
   ScorecardPeopleQueryVariables
 >;
@@ -1257,13 +1271,18 @@ export const NurseryFinisherScorecardDocument = gql`
         number
       }
     }
-    scorecardPages(job: $job) {
-      title
-      elements {
-        id
-        label
-        code
-        order
+    scorecardConfig(job: $job) {
+      job {
+        number
+      }
+      pages {
+        title
+        elements {
+          id
+          label
+          code
+          order
+        }
       }
     }
     scorecard(job: $job) {
@@ -1290,23 +1309,23 @@ export const NurseryFinisherScorecardDocument = gql`
  * });
  */
 export function useNurseryFinisherScorecardQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     NurseryFinisherScorecardQuery,
     NurseryFinisherScorecardQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     NurseryFinisherScorecardQuery,
     NurseryFinisherScorecardQueryVariables
   >(NurseryFinisherScorecardDocument, baseOptions);
 }
 export function useNurseryFinisherScorecardLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     NurseryFinisherScorecardQuery,
     NurseryFinisherScorecardQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     NurseryFinisherScorecardQuery,
     NurseryFinisherScorecardQueryVariables
   >(NurseryFinisherScorecardDocument, baseOptions);
@@ -1317,7 +1336,7 @@ export type NurseryFinisherScorecardQueryHookResult = ReturnType<
 export type NurseryFinisherScorecardLazyQueryHookResult = ReturnType<
   typeof useNurseryFinisherScorecardLazyQuery
 >;
-export type NurseryFinisherScorecardQueryResult = ApolloReactCommon.QueryResult<
+export type NurseryFinisherScorecardQueryResult = Apollo.QueryResult<
   NurseryFinisherScorecardQuery,
   NurseryFinisherScorecardQueryVariables
 >;
@@ -1332,7 +1351,7 @@ export const SaveScorecardDocument = gql`
   }
   ${ScorecardFieldsFragmentDoc}
 `;
-export type SaveScorecardMutationFn = ApolloReactCommon.MutationFunction<
+export type SaveScorecardMutationFn = Apollo.MutationFunction<
   SaveScorecardMutation,
   SaveScorecardMutationVariables
 >;
@@ -1355,12 +1374,12 @@ export type SaveScorecardMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSaveScorecardMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SaveScorecardMutation,
     SaveScorecardMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SaveScorecardMutation,
     SaveScorecardMutationVariables
   >(SaveScorecardDocument, baseOptions);
@@ -1368,10 +1387,10 @@ export function useSaveScorecardMutation(
 export type SaveScorecardMutationHookResult = ReturnType<
   typeof useSaveScorecardMutation
 >;
-export type SaveScorecardMutationResult = ApolloReactCommon.MutationResult<
+export type SaveScorecardMutationResult = Apollo.MutationResult<
   SaveScorecardMutation
 >;
-export type SaveScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SaveScorecardMutationOptions = Apollo.BaseMutationOptions<
   SaveScorecardMutation,
   SaveScorecardMutationVariables
 >;
@@ -1386,7 +1405,7 @@ export const PostScorecardDocument = gql`
   }
   ${ScorecardFieldsFragmentDoc}
 `;
-export type PostScorecardMutationFn = ApolloReactCommon.MutationFunction<
+export type PostScorecardMutationFn = Apollo.MutationFunction<
   PostScorecardMutation,
   PostScorecardMutationVariables
 >;
@@ -1409,12 +1428,12 @@ export type PostScorecardMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostScorecardMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostScorecardMutation,
     PostScorecardMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostScorecardMutation,
     PostScorecardMutationVariables
   >(PostScorecardDocument, baseOptions);
@@ -1422,10 +1441,10 @@ export function usePostScorecardMutation(
 export type PostScorecardMutationHookResult = ReturnType<
   typeof usePostScorecardMutation
 >;
-export type PostScorecardMutationResult = ApolloReactCommon.MutationResult<
+export type PostScorecardMutationResult = Apollo.MutationResult<
   PostScorecardMutation
 >;
-export type PostScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostScorecardMutationOptions = Apollo.BaseMutationOptions<
   PostScorecardMutation,
   PostScorecardMutationVariables
 >;
@@ -1454,23 +1473,23 @@ export const FarrowingBackendScorecardAreasDocument = gql`
  * });
  */
 export function useFarrowingBackendScorecardAreasQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     FarrowingBackendScorecardAreasQuery,
     FarrowingBackendScorecardAreasQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     FarrowingBackendScorecardAreasQuery,
     FarrowingBackendScorecardAreasQueryVariables
   >(FarrowingBackendScorecardAreasDocument, baseOptions);
 }
 export function useFarrowingBackendScorecardAreasLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     FarrowingBackendScorecardAreasQuery,
     FarrowingBackendScorecardAreasQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     FarrowingBackendScorecardAreasQuery,
     FarrowingBackendScorecardAreasQueryVariables
   >(FarrowingBackendScorecardAreasDocument, baseOptions);
@@ -1481,7 +1500,7 @@ export type FarrowingBackendScorecardAreasQueryHookResult = ReturnType<
 export type FarrowingBackendScorecardAreasLazyQueryHookResult = ReturnType<
   typeof useFarrowingBackendScorecardAreasLazyQuery
 >;
-export type FarrowingBackendScorecardAreasQueryResult = ApolloReactCommon.QueryResult<
+export type FarrowingBackendScorecardAreasQueryResult = Apollo.QueryResult<
   FarrowingBackendScorecardAreasQuery,
   FarrowingBackendScorecardAreasQueryVariables
 >;
@@ -1522,23 +1541,23 @@ export const FarrowingBackendScorecardDocument = gql`
  * });
  */
 export function useFarrowingBackendScorecardQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     FarrowingBackendScorecardQuery,
     FarrowingBackendScorecardQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     FarrowingBackendScorecardQuery,
     FarrowingBackendScorecardQueryVariables
   >(FarrowingBackendScorecardDocument, baseOptions);
 }
 export function useFarrowingBackendScorecardLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     FarrowingBackendScorecardQuery,
     FarrowingBackendScorecardQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     FarrowingBackendScorecardQuery,
     FarrowingBackendScorecardQueryVariables
   >(FarrowingBackendScorecardDocument, baseOptions);
@@ -1549,7 +1568,7 @@ export type FarrowingBackendScorecardQueryHookResult = ReturnType<
 export type FarrowingBackendScorecardLazyQueryHookResult = ReturnType<
   typeof useFarrowingBackendScorecardLazyQuery
 >;
-export type FarrowingBackendScorecardQueryResult = ApolloReactCommon.QueryResult<
+export type FarrowingBackendScorecardQueryResult = Apollo.QueryResult<
   FarrowingBackendScorecardQuery,
   FarrowingBackendScorecardQueryVariables
 >;
@@ -1583,23 +1602,23 @@ export const FarrowingBackendOperatorsDocument = gql`
  * });
  */
 export function useFarrowingBackendOperatorsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     FarrowingBackendOperatorsQuery,
     FarrowingBackendOperatorsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     FarrowingBackendOperatorsQuery,
     FarrowingBackendOperatorsQueryVariables
   >(FarrowingBackendOperatorsDocument, baseOptions);
 }
 export function useFarrowingBackendOperatorsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     FarrowingBackendOperatorsQuery,
     FarrowingBackendOperatorsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     FarrowingBackendOperatorsQuery,
     FarrowingBackendOperatorsQueryVariables
   >(FarrowingBackendOperatorsDocument, baseOptions);
@@ -1610,7 +1629,7 @@ export type FarrowingBackendOperatorsQueryHookResult = ReturnType<
 export type FarrowingBackendOperatorsLazyQueryHookResult = ReturnType<
   typeof useFarrowingBackendOperatorsLazyQuery
 >;
-export type FarrowingBackendOperatorsQueryResult = ApolloReactCommon.QueryResult<
+export type FarrowingBackendOperatorsQueryResult = Apollo.QueryResult<
   FarrowingBackendOperatorsQuery,
   FarrowingBackendOperatorsQueryVariables
 >;
@@ -1627,7 +1646,7 @@ export const PostFarrowingBackendScorecardDocument = gql`
   }
   ${FarrowingBackendScorecardFieldsFragmentDoc}
 `;
-export type PostFarrowingBackendScorecardMutationFn = ApolloReactCommon.MutationFunction<
+export type PostFarrowingBackendScorecardMutationFn = Apollo.MutationFunction<
   PostFarrowingBackendScorecardMutation,
   PostFarrowingBackendScorecardMutationVariables
 >;
@@ -1650,12 +1669,12 @@ export type PostFarrowingBackendScorecardMutationFn = ApolloReactCommon.Mutation
  * });
  */
 export function usePostFarrowingBackendScorecardMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostFarrowingBackendScorecardMutation,
     PostFarrowingBackendScorecardMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostFarrowingBackendScorecardMutation,
     PostFarrowingBackendScorecardMutationVariables
   >(PostFarrowingBackendScorecardDocument, baseOptions);
@@ -1663,10 +1682,10 @@ export function usePostFarrowingBackendScorecardMutation(
 export type PostFarrowingBackendScorecardMutationHookResult = ReturnType<
   typeof usePostFarrowingBackendScorecardMutation
 >;
-export type PostFarrowingBackendScorecardMutationResult = ApolloReactCommon.MutationResult<
+export type PostFarrowingBackendScorecardMutationResult = Apollo.MutationResult<
   PostFarrowingBackendScorecardMutation
 >;
-export type PostFarrowingBackendScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostFarrowingBackendScorecardMutationOptions = Apollo.BaseMutationOptions<
   PostFarrowingBackendScorecardMutation,
   PostFarrowingBackendScorecardMutationVariables
 >;
@@ -1683,7 +1702,7 @@ export const SaveFarrowingBackendScorecardDocument = gql`
   }
   ${FarrowingBackendScorecardFieldsFragmentDoc}
 `;
-export type SaveFarrowingBackendScorecardMutationFn = ApolloReactCommon.MutationFunction<
+export type SaveFarrowingBackendScorecardMutationFn = Apollo.MutationFunction<
   SaveFarrowingBackendScorecardMutation,
   SaveFarrowingBackendScorecardMutationVariables
 >;
@@ -1706,12 +1725,12 @@ export type SaveFarrowingBackendScorecardMutationFn = ApolloReactCommon.Mutation
  * });
  */
 export function useSaveFarrowingBackendScorecardMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SaveFarrowingBackendScorecardMutation,
     SaveFarrowingBackendScorecardMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SaveFarrowingBackendScorecardMutation,
     SaveFarrowingBackendScorecardMutationVariables
   >(SaveFarrowingBackendScorecardDocument, baseOptions);
@@ -1719,10 +1738,10 @@ export function useSaveFarrowingBackendScorecardMutation(
 export type SaveFarrowingBackendScorecardMutationHookResult = ReturnType<
   typeof useSaveFarrowingBackendScorecardMutation
 >;
-export type SaveFarrowingBackendScorecardMutationResult = ApolloReactCommon.MutationResult<
+export type SaveFarrowingBackendScorecardMutationResult = Apollo.MutationResult<
   SaveFarrowingBackendScorecardMutation
 >;
-export type SaveFarrowingBackendScorecardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SaveFarrowingBackendScorecardMutationOptions = Apollo.BaseMutationOptions<
   SaveFarrowingBackendScorecardMutation,
   SaveFarrowingBackendScorecardMutationVariables
 >;
@@ -1736,7 +1755,7 @@ export const SetAreaOperatorDocument = gql`
   }
   ${FarrowingBackendAreaFieldsFragmentDoc}
 `;
-export type SetAreaOperatorMutationFn = ApolloReactCommon.MutationFunction<
+export type SetAreaOperatorMutationFn = Apollo.MutationFunction<
   SetAreaOperatorMutation,
   SetAreaOperatorMutationVariables
 >;
@@ -1759,12 +1778,12 @@ export type SetAreaOperatorMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSetAreaOperatorMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SetAreaOperatorMutation,
     SetAreaOperatorMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SetAreaOperatorMutation,
     SetAreaOperatorMutationVariables
   >(SetAreaOperatorDocument, baseOptions);
@@ -1772,10 +1791,10 @@ export function useSetAreaOperatorMutation(
 export type SetAreaOperatorMutationHookResult = ReturnType<
   typeof useSetAreaOperatorMutation
 >;
-export type SetAreaOperatorMutationResult = ApolloReactCommon.MutationResult<
+export type SetAreaOperatorMutationResult = Apollo.MutationResult<
   SetAreaOperatorMutation
 >;
-export type SetAreaOperatorMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SetAreaOperatorMutationOptions = Apollo.BaseMutationOptions<
   SetAreaOperatorMutation,
   SetAreaOperatorMutationVariables
 >;

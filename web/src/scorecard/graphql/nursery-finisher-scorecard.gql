@@ -27,7 +27,7 @@ query ScorecardPigJob($job: String!) {
 }
 
 query ScorecardJobs {
-  jobs(input: { groups: ["NURSGROWSITE"] }) {
+  jobs(input: { groups: ["SURVEYNG"] }) {
     number
     description
   }
@@ -57,13 +57,18 @@ query NurseryFinisherScorecard($job: String!) {
       number
     }
   }
-  scorecardPages(job: $job) {
-    title
-    elements {
-      id
-      label
-      code
-      order
+  scorecardConfig(job: $job) {
+    job {
+      number
+    }
+    pages {
+      title
+      elements {
+        id
+        label
+        code
+        order
+      }
     }
   },
   scorecard(job: $job) {

@@ -91,7 +91,6 @@ export type Query = {
   farrowingBackendAreas: Array<Job>;
   farrowingBackendOperators: Array<Resource>;
   farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  growFinishJobs: Array<Job>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -113,6 +112,7 @@ export type Query = {
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardPages: Array<ScorecardPage>;
   user?: Maybe<User>;
 };
@@ -166,6 +166,10 @@ export type QueryResourcesArgs = {
 };
 
 export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardConfigArgs = {
   job: Scalars["String"];
 };
 
@@ -605,6 +609,12 @@ export type ScorecardPage = {
   elements: Array<ScorecardElement>;
 };
 
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
+};
+
 export type ScorecardJob = {
   __typename?: "ScorecardJob";
   number: Scalars["String"];
@@ -899,6 +909,7 @@ export type ResolversTypes = ResolversObject<{
   ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   ScorecardPage: ResolverTypeWrapper<ScorecardPage>;
+  ScorecardConfig: ResolverTypeWrapper<NavJob>;
   ScorecardJob: ResolverTypeWrapper<ScorecardJob>;
   ScorecardElementResponseInput: ScorecardElementResponseInput;
   PostScorecardInput: PostScorecardInput;
@@ -1014,6 +1025,7 @@ export type ResolversParentTypes = ResolversObject<{
   ScorecardElement: ScorecardElement;
   ID: Scalars["ID"];
   ScorecardPage: ScorecardPage;
+  ScorecardConfig: NavJob;
   ScorecardJob: ScorecardJob;
   ScorecardElementResponseInput: ScorecardElementResponseInput;
   PostScorecardInput: PostScorecardInput;
@@ -1131,11 +1143,6 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFarrowingBackendScorecardArgs, "area">
   >;
-  growFinishJobs?: Resolver<
-    Array<ResolversTypes["Job"]>,
-    ParentType,
-    ContextType
-  >;
   job?: Resolver<
     Maybe<ResolversTypes["Job"]>,
     ParentType,
@@ -1251,6 +1258,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryScorecardArgs, "job">
+  >;
+  scorecardConfig?: Resolver<
+    Maybe<ResolversTypes["ScorecardConfig"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryScorecardConfigArgs, "job">
   >;
   scorecardPages?: Resolver<
     Array<ResolversTypes["ScorecardPage"]>,
@@ -1769,6 +1782,19 @@ export type ScorecardPageResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type ScorecardConfigResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardConfig"] = ResolversParentTypes["ScorecardConfig"]
+> = ResolversObject<{
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  pages?: Resolver<
+    Array<ResolversTypes["ScorecardPage"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type ScorecardJobResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["ScorecardJob"] = ResolversParentTypes["ScorecardJob"]
@@ -1921,6 +1947,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   >;
   ScorecardElement?: ScorecardElementResolvers<ContextType>;
   ScorecardPage?: ScorecardPageResolvers<ContextType>;
+  ScorecardConfig?: ScorecardConfigResolvers<ContextType>;
   ScorecardJob?: ScorecardJobResolvers<ContextType>;
   ScorecardResult?: ScorecardResultResolvers<ContextType>;
   ScorecardElementResponse?: ScorecardElementResponseResolvers<ContextType>;

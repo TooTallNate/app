@@ -19,7 +19,6 @@ export interface GrowFinishContextValue {
   loadingJob: boolean;
   formState: FormValues;
   formConfig: FormPage[];
-  setJob(job?: string): void;
   saveProgress(values?: FormValues): Promise<void>;
   submit(): Promise<void>;
 }
@@ -51,15 +50,21 @@ export interface FormPage {
 
 const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
 
-const GrowFinishScorecardProvider: React.FC = ({ children }) => {
+export interface GrowFinishScorecardProviderProps {
+  job: string;
+}
+
+const GrowFinishScorecardProvider: React.FC<
+  GrowFinishScorecardProviderProps
+> = ({ children, job: jobNumber }) => {
   const lastFormState = useRef<FormValues>({});
-  const [jobNumber, setJob] = useState<string | undefined>();
   const [formState, setFormState] = useState<FormValues>(lastFormState.current);
 
   const [
     loadJob,
     { data: scorecardResult, loading: loadingJob }
   ] = useNurseryFinisherScorecardLazyQuery();
+
   const [save] = useSaveScorecardMutation();
   const [submitForm] = usePostScorecardMutation();
 
@@ -76,8 +81,9 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   // Update the from state when a new scorecard is loaded.
   useEffect(() => {
-    const state: FormValues = {};
     if (data && data.scorecard) {
+      const state: FormValues = {};
+      console.log("updating");
       data.scorecard.data.forEach(({ elementId, ...entry }) => {
         state[elementId] = {
           numericValue:
@@ -90,17 +96,34 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
               : undefined
         };
       });
+      lastFormState.current = state;
+      setFormState(state);
     }
-    lastFormState.current = state;
-    setFormState(state);
   }, [data]);
 
   // Load job information when the job number changes.
   useEffect(() => {
-    if (jobNumber) {
-      loadJob({ variables: { job: jobNumber } });
-    }
+    loadJob({ variables: { job: jobNumber } });
   }, [jobNumber, loadJob]);
+
+  // When form state changes, save to server.
+  useEffect(() => {
+    if (jobNumber && lastFormState.current !== formState) {
+      console.log("saving...");
+      save({
+        variables: {
+          input: {
+            job: jobNumber,
+            data: Object.entries(formState).map(([key, value]) => ({
+              elementId: key,
+              ...value
+            }))
+          }
+        }
+      });
+      lastFormState.current = formState;
+    }
+  }, [formState, jobNumber, save]);
 
   const submit = useCallback(async () => {
     if (jobNumber) {
@@ -118,25 +141,9 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     }
   }, [formState, jobNumber, submitForm]);
 
-  const saveProgress = useCallback(
-    async (values: Partial<FormValues> = {}) => {
-      setFormState(prev => ({ ...prev, ...values }));
-      if (jobNumber) {
-        await save({
-          variables: {
-            input: {
-              job: jobNumber,
-              data: Object.entries(formState).map(([key, value]) => ({
-                elementId: key,
-                ...value
-              }))
-            }
-          }
-        });
-      }
-    },
-    [formState, jobNumber, save]
-  );
+  const saveProgress = useCallback(async (values: Partial<FormValues> = {}) => {
+    setFormState(prev => ({ ...prev, ...values }));
+  }, []);
 
   const job = useMemo(
     () =>
@@ -151,7 +158,12 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   );
 
   const formConfig = useMemo<FormPage[]>(
-    () => (jobNumber && data && data.scorecardPages) || [],
+    () =>
+      (jobNumber &&
+        data &&
+        data.scorecardConfig &&
+        data.scorecardConfig.pages) ||
+      [],
     [data, jobNumber]
   );
 
@@ -163,8 +175,7 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
         formState,
         formConfig,
         saveProgress,
-        submit,
-        setJob
+        submit
       }}
     >
       {children}

@@ -4,7 +4,7 @@ import {
   ScorecardEntry,
   FarrowingBackendScorecardResolvers,
   ScorecardResolvers,
-  ScorecardElementResponseInput
+  ScorecardConfigResolvers
 } from "../common/graphql";
 import {
   NavJobJournalLine,
@@ -17,7 +17,6 @@ import { navDate, getDocumentNumber } from "../common/utils";
 import FarrowingBackendScorecardModel from "./models/FarrowingBackendScorecard";
 import NavJobJournalDataSource from "../common/datasources/NavJobJournalDataSource";
 import ScorecardModel from "./models/Scorecard";
-import { isFriday } from "date-fns";
 
 function postJobJournal(
   entry: Partial<NavJobJournalLine>,
@@ -44,6 +43,34 @@ const FarrowingBackendScorecard: FarrowingBackendScorecardResolvers = {
   water: scorecard => scorecard.water || {},
   crate: scorecard => scorecard.crate || {},
   room: scorecard => scorecard.room || {}
+};
+
+const ScorecardConfig: ScorecardConfigResolvers = {
+  job: job => job,
+  async pages(job, _, { dataSources }) {
+    const tasks = await dataSources.navJob.getJobTasks(job.No);
+    console.log(tasks);
+    const pages = tasks.reduce((pages, task) => {
+      if (task.Job_Task_Type === "Heading") {
+        pages.push({
+          title: task.Description,
+          elements: []
+        });
+      } else if (task.Job_Task_Type === "Posting") {
+        const page = pages.slice(-1)[0];
+        if (page) {
+          page.elements.push({
+            id: task.Job_Task_No,
+            label: task.Description,
+            code: task.Job_Task_No.substring(4),
+            order: parseInt(task.Job_Task_No) || 0
+          });
+        }
+      }
+      return pages;
+    }, []);
+    return pages;
+  }
 };
 
 const Scorecard: ScorecardResolvers = {
@@ -80,27 +107,8 @@ export const queries: QueryResolvers = {
   async scorecard(_, { job }) {
     return await ScorecardModel.findOne({ job });
   },
-  async scorecardPages(_, { job }, { dataSources }) {
-    const tasks = await dataSources.navJob.getJobTasks(job);
-    return tasks.reduce((pages, task) => {
-      if (task.Job_Task_Type === "Heading") {
-        pages.push({
-          title: task.Description,
-          elements: []
-        });
-      } else if (task.Job_Task_Type === "Posting") {
-        const page = pages.slice(-1)[0];
-        if (page) {
-          page.elements.push({
-            id: task.Job_Task_No,
-            label: task.Description,
-            code: task.Job_Task_No.substring(4),
-            order: parseInt(task.Job_Task_No) || 0
-          });
-        }
-      }
-      return pages;
-    }, []);
+  async scorecardConfig(_, { job }, { dataSources }) {
+    return await dataSources.navJob.getByNo(job);
   }
 };
 
@@ -228,5 +236,6 @@ export const mutations: MutationResolvers = {
 
 export const types = {
   Scorecard,
+  ScorecardConfig,
   FarrowingBackendScorecard
 };

@@ -60,32 +60,15 @@ type ScorecardPage {
   elements: [ScorecardElement!]!
 }
 
-type ScorecardJob {
-  number: String!
-  #TODO change to resource
-  personResponsible: String!
-  # scorecardPages: [ScorecardPage!]!
+type ScorecardConfig {
+  job: Job!
+  pages: [ScorecardPage!]!
 }
 
-# type GrowFinishScorecard {
-#   job: Job!
-#   operator: Resource
-# }
-
-# input PostGrowFinishScorecardInput {
-#   job: String!
-#   operator: String!
-# }
-
-# input SaveGrowFinishScorecardInput {
-#   job: String!
-#   operator: String
-# }
-
-# type GrowFinishScorecardResult {
-#   success: Boolean!
-#   scorecard: GrowFinishScorecard!
-# }
+type ScorecardJob {
+  number: String!
+  personResponsible: String!
+}
 
 input ScorecardElementResponseInput {
   elementId: ID!
@@ -130,11 +113,10 @@ type Query {
   farrowingBackendAreas: [Job!]!
   farrowingBackendArea(number: String!): Job
   farrowingBackendOperators: [Resource!]!
-  # remove this when common is working
-  growFinishJobs: [Job!]!
-  # add support for this job input
   scorecardPages(job: String!): [ScorecardPage!]!
   personResponsible: [Resource!]!
+
+  scorecardConfig(job: String!): ScorecardConfig
   scorecard(job: String!): Scorecard
 }
 

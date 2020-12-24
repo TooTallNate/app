@@ -8,8 +8,6 @@ import {
   useSavePigMoveMutation,
   usePostPigMoveMutation
 } from "../graphql";
-import StackedInput from "../../common/components/input/StackedInput";
-import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
@@ -28,9 +26,6 @@ import InventoryField from "../components/InventoryField";
 import TotalWeightField from "../components/TotalWeightField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
-import FormGroupContent from "../../common/components/form/FormGroupContent";
-import FormGroupLabel from "../../common/components/form/FormGroupLabel";
-import FormGroup from "../../common/components/form/FormGroup";
 
 interface FormData {
   event: string;

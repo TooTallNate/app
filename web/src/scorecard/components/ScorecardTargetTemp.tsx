@@ -69,9 +69,9 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput noRegister>
-        <StaticValue value={
-            typeof targetTemp === "number" ? `${targetTemp} Degrees` : ""
-          } />
+        <StaticValue
+          value={typeof targetTemp === "number" ? `${targetTemp} Degrees` : ""}
+        />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

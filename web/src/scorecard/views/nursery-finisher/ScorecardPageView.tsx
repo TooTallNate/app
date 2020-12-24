@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import { useHistory, useParams, Link } from "react-router-dom";
+import React from "react";
+import { useHistory, useParams, Link, useRouteMatch } from "react-router-dom";
 import Title from "../../../common/components/view/ViewTitle";
 import View from "../../../common/components/view/View";
 import ViewHeader from "../../../common/components/view/ViewHeader";
@@ -13,23 +13,16 @@ import ScorecardPageComponent from "../../components/ScorecardPageComponent";
 import Button from "../../../common/components/input/Button";
 import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
 import { useFlash } from "../../../common/contexts/flash";
-import { useSaveScorecardMutation } from "../../graphql";
 
 const ScorecardPageView: React.FC = () => {
-  const params = useParams<{ page: string; job: string }>();
+  const match = useRouteMatch();
+  const params = useParams<{ page: string }>();
   const history = useHistory();
 
-  const { formConfig, setJob, saveProgress, job, loadingJob } = useGrowFinish();
+  const { formConfig, saveProgress, job, loadingJob } = useGrowFinish();
   const formContext = useForm();
   const { setMessage } = useFlash();
   const { getValues } = formContext;
-
-  // const [save] = useSaveScorecardMutation();
-
-  // Refresh job on page reload.
-  useEffect(() => {
-    setJob(params.job);
-  }, [params.job, setJob]);
 
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
@@ -38,9 +31,9 @@ const ScorecardPageView: React.FC = () => {
   const onSubmit: OnSubmit<Record<string, any>> = async data => {
     await saveProgress(data);
     if (pageNumber + 1 < pageCount) {
-      history.push(`/scorecard/${params.job}/page/${pageNumber + 2}`);
+      history.push(match.path.replace(":page", `${pageNumber + 2}`));
     } else {
-      history.push(`/scorecard/${params.job}/submit`);
+      history.push(match.path.replace(":page", "submit"));
     }
   };
 

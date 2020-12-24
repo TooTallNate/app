@@ -36,6 +36,7 @@ generates:
         PigActivityDefaults: "./models/UserSettings#UserSettingsDocument"
         FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
         Scorecard: "../scorecard/models/Scorecard#ScorecardDocument"
+        ScorecardConfig: "./nav#NavJob"
     hooks:
       afterOneFileWrite:
         - eslint --fix

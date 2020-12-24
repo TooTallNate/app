@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useGrowFinish } from "../../contexts/growFinish";
 import ViewContent from "../../../common/components/view/ViewContent";
 import View from "../../../common/components/view/View";
@@ -16,18 +16,7 @@ const ScorecardSubmitView: React.FC = () => {
   const params = useParams<{ job: string }>();
   const history = useHistory();
 
-  const {
-    formConfig,
-    formState,
-    submit,
-    saveProgress,
-    setJob
-  } = useGrowFinish();
-
-  // Refresh job on page reload.
-  useEffect(() => {
-    setJob(params.job);
-  }, [params.job, setJob]);
+  const { formConfig, formState, submit, saveProgress } = useGrowFinish();
 
   const onSave = async () => {
     await saveProgress();
