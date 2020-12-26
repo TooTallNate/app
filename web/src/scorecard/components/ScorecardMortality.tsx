@@ -8,6 +8,7 @@ import { useScorecardPigJobLazyQuery } from "../graphql/index";
 import { useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
+import usePigJob from "./usePigJob";
 
 export interface ScorecardMortalityProps {
   label: string;
@@ -18,19 +19,9 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   label,
   id
 }) => {
-  const { formState } = useScorecard();
+  const { job: pigJob } = usePigJob();
   const { setValue, register, unregister, watch } = useFormContext();
-  const [loadJob, { data }] = useScorecardPigJobLazyQuery();
   const name = `${id}.numericValue`;
-  const [, jobElement] =
-    Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
-    [];
-
-  useEffect(() => {
-    if (jobElement && jobElement.stringValue) {
-      loadJob({ variables: { job: jobElement.stringValue } });
-    }
-  }, [jobElement, loadJob]);
 
   useEffect(() => {
     register({ name, type: "custom" });
@@ -38,12 +29,12 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    if (data && data.job && data.job.deadQuantity) {
-      setValue(name, data.job.deadQuantity);
+    if (pigJob && pigJob.deadQuantity) {
+      setValue(name, pigJob.deadQuantity);
     } else {
       setValue(name, "Unknown");
     }
-  }, [data, setValue, name]);
+  }, [pigJob, setValue, name]);
 
   let deadQuantity = watch(name);
 
@@ -53,8 +44,8 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
       <FormFieldInput noRegister>
         <StaticValue
           value={
-            typeof deadQuantity === "number" && (data && data.job)
-              ? `${data.job.deadQuantity} deads`
+            typeof deadQuantity === "number"
+              ? `${deadQuantity} deads`
               : "Unknown"
           }
         />

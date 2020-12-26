@@ -51,7 +51,7 @@ const ScorecardJobView: React.FC = () => {
                   sort="desc"
                   items={data.jobs.map(job => ({
                     value: job.number,
-                    title: `${job.number} ${job.description}`
+                    title: job.description
                   }))}
                 />
               </FormFieldInput>

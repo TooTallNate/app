@@ -24,7 +24,7 @@ const AuthenticatedApp: React.FC = () => {
     <div className="max-w-3xl h-full mx-auto flex flex-col">
       <Switch>
         <Route exact path="/" component={HomeView} />
-        <Route path="/pigs" component={ActivityView} />
+        <Route path="/pig-activity" component={ActivityView} />
         <Route path="/scorecard" component={ScorecardsRouterView} />
         <Route path="/account" component={AccountRouterView} />
         <Redirect to="/" />

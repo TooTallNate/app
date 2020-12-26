@@ -89,16 +89,16 @@ export const mutations: MutationResolvers = {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
       );
-      if (element) {
+      if (element && element.numericValue !== 0) {
         await dataSources.navJobJournal.postEntry({
-          Journal_Template_Name: NavJobJournalTemplate.Job,
+          Journal_Template_Name: job.Job_Posting_Group,
           Journal_Batch_Name: NavJobJournalBatch.FarmApp,
           Document_No: docNo,
           Job_No: job.No,
           Location_Code: job.Site,
           Job_Task_No: task.Job_Task_No,
           No: caretaker.stringValue,
-          Quantity: element.numericValue || 1,
+          Quantity: element.numericValue || -1,
           Description: element.stringValue || " ",
           Work_Type_Code: job.Job_Posting_Group,
           Posting_Date: date,
