@@ -32,7 +32,7 @@ const ScorecardSubmitView: React.FC = () => {
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Submit</Title>
+        <Title>Summary</Title>
       </ViewHeader>
       <ViewContent>
         <Stack className="min-h-full">

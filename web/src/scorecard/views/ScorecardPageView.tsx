@@ -59,7 +59,12 @@ const ScorecardPageView: React.FC = () => {
       <ViewHeader>
         <BackButton />
         <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
-        <Link to={match.path.replace("page/:page", "submit")}>Submit</Link>
+        <Link
+          to={match.path.replace("page/:page", "submit")}
+          className="text-blue-700"
+        >
+          Summary
+        </Link>
       </ViewHeader>
       <ViewContent loading={loadingJob}>
         {job && (
