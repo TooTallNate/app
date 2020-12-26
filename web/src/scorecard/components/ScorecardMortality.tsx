@@ -4,8 +4,7 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useScorecard } from "../contexts/scorecard";
+import { FormValue } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 import usePigJob from "./usePigJob";
@@ -54,5 +53,8 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
     </FormField>
   );
 };
+
+export const isComplete = ({ numericValue }: FormValue) =>
+  typeof numericValue === "number";
 
 export default ScorecardMortality;

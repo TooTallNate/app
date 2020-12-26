@@ -15,7 +15,7 @@ import ScorecardScores, {
   isComplete as isScoresComplete
 } from "./ScorecardScores";
 import ScorecardHealthInput, {
-  isComplete as isNumperComplete
+  isComplete as isNumberComplete
 } from "./ScorecardNumberInput";
 import { FormValue } from "../contexts/scorecard";
 import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
@@ -65,14 +65,16 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
 };
 
 const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
+  //TODO Anytihng not here but in the switch up there needs to be added
   YN: isYesNoComplete,
   JOB: isPigJobComplete,
   CARETAKER: isCaretakerComplete,
   SUPERVISOR: isSupervisorComplete,
   SCORE5: isScoresComplete,
   SCORE10: isScoresComplete,
-  HEALTH: isNumperComplete,
-  TEMP: isNumperComplete
+  HEALTH: isNumberComplete,
+  TEMP: isNumberComplete,
+  WEEKSONFEED: isWeeksOnFeedComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {
