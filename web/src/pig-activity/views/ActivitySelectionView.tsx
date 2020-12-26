@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import StackedNav from "../../common/components/nav/StackedNav";
 import StackedNavLink from "../../common/components/nav/StackedNavLink";
 import Title from "../../common/components/view/ViewTitle";
@@ -8,22 +8,14 @@ import ViewHeader from "../../common/components/view/ViewHeader";
 import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 
-interface ViewParams {
-  barnType: string;
-}
-
 const ActivitySelectionView: React.FC = () => {
   const match = useRouteMatch();
-  const params = useParams<ViewParams>();
 
   return (
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>
-          {params.barnType === "sow-farm" ? "Sow Farm " : "Nursery/Finisher "}
-          Activity
-        </Title>
+        <Title>Pig Activity</Title>
       </ViewHeader>
       <ViewContent>
         <StackedNav>
