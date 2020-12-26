@@ -15,14 +15,24 @@ import ScorecardScores, {
   isComplete as isScoresComplete
 } from "./ScorecardScores";
 import ScorecardHealthInput, {
-  isComplete as isNumberComplete
-} from "./ScorecardNumberInput";
+  isComplete as isHealthInputComplete
+} from "./ScorecardHealthInput";
+import ScorecardWeeksOnFeed, {
+  isComplete as isWeeksOnFeedComplete
+} from "./ScorecardWeeksOnFeed";
+import ScorecardMortality, {
+  isComplete as isMortalityComplete
+} from "./ScorecardMortality";
+import ScorecardPostingDate, {
+  isComplete as isPostingDateComplete
+} from "./ScorecardPostingDate";
+import ScorecardTargetTemp, {
+  isComplete as isTargetTempComplete
+} from "./ScorecardTargetTemp";
+import ScorecardTempInput, {
+  isComplete as isTempComplete
+} from "./ScorecardTemp";
 import { FormValue } from "../contexts/scorecard";
-import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
-import ScorecardMortality from "./ScorecardMortality";
-import ScorecardPostingDate from "./ScorecardPostingDate";
-import ScorecardTargetTemp from "./ScorecardTargetTemp";
-import ScorecardTempInput from "./ScorecardTemp";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -49,8 +59,6 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardScores {...props} min={1} max={10} step={1} />;
     case "HEALTH":
       return <ScorecardHealthInput {...props} min={0} max={100} />;
-    case "TEMP":
-      return <ScorecardTempInput {...props} />;
     case "WEEKSONFEED":
       return <ScorecardWeeksOnFeed {...props} />;
     case "MORTALITY":
@@ -59,6 +67,8 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardPostingDate {...props} />;
     case "TEMPTARGET":
       return <ScorecardTargetTemp {...props} />;
+    case "TEMP":
+      return <ScorecardTempInput {...props} />;
     default:
       return null;
   }
@@ -72,9 +82,12 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   SUPERVISOR: isSupervisorComplete,
   SCORE5: isScoresComplete,
   SCORE10: isScoresComplete,
-  HEALTH: isNumberComplete,
-  TEMP: isNumberComplete,
-  WEEKSONFEED: isWeeksOnFeedComplete
+  HEALTH: isHealthInputComplete,
+  WEEKSONFEED: isWeeksOnFeedComplete,
+  MORTALITY: isMortalityComplete,
+  POSTINGDATE: isPostingDateComplete,
+  TARGETTEMP: isTargetTempComplete,
+  TEMP: isTempComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {

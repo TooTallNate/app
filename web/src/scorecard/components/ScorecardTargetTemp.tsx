@@ -8,6 +8,7 @@ import { useScorecardTargetTempLazyQuery } from "../graphql/index";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 import usePigJob from "./usePigJob";
+import { FormValue } from "../contexts/scorecard";
 
 export interface ScorecardTargetTempProps {
   label: string;
@@ -63,5 +64,8 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
     </FormField>
   );
 };
+
+export const isComplete = ({ numericValue }: FormValue) =>
+  typeof numericValue === "number";
 
 export default ScorecardTargetTemp;
