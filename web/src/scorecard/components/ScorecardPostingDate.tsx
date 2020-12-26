@@ -6,7 +6,7 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { useScorecard } from "../contexts/scorecard";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import TextInput from "../../common/components/input/TextInput";
 
@@ -50,5 +50,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
     </FormField>
   );
 };
+
+export const isComplete = ({ stringValue }: FormValue) => !!stringValue;
 
 export default ScorecardPostingDate;

@@ -8,19 +8,12 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 
-export interface ScorecardNumberInputProps {
+export interface ScorecardTempProps {
   label: string;
   id: string;
-  min: number;
-  max: number;
 }
 
-const ScorecardNumberInput: React.FC<ScorecardNumberInputProps> = ({
-  label,
-  id,
-  min,
-  max
-}) => {
+const ScorecardTempInput: React.FC<ScorecardTempProps> = ({ label, id }) => {
   const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
@@ -28,25 +21,25 @@ const ScorecardNumberInput: React.FC<ScorecardNumberInputProps> = ({
 
   useEffect(() => {
     setValue(name, numericValue);
-  }, [name, numericValue, setValue]);
+  }, [numericValue, name, setValue]);
 
   return (
     <FormField
       name={name}
       rules={{
         min: {
-          value: min,
-          message: `Must be at least ${min}.`
+          value: -30,
+          message: `Must be at least -30ºF.`
         },
         max: {
-          value: max,
-          message: `Must be at most ${max}.`
+          value: 110,
+          message: `Must be at most 110ºF.`
         }
       }}
     >
-      <FormFieldLabel>{label}</FormFieldLabel>
+      <FormFieldLabel>{label} (ºF)</FormFieldLabel>
       <FormFieldInput>
-        <NumberInput />
+        <NumberInput className="w-16" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
@@ -56,4 +49,4 @@ const ScorecardNumberInput: React.FC<ScorecardNumberInputProps> = ({
 export const isComplete = ({ numericValue }: FormValue) =>
   typeof numericValue === "number";
 
-export default ScorecardNumberInput;
+export default ScorecardTempInput;

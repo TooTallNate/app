@@ -14,14 +14,25 @@ import ScorecardSupervisor, {
 import ScorecardScores, {
   isComplete as isScoresComplete
 } from "./ScorecardScores";
-import ScorecardNumberInput, {
-  isComplete as isNumperComplete
-} from "./ScorecardNumberInput";
+import ScorecardHealthInput, {
+  isComplete as isHealthInputComplete
+} from "./ScorecardHealthInput";
+import ScorecardWeeksOnFeed, {
+  isComplete as isWeeksOnFeedComplete
+} from "./ScorecardWeeksOnFeed";
+import ScorecardMortality, {
+  isComplete as isMortalityComplete
+} from "./ScorecardMortality";
+import ScorecardPostingDate, {
+  isComplete as isPostingDateComplete
+} from "./ScorecardPostingDate";
+import ScorecardTargetTemp, {
+  isComplete as isTargetTempComplete
+} from "./ScorecardTargetTemp";
+import ScorecardTempInput, {
+  isComplete as isTempComplete
+} from "./ScorecardTemp";
 import { FormValue } from "../contexts/scorecard";
-import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
-import ScorecardMortality from "./ScorecardMortality";
-import ScorecardPostingDate from "./ScorecardPostingDate";
-import ScorecardTargetTemp from "./ScorecardTargetTemp";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -47,9 +58,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
     case "SCORE10":
       return <ScorecardScores {...props} min={1} max={10} step={1} />;
     case "HEALTH":
-      return <ScorecardNumberInput {...props} min={0} max={100} />;
-    case "TEMP":
-      return <ScorecardNumberInput {...props} min={-30} max={110} />;
+      return <ScorecardHealthInput {...props} min={0} max={100} />;
     case "WEEKSONFEED":
       return <ScorecardWeeksOnFeed {...props} />;
     case "MORTALITY":
@@ -58,20 +67,27 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardPostingDate {...props} />;
     case "TEMPTARGET":
       return <ScorecardTargetTemp {...props} />;
+    case "TEMP":
+      return <ScorecardTempInput {...props} />;
     default:
       return null;
   }
 };
 
 const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
+  //TODO Anytihng not here but in the switch up there needs to be added
   YN: isYesNoComplete,
   JOB: isPigJobComplete,
   CARETAKER: isCaretakerComplete,
   SUPERVISOR: isSupervisorComplete,
   SCORE5: isScoresComplete,
   SCORE10: isScoresComplete,
-  HEALTH: isNumperComplete,
-  TEMP: isNumperComplete
+  HEALTH: isHealthInputComplete,
+  WEEKSONFEED: isWeeksOnFeedComplete,
+  MORTALITY: isMortalityComplete,
+  POSTINGDATE: isPostingDateComplete,
+  TARGETTEMP: isTargetTempComplete,
+  TEMP: isTempComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {
