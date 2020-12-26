@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
-import * as ApolloReactCommon from "@apollo/react-common";
-import * as ApolloReactHooks from "@apollo/react-hooks";
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -23,6 +22,8 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  startDate?: Maybe<Scalars["String"]>;
+  location: Location;
 };
 
 export type Item = {
@@ -41,12 +42,99 @@ export type Resource = {
   __typename?: "Resource";
   number: Scalars["String"];
   name: Scalars["String"];
+  unitPrice?: Maybe<Scalars["Float"]>;
 };
 
 export type Location = {
   __typename?: "Location";
   code: Scalars["String"];
   name: Scalars["String"];
+};
+
+export type JobFilter = {
+  groups?: Maybe<Array<Scalars["String"]>>;
+  locations?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type ResourceFilter = {
+  group?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
+};
+
+export type Query = {
+  __typename?: "Query";
+  animals: Array<Item>;
+  job?: Maybe<Job>;
+  jobs: Array<Job>;
+  locations: Array<Location>;
+  pigActivityDefaults: PigActivityDefaults;
+  pigActivityJobs: Array<Job>;
+  pigAdjustment: PigAdjustment;
+  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
+  pigGradeOff: PigGradeOff;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
+  pigMortality: PigMortality;
+  pigMortalityEventTypes: Array<PigMortalityEvent>;
+  pigMove: PigMove;
+  pigMoveEventTypes: Array<PigMoveEvent>;
+  pigPurchase: PigPurchase;
+  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
+  pigWean: PigWean;
+  pigWeanEventTypes: Array<PigWeanEvent>;
+  resource?: Maybe<Resource>;
+  resources: Array<Resource>;
+  scorecard?: Maybe<Scorecard>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
+  scorecardGroups: Array<ScorecardGroup>;
+  user?: Maybe<User>;
+};
+
+export type QueryJobArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryJobsArgs = {
+  input?: Maybe<JobFilter>;
+};
+
+export type QueryPigAdjustmentArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigGradeOffArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMortalityArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMoveArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigWeanArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryResourceArgs = {
+  code: Scalars["String"];
+};
+
+export type QueryResourcesArgs = {
+  input?: Maybe<ResourceFilter>;
+};
+
+export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardConfigArgs = {
+  job: Scalars["String"];
 };
 
 export type PigActivityDefaults = {
@@ -316,91 +404,29 @@ export type PigWeanResult = {
   defaults: PigActivityDefaults;
 };
 
-export type Query = {
-  __typename?: "Query";
-  animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  locations: Array<Location>;
-  pigActivityDefaults: PigActivityDefaults;
-  pigActivityJobs: Array<Job>;
-  pigAdjustment: PigAdjustment;
-  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
-  pigGradeOff: PigGradeOff;
-  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigMortality: PigMortality;
-  pigMortalityEventTypes: Array<PigMortalityEvent>;
-  pigMove: PigMove;
-  pigMoveEventTypes: Array<PigMoveEvent>;
-  pigPurchase: PigPurchase;
-  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
-  pigWean: PigWean;
-  pigWeanEventTypes: Array<PigWeanEvent>;
-  user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
-};
-
-export type QueryPigAdjustmentArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigGradeOffArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMortalityArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMoveArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigPurchaseArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigWeanArgs = {
-  job: Scalars["String"];
-};
-
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
   postPigMove: PigMoveResult;
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
-  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  postScorecard: ScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
   savePigMove: PigMoveResult;
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
-  setAreaOperator: SetAreaOperatorResult;
+  saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -427,8 +453,8 @@ export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
-export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: SaveFarrowingBackendScorecardInput;
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
 };
 
 export type MutationSavePigAdjustmentArgs = {
@@ -455,74 +481,68 @@ export type MutationSavePigWeanArgs = {
   input: SavePigWeanInput;
 };
 
-export type MutationSetAreaOperatorArgs = {
-  input: SetAreaOperatorInput;
+export type MutationSaveScorecardArgs = {
+  input: PostScorecardInput;
 };
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
 };
 
-export type ScorecardEntry = {
-  __typename?: "ScorecardEntry";
-  score?: Maybe<Scalars["Int"]>;
-  comments?: Maybe<Scalars["String"]>;
+export type ScorecardGroup = {
+  __typename?: "ScorecardGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
-export type ScorecardEntryInput = {
-  score: Scalars["Int"];
-  comments?: Maybe<Scalars["String"]>;
+export type ScorecardElement = {
+  __typename?: "ScorecardElement";
+  id: Scalars["ID"];
+  label: Scalars["String"];
+  code: Scalars["String"];
+  order: Scalars["Int"];
 };
 
-export type FarrowingBackendScorecard = {
-  __typename?: "FarrowingBackendScorecard";
-  area: Job;
-  operator?: Maybe<Resource>;
-  sows: ScorecardEntry;
-  piglets: ScorecardEntry;
-  feed: ScorecardEntry;
-  water: ScorecardEntry;
-  crate: ScorecardEntry;
-  room: ScorecardEntry;
+export type ScorecardPage = {
+  __typename?: "ScorecardPage";
+  title?: Maybe<Scalars["String"]>;
+  elements: Array<ScorecardElement>;
 };
 
-export type PostFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
 };
 
-export type SaveFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
+export type ScorecardElementResponseInput = {
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type FarrowingBackendScorecardResult = {
-  __typename?: "FarrowingBackendScorecardResult";
+export type PostScorecardInput = {
+  job: Scalars["String"];
+  data: Array<ScorecardElementResponseInput>;
+};
+
+export type ScorecardResult = {
+  __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+  scorecard?: Maybe<Scorecard>;
 };
 
-export type SetAreaOperatorInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
+export type ScorecardElementResponse = {
+  __typename?: "ScorecardElementResponse";
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type SetAreaOperatorResult = {
-  __typename?: "SetAreaOperatorResult";
-  success: Scalars["Boolean"];
-  area: Job;
+export type Scorecard = {
+  __typename?: "Scorecard";
+  job: Job;
+  data: Array<ScorecardElementResponse>;
 };
 
 export type UserLocations = {
@@ -1064,23 +1084,23 @@ export const PigActivityJobsDocument = gql`
  * });
  */
 export function usePigActivityJobsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     PigActivityJobsQuery,
     PigActivityJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    PigActivityJobsQuery,
-    PigActivityJobsQueryVariables
-  >(PigActivityJobsDocument, baseOptions);
+  return Apollo.useQuery<PigActivityJobsQuery, PigActivityJobsQueryVariables>(
+    PigActivityJobsDocument,
+    baseOptions
+  );
 }
 export function usePigActivityJobsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     PigActivityJobsQuery,
     PigActivityJobsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     PigActivityJobsQuery,
     PigActivityJobsQueryVariables
   >(PigActivityJobsDocument, baseOptions);
@@ -1091,7 +1111,7 @@ export type PigActivityJobsQueryHookResult = ReturnType<
 export type PigActivityJobsLazyQueryHookResult = ReturnType<
   typeof usePigActivityJobsLazyQuery
 >;
-export type PigActivityJobsQueryResult = ApolloReactCommon.QueryResult<
+export type PigActivityJobsQueryResult = Apollo.QueryResult<
   PigActivityJobsQuery,
   PigActivityJobsQueryVariables
 >;
@@ -1125,26 +1145,26 @@ export const PigAdjustmentDocument = gql`
  * });
  */
 export function usePigAdjustmentQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     PigAdjustmentQuery,
     PigAdjustmentQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    PigAdjustmentQuery,
-    PigAdjustmentQueryVariables
-  >(PigAdjustmentDocument, baseOptions);
+  return Apollo.useQuery<PigAdjustmentQuery, PigAdjustmentQueryVariables>(
+    PigAdjustmentDocument,
+    baseOptions
+  );
 }
 export function usePigAdjustmentLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     PigAdjustmentQuery,
     PigAdjustmentQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    PigAdjustmentQuery,
-    PigAdjustmentQueryVariables
-  >(PigAdjustmentDocument, baseOptions);
+  return Apollo.useLazyQuery<PigAdjustmentQuery, PigAdjustmentQueryVariables>(
+    PigAdjustmentDocument,
+    baseOptions
+  );
 }
 export type PigAdjustmentQueryHookResult = ReturnType<
   typeof usePigAdjustmentQuery
@@ -1152,7 +1172,7 @@ export type PigAdjustmentQueryHookResult = ReturnType<
 export type PigAdjustmentLazyQueryHookResult = ReturnType<
   typeof usePigAdjustmentLazyQuery
 >;
-export type PigAdjustmentQueryResult = ApolloReactCommon.QueryResult<
+export type PigAdjustmentQueryResult = Apollo.QueryResult<
   PigAdjustmentQuery,
   PigAdjustmentQueryVariables
 >;
@@ -1170,7 +1190,7 @@ export const SavePigAdjustmentDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigAdjustmentFragmentFragmentDoc}
 `;
-export type SavePigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigAdjustmentMutationFn = Apollo.MutationFunction<
   SavePigAdjustmentMutation,
   SavePigAdjustmentMutationVariables
 >;
@@ -1193,12 +1213,12 @@ export type SavePigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigAdjustmentMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigAdjustmentMutation,
     SavePigAdjustmentMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SavePigAdjustmentMutation,
     SavePigAdjustmentMutationVariables
   >(SavePigAdjustmentDocument, baseOptions);
@@ -1206,10 +1226,10 @@ export function useSavePigAdjustmentMutation(
 export type SavePigAdjustmentMutationHookResult = ReturnType<
   typeof useSavePigAdjustmentMutation
 >;
-export type SavePigAdjustmentMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigAdjustmentMutationResult = Apollo.MutationResult<
   SavePigAdjustmentMutation
 >;
-export type SavePigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigAdjustmentMutationOptions = Apollo.BaseMutationOptions<
   SavePigAdjustmentMutation,
   SavePigAdjustmentMutationVariables
 >;
@@ -1227,7 +1247,7 @@ export const PostPigAdjustmentDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigAdjustmentFragmentFragmentDoc}
 `;
-export type PostPigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigAdjustmentMutationFn = Apollo.MutationFunction<
   PostPigAdjustmentMutation,
   PostPigAdjustmentMutationVariables
 >;
@@ -1250,12 +1270,12 @@ export type PostPigAdjustmentMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigAdjustmentMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigAdjustmentMutation,
     PostPigAdjustmentMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostPigAdjustmentMutation,
     PostPigAdjustmentMutationVariables
   >(PostPigAdjustmentDocument, baseOptions);
@@ -1263,10 +1283,10 @@ export function usePostPigAdjustmentMutation(
 export type PostPigAdjustmentMutationHookResult = ReturnType<
   typeof usePostPigAdjustmentMutation
 >;
-export type PostPigAdjustmentMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigAdjustmentMutationResult = Apollo.MutationResult<
   PostPigAdjustmentMutation
 >;
-export type PostPigAdjustmentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigAdjustmentMutationOptions = Apollo.BaseMutationOptions<
   PostPigAdjustmentMutation,
   PostPigAdjustmentMutationVariables
 >;
@@ -1304,32 +1324,32 @@ export const PigGradeOffDocument = gql`
  * });
  */
 export function usePigGradeOffQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     PigGradeOffQuery,
     PigGradeOffQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<PigGradeOffQuery, PigGradeOffQueryVariables>(
+  return Apollo.useQuery<PigGradeOffQuery, PigGradeOffQueryVariables>(
     PigGradeOffDocument,
     baseOptions
   );
 }
 export function usePigGradeOffLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     PigGradeOffQuery,
     PigGradeOffQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    PigGradeOffQuery,
-    PigGradeOffQueryVariables
-  >(PigGradeOffDocument, baseOptions);
+  return Apollo.useLazyQuery<PigGradeOffQuery, PigGradeOffQueryVariables>(
+    PigGradeOffDocument,
+    baseOptions
+  );
 }
 export type PigGradeOffQueryHookResult = ReturnType<typeof usePigGradeOffQuery>;
 export type PigGradeOffLazyQueryHookResult = ReturnType<
   typeof usePigGradeOffLazyQuery
 >;
-export type PigGradeOffQueryResult = ApolloReactCommon.QueryResult<
+export type PigGradeOffQueryResult = Apollo.QueryResult<
   PigGradeOffQuery,
   PigGradeOffQueryVariables
 >;
@@ -1343,7 +1363,7 @@ export const SavePigGradeOffDocument = gql`
   }
   ${PigGradeOffFragmentFragmentDoc}
 `;
-export type SavePigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigGradeOffMutationFn = Apollo.MutationFunction<
   SavePigGradeOffMutation,
   SavePigGradeOffMutationVariables
 >;
@@ -1366,12 +1386,12 @@ export type SavePigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigGradeOffMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigGradeOffMutation,
     SavePigGradeOffMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SavePigGradeOffMutation,
     SavePigGradeOffMutationVariables
   >(SavePigGradeOffDocument, baseOptions);
@@ -1379,10 +1399,10 @@ export function useSavePigGradeOffMutation(
 export type SavePigGradeOffMutationHookResult = ReturnType<
   typeof useSavePigGradeOffMutation
 >;
-export type SavePigGradeOffMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigGradeOffMutationResult = Apollo.MutationResult<
   SavePigGradeOffMutation
 >;
-export type SavePigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigGradeOffMutationOptions = Apollo.BaseMutationOptions<
   SavePigGradeOffMutation,
   SavePigGradeOffMutationVariables
 >;
@@ -1396,7 +1416,7 @@ export const PostPigGradeOffDocument = gql`
   }
   ${PigGradeOffFragmentFragmentDoc}
 `;
-export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigGradeOffMutationFn = Apollo.MutationFunction<
   PostPigGradeOffMutation,
   PostPigGradeOffMutationVariables
 >;
@@ -1419,12 +1439,12 @@ export type PostPigGradeOffMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigGradeOffMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigGradeOffMutation,
     PostPigGradeOffMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostPigGradeOffMutation,
     PostPigGradeOffMutationVariables
   >(PostPigGradeOffDocument, baseOptions);
@@ -1432,10 +1452,10 @@ export function usePostPigGradeOffMutation(
 export type PostPigGradeOffMutationHookResult = ReturnType<
   typeof usePostPigGradeOffMutation
 >;
-export type PostPigGradeOffMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigGradeOffMutationResult = Apollo.MutationResult<
   PostPigGradeOffMutation
 >;
-export type PostPigGradeOffMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigGradeOffMutationOptions = Apollo.BaseMutationOptions<
   PostPigGradeOffMutation,
   PostPigGradeOffMutationVariables
 >;
@@ -1473,26 +1493,26 @@ export const PigMortalityDocument = gql`
  * });
  */
 export function usePigMortalityQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     PigMortalityQuery,
     PigMortalityQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    PigMortalityQuery,
-    PigMortalityQueryVariables
-  >(PigMortalityDocument, baseOptions);
+  return Apollo.useQuery<PigMortalityQuery, PigMortalityQueryVariables>(
+    PigMortalityDocument,
+    baseOptions
+  );
 }
 export function usePigMortalityLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     PigMortalityQuery,
     PigMortalityQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    PigMortalityQuery,
-    PigMortalityQueryVariables
-  >(PigMortalityDocument, baseOptions);
+  return Apollo.useLazyQuery<PigMortalityQuery, PigMortalityQueryVariables>(
+    PigMortalityDocument,
+    baseOptions
+  );
 }
 export type PigMortalityQueryHookResult = ReturnType<
   typeof usePigMortalityQuery
@@ -1500,7 +1520,7 @@ export type PigMortalityQueryHookResult = ReturnType<
 export type PigMortalityLazyQueryHookResult = ReturnType<
   typeof usePigMortalityLazyQuery
 >;
-export type PigMortalityQueryResult = ApolloReactCommon.QueryResult<
+export type PigMortalityQueryResult = Apollo.QueryResult<
   PigMortalityQuery,
   PigMortalityQueryVariables
 >;
@@ -1514,7 +1534,7 @@ export const SavePigMortalityDocument = gql`
   }
   ${PigMortalityFragmentFragmentDoc}
 `;
-export type SavePigMortalityMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigMortalityMutationFn = Apollo.MutationFunction<
   SavePigMortalityMutation,
   SavePigMortalityMutationVariables
 >;
@@ -1537,12 +1557,12 @@ export type SavePigMortalityMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigMortalityMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigMortalityMutation,
     SavePigMortalityMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SavePigMortalityMutation,
     SavePigMortalityMutationVariables
   >(SavePigMortalityDocument, baseOptions);
@@ -1550,10 +1570,10 @@ export function useSavePigMortalityMutation(
 export type SavePigMortalityMutationHookResult = ReturnType<
   typeof useSavePigMortalityMutation
 >;
-export type SavePigMortalityMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigMortalityMutationResult = Apollo.MutationResult<
   SavePigMortalityMutation
 >;
-export type SavePigMortalityMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigMortalityMutationOptions = Apollo.BaseMutationOptions<
   SavePigMortalityMutation,
   SavePigMortalityMutationVariables
 >;
@@ -1567,7 +1587,7 @@ export const PostPigMortalityDocument = gql`
   }
   ${PigMortalityFragmentFragmentDoc}
 `;
-export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigMortalityMutationFn = Apollo.MutationFunction<
   PostPigMortalityMutation,
   PostPigMortalityMutationVariables
 >;
@@ -1590,12 +1610,12 @@ export type PostPigMortalityMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigMortalityMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigMortalityMutation,
     PostPigMortalityMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostPigMortalityMutation,
     PostPigMortalityMutationVariables
   >(PostPigMortalityDocument, baseOptions);
@@ -1603,10 +1623,10 @@ export function usePostPigMortalityMutation(
 export type PostPigMortalityMutationHookResult = ReturnType<
   typeof usePostPigMortalityMutation
 >;
-export type PostPigMortalityMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigMortalityMutationResult = Apollo.MutationResult<
   PostPigMortalityMutation
 >;
-export type PostPigMortalityMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigMortalityMutationOptions = Apollo.BaseMutationOptions<
   PostPigMortalityMutation,
   PostPigMortalityMutationVariables
 >;
@@ -1644,30 +1664,24 @@ export const PigMoveDocument = gql`
  * });
  */
 export function usePigMoveQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    PigMoveQuery,
-    PigMoveQueryVariables
-  >
+  baseOptions: Apollo.QueryHookOptions<PigMoveQuery, PigMoveQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<PigMoveQuery, PigMoveQueryVariables>(
+  return Apollo.useQuery<PigMoveQuery, PigMoveQueryVariables>(
     PigMoveDocument,
     baseOptions
   );
 }
 export function usePigMoveLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    PigMoveQuery,
-    PigMoveQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<PigMoveQuery, PigMoveQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<PigMoveQuery, PigMoveQueryVariables>(
+  return Apollo.useLazyQuery<PigMoveQuery, PigMoveQueryVariables>(
     PigMoveDocument,
     baseOptions
   );
 }
 export type PigMoveQueryHookResult = ReturnType<typeof usePigMoveQuery>;
 export type PigMoveLazyQueryHookResult = ReturnType<typeof usePigMoveLazyQuery>;
-export type PigMoveQueryResult = ApolloReactCommon.QueryResult<
+export type PigMoveQueryResult = Apollo.QueryResult<
   PigMoveQuery,
   PigMoveQueryVariables
 >;
@@ -1685,7 +1699,7 @@ export const SavePigMoveDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigMoveFragmentFragmentDoc}
 `;
-export type SavePigMoveMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigMoveMutationFn = Apollo.MutationFunction<
   SavePigMoveMutation,
   SavePigMoveMutationVariables
 >;
@@ -1708,23 +1722,23 @@ export type SavePigMoveMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigMoveMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigMoveMutation,
     SavePigMoveMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    SavePigMoveMutation,
-    SavePigMoveMutationVariables
-  >(SavePigMoveDocument, baseOptions);
+  return Apollo.useMutation<SavePigMoveMutation, SavePigMoveMutationVariables>(
+    SavePigMoveDocument,
+    baseOptions
+  );
 }
 export type SavePigMoveMutationHookResult = ReturnType<
   typeof useSavePigMoveMutation
 >;
-export type SavePigMoveMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigMoveMutationResult = Apollo.MutationResult<
   SavePigMoveMutation
 >;
-export type SavePigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigMoveMutationOptions = Apollo.BaseMutationOptions<
   SavePigMoveMutation,
   SavePigMoveMutationVariables
 >;
@@ -1742,7 +1756,7 @@ export const PostPigMoveDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigMoveFragmentFragmentDoc}
 `;
-export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigMoveMutationFn = Apollo.MutationFunction<
   PostPigMoveMutation,
   PostPigMoveMutationVariables
 >;
@@ -1765,23 +1779,23 @@ export type PostPigMoveMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigMoveMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigMoveMutation,
     PostPigMoveMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    PostPigMoveMutation,
-    PostPigMoveMutationVariables
-  >(PostPigMoveDocument, baseOptions);
+  return Apollo.useMutation<PostPigMoveMutation, PostPigMoveMutationVariables>(
+    PostPigMoveDocument,
+    baseOptions
+  );
 }
 export type PostPigMoveMutationHookResult = ReturnType<
   typeof usePostPigMoveMutation
 >;
-export type PostPigMoveMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigMoveMutationResult = Apollo.MutationResult<
   PostPigMoveMutation
 >;
-export type PostPigMoveMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigMoveMutationOptions = Apollo.BaseMutationOptions<
   PostPigMoveMutation,
   PostPigMoveMutationVariables
 >;
@@ -1815,32 +1829,32 @@ export const PigPurchaseDocument = gql`
  * });
  */
 export function usePigPurchaseQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     PigPurchaseQuery,
     PigPurchaseQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<PigPurchaseQuery, PigPurchaseQueryVariables>(
+  return Apollo.useQuery<PigPurchaseQuery, PigPurchaseQueryVariables>(
     PigPurchaseDocument,
     baseOptions
   );
 }
 export function usePigPurchaseLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     PigPurchaseQuery,
     PigPurchaseQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    PigPurchaseQuery,
-    PigPurchaseQueryVariables
-  >(PigPurchaseDocument, baseOptions);
+  return Apollo.useLazyQuery<PigPurchaseQuery, PigPurchaseQueryVariables>(
+    PigPurchaseDocument,
+    baseOptions
+  );
 }
 export type PigPurchaseQueryHookResult = ReturnType<typeof usePigPurchaseQuery>;
 export type PigPurchaseLazyQueryHookResult = ReturnType<
   typeof usePigPurchaseLazyQuery
 >;
-export type PigPurchaseQueryResult = ApolloReactCommon.QueryResult<
+export type PigPurchaseQueryResult = Apollo.QueryResult<
   PigPurchaseQuery,
   PigPurchaseQueryVariables
 >;
@@ -1858,7 +1872,7 @@ export const SavePigPurchaseDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigPurchaseFragmentFragmentDoc}
 `;
-export type SavePigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigPurchaseMutationFn = Apollo.MutationFunction<
   SavePigPurchaseMutation,
   SavePigPurchaseMutationVariables
 >;
@@ -1881,12 +1895,12 @@ export type SavePigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigPurchaseMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigPurchaseMutation,
     SavePigPurchaseMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SavePigPurchaseMutation,
     SavePigPurchaseMutationVariables
   >(SavePigPurchaseDocument, baseOptions);
@@ -1894,10 +1908,10 @@ export function useSavePigPurchaseMutation(
 export type SavePigPurchaseMutationHookResult = ReturnType<
   typeof useSavePigPurchaseMutation
 >;
-export type SavePigPurchaseMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigPurchaseMutationResult = Apollo.MutationResult<
   SavePigPurchaseMutation
 >;
-export type SavePigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigPurchaseMutationOptions = Apollo.BaseMutationOptions<
   SavePigPurchaseMutation,
   SavePigPurchaseMutationVariables
 >;
@@ -1915,7 +1929,7 @@ export const PostPigPurchaseDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigPurchaseFragmentFragmentDoc}
 `;
-export type PostPigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigPurchaseMutationFn = Apollo.MutationFunction<
   PostPigPurchaseMutation,
   PostPigPurchaseMutationVariables
 >;
@@ -1938,12 +1952,12 @@ export type PostPigPurchaseMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigPurchaseMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigPurchaseMutation,
     PostPigPurchaseMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     PostPigPurchaseMutation,
     PostPigPurchaseMutationVariables
   >(PostPigPurchaseDocument, baseOptions);
@@ -1951,10 +1965,10 @@ export function usePostPigPurchaseMutation(
 export type PostPigPurchaseMutationHookResult = ReturnType<
   typeof usePostPigPurchaseMutation
 >;
-export type PostPigPurchaseMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigPurchaseMutationResult = Apollo.MutationResult<
   PostPigPurchaseMutation
 >;
-export type PostPigPurchaseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigPurchaseMutationOptions = Apollo.BaseMutationOptions<
   PostPigPurchaseMutation,
   PostPigPurchaseMutationVariables
 >;
@@ -1988,30 +2002,24 @@ export const PigWeanDocument = gql`
  * });
  */
 export function usePigWeanQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    PigWeanQuery,
-    PigWeanQueryVariables
-  >
+  baseOptions: Apollo.QueryHookOptions<PigWeanQuery, PigWeanQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<PigWeanQuery, PigWeanQueryVariables>(
+  return Apollo.useQuery<PigWeanQuery, PigWeanQueryVariables>(
     PigWeanDocument,
     baseOptions
   );
 }
 export function usePigWeanLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    PigWeanQuery,
-    PigWeanQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<PigWeanQuery, PigWeanQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<PigWeanQuery, PigWeanQueryVariables>(
+  return Apollo.useLazyQuery<PigWeanQuery, PigWeanQueryVariables>(
     PigWeanDocument,
     baseOptions
   );
 }
 export type PigWeanQueryHookResult = ReturnType<typeof usePigWeanQuery>;
 export type PigWeanLazyQueryHookResult = ReturnType<typeof usePigWeanLazyQuery>;
-export type PigWeanQueryResult = ApolloReactCommon.QueryResult<
+export type PigWeanQueryResult = Apollo.QueryResult<
   PigWeanQuery,
   PigWeanQueryVariables
 >;
@@ -2029,7 +2037,7 @@ export const SavePigWeanDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigWeanFragmentFragmentDoc}
 `;
-export type SavePigWeanMutationFn = ApolloReactCommon.MutationFunction<
+export type SavePigWeanMutationFn = Apollo.MutationFunction<
   SavePigWeanMutation,
   SavePigWeanMutationVariables
 >;
@@ -2052,23 +2060,23 @@ export type SavePigWeanMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSavePigWeanMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SavePigWeanMutation,
     SavePigWeanMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    SavePigWeanMutation,
-    SavePigWeanMutationVariables
-  >(SavePigWeanDocument, baseOptions);
+  return Apollo.useMutation<SavePigWeanMutation, SavePigWeanMutationVariables>(
+    SavePigWeanDocument,
+    baseOptions
+  );
 }
 export type SavePigWeanMutationHookResult = ReturnType<
   typeof useSavePigWeanMutation
 >;
-export type SavePigWeanMutationResult = ApolloReactCommon.MutationResult<
+export type SavePigWeanMutationResult = Apollo.MutationResult<
   SavePigWeanMutation
 >;
-export type SavePigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SavePigWeanMutationOptions = Apollo.BaseMutationOptions<
   SavePigWeanMutation,
   SavePigWeanMutationVariables
 >;
@@ -2086,7 +2094,7 @@ export const PostPigWeanDocument = gql`
   ${PigActivityDefaultsFragmentFragmentDoc}
   ${PigWeanFragmentFragmentDoc}
 `;
-export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
+export type PostPigWeanMutationFn = Apollo.MutationFunction<
   PostPigWeanMutation,
   PostPigWeanMutationVariables
 >;
@@ -2109,23 +2117,23 @@ export type PostPigWeanMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePostPigWeanMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PostPigWeanMutation,
     PostPigWeanMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    PostPigWeanMutation,
-    PostPigWeanMutationVariables
-  >(PostPigWeanDocument, baseOptions);
+  return Apollo.useMutation<PostPigWeanMutation, PostPigWeanMutationVariables>(
+    PostPigWeanDocument,
+    baseOptions
+  );
 }
 export type PostPigWeanMutationHookResult = ReturnType<
   typeof usePostPigWeanMutation
 >;
-export type PostPigWeanMutationResult = ApolloReactCommon.MutationResult<
+export type PostPigWeanMutationResult = Apollo.MutationResult<
   PostPigWeanMutation
 >;
-export type PostPigWeanMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PostPigWeanMutationOptions = Apollo.BaseMutationOptions<
   PostPigWeanMutation,
   PostPigWeanMutationVariables
 >;

@@ -13,4 +13,8 @@ export default class NavLocationDataSource extends NavDataSource {
       )}`
     );
   }
+
+  getByCode(code: string): Promise<NavLocation> {
+    return this.get(`/Locations('${code}')`);
+  }
 }

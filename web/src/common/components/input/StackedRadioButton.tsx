@@ -36,7 +36,7 @@ const StackedRadioButton = forwardRef<
         value={value}
         name={name}
         checked={selected === value}
-        onChange={e => onChange && onChange(e.target.value)}
+        onChange={e => onChange && onChange(value)}
       />
       <div className="flex items-center h-full px-4 checked:bg-blue-300">
         {children}

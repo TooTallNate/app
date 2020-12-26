@@ -9,7 +9,7 @@ interface TextInputProps
 
 const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   function TextInput(
-    { className, onChange, autoComplete = "off", ...props },
+    { className, onChange, value, autoComplete = "off", ...props },
     ref
   ) {
     const fieldConfig = useField();
@@ -31,6 +31,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           focus:shadow-outline focus:outline-none
           ${className}
         `}
+        value={value || ""}
         onChange={e => onChange && onChange(e.target.value)}
         ref={ref}
       />

@@ -7,7 +7,8 @@ import {
   faTimes,
   faChevronDown,
   faChevronUp,
-  faChevronLeft
+  faChevronLeft,
+  faCheck
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -18,5 +19,6 @@ library.add(
   faCheckCircle,
   faChevronDown,
   faChevronUp,
-  faChevronLeft
+  faChevronLeft,
+  faCheck
 );

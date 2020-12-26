@@ -5,6 +5,11 @@ import {
   NavReasonCode
 } from "./enum";
 
+export interface NavJobPostingGroup {
+  Code: string;
+  Description: string;
+}
+
 export interface NavUser {
   Full_Name: string;
   License_Type: string;
@@ -25,6 +30,7 @@ export interface NavJob {
   Start_Quantity: number;
   Start_Weight: number;
   Start_Date: string;
+  Job_Posting_Group: string;
 }
 
 export interface NavReason {
@@ -45,6 +51,7 @@ export interface NavLocation {
 export interface NavResource {
   No: string;
   Name: string;
+  Unit_Price: number;
 }
 
 export interface NavItemJournalLine {
@@ -88,4 +95,14 @@ export interface NavStandardItemJournal {
   Journal_Template_Name: string;
   Code: string;
   Description: string;
+}
+
+export interface NavJobTask {
+  Job_No: string;
+  Job_Task_No: string;
+  Description: string;
+  Job_Task_Type: string;
+  WIP_Total: number;
+  Totaling: number;
+  Job_Posting_Group: string;
 }

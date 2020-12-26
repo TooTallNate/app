@@ -9,6 +9,8 @@ type Job {
   personResponsible: Resource!
   inventory: Int
   deadQuantity: Int
+  startDate: String
+  location: Location!
 }
 
 type Item {
@@ -24,9 +26,28 @@ type Reason {
 type Resource {
   number: String!
   name: String!
+  unitPrice: Float
 }
 
 type Location {
   code: String!
   name: String!
 }
+
+input JobFilter {
+  groups: [String!]
+  locations: [String!]
+}
+
+input ResourceFilter {
+  group: String
+  type: String
+}
+
+type Query {
+  resources(input: ResourceFilter): [Resource!]!
+  resource(code: String!): Resource
+  jobs(input: JobFilter): [Job!]!
+  job(number: String!): Job
+}
+

@@ -6,7 +6,8 @@ import {
   NavResource,
   NavReason,
   NavLocation,
-  NavStandardItemJournal
+  NavStandardItemJournal,
+  NavJobPostingGroup
 } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
@@ -15,7 +16,7 @@ import { PigMoveDocument } from "../pig-activity/models/PigMove";
 import { PigPurchaseDocument } from "../pig-activity/models/PigPurchase";
 import { PigWeanDocument } from "../pig-activity/models/PigWean";
 import { UserSettingsDocument } from "./models/UserSettings";
-import { FarrowingBackendScorecardDocument } from "../scorecard/models/FarrowingBackendScorecard";
+import { ScorecardDocument } from "../scorecard/Scorecard";
 import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -44,6 +45,8 @@ export type Job = {
   personResponsible: Resource;
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
+  startDate?: Maybe<Scalars["String"]>;
+  location: Location;
 };
 
 export type Item = {
@@ -62,12 +65,99 @@ export type Resource = {
   __typename?: "Resource";
   number: Scalars["String"];
   name: Scalars["String"];
+  unitPrice?: Maybe<Scalars["Float"]>;
 };
 
 export type Location = {
   __typename?: "Location";
   code: Scalars["String"];
   name: Scalars["String"];
+};
+
+export type JobFilter = {
+  groups?: Maybe<Array<Scalars["String"]>>;
+  locations?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type ResourceFilter = {
+  group?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
+};
+
+export type Query = {
+  __typename?: "Query";
+  animals: Array<Item>;
+  job?: Maybe<Job>;
+  jobs: Array<Job>;
+  locations: Array<Location>;
+  pigActivityDefaults: PigActivityDefaults;
+  pigActivityJobs: Array<Job>;
+  pigAdjustment: PigAdjustment;
+  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
+  pigGradeOff: PigGradeOff;
+  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
+  pigMortality: PigMortality;
+  pigMortalityEventTypes: Array<PigMortalityEvent>;
+  pigMove: PigMove;
+  pigMoveEventTypes: Array<PigMoveEvent>;
+  pigPurchase: PigPurchase;
+  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
+  pigWean: PigWean;
+  pigWeanEventTypes: Array<PigWeanEvent>;
+  resource?: Maybe<Resource>;
+  resources: Array<Resource>;
+  scorecard?: Maybe<Scorecard>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
+  scorecardGroups: Array<ScorecardGroup>;
+  user?: Maybe<User>;
+};
+
+export type QueryJobArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryJobsArgs = {
+  input?: Maybe<JobFilter>;
+};
+
+export type QueryPigAdjustmentArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigGradeOffArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMortalityArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigMoveArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryPigWeanArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryResourceArgs = {
+  code: Scalars["String"];
+};
+
+export type QueryResourcesArgs = {
+  input?: Maybe<ResourceFilter>;
+};
+
+export type QueryScorecardArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryScorecardConfigArgs = {
+  job: Scalars["String"];
 };
 
 export type PigActivityDefaults = {
@@ -337,91 +427,29 @@ export type PigWeanResult = {
   defaults: PigActivityDefaults;
 };
 
-export type Query = {
-  __typename?: "Query";
-  animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  locations: Array<Location>;
-  pigActivityDefaults: PigActivityDefaults;
-  pigActivityJobs: Array<Job>;
-  pigAdjustment: PigAdjustment;
-  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
-  pigGradeOff: PigGradeOff;
-  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigMortality: PigMortality;
-  pigMortalityEventTypes: Array<PigMortalityEvent>;
-  pigMove: PigMove;
-  pigMoveEventTypes: Array<PigMoveEvent>;
-  pigPurchase: PigPurchase;
-  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
-  pigWean: PigWean;
-  pigWeanEventTypes: Array<PigWeanEvent>;
-  user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
-};
-
-export type QueryPigAdjustmentArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigGradeOffArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMortalityArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMoveArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigPurchaseArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigWeanArgs = {
-  job: Scalars["String"];
-};
-
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
   postPigMove: PigMoveResult;
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
-  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
+  postScorecard: ScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
   savePigMove: PigMoveResult;
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
-  setAreaOperator: SetAreaOperatorResult;
+  saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -448,8 +476,8 @@ export type MutationPostPigWeanArgs = {
   input: PostPigWeanInput;
 };
 
-export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: SaveFarrowingBackendScorecardInput;
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
 };
 
 export type MutationSavePigAdjustmentArgs = {
@@ -476,74 +504,68 @@ export type MutationSavePigWeanArgs = {
   input: SavePigWeanInput;
 };
 
-export type MutationSetAreaOperatorArgs = {
-  input: SetAreaOperatorInput;
+export type MutationSaveScorecardArgs = {
+  input: PostScorecardInput;
 };
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
 };
 
-export type ScorecardEntry = {
-  __typename?: "ScorecardEntry";
-  score?: Maybe<Scalars["Int"]>;
-  comments?: Maybe<Scalars["String"]>;
+export type ScorecardGroup = {
+  __typename?: "ScorecardGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
-export type ScorecardEntryInput = {
-  score: Scalars["Int"];
-  comments?: Maybe<Scalars["String"]>;
+export type ScorecardElement = {
+  __typename?: "ScorecardElement";
+  id: Scalars["ID"];
+  label: Scalars["String"];
+  code: Scalars["String"];
+  order: Scalars["Int"];
 };
 
-export type FarrowingBackendScorecard = {
-  __typename?: "FarrowingBackendScorecard";
-  area: Job;
-  operator?: Maybe<Resource>;
-  sows: ScorecardEntry;
-  piglets: ScorecardEntry;
-  feed: ScorecardEntry;
-  water: ScorecardEntry;
-  crate: ScorecardEntry;
-  room: ScorecardEntry;
+export type ScorecardPage = {
+  __typename?: "ScorecardPage";
+  title?: Maybe<Scalars["String"]>;
+  elements: Array<ScorecardElement>;
 };
 
-export type PostFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
 };
 
-export type SaveFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
+export type ScorecardElementResponseInput = {
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type FarrowingBackendScorecardResult = {
-  __typename?: "FarrowingBackendScorecardResult";
+export type PostScorecardInput = {
+  job: Scalars["String"];
+  data: Array<ScorecardElementResponseInput>;
+};
+
+export type ScorecardResult = {
+  __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+  scorecard?: Maybe<Scorecard>;
 };
 
-export type SetAreaOperatorInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
+export type ScorecardElementResponse = {
+  __typename?: "ScorecardElementResponse";
+  elementId: Scalars["ID"];
+  numericValue?: Maybe<Scalars["Float"]>;
+  stringValue?: Maybe<Scalars["String"]>;
 };
 
-export type SetAreaOperatorResult = {
-  __typename?: "SetAreaOperatorResult";
-  success: Scalars["Boolean"];
-  area: Job;
+export type Scorecard = {
+  __typename?: "Scorecard";
+  job: Job;
+  data: Array<ScorecardElementResponse>;
 };
 
 export type UserLocations = {
@@ -707,7 +729,11 @@ export type ResolversTypes = ResolversObject<{
   Item: ResolverTypeWrapper<NavItem>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Location: ResolverTypeWrapper<NavLocation>;
+  JobFilter: JobFilter;
+  ResourceFilter: ResourceFilter;
+  Query: ResolverTypeWrapper<{}>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
@@ -716,7 +742,6 @@ export type ResolversTypes = ResolversObject<{
   PigAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
   PigQuantity: ResolverTypeWrapper<PigQuantity>;
   PigQuantityInput: PigQuantityInput;
   PigOptionalQuantityInput: PigOptionalQuantityInput;
@@ -774,24 +799,21 @@ export type ResolversTypes = ResolversObject<{
       defaults: ResolversTypes["PigActivityDefaults"];
     }
   >;
-  Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
-  ScorecardEntry: ResolverTypeWrapper<ScorecardEntry>;
-  ScorecardEntryInput: ScorecardEntryInput;
-  FarrowingBackendScorecard: ResolverTypeWrapper<
-    FarrowingBackendScorecardDocument
-  >;
-  PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
-  SaveFarrowingBackendScorecardInput: SaveFarrowingBackendScorecardInput;
-  FarrowingBackendScorecardResult: ResolverTypeWrapper<
-    Omit<FarrowingBackendScorecardResult, "scorecard"> & {
-      scorecard: ResolversTypes["FarrowingBackendScorecard"];
+  ScorecardGroup: ResolverTypeWrapper<NavJobPostingGroup>;
+  ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
+  ID: ResolverTypeWrapper<Scalars["ID"]>;
+  ScorecardPage: ResolverTypeWrapper<ScorecardPage>;
+  ScorecardConfig: ResolverTypeWrapper<NavJob>;
+  ScorecardElementResponseInput: ScorecardElementResponseInput;
+  PostScorecardInput: PostScorecardInput;
+  ScorecardResult: ResolverTypeWrapper<
+    Omit<ScorecardResult, "scorecard"> & {
+      scorecard?: Maybe<ResolversTypes["Scorecard"]>;
     }
   >;
-  SetAreaOperatorInput: SetAreaOperatorInput;
-  SetAreaOperatorResult: ResolverTypeWrapper<
-    Omit<SetAreaOperatorResult, "area"> & { area: ResolversTypes["Job"] }
-  >;
+  ScorecardElementResponse: ResolverTypeWrapper<ScorecardElementResponse>;
+  Scorecard: ResolverTypeWrapper<ScorecardDocument>;
   UserLocations: ResolverTypeWrapper<
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
@@ -819,7 +841,11 @@ export type ResolversParentTypes = ResolversObject<{
   Item: NavItem;
   Reason: NavReason;
   Resource: NavResource;
+  Float: Scalars["Float"];
   Location: NavLocation;
+  JobFilter: JobFilter;
+  ResourceFilter: ResourceFilter;
+  Query: {};
   PigActivityDefaults: UserSettingsDocument;
   PigWeanEvent: NavStandardItemJournal;
   PigGradeOffEvent: NavStandardItemJournal;
@@ -828,7 +854,6 @@ export type ResolversParentTypes = ResolversObject<{
   PigAdjustmentEvent: NavStandardItemJournal;
   PigMortalityEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
-  Float: Scalars["Float"];
   PigQuantity: PigQuantity;
   PigQuantityInput: PigQuantityInput;
   PigOptionalQuantityInput: PigOptionalQuantityInput;
@@ -877,21 +902,19 @@ export type ResolversParentTypes = ResolversObject<{
     pigWean: ResolversParentTypes["PigWean"];
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
-  Query: {};
   Mutation: {};
-  ScorecardEntry: ScorecardEntry;
-  ScorecardEntryInput: ScorecardEntryInput;
-  FarrowingBackendScorecard: FarrowingBackendScorecardDocument;
-  PostFarrowingBackendScorecardInput: PostFarrowingBackendScorecardInput;
-  SaveFarrowingBackendScorecardInput: SaveFarrowingBackendScorecardInput;
-  FarrowingBackendScorecardResult: Omit<
-    FarrowingBackendScorecardResult,
-    "scorecard"
-  > & { scorecard: ResolversParentTypes["FarrowingBackendScorecard"] };
-  SetAreaOperatorInput: SetAreaOperatorInput;
-  SetAreaOperatorResult: Omit<SetAreaOperatorResult, "area"> & {
-    area: ResolversParentTypes["Job"];
+  ScorecardGroup: NavJobPostingGroup;
+  ScorecardElement: ScorecardElement;
+  ID: Scalars["ID"];
+  ScorecardPage: ScorecardPage;
+  ScorecardConfig: NavJob;
+  ScorecardElementResponseInput: ScorecardElementResponseInput;
+  PostScorecardInput: PostScorecardInput;
+  ScorecardResult: Omit<ScorecardResult, "scorecard"> & {
+    scorecard?: Maybe<ResolversParentTypes["Scorecard"]>;
   };
+  ScorecardElementResponse: ScorecardElementResponse;
+  Scorecard: ScorecardDocument;
   UserLocations: Omit<UserLocations, "list"> & {
     list: Array<ResolversParentTypes["Location"]>;
   };
@@ -924,6 +947,12 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
+  startDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  location?: Resolver<ResolversTypes["Location"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -951,6 +980,7 @@ export type ResourceResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -961,6 +991,136 @@ export type LocationResolvers<
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type QueryResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
+> = ResolversObject<{
+  animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  job?: Resolver<
+    Maybe<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryJobArgs, "number">
+  >;
+  jobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryJobsArgs, never>
+  >;
+  locations?: Resolver<
+    Array<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
+  >;
+  pigActivityDefaults?: Resolver<
+    ResolversTypes["PigActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  pigActivityJobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType
+  >;
+  pigAdjustment?: Resolver<
+    ResolversTypes["PigAdjustment"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigAdjustmentArgs, "job">
+  >;
+  pigAdjustmentEventTypes?: Resolver<
+    Array<ResolversTypes["PigAdjustmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  pigGradeOff?: Resolver<
+    ResolversTypes["PigGradeOff"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigGradeOffArgs, "job">
+  >;
+  pigGradeOffEventTypes?: Resolver<
+    Array<ResolversTypes["PigGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  pigMortality?: Resolver<
+    ResolversTypes["PigMortality"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigMortalityArgs, "job">
+  >;
+  pigMortalityEventTypes?: Resolver<
+    Array<ResolversTypes["PigMortalityEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  pigMove?: Resolver<
+    ResolversTypes["PigMove"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigMoveArgs, "job">
+  >;
+  pigMoveEventTypes?: Resolver<
+    Array<ResolversTypes["PigMoveEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  pigPurchase?: Resolver<
+    ResolversTypes["PigPurchase"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigPurchaseArgs, "job">
+  >;
+  pigPurchaseEventTypes?: Resolver<
+    Array<ResolversTypes["PigPurchaseEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  pigWean?: Resolver<
+    ResolversTypes["PigWean"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPigWeanArgs, "job">
+  >;
+  pigWeanEventTypes?: Resolver<
+    Array<ResolversTypes["PigWeanEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  resource?: Resolver<
+    Maybe<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryResourceArgs, "code">
+  >;
+  resources?: Resolver<
+    Array<ResolversTypes["Resource"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryResourcesArgs, never>
+  >;
+  scorecard?: Resolver<
+    Maybe<ResolversTypes["Scorecard"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryScorecardArgs, "job">
+  >;
+  scorecardConfig?: Resolver<
+    Maybe<ResolversTypes["ScorecardConfig"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryScorecardConfigArgs, "job">
+  >;
+  scorecardGroups?: Resolver<
+    Array<ResolversTypes["ScorecardGroup"]>,
+    ParentType,
+    ContextType
+  >;
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 }>;
 
 export type PigActivityDefaultsResolvers<
@@ -1285,117 +1445,6 @@ export type PigWeanResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type QueryResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
-> = ResolversObject<{
-  animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
-  farrowingBackendArea?: Resolver<
-    Maybe<ResolversTypes["Job"]>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryFarrowingBackendAreaArgs, "number">
-  >;
-  farrowingBackendAreas?: Resolver<
-    Array<ResolversTypes["Job"]>,
-    ParentType,
-    ContextType
-  >;
-  farrowingBackendOperators?: Resolver<
-    Array<ResolversTypes["Resource"]>,
-    ParentType,
-    ContextType
-  >;
-  farrowingBackendScorecard?: Resolver<
-    Maybe<ResolversTypes["FarrowingBackendScorecard"]>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryFarrowingBackendScorecardArgs, "area">
-  >;
-  locations?: Resolver<
-    Array<ResolversTypes["Location"]>,
-    ParentType,
-    ContextType
-  >;
-  pigActivityDefaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  pigActivityJobs?: Resolver<
-    Array<ResolversTypes["Job"]>,
-    ParentType,
-    ContextType
-  >;
-  pigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustment"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigAdjustmentArgs, "job">
-  >;
-  pigAdjustmentEventTypes?: Resolver<
-    Array<ResolversTypes["PigAdjustmentEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOff"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigGradeOffArgs, "job">
-  >;
-  pigGradeOffEventTypes?: Resolver<
-    Array<ResolversTypes["PigGradeOffEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigMortality?: Resolver<
-    ResolversTypes["PigMortality"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigMortalityArgs, "job">
-  >;
-  pigMortalityEventTypes?: Resolver<
-    Array<ResolversTypes["PigMortalityEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigMove?: Resolver<
-    ResolversTypes["PigMove"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigMoveArgs, "job">
-  >;
-  pigMoveEventTypes?: Resolver<
-    Array<ResolversTypes["PigMoveEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigPurchase?: Resolver<
-    ResolversTypes["PigPurchase"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigPurchaseArgs, "job">
-  >;
-  pigPurchaseEventTypes?: Resolver<
-    Array<ResolversTypes["PigPurchaseEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigWean?: Resolver<
-    ResolversTypes["PigWean"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigWeanArgs, "job">
-  >;
-  pigWeanEventTypes?: Resolver<
-    Array<ResolversTypes["PigWeanEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-}>;
-
 export type MutationResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
@@ -1407,12 +1456,6 @@ export type MutationResolvers<
     RequireFields<MutationLoginArgs, "input">
   >;
   logout?: Resolver<ResolversTypes["LogoutResult"], ParentType, ContextType>;
-  postFarrowingBackendScorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecardResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostFarrowingBackendScorecardArgs, "input">
-  >;
   postPigAdjustment?: Resolver<
     ResolversTypes["PigAdjustmentResult"],
     ParentType,
@@ -1449,11 +1492,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostPigWeanArgs, "input">
   >;
-  saveFarrowingBackendScorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecardResult"],
+  postScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSaveFarrowingBackendScorecardArgs, "input">
+    RequireFields<MutationPostScorecardArgs, "input">
   >;
   savePigAdjustment?: Resolver<
     ResolversTypes["PigAdjustmentResult"],
@@ -1491,11 +1534,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSavePigWeanArgs, "input">
   >;
-  setAreaOperator?: Resolver<
-    ResolversTypes["SetAreaOperatorResult"],
+  saveScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSetAreaOperatorArgs, "input">
+    RequireFields<MutationSaveScorecardArgs, "input">
   >;
   updateUserLocations?: Resolver<
     ResolversTypes["UpdateUserLocationsResult"],
@@ -1505,53 +1548,93 @@ export type MutationResolvers<
   >;
 }>;
 
-export type ScorecardEntryResolvers<
+export type ScorecardGroupResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["ScorecardEntry"] = ResolversParentTypes["ScorecardEntry"]
+  ParentType extends ResolversParentTypes["ScorecardGroup"] = ResolversParentTypes["ScorecardGroup"]
 > = ResolversObject<{
-  score?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type FarrowingBackendScorecardResolvers<
+export type ScorecardElementResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["FarrowingBackendScorecard"] = ResolversParentTypes["FarrowingBackendScorecard"]
+  ParentType extends ResolversParentTypes["ScorecardElement"] = ResolversParentTypes["ScorecardElement"]
 > = ResolversObject<{
-  area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  operator?: Resolver<
-    Maybe<ResolversTypes["Resource"]>,
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardPageResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardPage"] = ResolversParentTypes["ScorecardPage"]
+> = ResolversObject<{
+  title?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  elements?: Resolver<
+    Array<ResolversTypes["ScorecardElement"]>,
     ParentType,
     ContextType
   >;
-  sows?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
-  piglets?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
-  feed?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
-  water?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
-  crate?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
-  room?: Resolver<ResolversTypes["ScorecardEntry"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type FarrowingBackendScorecardResultResolvers<
+export type ScorecardConfigResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["FarrowingBackendScorecardResult"] = ResolversParentTypes["FarrowingBackendScorecardResult"]
+  ParentType extends ResolversParentTypes["ScorecardConfig"] = ResolversParentTypes["ScorecardConfig"]
+> = ResolversObject<{
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  pages?: Resolver<
+    Array<ResolversTypes["ScorecardPage"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ScorecardResult"] = ResolversParentTypes["ScorecardResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   scorecard?: Resolver<
-    ResolversTypes["FarrowingBackendScorecard"],
+    Maybe<ResolversTypes["Scorecard"]>,
     ParentType,
     ContextType
   >;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type SetAreaOperatorResultResolvers<
+export type ScorecardElementResponseResolvers<
   ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["SetAreaOperatorResult"] = ResolversParentTypes["SetAreaOperatorResult"]
+  ParentType extends ResolversParentTypes["ScorecardElementResponse"] = ResolversParentTypes["ScorecardElementResponse"]
 > = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  area?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  elementId?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  numericValue?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  stringValue?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ScorecardResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Scorecard"] = ResolversParentTypes["Scorecard"]
+> = ResolversObject<{
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  data?: Resolver<
+    Array<ResolversTypes["ScorecardElementResponse"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1615,6 +1698,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Reason?: ReasonResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
   PigWeanEvent?: PigWeanEventResolvers<ContextType>;
   PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;
@@ -1636,14 +1720,14 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PigPurchaseResult?: PigPurchaseResultResolvers<ContextType>;
   PigWean?: PigWeanResolvers<ContextType>;
   PigWeanResult?: PigWeanResultResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
-  ScorecardEntry?: ScorecardEntryResolvers<ContextType>;
-  FarrowingBackendScorecard?: FarrowingBackendScorecardResolvers<ContextType>;
-  FarrowingBackendScorecardResult?: FarrowingBackendScorecardResultResolvers<
-    ContextType
-  >;
-  SetAreaOperatorResult?: SetAreaOperatorResultResolvers<ContextType>;
+  ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
+  ScorecardElement?: ScorecardElementResolvers<ContextType>;
+  ScorecardPage?: ScorecardPageResolvers<ContextType>;
+  ScorecardConfig?: ScorecardConfigResolvers<ContextType>;
+  ScorecardResult?: ScorecardResultResolvers<ContextType>;
+  ScorecardElementResponse?: ScorecardElementResponseResolvers<ContextType>;
+  Scorecard?: ScorecardResolvers<ContextType>;
   UserLocations?: UserLocationsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;

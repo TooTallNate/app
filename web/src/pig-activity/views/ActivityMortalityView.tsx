@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {} from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
@@ -15,9 +15,7 @@ import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldInput, {
-  FormFieldInputElement
-} from "../../common/components/form/FormFieldInput";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../../common/components/input/Button";
@@ -29,12 +27,6 @@ import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import StaticValue from "../../common/components/input/StaticValue";
-
-function onInputAdded(el: FormFieldInputElement | null) {
-  if (el) {
-    el.focus();
-  }
-}
 
 interface FormData {
   event: string;

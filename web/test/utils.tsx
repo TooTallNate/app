@@ -5,7 +5,7 @@ import { MemoryRouter, Route, RouteProps, Switch } from "react-router-dom";
 import { AuthProvider } from "../src/user/contexts/auth";
 import App from "../src/App";
 import { User, UserDocument } from "../src/user/graphql";
-import { MockedResponse, MockedProvider } from "@apollo/react-testing";
+import { MockedResponse, MockedProvider } from "@apollo/client/testing";
 
 export * from "@testing-library/react";
 
