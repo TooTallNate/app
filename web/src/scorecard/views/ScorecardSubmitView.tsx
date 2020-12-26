@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useScorecard } from "../contexts/scorecard";
 import ViewContent from "../../common/components/view/ViewContent";
 import View from "../../common/components/view/View";
@@ -11,21 +11,31 @@ import { useHistory, Link, useRouteMatch } from "react-router-dom";
 import { isElementComplete } from "../components/ScorecardPageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import Form from "../../common/components/form/Form";
+import FormSubmit from "../../common/components/form/FormSubmit";
+import { useForm } from "react-hook-form";
 
 const ScorecardSubmitView: React.FC = () => {
+  const submitAction = useRef<string | null>(null);
   const match = useRouteMatch();
   const history = useHistory();
+  const formContext = useForm();
 
-  const { formConfig, formState, submit, saveProgress } = useScorecard();
-
-  const onSave = async () => {
-    await saveProgress();
-    history.push("/");
-  };
+  const { formConfig, formState, submit } = useScorecard();
 
   const onSubmit = async () => {
-    await submit();
-    history.push("/");
+    switch (submitAction.current) {
+      case "back":
+        history.push(match.path.replace("submit", `page/${formConfig.length}`));
+        break;
+      case "save":
+        history.push("/");
+        break;
+      default:
+        await submit();
+        history.push("/");
+        break;
+    }
   };
 
   return (
@@ -35,7 +45,7 @@ const ScorecardSubmitView: React.FC = () => {
         <Title>Summary</Title>
       </ViewHeader>
       <ViewContent>
-        <Stack className="min-h-full">
+        <Form context={formContext} onSubmit={onSubmit} className="mb-12">
           <table>
             <thead className="sr-only">
               <tr>
@@ -75,16 +85,20 @@ const ScorecardSubmitView: React.FC = () => {
             </tbody>
           </table>
           <div className="flex-grow" />
-          <div className="flex">
-            <Button className="w-full" type="button" onClick={onSave}>
-              Save
-            </Button>
+          <div className="flex absolute w-full p-4 left-0 bottom-0 bg-white">
+            <FormSubmit onClick={() => (submitAction.current = "back")}>
+              Back
+            </FormSubmit>
             <HorizontalSpacer />
-            <Button className="w-full" type="button" onClick={onSubmit}>
+            <FormSubmit onClick={() => (submitAction.current = "save")}>
+              Save
+            </FormSubmit>
+            <HorizontalSpacer />
+            <FormSubmit onClick={() => (submitAction.current = "submit")}>
               Submit
-            </Button>
+            </FormSubmit>
           </div>
-        </Stack>
+        </Form>
       </ViewContent>
     </View>
   );

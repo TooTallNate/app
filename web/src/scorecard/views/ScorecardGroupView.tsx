@@ -5,7 +5,6 @@ import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
-import BackButton from "../../common/components/view/BackButton";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import Form from "../../common/components/form/Form";
 import { useForm, OnSubmit } from "react-hook-form";
@@ -13,6 +12,8 @@ import FormSubmit from "../../common/components/form/FormSubmit";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import ViewContent from "../../common/components/view/ViewContent";
 import { useScorecardGroupsQuery } from "../graphql";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import Button from "../../common/components/input/Button";
 
 interface FormData {
   group: string;
@@ -27,10 +28,13 @@ const ScorecardGroupView: React.FC = () => {
     history.push(`/scorecard/${data.group}`);
   };
 
+  const onBack = () => {
+    history.push("/");
+  };
+
   return (
     <View>
       <ViewHeader>
-        <BackButton />
         <Title>Scorecard Selection</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
@@ -53,7 +57,13 @@ const ScorecardGroupView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <div className="flex-grow" />
-            <FormSubmit>Continue</FormSubmit>
+            <div className="flex">
+              <Button className="w-full" onClick={onBack}>
+                Back
+              </Button>
+              <HorizontalSpacer />
+              <FormSubmit>Continue</FormSubmit>
+            </div>
           </Form>
         )}
       </ViewContent>

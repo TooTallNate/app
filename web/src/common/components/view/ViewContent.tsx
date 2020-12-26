@@ -10,8 +10,10 @@ const ViewContent: React.FC<ViewContentProps> = ({
   loading = false
 }) => {
   return (
-    <main className="relative h-full p-4 overflow-x-hidden overflow-y-auto">
-      {loading ? <FullPageSpinner /> : children}
+    <main className="relative h-full overflow-hidden">
+      <div className="p-4 h-full overflow-x-hidden overflow-y-auto">
+        {loading ? <FullPageSpinner /> : children}
+      </div>
     </main>
   );
 };
