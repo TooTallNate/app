@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
-import * as ApolloReactCommon from "@apollo/react-common";
-import * as ApolloReactHooks from "@apollo/react-hooks";
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -65,15 +64,9 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
-  farrowingBackendArea?: Maybe<Job>;
-  farrowingBackendAreas: Array<Job>;
-  farrowingBackendOperators: Array<Resource>;
-  farrowingBackendScorecard?: Maybe<FarrowingBackendScorecard>;
-  growFinishJobs: Array<Job>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
-  personResponsible: Array<Resource>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -91,16 +84,9 @@ export type Query = {
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
-  scorecardPages: Array<ScorecardPage>;
+  scorecardConfig?: Maybe<ScorecardConfig>;
+  scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
-};
-
-export type QueryFarrowingBackendAreaArgs = {
-  number: Scalars["String"];
-};
-
-export type QueryFarrowingBackendScorecardArgs = {
-  area: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -147,7 +133,7 @@ export type QueryScorecardArgs = {
   job: Scalars["String"];
 };
 
-export type QueryScorecardPagesArgs = {
+export type QueryScorecardConfigArgs = {
   job: Scalars["String"];
 };
 
@@ -422,7 +408,6 @@ export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
   logout: LogoutResult;
-  postFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -430,7 +415,6 @@ export type Mutation = {
   postPigPurchase: PigPurchaseResult;
   postPigWean: PigWeanResult;
   postScorecard: ScorecardResult;
-  saveFarrowingBackendScorecard: FarrowingBackendScorecardResult;
   savePigAdjustment: PigAdjustmentResult;
   savePigGradeOff: PigGradeOffResult;
   savePigMortality: PigMortalityResult;
@@ -438,16 +422,11 @@ export type Mutation = {
   savePigPurchase: PigPurchaseResult;
   savePigWean: PigWeanResult;
   saveScorecard: ScorecardResult;
-  setAreaOperator: SetAreaOperatorResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
 
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationPostFarrowingBackendScorecardArgs = {
-  input: PostFarrowingBackendScorecardInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -478,10 +457,6 @@ export type MutationPostScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSaveFarrowingBackendScorecardArgs = {
-  input: SaveFarrowingBackendScorecardInput;
-};
-
 export type MutationSavePigAdjustmentArgs = {
   input: SavePigAdjustmentInput;
 };
@@ -510,63 +485,14 @@ export type MutationSaveScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSetAreaOperatorArgs = {
-  input: SetAreaOperatorInput;
-};
-
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
 };
 
-export type ScorecardEntry = {
-  __typename?: "ScorecardEntry";
-  score?: Maybe<Scalars["Int"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type ScorecardEntryInput = {
-  score: Scalars["Int"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type FarrowingBackendScorecard = {
-  __typename?: "FarrowingBackendScorecard";
-  area: Job;
-  operator?: Maybe<Resource>;
-  sows: ScorecardEntry;
-  piglets: ScorecardEntry;
-  feed: ScorecardEntry;
-  water: ScorecardEntry;
-  crate: ScorecardEntry;
-  room: ScorecardEntry;
-};
-
-export type PostFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-  sows: ScorecardEntryInput;
-  piglets: ScorecardEntryInput;
-  feed: ScorecardEntryInput;
-  water: ScorecardEntryInput;
-  crate: ScorecardEntryInput;
-  room: ScorecardEntryInput;
-};
-
-export type SaveFarrowingBackendScorecardInput = {
-  area: Scalars["String"];
-  operator?: Maybe<Scalars["String"]>;
-  sows?: Maybe<ScorecardEntryInput>;
-  piglets?: Maybe<ScorecardEntryInput>;
-  feed?: Maybe<ScorecardEntryInput>;
-  water?: Maybe<ScorecardEntryInput>;
-  crate?: Maybe<ScorecardEntryInput>;
-  room?: Maybe<ScorecardEntryInput>;
-};
-
-export type FarrowingBackendScorecardResult = {
-  __typename?: "FarrowingBackendScorecardResult";
-  success: Scalars["Boolean"];
-  scorecard: FarrowingBackendScorecard;
+export type ScorecardGroup = {
+  __typename?: "ScorecardGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type ScorecardElement = {
@@ -583,10 +509,10 @@ export type ScorecardPage = {
   elements: Array<ScorecardElement>;
 };
 
-export type ScorecardJob = {
-  __typename?: "ScorecardJob";
-  number: Scalars["String"];
-  personResponsible: Scalars["String"];
+export type ScorecardConfig = {
+  __typename?: "ScorecardConfig";
+  job: Job;
+  pages: Array<ScorecardPage>;
 };
 
 export type ScorecardElementResponseInput = {
@@ -603,7 +529,7 @@ export type PostScorecardInput = {
 export type ScorecardResult = {
   __typename?: "ScorecardResult";
   success: Scalars["Boolean"];
-  scorecard: Scorecard;
+  scorecard?: Maybe<Scorecard>;
 };
 
 export type ScorecardElementResponse = {
@@ -617,17 +543,6 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
-};
-
-export type SetAreaOperatorInput = {
-  area: Scalars["String"];
-  operator: Scalars["String"];
-};
-
-export type SetAreaOperatorResult = {
-  __typename?: "SetAreaOperatorResult";
-  success: Scalars["Boolean"];
-  area: Job;
 };
 
 export type UserLocations = {
@@ -774,23 +689,20 @@ export const LocationsDocument = gql`
  * });
  */
 export function useLocationsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    LocationsQuery,
-    LocationsQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<LocationsQuery, LocationsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<LocationsQuery, LocationsQueryVariables>(
+  return Apollo.useQuery<LocationsQuery, LocationsQueryVariables>(
     LocationsDocument,
     baseOptions
   );
 }
 export function useLocationsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     LocationsQuery,
     LocationsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
+  return Apollo.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
     LocationsDocument,
     baseOptions
   );
@@ -799,7 +711,7 @@ export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
 export type LocationsLazyQueryHookResult = ReturnType<
   typeof useLocationsLazyQuery
 >;
-export type LocationsQueryResult = ApolloReactCommon.QueryResult<
+export type LocationsQueryResult = Apollo.QueryResult<
   LocationsQuery,
   LocationsQueryVariables
 >;
@@ -813,7 +725,7 @@ export const UpdateLocationsDocument = gql`
   }
   ${UserLocationsFieldsFragmentDoc}
 `;
-export type UpdateLocationsMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateLocationsMutationFn = Apollo.MutationFunction<
   UpdateLocationsMutation,
   UpdateLocationsMutationVariables
 >;
@@ -836,12 +748,12 @@ export type UpdateLocationsMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateLocationsMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateLocationsMutation,
     UpdateLocationsMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateLocationsMutation,
     UpdateLocationsMutationVariables
   >(UpdateLocationsDocument, baseOptions);
@@ -849,10 +761,10 @@ export function useUpdateLocationsMutation(
 export type UpdateLocationsMutationHookResult = ReturnType<
   typeof useUpdateLocationsMutation
 >;
-export type UpdateLocationsMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateLocationsMutationResult = Apollo.MutationResult<
   UpdateLocationsMutation
 >;
-export type UpdateLocationsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationsMutation,
   UpdateLocationsMutationVariables
 >;
@@ -866,7 +778,7 @@ export const LoginDocument = gql`
   }
   ${UserPartsFragmentDoc}
 `;
-export type LoginMutationFn = ApolloReactCommon.MutationFunction<
+export type LoginMutationFn = Apollo.MutationFunction<
   LoginMutation,
   LoginMutationVariables
 >;
@@ -889,21 +801,19 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useLoginMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     LoginMutation,
     LoginMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
     LoginDocument,
     baseOptions
   );
 }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = ApolloReactCommon.MutationResult<
-  LoginMutation
->;
-export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
 >;
@@ -932,30 +842,24 @@ export const UserDocument = gql`
  * });
  */
 export function useUserQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export function useUserLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UserQuery,
-    UserQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(
+  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
     UserDocument,
     baseOptions
   );
 }
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = ApolloReactCommon.QueryResult<
-  UserQuery,
-  UserQueryVariables
->;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const LogoutDocument = gql`
   mutation Logout {
     logout {
@@ -963,7 +867,7 @@ export const LogoutDocument = gql`
     }
   }
 `;
-export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
+export type LogoutMutationFn = Apollo.MutationFunction<
   LogoutMutation,
   LogoutMutationVariables
 >;
@@ -985,21 +889,19 @@ export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useLogoutMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     LogoutMutation,
     LogoutMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
     LogoutDocument,
     baseOptions
   );
 }
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = ApolloReactCommon.MutationResult<
-  LogoutMutation
->;
-export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
   LogoutMutation,
   LogoutMutationVariables
 >;

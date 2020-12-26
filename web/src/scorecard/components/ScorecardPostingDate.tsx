@@ -6,10 +6,8 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
-import StaticValue from "../../common/components/input/StaticValue";
 import TextInput from "../../common/components/input/TextInput";
 
 export interface ScorecardPostingDateProps {
@@ -23,19 +21,14 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   label,
   id
 }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue
-        ? elementState.stringValue
-        : format(new Date(), DATEFORMAT)
-    );
-  }, [elementState, name, setValue]);
+    setValue(name, stringValue ? stringValue : format(new Date(), DATEFORMAT));
+  }, [name, setValue, stringValue]);
 
   return (
     <FormField

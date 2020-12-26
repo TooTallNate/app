@@ -1,51 +1,6 @@
-type ScorecardEntry {
-  score: Int
-  comments: String
-}
-
-input ScorecardEntryInput {
-  score: Int!
-  comments: String
-}
-
-
-type FarrowingBackendScorecard {
-  area: Job!
-  operator: Resource
-  sows: ScorecardEntry!
-  piglets: ScorecardEntry!
-  feed: ScorecardEntry!
-  water: ScorecardEntry!
-  crate: ScorecardEntry!
-  room: ScorecardEntry!
-}
-
-
-input PostFarrowingBackendScorecardInput {
-  area: String!
-  operator: String!
-  sows: ScorecardEntryInput!
-  piglets: ScorecardEntryInput!
-  feed: ScorecardEntryInput!
-  water: ScorecardEntryInput!
-  crate: ScorecardEntryInput!
-  room: ScorecardEntryInput!
-}
-
-input SaveFarrowingBackendScorecardInput {
-  area: String!
-  operator: String
-  sows: ScorecardEntryInput
-  piglets: ScorecardEntryInput
-  feed: ScorecardEntryInput
-  water: ScorecardEntryInput
-  crate: ScorecardEntryInput
-  room: ScorecardEntryInput
-}
-
-type FarrowingBackendScorecardResult {
-  success: Boolean!
-  scorecard: FarrowingBackendScorecard!
+type ScorecardGroup {
+  code: String!
+  description: String!
 }
 
 type ScorecardElement {
@@ -60,32 +15,10 @@ type ScorecardPage {
   elements: [ScorecardElement!]!
 }
 
-type ScorecardJob {
-  number: String!
-  #TODO change to resource
-  personResponsible: String!
-  # scorecardPages: [ScorecardPage!]!
+type ScorecardConfig {
+  job: Job!
+  pages: [ScorecardPage!]!
 }
-
-# type GrowFinishScorecard {
-#   job: Job!
-#   operator: Resource
-# }
-
-# input PostGrowFinishScorecardInput {
-#   job: String!
-#   operator: String!
-# }
-
-# input SaveGrowFinishScorecardInput {
-#   job: String!
-#   operator: String
-# }
-
-# type GrowFinishScorecardResult {
-#   success: Boolean!
-#   scorecard: GrowFinishScorecard!
-# }
 
 input ScorecardElementResponseInput {
   elementId: ID!
@@ -100,7 +33,7 @@ input PostScorecardInput {
 
 type ScorecardResult {
   success: Boolean!
-  scorecard: Scorecard!
+  scorecard: Scorecard
 }
 
 type ScorecardElementResponse {
@@ -114,34 +47,13 @@ type Scorecard {
   data: [ScorecardElementResponse!]!
 }
 
-
-input SetAreaOperatorInput {
-  area: String!
-  operator: String!
-}
-
-type SetAreaOperatorResult {
-  success: Boolean!
-  area: Job!
-}
-
 type Query {
-  farrowingBackendScorecard(area: String!): FarrowingBackendScorecard
-  farrowingBackendAreas: [Job!]!
-  farrowingBackendArea(number: String!): Job
-  farrowingBackendOperators: [Resource!]!
-  # remove this when common is working
-  growFinishJobs: [Job!]!
-  # add support for this job input
-  scorecardPages(job: String!): [ScorecardPage!]!
-  personResponsible: [Resource!]!
+  scorecardGroups: [ScorecardGroup!]!
+  scorecardConfig(job: String!): ScorecardConfig
   scorecard(job: String!): Scorecard
 }
 
 type Mutation {
-  setAreaOperator(input: SetAreaOperatorInput!): SetAreaOperatorResult!
-  postFarrowingBackendScorecard(input: PostFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
-  saveFarrowingBackendScorecard(input: SaveFarrowingBackendScorecardInput!): FarrowingBackendScorecardResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
 }

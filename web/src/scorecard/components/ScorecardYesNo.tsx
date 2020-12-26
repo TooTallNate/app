@@ -6,7 +6,7 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StackedInput from "../../common/components/input/StackedInput";
 import StackedRadioButton from "../../common/components/input/StackedRadioButton";
-import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 
 export interface ScorecardYesNoProps {
@@ -15,17 +15,14 @@ export interface ScorecardYesNoProps {
 }
 
 const ScorecardYesNo: React.FC<ScorecardYesNoProps> = ({ label, id }) => {
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
-  const elementState = formState[id] || {};
+  const { numericValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.numericValue ? elementState.numericValue : undefined
-    );
-  }, [elementState, id, name, setValue]);
+    setValue(name, numericValue);
+  }, [numericValue, name, setValue]);
 
   return (
     <FormField name={name}>

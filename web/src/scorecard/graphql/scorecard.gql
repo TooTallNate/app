@@ -1,101 +1,102 @@
-fragment FarrowingBackendAreaFields on Job {
-  number
-  description
-  personResponsible {
+fragment scorecardFields on Scorecard {
+  job {
+    number
+  }
+  data {
+    elementId
+    numericValue
+    stringValue
+  }
+}
+
+query ScorecardGroups {
+  scorecardGroups {
+    code
+    description
+  }
+}
+
+query ScorecardTargetTemp($code: String!) {
+  resource(code: $code) {
+    number
     name
-    number
+    unitPrice
   }
 }
 
-fragment FarrowingBackendScorecardFields on FarrowingBackendScorecard {
-  area {
+query ScorecardPigJob($job: String!) {
+  job(number: $job) {
     number
-  }
-  operator {
-    number
-  }
-  sows {
-    score
-    comments
-  }
-  piglets {
-    score
-    comments
-  }
-  feed {
-    score
-    comments
-  }
-  water {
-    score
-    comments
-  }
-  crate {
-    score
-    comments
-  }
-  room {
-    score
-    comments
+    description
+    startDate
+    deadQuantity
   }
 }
 
-query FarrowingBackendScorecardAreas {
-  areas: farrowingBackendAreas {
+query ScorecardJobs($group: String!) {
+  jobs(input: { groups: [$group] }) {
     number
     description
   }
 }
 
-query FarrowingBackendScorecard($area: String!) {
-  area: farrowingBackendArea(number: $area) {
+query ScorecardPigJobs($location: String!) {
+  jobs(input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }) {
     number
     description
+  }
+}
+
+query ScorecardPeople {
+  people: resources(input: { type: "Person" }) {
+    number
+    name
+  }
+}
+
+query Scorecard($job: String!) {
+  job: job(number: $job) {
+    number
+    location {
+      code
+    }
     personResponsible {
       number
     }
   }
-  operators: farrowingBackendOperators {
-    number
-    name
-  }
-  scorecard: farrowingBackendScorecard(area: $area) {
-    ...FarrowingBackendScorecardFields 
+  scorecardConfig(job: $job) {
+    job {
+      number
+    }
+    pages {
+      title
+      elements {
+        id
+        label
+        code
+        order
+      }
+    }
+  },
+  scorecard(job: $job) {
+    ...scorecardFields
   }
 }
 
-query FarrowingBackendOperators($area: String!) {
-  area: farrowingBackendArea(number: $area) {
-    ...FarrowingBackendAreaFields
-  }
-  operators: farrowingBackendOperators {
-    number
-    name
-  }
-}
-
-mutation PostFarrowingBackendScorecard($input: PostFarrowingBackendScorecardInput!) {
-  postFarrowingBackendScorecard(input: $input) {
+mutation SaveScorecard($input: PostScorecardInput!) {
+  saveScorecard(input: $input) {
     success
     scorecard {
-      ...FarrowingBackendScorecardFields 
+      ...scorecardFields
     }
   }
 }
 
-mutation SaveFarrowingBackendScorecard($input: SaveFarrowingBackendScorecardInput!) {
-  saveFarrowingBackendScorecard(input: $input) {
+mutation PostScorecard($input: PostScorecardInput!) {
+  postScorecard(input: $input) {
     success
     scorecard {
-      ...FarrowingBackendScorecardFields 
-    }
-  }
-}
-
-mutation SetAreaOperator($input: SetAreaOperatorInput!) {
-  setAreaOperator(input: $input) {
-    area {
-      ...FarrowingBackendAreaFields
+      ...scorecardFields
     }
   }
 }

@@ -17,7 +17,7 @@ import ScorecardScores, {
 import ScorecardHealthInput, {
   isComplete as isNumperComplete
 } from "./ScorecardNumberInput";
-import { FormValue } from "../contexts/growFinish";
+import { FormValue } from "../contexts/scorecard";
 import ScorecardWeeksOnFeed from "./ScorecardWeeksOnFeed";
 import ScorecardMortality from "./ScorecardMortality";
 import ScorecardPostingDate from "./ScorecardPostingDate";

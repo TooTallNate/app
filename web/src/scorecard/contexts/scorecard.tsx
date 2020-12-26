@@ -8,18 +8,17 @@ import React, {
   useRef
 } from "react";
 import {
-  useNurseryFinisherScorecardLazyQuery,
+  useScorecardLazyQuery,
   useSaveScorecardMutation,
-  NurseryFinisherScorecardQuery,
+  ScorecardQuery,
   usePostScorecardMutation
 } from "../graphql";
 
-export interface GrowFinishContextValue {
+export interface ScorecardContextValue {
   job?: Job;
   loadingJob: boolean;
   formState: FormValues;
   formConfig: FormPage[];
-  setJob(job?: string): void;
   saveProgress(values?: FormValues): Promise<void>;
   submit(): Promise<void>;
 }
@@ -49,23 +48,30 @@ export interface FormPage {
   }[];
 }
 
-const GrowFinishContext = createContext<GrowFinishContextValue | null>(null);
+const ScorecardContext = createContext<ScorecardContextValue | null>(null);
 
-const GrowFinishScorecardProvider: React.FC = ({ children }) => {
+export interface ScorecardProviderProps {
+  job: string;
+}
+
+const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
+  children,
+  job: jobNumber
+}) => {
   const lastFormState = useRef<FormValues>({});
-  const [jobNumber, setJob] = useState<string | undefined>();
   const [formState, setFormState] = useState<FormValues>(lastFormState.current);
 
   const [
     loadJob,
     { data: scorecardResult, loading: loadingJob }
-  ] = useNurseryFinisherScorecardLazyQuery();
+  ] = useScorecardLazyQuery();
+
   const [save] = useSaveScorecardMutation();
   const [submitForm] = usePostScorecardMutation();
 
   // Only use the lazy query result if it matches the selected job number.
   // There is some delay until the results are loaded.
-  let data: NurseryFinisherScorecardQuery | undefined;
+  let data: ScorecardQuery | undefined;
   if (
     scorecardResult &&
     scorecardResult.job &&
@@ -76,8 +82,8 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
 
   // Update the from state when a new scorecard is loaded.
   useEffect(() => {
-    const state: FormValues = {};
     if (data && data.scorecard) {
+      const state: FormValues = {};
       data.scorecard.data.forEach(({ elementId, ...entry }) => {
         state[elementId] = {
           numericValue:
@@ -90,17 +96,33 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
               : undefined
         };
       });
+      lastFormState.current = state;
+      setFormState(state);
     }
-    lastFormState.current = state;
-    setFormState(state);
   }, [data]);
 
   // Load job information when the job number changes.
   useEffect(() => {
-    if (jobNumber) {
-      loadJob({ variables: { job: jobNumber } });
-    }
+    loadJob({ variables: { job: jobNumber } });
   }, [jobNumber, loadJob]);
+
+  // When form state changes, save to server.
+  useEffect(() => {
+    if (jobNumber && lastFormState.current !== formState) {
+      save({
+        variables: {
+          input: {
+            job: jobNumber,
+            data: Object.entries(formState).map(([key, value]) => ({
+              elementId: key,
+              ...value
+            }))
+          }
+        }
+      });
+      lastFormState.current = formState;
+    }
+  }, [formState, jobNumber, save]);
 
   const submit = useCallback(async () => {
     if (jobNumber) {
@@ -118,25 +140,9 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
     }
   }, [formState, jobNumber, submitForm]);
 
-  const saveProgress = useCallback(
-    async (values: Partial<FormValues> = {}) => {
-      setFormState(prev => ({ ...prev, ...values }));
-      if (jobNumber) {
-        await save({
-          variables: {
-            input: {
-              job: jobNumber,
-              data: Object.entries(formState).map(([key, value]) => ({
-                elementId: key,
-                ...value
-              }))
-            }
-          }
-        });
-      }
-    },
-    [formState, jobNumber, save]
-  );
+  const saveProgress = useCallback(async (values: Partial<FormValues> = {}) => {
+    setFormState(prev => ({ ...prev, ...values }));
+  }, []);
 
   const job = useMemo(
     () =>
@@ -151,35 +157,37 @@ const GrowFinishScorecardProvider: React.FC = ({ children }) => {
   );
 
   const formConfig = useMemo<FormPage[]>(
-    () => (jobNumber && data && data.scorecardPages) || [],
+    () =>
+      (jobNumber &&
+        data &&
+        data.scorecardConfig &&
+        data.scorecardConfig.pages) ||
+      [],
     [data, jobNumber]
   );
 
   return (
-    <GrowFinishContext.Provider
+    <ScorecardContext.Provider
       value={{
         job,
         loadingJob,
         formState,
         formConfig,
         saveProgress,
-        submit,
-        setJob
+        submit
       }}
     >
       {children}
-    </GrowFinishContext.Provider>
+    </ScorecardContext.Provider>
   );
 };
 
-const useGrowFinish = () => {
-  const context = useContext(GrowFinishContext);
+const useScorecard = () => {
+  const context = useContext(ScorecardContext);
   if (!context) {
-    throw new Error(
-      "useGrowFinish must be a descendant of GrowFinishScorecardProvider."
-    );
+    throw new Error("useScorecard must be a descendant of ScorecardProvider.");
   }
   return context;
 };
 
-export { GrowFinishScorecardProvider, useGrowFinish };
+export { ScorecardProvider, useScorecard };

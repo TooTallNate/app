@@ -34,8 +34,9 @@ generates:
         PigAdjustmentEvent: "./nav#NavStandardItemJournal"
         PigMortalityEvent: "./nav#NavStandardItemJournal"
         PigActivityDefaults: "./models/UserSettings#UserSettingsDocument"
-        FarrowingBackendScorecard: "../scorecard/models/FarrowingBackendScorecard#FarrowingBackendScorecardDocument"
-        Scorecard: "../scorecard/models/Scorecard#ScorecardDocument"
+        ScorecardGroup: "./nav#NavJobPostingGroup"
+        Scorecard: "../scorecard/Scorecard#ScorecardDocument"
+        ScorecardConfig: "./nav#NavJob"
     hooks:
       afterOneFileWrite:
         - eslint --fix

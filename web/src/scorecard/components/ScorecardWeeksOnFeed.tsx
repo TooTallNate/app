@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPigJobLazyQuery } from "../graphql/index";
-import { useGrowFinish } from "../contexts/growFinish";
+import { useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
+import usePigJob from "./usePigJob";
 
 export interface ScorecardWeeksOnFeedProps {
   label: string;
@@ -18,19 +19,10 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   label,
   id
 }) => {
-  const { formState } = useGrowFinish();
+  const { job: pigJob } = usePigJob();
   const { setValue, register, unregister, watch } = useFormContext();
-  const [loadJob, { data }] = useScorecardPigJobLazyQuery();
   const name = `${id}.numericValue`;
-  const [, jobElement] =
-    Object.entries(formState).find(([id, entry]) => id.slice(4) === "JOB") ||
-    [];
-
-  useEffect(() => {
-    if (jobElement && jobElement.stringValue) {
-      loadJob({ variables: { job: jobElement.stringValue } });
-    }
-  }, [jobElement, loadJob]);
+  const weeksOnFeed = watch(name);
 
   useEffect(() => {
     register({ name, type: "custom" });
@@ -39,18 +31,16 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
 
   useEffect(() => {
     let weeksOnFeed;
-    if (data && data.job && data.job.startDate) {
+    if (pigJob && pigJob.startDate) {
       const today = new Date();
-      const postingDate = new Date(data.job.startDate);
+      const postingDate = new Date(pigJob.startDate);
       const diff = Math.abs(today.valueOf() - postingDate.valueOf());
       weeksOnFeed = Math.floor(Math.ceil(diff / (1000 * 3600 * 24)) / 7);
     } else {
       weeksOnFeed = undefined;
     }
     setValue(name, weeksOnFeed);
-  }, [data, setValue, name]);
-
-  let weeksOnFeed = watch(name);
+  }, [pigJob, setValue, name]);
 
   return (
     <FormField name={name}>

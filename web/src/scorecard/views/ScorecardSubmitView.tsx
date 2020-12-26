@@ -1,33 +1,22 @@
-import React, { useEffect } from "react";
-import { useGrowFinish } from "../../contexts/growFinish";
-import ViewContent from "../../../common/components/view/ViewContent";
-import View from "../../../common/components/view/View";
-import Title from "../../../common/components/view/ViewTitle";
-import ViewHeader from "../../../common/components/view/ViewHeader";
-import BackButton from "../../../common/components/view/BackButton";
-import Button from "../../../common/components/input/Button";
-import Stack from "../../../common/components/layout/Stack";
-import { useParams, useHistory, Link } from "react-router-dom";
-import { isElementComplete } from "../../components/ScorecardPageComponent";
+import React from "react";
+import { useScorecard } from "../contexts/scorecard";
+import ViewContent from "../../common/components/view/ViewContent";
+import View from "../../common/components/view/View";
+import Title from "../../common/components/view/ViewTitle";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import BackButton from "../../common/components/view/BackButton";
+import Button from "../../common/components/input/Button";
+import Stack from "../../common/components/layout/Stack";
+import { useHistory, Link, useRouteMatch } from "react-router-dom";
+import { isElementComplete } from "../components/ScorecardPageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import HorizontalSpacer from "../../../common/components/layout/HorizontalSpacer";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 
 const ScorecardSubmitView: React.FC = () => {
-  const params = useParams<{ job: string }>();
+  const match = useRouteMatch();
   const history = useHistory();
 
-  const {
-    formConfig,
-    formState,
-    submit,
-    saveProgress,
-    setJob
-  } = useGrowFinish();
-
-  // Refresh job on page reload.
-  useEffect(() => {
-    setJob(params.job);
-  }, [params.job, setJob]);
+  const { formConfig, formState, submit, saveProgress } = useScorecard();
 
   const onSave = async () => {
     await saveProgress();
@@ -65,7 +54,7 @@ const ScorecardSubmitView: React.FC = () => {
                     className="h-12 border-t border-b border-gray-500"
                   >
                     <td>
-                      <Link to={`/scorecard/${params.job}/page/${i + 1}`}>
+                      <Link to={match.path.replace("submit", `page/${i + 1}`)}>
                         {page.title ||
                           (page.elements[0] && page.elements[0].label)}
                       </Link>

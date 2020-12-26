@@ -1,6 +1,5 @@
 import React from "react";
 import { RouteComponentProps, Route, Switch, Redirect } from "react-router-dom";
-import ActivitySelectionView from "./ActivitySelectionView";
 import ActivityPurchaseView from "./ActivityPurchaseView";
 import ActivityWeanView from "./ActivityWeanView";
 import ActivityMortalityView from "./ActivityMortalityView";
@@ -8,44 +7,35 @@ import ActivityMoveView from "./ActivityMoveView";
 import ActivityGradeOffView from "./ActivityGradeOffView";
 import ActivityAdjustmentView from "./ActivityAdjustmentView";
 import ActivityJobView from "./ActivityJobView";
+import ActivitySelectionView from "./ActivitySelectionView";
 
 const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
   match
 }) => {
   return (
     <Switch>
+      <Route exact path={`${match.url}`} component={ActivitySelectionView} />
       <Route
         exact
-        path={`${match.url}/:barnType`}
-        component={ActivitySelectionView}
-      />
-      <Route
-        exact
-        path={`${match.url}/:barnType/:activity(purchase|wean|mortality|move|grade-off|adjustment)`}
+        path={`${match.url}/:activity(purchase|wean|mortality|move|grade-off|adjustment)`}
         component={ActivityJobView}
       />
       <Route
-        path={`${match.url}/:barnType/purchase/:job`}
+        path={`${match.url}/purchase/:job`}
         component={ActivityPurchaseView}
       />
+      <Route path={`${match.url}/wean/:job`} component={ActivityWeanView} />
       <Route
-        path={`${match.url}/:barnType/wean/:job`}
-        component={ActivityWeanView}
-      />
-      <Route
-        path={`${match.url}/:barnType/mortality/:job`}
+        path={`${match.url}/mortality/:job`}
         component={ActivityMortalityView}
       />
+      <Route path={`${match.url}/move/:job`} component={ActivityMoveView} />
       <Route
-        path={`${match.url}/:barnType/move/:job`}
-        component={ActivityMoveView}
-      />
-      <Route
-        path={`${match.url}/:barnType/grade-off/:job`}
+        path={`${match.url}/grade-off/:job`}
         component={ActivityGradeOffView}
       />
       <Route
-        path={`${match.url}/:barnType/adjustment/:job`}
+        path={`${match.url}/adjustment/:job`}
         component={ActivityAdjustmentView}
       />
       <Redirect to={match.url} />

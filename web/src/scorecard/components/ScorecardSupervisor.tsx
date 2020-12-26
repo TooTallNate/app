@@ -6,7 +6,7 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardPeopleQuery } from "../graphql/index";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import { FormValue, useGrowFinish } from "../contexts/growFinish";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 
 export interface ScorecardSupervisorProps {
@@ -19,18 +19,15 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
   id
 }) => {
   const { data } = useScorecardPeopleQuery();
-  const { formState } = useGrowFinish();
+  const { formState } = useScorecard();
   const { setValue } = useFormContext();
 
   const name = `${id}.stringValue`;
-  const elementState = formState[id] || {};
+  const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(
-      name,
-      elementState.stringValue ? elementState.stringValue : undefined
-    );
-  }, [elementState, id, name, setValue]);
+    setValue(name, stringValue);
+  }, [stringValue, name, setValue]);
 
   return (
     <FormField name={name}>
