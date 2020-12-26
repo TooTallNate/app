@@ -5,9 +5,10 @@ import {
   ScorecardConfigResolvers,
   ScorecardGroupResolvers
 } from "../common/graphql";
-import { NavJobJournalTemplate, NavJobJournalBatch } from "../common/nav";
+import { NavJobJournalBatch } from "../common/nav";
 import { navDate, getDocumentNumber } from "../common/utils";
 import ScorecardModel from "./Scorecard";
+import parse from "date-fns/parse";
 
 const ScorecardGroup: ScorecardGroupResolvers = {
   code: group => group.Code,
@@ -83,7 +84,15 @@ export const mutations: MutationResolvers = {
     const caretaker = input.data.find(element =>
       element.elementId.includes("CARETAKER")
     ) || { stringValue: job.Person_Responsible };
-    const date = navDate(new Date());
+    const postingDate = input.data.find(element =>
+      element.elementId.includes("POSTDATE")
+    );
+    console.log(parse(postingDate.stringValue, "MM/dd/yyyy", new Date()));
+    const date = navDate(
+      postingDate && postingDate.stringValue
+        ? parse(postingDate.stringValue, "MM/dd/yyyy", new Date())
+        : new Date()
+    );
 
     for (const task of jobTasks) {
       const element = input.data.find(

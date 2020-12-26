@@ -14,6 +14,7 @@ import ViewContent from "../../common/components/view/ViewContent";
 import { useScorecardJobsQuery } from "../graphql";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import Button from "../../common/components/input/Button";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 
 interface FormData {
   job: string;
@@ -50,6 +51,7 @@ const ScorecardJobView: React.FC = () => {
                 required: "The job field is required."
               }}
             >
+              <FormFieldLabel>Scorecard Job</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   sort="desc"

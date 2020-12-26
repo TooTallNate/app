@@ -19,7 +19,7 @@ const ScorecardSubmitView: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
   const formContext = useForm();
-  const { addMessage } = useFlash();
+  const { addMessage, setMessage } = useFlash();
 
   const { formConfig, formState, submit } = useScorecard();
 
@@ -46,8 +46,15 @@ const ScorecardSubmitView: React.FC = () => {
         history.push("/");
         break;
       default:
-        await submit();
-        history.push("/");
+        try {
+          await submit();
+          history.push("/");
+        } catch {
+          setMessage({
+            level: "error",
+            message: "An error occurred submitting scorecard"
+          });
+        }
         break;
     }
   };

@@ -14,6 +14,7 @@ import ViewContent from "../../common/components/view/ViewContent";
 import { useScorecardGroupsQuery } from "../graphql";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import Button from "../../common/components/input/Button";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 
 interface FormData {
   group: string;
@@ -46,6 +47,7 @@ const ScorecardGroupView: React.FC = () => {
                 required: "The scorecare type field is required."
               }}
             >
+              <FormFieldLabel>Scorecard Type</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   items={data.scorecardGroups.map(group => ({
