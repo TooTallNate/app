@@ -10,19 +10,29 @@ import { ErrorCode } from "../utils";
 import { FilterFunction, compileFilter } from "../nav/filter";
 import logger from "../../config/logging";
 
-const authHeader = `Basic ${Buffer.from(
-  `${process.env.NAV_USER}:${process.env.NAV_ACCESS_KEY}`
-).toString("base64")}`;
-
 export default class NavDataSource extends RESTDataSource<GraphqlContext> {
+  get config() {
+    if (this.context.navConfig) {
+      return this.context.navConfig;
+    } else {
+      throw new Error("NAV not initialized");
+    }
+  }
+
+  get authHeader() {
+    return `Basic ${Buffer.from(
+      `${this.config.user}:${this.config.accessKey}`
+    ).toString("base64")}`;
+  }
+
   get baseURL() {
-    return `${process.env.NAV_BASE_URL}/Company('${process.env.NAV_COMPANY}')`;
+    return this.config.url;
   }
 
   // Attach authorization header if user is logged in on the context.
   willSendRequest(request: RequestOptions) {
     if (this.context.user && !request.headers.has("Authorization")) {
-      request.headers.set("Authorization", authHeader);
+      request.headers.set("Authorization", this.authHeader);
     }
   }
 

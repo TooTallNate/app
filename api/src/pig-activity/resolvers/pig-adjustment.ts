@@ -4,7 +4,6 @@ import {
   PigAdjustmentResolvers,
   PigAdjustmentEventResolvers
 } from "../../common/graphql";
-import UserSettingsModel from "../../common/models/UserSettings";
 import {
   NavItemJournalBatch,
   NavItemJournalTemplate,
@@ -48,7 +47,7 @@ export const PigAdjustmentEvent: PigAdjustmentEventResolvers = {
 };
 
 export const PigAdjustmentMutations: MutationResolvers = {
-  async savePigAdjustment(_, { input }, { user }) {
+  async savePigAdjustment(_, { input }, { user, navConfig }) {
     const doc =
       (await PigAdjustmentModel.findOne({
         job: input.job
@@ -58,7 +57,8 @@ export const PigAdjustmentMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     return {
@@ -67,7 +67,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
       defaults: userSettings
     };
   },
-  async postPigAdjustment(_, { input }, { user, dataSources }) {
+  async postPigAdjustment(_, { input }, { user, dataSources, navConfig }) {
     const job = await dataSources.navJob.getByNo(input.job);
 
     const [
@@ -101,7 +101,8 @@ export const PigAdjustmentMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     const doc =

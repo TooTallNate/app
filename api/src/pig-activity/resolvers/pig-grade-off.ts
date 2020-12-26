@@ -4,19 +4,10 @@ import {
   PigGradeOffResolvers,
   PigGradeOffEventResolvers
 } from "../../common/graphql";
-import {
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavEntryType,
-  NavReason,
-  NavReasonCode,
-  NavItemJournalLine
-} from "../../common/nav";
+import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
 import PigGradeOffModel from "../models/PigGradeOff";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
-import datasources from "../../common/datasources";
-import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
 
 export const PigGradeOff: PigGradeOffResolvers = {
   job(pigGradeOff, _, { dataSources }) {
@@ -63,23 +54,23 @@ export const PigGradeOffEvent: PigGradeOffEventResolvers = {
 };
 
 export const PigGradeOffMutations: MutationResolvers = {
-  async savePigGradeOff(_, { input }, { user }) {
+  async savePigGradeOff(_, { input }, { user, navConfig }) {
     const doc =
       (await PigGradeOffModel.findOne({
         job: input.job
       })) || new PigGradeOffModel();
-    console.log(input);
     doc.set(input);
     await doc.save();
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     return { success: true, pigGradeOff: doc, defaults: userSettings };
   },
-  async postPigGradeOff(_, { input }, { user, dataSources }) {
+  async postPigGradeOff(_, { input }, { user, dataSources, navConfig }) {
     const standardJournalLines = await dataSources.navItemJournal.getStandardJournalLines(
       {
         code: input.event,
@@ -118,7 +109,8 @@ export const PigGradeOffMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     const doc =
