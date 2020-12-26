@@ -5,8 +5,6 @@ import View from "../../common/components/view/View";
 import Title from "../../common/components/view/ViewTitle";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import BackButton from "../../common/components/view/BackButton";
-import Button from "../../common/components/input/Button";
-import Stack from "../../common/components/layout/Stack";
 import { useHistory, Link, useRouteMatch } from "react-router-dom";
 import { isElementComplete } from "../components/ScorecardPageComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,6 +20,15 @@ const ScorecardSubmitView: React.FC = () => {
   const formContext = useForm();
 
   const { formConfig, formState, submit } = useScorecard();
+
+  const pages = formConfig.map((page, i) => ({
+    ...page,
+    isComplete: page.elements.every(element =>
+      isElementComplete(element.code, formState[element.id] || {})
+    )
+  }));
+
+  const canSubmit = pages.every(page => page.isComplete);
 
   const onSubmit = async () => {
     switch (submitAction.current) {
@@ -54,10 +61,7 @@ const ScorecardSubmitView: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {formConfig.map((page, i) => {
-                const isComplete = page.elements.every(element =>
-                  isElementComplete(element.code, formState[element.id] || {})
-                );
+              {pages.map((page, i) => {
                 return (
                   <tr
                     key={i}
@@ -72,12 +76,14 @@ const ScorecardSubmitView: React.FC = () => {
                     <td className="text-center">
                       <FontAwesomeIcon
                         className={
-                          isComplete ? "text-green-600" : "text-red-600"
+                          page.isComplete ? "text-green-600" : "text-red-600"
                         }
-                        icon={isComplete ? "check" : "times"}
+                        icon={page.isComplete ? "check" : "times"}
                         aria-hidden
                       />
-                      <span className="sr-only">{isComplete.toString()}</span>
+                      <span className="sr-only">
+                        {page.isComplete.toString()}
+                      </span>
                     </td>
                   </tr>
                 );
@@ -94,7 +100,10 @@ const ScorecardSubmitView: React.FC = () => {
               Save
             </FormSubmit>
             <HorizontalSpacer />
-            <FormSubmit onClick={() => (submitAction.current = "submit")}>
+            <FormSubmit
+              onClick={() => (submitAction.current = "submit")}
+              disabled={!canSubmit}
+            >
               Submit
             </FormSubmit>
           </div>

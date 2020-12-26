@@ -5,9 +5,14 @@ import Spinner from "../Spinner";
 
 export interface FormSubmitProps {
   onClick?(): void;
+  disabled?: boolean;
 }
 
-const FormSubmit: React.FC<FormSubmitProps> = ({ children, onClick }) => {
+const FormSubmit: React.FC<FormSubmitProps> = ({
+  children,
+  disabled,
+  onClick
+}) => {
   const element = useRef<HTMLButtonElement>(null);
   const { formState } = useFormContext();
 
@@ -18,7 +23,7 @@ const FormSubmit: React.FC<FormSubmitProps> = ({ children, onClick }) => {
       ref={element}
       type="submit"
       className="w-full"
-      disabled={formState.isSubmitting}
+      disabled={disabled || formState.isSubmitting}
       onClick={onClick}
     >
       {formState.isSubmitting ? (
