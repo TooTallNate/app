@@ -20,10 +20,13 @@ export interface UserSettingsDocument extends Document {
 
 const UserSettingsSchema = new Schema(
   {
+    subdomain: {
+      type: String,
+      required: true
+    },
     username: {
       type: String,
-      required: true,
-      unique: true
+      required: true
     },
     pigJob: String,
     prices: [
@@ -45,6 +48,8 @@ const UserSettingsSchema = new Schema(
     timestamps: true
   }
 );
+
+UserSettingsSchema.index({ subdomain: 1, username: 1 }, { unique: true });
 
 const UserSettingsModel = model<UserSettingsDocument>(
   "UserSettings",

@@ -9,7 +9,6 @@ import { getDocumentNumber, parseNavDate } from "../../common/utils";
 import PigMortalityModel from "../models/PigMortality";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
 import { differenceInDays } from "date-fns";
-import { LinkedErrors } from "@sentry/node/dist/integrations";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { dataSources }) {
@@ -55,7 +54,7 @@ export const PigMortalityEvent: PigMortalityEventResolvers = {
 };
 
 export const PigMortalityMutations: MutationResolvers = {
-  async savePigMortality(_, { input }, { user }) {
+  async savePigMortality(_, { input }, { user, navConfig }) {
     const doc =
       (await PigMortalityModel.findOne({
         job: input.job
@@ -65,12 +64,13 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     return { success: true, pigMortality: doc, defaults: userSettings };
   },
-  async postPigMortality(_, { input }, { user, dataSources }) {
+  async postPigMortality(_, { input }, { user, dataSources, navConfig }) {
     const standardJournalLines = await dataSources.navItemJournal.getStandardJournalLines(
       {
         code: input.event,
@@ -112,7 +112,8 @@ export const PigMortalityMutations: MutationResolvers = {
     }
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.job
+      pigJob: input.job,
+      subdomain: navConfig.subdomain
     });
 
     const doc =

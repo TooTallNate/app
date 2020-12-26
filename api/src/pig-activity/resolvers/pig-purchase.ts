@@ -43,7 +43,7 @@ export const PigPurchaseEvent: PigPurchaseEventResolvers = {
 };
 
 export const PigPurchaseMutations: MutationResolvers = {
-  async savePigPurchase(_, { input }, { user }) {
+  async savePigPurchase(_, { input }, { user, navConfig }) {
     const doc =
       (await PigPurchaseModel.findOne({
         job: input.job
@@ -52,7 +52,8 @@ export const PigPurchaseMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await UserSettingsModel.findOne({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     });
 
     return {
@@ -61,7 +62,7 @@ export const PigPurchaseMutations: MutationResolvers = {
       defaults: userSettings || new UserSettingsModel()
     };
   },
-  async postPigPurchase(_, { input }, { user, dataSources }) {
+  async postPigPurchase(_, { input }, { user, dataSources, navConfig }) {
     const [
       standardJournalLines
     ] = await dataSources.navItemJournal.getStandardJournalLines({
@@ -93,7 +94,8 @@ export const PigPurchaseMutations: MutationResolvers = {
     );
 
     const userSettings = await updateUserSettings({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     });
 
     const doc =

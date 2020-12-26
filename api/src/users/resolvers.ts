@@ -47,10 +47,16 @@ export const mutations: MutationResolvers = {
     );
     return { success: true };
   },
-  async updateUserLocations(_, { input }, { user, dataSources }) {
+  async updateUserLocations(_, { input }, { user, dataSources, navConfig }) {
     const settings =
-      (await UserSettingsModel.findOne({ username: user.username })) ||
-      new UserSettingsModel({ username: user.username });
+      (await UserSettingsModel.findOne({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      })) ||
+      new UserSettingsModel({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      });
     if (input.add) {
       settings.locations.list.push(...input.add);
     }
@@ -84,9 +90,10 @@ export const User: UserResolvers = {
   username: user => user.User_Name,
   name: user => user.Full_Name,
   license: user => user.License_Type,
-  async locations(_, __, { dataSources, user }) {
+  async locations(_, __, { dataSources, user, navConfig }) {
     const settings = await UserSettingsModel.findOne({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     }).lean<UserSettingsDocument>();
     if (settings && settings.locations) {
       let list: NavLocation[] = [];

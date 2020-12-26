@@ -51,7 +51,7 @@ export const PigMoveEvent: PigMoveEventResolvers = {
 };
 
 export const PigMoveMutations: MutationResolvers = {
-  async savePigMove(_, { input }, { user }) {
+  async savePigMove(_, { input }, { user, navConfig }) {
     const doc =
       (await PigMoveModel.findOne({
         fromJob: input.fromJob
@@ -61,12 +61,13 @@ export const PigMoveMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.fromJob
+      pigJob: input.fromJob,
+      subdomain: navConfig.subdomain
     });
 
     return { success: true, pigMove: doc, defaults: userSettings };
   },
-  async postPigMove(_, { input }, { user, dataSources }) {
+  async postPigMove(_, { input }, { user, dataSources, navConfig }) {
     const standardJournal = await dataSources.navItemJournal.getStandardJournalLines(
       {
         code: input.event,
@@ -124,7 +125,8 @@ export const PigMoveMutations: MutationResolvers = {
 
     const userSettings = await updateUserSettings({
       username: user.username,
-      pigJob: input.fromJob
+      pigJob: input.fromJob,
+      subdomain: navConfig.subdomain
     });
 
     const doc =

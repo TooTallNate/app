@@ -41,7 +41,7 @@ export const PigWeanEvent: PigWeanEventResolvers = {
 };
 
 export const PigWeanMutations: MutationResolvers = {
-  async savePigWean(_, { input }, { user }) {
+  async savePigWean(_, { input }, { user, navConfig }) {
     const doc =
       (await PigWeanModel.findOne({
         job: input.job
@@ -50,7 +50,8 @@ export const PigWeanMutations: MutationResolvers = {
     await doc.save();
 
     const userSettings = await UserSettingsModel.findOne({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     });
 
     return {
@@ -59,7 +60,7 @@ export const PigWeanMutations: MutationResolvers = {
       defaults: userSettings || new UserSettingsModel()
     };
   },
-  async postPigWean(_, { input }, { user, dataSources }) {
+  async postPigWean(_, { input }, { user, dataSources, navConfig }) {
     const [
       standardJournal
     ] = await dataSources.navItemJournal.getStandardJournalLines({
@@ -88,7 +89,8 @@ export const PigWeanMutations: MutationResolvers = {
     );
 
     const userSettings = await UserSettingsModel.findOne({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     });
 
     const doc =
