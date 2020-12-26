@@ -87,7 +87,6 @@ export const mutations: MutationResolvers = {
     const postingDate = input.data.find(element =>
       element.elementId.includes("POSTDATE")
     );
-    console.log(parse(postingDate.stringValue, "MM/dd/yyyy", new Date()));
     const date = navDate(
       postingDate && postingDate.stringValue
         ? parse(postingDate.stringValue, "MM/dd/yyyy", new Date())
