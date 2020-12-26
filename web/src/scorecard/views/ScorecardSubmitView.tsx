@@ -12,12 +12,14 @@ import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import Form from "../../common/components/form/Form";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { useForm } from "react-hook-form";
+import { useFlash } from "../../common/contexts/flash";
 
 const ScorecardSubmitView: React.FC = () => {
   const submitAction = useRef<string | null>(null);
   const match = useRouteMatch();
   const history = useHistory();
   const formContext = useForm();
+  const { addMessage } = useFlash();
 
   const { formConfig, formState, submit } = useScorecard();
 
@@ -34,6 +36,11 @@ const ScorecardSubmitView: React.FC = () => {
     switch (submitAction.current) {
       case "back":
         history.push(match.path.replace("submit", `page/${formConfig.length}`));
+        addMessage({
+          level: "success",
+          message: "Scorecard posted successully!",
+          timeout: 3000
+        });
         break;
       case "save":
         history.push("/");

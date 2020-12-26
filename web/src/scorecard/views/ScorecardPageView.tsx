@@ -27,7 +27,15 @@ const ScorecardPageView: React.FC = () => {
   const pageConfig = formConfig[pageNumber];
 
   const onSubmit: OnSubmit<Record<string, any>> = async data => {
-    await saveProgress(data);
+    try {
+      await saveProgress(data);
+    } catch {
+      setMessage({
+        level: "error",
+        message: "Error occurred while saving scorecard."
+      });
+      return;
+    }
 
     switch (submitAction.current) {
       case "save":
