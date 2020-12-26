@@ -1,8 +1,8 @@
 import { DataSources } from "./common/datasources";
 import FarmConfigModel from "./common/models/FarmConfig";
-import logger from "./config/logging";
 
 export interface NavConfig {
+  subdomain: string;
   url: string;
   user: string;
   accessKey: string;
@@ -27,12 +27,9 @@ export async function createContext({
 }: CreateContextOptions): Promise<Omit<GraphqlContext, "dataSources">> {
   let navConfig;
   if (process.env.VERCEL_ENV === "production") {
-    const farmConfig = await FarmConfigModel.findOne(
-      {
-        subdomain: req.subdomains[0]
-      },
-      "url user accessKey"
-    ).lean();
+    const farmConfig = await FarmConfigModel.findOne({
+      subdomain: req.subdomains[0]
+    }).lean();
 
     if (farmConfig) {
       navConfig = farmConfig;
@@ -44,6 +41,7 @@ export async function createContext({
   // convert this to else statement after everyone moves over to subdomain.
   if (!navConfig) {
     navConfig = {
+      subdomain: "moglerfarms",
       url: `${process.env.NAV_BASE_URL}/Company('${process.env.NAV_COMPANY}')`,
       user: process.env.NAV_USER,
       accessKey: process.env.NAV_ACCESS_KEY

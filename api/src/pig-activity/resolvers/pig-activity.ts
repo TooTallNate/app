@@ -25,16 +25,18 @@ export function postItemJournal(
 export async function updateUserSettings({
   username,
   animal,
+  subdomain,
   ...doc
 }: {
   username: string;
+  subdomain: string;
   pigJob?: string;
   animal?: string;
   price?: number;
 }): Promise<UserSettingsDocument> {
-  let settings = await UserSettingsModel.findOne({ username });
+  let settings = await UserSettingsModel.findOne({ username, subdomain });
   if (!settings) {
-    settings = new UserSettingsModel({ username });
+    settings = new UserSettingsModel({ username, subdomain });
   }
 
   if (typeof doc.price === "number" && typeof animal === "string") {
@@ -73,9 +75,10 @@ export const PigActivityQueries: QueryResolvers = {
       postingGroups: ["SOWS", "MARKET HOGS"]
     });
   },
-  async pigActivityJobs(_, __, { user, dataSources }) {
+  async pigActivityJobs(_, __, { user, navConfig, dataSources }) {
     const settings = await UserSettingsModel.findOne({
-      username: user.username
+      username: user.username,
+      subdomain: navConfig.subdomain
     });
     if (settings && settings.locations.list) {
       if (settings.locations.mode === InclusivityMode.Include) {
@@ -91,11 +94,16 @@ export const PigActivityQueries: QueryResolvers = {
       excludeLocations
     });
   },
-  async pigActivityDefaults(_, __, { user }) {
+  async pigActivityDefaults(_, __, { user, navConfig }) {
     return (
       (await UserSettingsModel.findOne({
-        username: user.username
-      })) || new UserSettingsModel({ username: user.username })
+        username: user.username,
+        subdomain: navConfig.subdomain
+      })) ||
+      new UserSettingsModel({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      })
     );
   }
 };
