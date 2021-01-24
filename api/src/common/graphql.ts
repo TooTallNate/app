@@ -46,6 +46,7 @@ export type Job = {
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
   startDate?: Maybe<Scalars["String"]>;
+  groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
 };
 
@@ -110,6 +111,7 @@ export type Query = {
   scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
+  users?: Maybe<Array<User>>;
 };
 
 export type QueryJobArgs = {
@@ -952,6 +954,11 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
+  groupStartDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   location?: Resolver<ResolversTypes["Location"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
@@ -1121,6 +1128,11 @@ export type QueryResolvers<
     ContextType
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  users?: Resolver<
+    Maybe<Array<ResolversTypes["User"]>>,
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type PigActivityDefaultsResolvers<

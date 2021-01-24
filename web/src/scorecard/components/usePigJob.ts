@@ -9,6 +9,7 @@ export interface UsePigJob {
     description: string;
     deadQuantity?: number | null;
     startDate?: string | null;
+    groupStartDate?: string | null;
   } | null;
   loading: boolean;
 }

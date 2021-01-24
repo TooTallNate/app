@@ -29,6 +29,7 @@ query ScorecardPigJob($job: String!) {
     number
     description
     startDate
+    groupStartDate
     deadQuantity
   }
 }

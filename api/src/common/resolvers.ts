@@ -22,6 +22,7 @@ const Job: JobResolvers = {
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity,
   startDate: job => job.Start_Date,
+  groupStartDate: job => '20' + job.No.substring(0,2).concat("/").concat(job.No.substring(2,4)),
   async location(job, _, { dataSources }) {
     return dataSources.navLocation.getByCode(job.Site);
   }

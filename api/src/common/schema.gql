@@ -10,6 +10,7 @@ type Job {
   inventory: Int
   deadQuantity: Int
   startDate: String
+  groupStartDate: String
   location: Location!
 }
 

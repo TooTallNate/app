@@ -20,4 +20,8 @@ export default class NavUserDataSource extends NavDataSource {
   getBySecurityID(id: string): Promise<NavUser | undefined> {
     return this.get(`/Users(${id})`);
   }
+
+  getAll(): Promise<NavUser[]> {
+    return this.get(`/Users`);
+  }
 }

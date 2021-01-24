@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict"
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -25,15 +27,29 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   const name = `${id}.numericValue`;
   const targetTemp = watch(name);
 
+  const getDateOfISOWeek = (w: number, y: number) => {
+    var simple = new Date(y, 0, 1 + (w - 1) * 7);
+    var dow = simple.getDay();
+    var ISOweekStart = simple;
+    if (dow <= 4)
+        ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+    else
+        ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+    return ISOweekStart;
+  };
+
   useEffect(() => {
-    if (pigJob && pigJob.startDate) {
-      const today = new Date();
-      const postingDate = new Date(pigJob.startDate);
-      const diff = Math.abs(today.valueOf() - postingDate.valueOf());
+    if (pigJob && pigJob.groupStartDate) {
+      const year = Number(pigJob.groupStartDate.substr(0,4));
+      const week = Number(pigJob.groupStartDate.substr(5,7));
+      const date = getDateOfISOWeek(week, year);
+      const startDate = lastDayOfWeek(date, {weekStartsOn: 2 });
+      const diff = formatDistanceToNowStrict(startDate, { unit: 'day'}).split(' ')[0];
       const tempWeeks = Math.min(
         16,
-        Math.floor(Math.ceil(diff / (1000 * 3600 * 24)) / 7)
+        Math.floor(Math.ceil(Number(diff)) / 7)
       );
+      console.log(`tempweeks ${tempWeeks}`);
       const resourceNo = `${tempWeeks}TARGETTEMP`;
       loadResource({ variables: { code: resourceNo } });
     }

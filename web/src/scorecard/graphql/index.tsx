@@ -23,6 +23,7 @@ export type Job = {
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
   startDate?: Maybe<Scalars["String"]>;
+  groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
 };
 
@@ -87,6 +88,7 @@ export type Query = {
   scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
+  users?: Maybe<Array<User>>;
 };
 
 export type QueryJobArgs = {
@@ -629,7 +631,7 @@ export type ScorecardPigJobQuery = { __typename?: "Query" } & {
   job?: Maybe<
     { __typename?: "Job" } & Pick<
       Job,
-      "number" | "description" | "startDate" | "deadQuantity"
+      "number" | "description" | "startDate" | "groupStartDate" | "deadQuantity"
     >
   >;
 };
@@ -848,6 +850,7 @@ export const ScorecardPigJobDocument = gql`
       number
       description
       startDate
+      groupStartDate
       deadQuantity
     }
   }
