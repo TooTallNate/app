@@ -27,6 +27,7 @@ export interface Job {
   number: string;
   location: string;
   caretaker: string;
+  projectManager?: string;
 }
 
 export interface FormValue {
@@ -150,7 +151,8 @@ const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
         ? {
             number: data.job.number,
             location: data.job.location.code,
-            caretaker: data.job.personResponsible.number
+            caretaker: data.job.personResponsible.number,
+            projectManager: data.job.projectManager ? data.job.projectManager.username : undefined
           }
         : undefined,
     [data, jobNumber]

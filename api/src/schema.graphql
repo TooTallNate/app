@@ -12,6 +12,7 @@ type Job {
   startDate: String
   groupStartDate: String
   location: Location!
+  projectManager: User
 }
 
 type Item {
@@ -70,7 +71,7 @@ type Query {
   scorecardConfig(job: String!): ScorecardConfig
   scorecardGroups: [ScorecardGroup!]!
   user: User
-  users: [User]
+  users: [User!]!
 }
 
 type PigActivityDefaults {

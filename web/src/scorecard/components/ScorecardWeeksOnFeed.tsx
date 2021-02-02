@@ -18,17 +18,6 @@ export interface ScorecardWeeksOnFeedProps {
   id: string;
 }
 
-const getDateOfISOWeek = (w: number, y: number) => {
-  var simple = new Date(y, 0, 1 + (w - 1) * 7);
-  var dow = simple.getDay();
-  var ISOweekStart = simple;
-  if (dow <= 4)
-      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  else
-      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-  return ISOweekStart;
-};
-
 const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   label,
   id
@@ -46,16 +35,9 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   useEffect(() => {
     let weeksOnFeed;
     if (pigJob && pigJob.groupStartDate) {
-      const year = Number(pigJob.groupStartDate.substr(0,4));
-      const week = Number(pigJob.groupStartDate.substr(5,7));
-
-      const date = getDateOfISOWeek(week, year);
-
-      const startDate = lastDayOfWeek(date, {weekStartsOn: 2 });
-      const diff = formatDistanceToNowStrict(startDate, { unit: 'day'}).split(' ')[0];
-
+      const groupStartDate = new Date(pigJob.groupStartDate);
+      const diff = formatDistanceToNowStrict(groupStartDate, { unit: 'day'}).split(' ')[0];
       weeksOnFeed = Math.floor(Math.ceil(Number(diff)) / 7);
-
     } else {
       weeksOnFeed = undefined;
     }

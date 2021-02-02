@@ -25,6 +25,7 @@ export type Job = {
   startDate?: Maybe<Scalars["String"]>;
   groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
+  projectManager?: Maybe<User>;
 };
 
 export type Item = {
@@ -88,7 +89,7 @@ export type Query = {
   scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
-  users?: Maybe<Array<User>>;
+  users: Array<User>;
 };
 
 export type QueryJobArgs = {
@@ -660,6 +661,12 @@ export type ScorecardPeopleQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type ScorecardUsersQueryVariables = {};
+
+export type ScorecardUsersQuery = { __typename?: "Query" } & {
+  users: Array<{ __typename?: "User" } & Pick<User, "username" | "name">>;
+};
+
 export type ScorecardQueryVariables = {
   job: Scalars["String"];
 };
@@ -671,6 +678,9 @@ export type ScorecardQuery = { __typename?: "Query" } & {
         personResponsible: { __typename?: "Resource" } & Pick<
           Resource,
           "number"
+        >;
+        projectManager?: Maybe<
+          { __typename?: "User" } & Pick<User, "username">
         >;
       }
   >;
@@ -1076,6 +1086,62 @@ export type ScorecardPeopleQueryResult = Apollo.QueryResult<
   ScorecardPeopleQuery,
   ScorecardPeopleQueryVariables
 >;
+export const ScorecardUsersDocument = gql`
+  query ScorecardUsers {
+    users {
+      username
+      name
+    }
+  }
+`;
+
+/**
+ * __useScorecardUsersQuery__
+ *
+ * To run a query within a React component, call `useScorecardUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScorecardUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScorecardUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useScorecardUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ScorecardUsersQuery,
+    ScorecardUsersQueryVariables
+  >
+) {
+  return Apollo.useQuery<ScorecardUsersQuery, ScorecardUsersQueryVariables>(
+    ScorecardUsersDocument,
+    baseOptions
+  );
+}
+export function useScorecardUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ScorecardUsersQuery,
+    ScorecardUsersQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<ScorecardUsersQuery, ScorecardUsersQueryVariables>(
+    ScorecardUsersDocument,
+    baseOptions
+  );
+}
+export type ScorecardUsersQueryHookResult = ReturnType<
+  typeof useScorecardUsersQuery
+>;
+export type ScorecardUsersLazyQueryHookResult = ReturnType<
+  typeof useScorecardUsersLazyQuery
+>;
+export type ScorecardUsersQueryResult = Apollo.QueryResult<
+  ScorecardUsersQuery,
+  ScorecardUsersQueryVariables
+>;
 export const ScorecardDocument = gql`
   query Scorecard($job: String!) {
     job: job(number: $job) {
@@ -1085,6 +1151,9 @@ export const ScorecardDocument = gql`
       }
       personResponsible {
         number
+      }
+      projectManager {
+        username
       }
     }
     scorecardConfig(job: $job) {

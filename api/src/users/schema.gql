@@ -37,7 +37,7 @@ type UpdateUserLocationsResult {
 
 type Query {
   user: User
-  users: [User!]
+  users: [User!]!
   locations: [Location!]!
 }
 

@@ -27,29 +27,14 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   const name = `${id}.numericValue`;
   const targetTemp = watch(name);
 
-  const getDateOfISOWeek = (w: number, y: number) => {
-    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-    var dow = simple.getDay();
-    var ISOweekStart = simple;
-    if (dow <= 4)
-        ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    else
-        ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-    return ISOweekStart;
-  };
-
   useEffect(() => {
     if (pigJob && pigJob.groupStartDate) {
-      const year = Number(pigJob.groupStartDate.substr(0,4));
-      const week = Number(pigJob.groupStartDate.substr(5,7));
-      const date = getDateOfISOWeek(week, year);
-      const startDate = lastDayOfWeek(date, {weekStartsOn: 2 });
-      const diff = formatDistanceToNowStrict(startDate, { unit: 'day'}).split(' ')[0];
+      const groupStartDate = new Date(pigJob.groupStartDate);
+      const diff = formatDistanceToNowStrict(groupStartDate, { unit: 'day'}).split(' ')[0];
       const tempWeeks = Math.min(
         16,
         Math.floor(Math.ceil(Number(diff)) / 7)
       );
-      console.log(`tempweeks ${tempWeeks}`);
       const resourceNo = `${tempWeeks}TARGETTEMP`;
       loadResource({ variables: { code: resourceNo } });
     }

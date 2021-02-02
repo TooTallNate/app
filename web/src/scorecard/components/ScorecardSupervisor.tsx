@@ -4,7 +4,7 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { useScorecardPeopleQuery } from "../graphql/index";
+import { useScorecardPeopleQuery, useScorecardUsersQuery } from "../graphql/index";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
@@ -18,25 +18,29 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
   label,
   id
 }) => {
-  const { data } = useScorecardPeopleQuery();
-  const { formState } = useScorecard();
+  const { data } = useScorecardUsersQuery();
+  const { job, formState } = useScorecard();
   const { setValue } = useFormContext();
 
   const name = `${id}.stringValue`;
   const { stringValue } = formState[id] || {};
 
-  useEffect(() => {
-    setValue(name, stringValue);
-  }, [stringValue, name, setValue]);
+  // useEffect(() => {
+  //   setValue(name, stringValue);
+  // }, [stringValue, name, setValue]);
 
+  useEffect(() => {
+    setValue(name, stringValue ? stringValue : job ? job.projectManager : undefined);
+  }, [job, name, setValue, stringValue]);
+ 
   return (
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput>
         <TypeaheadInput
-          items={((data && data.people) || []).map(person => ({
-            title: person.name,
-            value: person.number
+          items={((data && data.users) || []).map(user => ({
+            title: user.name || (user.username || '').split('/')[1] || user.username,
+            value: user.username
           }))}
         />
       </FormFieldInput>

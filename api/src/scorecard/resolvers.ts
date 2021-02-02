@@ -19,7 +19,6 @@ const ScorecardConfig: ScorecardConfigResolvers = {
   job: job => job,
   async pages(job, _, { dataSources }) {
     const tasks = await dataSources.navJob.getJobTasks(job.No);
-    console.log(tasks);
     const pages = tasks.reduce((pages, task) => {
       if (task.Job_Task_Type === "Heading") {
         pages.push({

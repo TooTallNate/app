@@ -5,7 +5,7 @@ import { ApolloProvider } from "@apollo/client/react";
 const cache = new InMemoryCache({
   typePolicies: {
     UserLocations: { keyFields: [] },
-    User: { keyFields: [] },
+    User: { keyFields: ["username"] },
     PigActivityDefaults: { keyFields: [] },
     Job: { keyFields: ["number"] },
     Item: { keyFields: ["number"] },
