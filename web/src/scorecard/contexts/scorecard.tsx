@@ -152,7 +152,9 @@ const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
             number: data.job.number,
             location: data.job.location.code,
             caretaker: data.job.personResponsible.number,
-            projectManager: data.job.projectManager ? data.job.projectManager.username : undefined
+            projectManager: data.job.projectManager
+              ? data.job.projectManager.username
+              : undefined
           }
         : undefined,
     [data, jobNumber]

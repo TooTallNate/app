@@ -72,23 +72,21 @@ const ScorecardPageView: React.FC = () => {
         <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
         <Link
           to={match.path.replace("page/:page", "submit")}
-          className="text-blue-700"       
-          onClick={
-            async (e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              try {
-                await saveProgress(getValues({ nest: true }))
-              } catch {
-                setMessage({
-                  level: "error",
-                  message: "Error occurred while saving scorecard."
-                });
-                return;
-              }
-              history.push(match.path.replace("page/:page", "submit"));
+          className="text-blue-700"
+          onClick={async e => {
+            e.stopPropagation();
+            e.preventDefault();
+            try {
+              await saveProgress(getValues({ nest: true }));
+            } catch {
+              setMessage({
+                level: "error",
+                message: "Error occurred while saving scorecard."
+              });
+              return;
             }
-          }
+            history.push(match.path.replace("page/:page", "submit"));
+          }}
         >
           Summary
         </Link>
