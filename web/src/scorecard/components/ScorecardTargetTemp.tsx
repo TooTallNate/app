@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
 import FormField from "../../common/components/form/FormField";
