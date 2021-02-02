@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import lastDayOfWeek from "date-fns/lastDayOfWeek";
-import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict"
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -30,11 +30,10 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   useEffect(() => {
     if (pigJob && pigJob.groupStartDate) {
       const groupStartDate = new Date(pigJob.groupStartDate);
-      const diff = formatDistanceToNowStrict(groupStartDate, { unit: 'day'}).split(' ')[0];
-      const tempWeeks = Math.min(
-        16,
-        Math.floor(Math.ceil(Number(diff)) / 7)
-      );
+      const diff = formatDistanceToNowStrict(groupStartDate, {
+        unit: "day"
+      }).split(" ")[0];
+      const tempWeeks = Math.min(16, Math.floor(Math.ceil(Number(diff)) / 7));
       const resourceNo = `${tempWeeks}TARGETTEMP`;
       loadResource({ variables: { code: resourceNo } });
     }

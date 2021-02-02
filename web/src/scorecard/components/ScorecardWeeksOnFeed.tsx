@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import lastDayOfWeek from "date-fns/lastDayOfWeek";
-import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict"
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -10,8 +9,6 @@ import { FormValue } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
 import usePigJob from "./usePigJob";
-import { start } from "repl";
-import { getDate } from "date-fns";
 
 export interface ScorecardWeeksOnFeedProps {
   label: string;
@@ -36,7 +33,9 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
     let weeksOnFeed;
     if (pigJob && pigJob.groupStartDate) {
       const groupStartDate = new Date(pigJob.groupStartDate);
-      const diff = formatDistanceToNowStrict(groupStartDate, { unit: 'day'}).split(' ')[0];
+      const diff = formatDistanceToNowStrict(groupStartDate, {
+        unit: "day"
+      }).split(" ")[0];
       weeksOnFeed = Math.floor(Math.ceil(Number(diff)) / 7);
     } else {
       weeksOnFeed = undefined;

@@ -34,18 +34,18 @@ const ScorecardPassFail: React.FC<ScorecardPassFailProps> = ({ label, id }) => {
 
   return (
     <>
-    <FormField name={name}>
-      <FormFieldLabel>{label}</FormFieldLabel>
-      <FormFieldInput>
-        <StackedInput orientation="horizontal">
-          <StackedRadioButton value={1}>Pass</StackedRadioButton>
-          <StackedRadioButton value={-1}>Fail</StackedRadioButton>
-        </StackedInput>
-      </FormFieldInput>
-      <FormFieldErrors />
-    </FormField>
-    <VerticalSpacer spacing={Spacing.S} />
-    <FormField name={commentsName}>
+      <FormField name={name}>
+        <FormFieldLabel>{label}</FormFieldLabel>
+        <FormFieldInput>
+          <StackedInput orientation="horizontal">
+            <StackedRadioButton value={1}>Pass</StackedRadioButton>
+            <StackedRadioButton value={-1}>Fail</StackedRadioButton>
+          </StackedInput>
+        </FormFieldInput>
+        <FormFieldErrors />
+      </FormField>
+      <VerticalSpacer spacing={Spacing.S} />
+      <FormField name={commentsName}>
         <FormFieldLabel>Comments</FormFieldLabel>
         <FormFieldInput>
           <MultilineTextInput rows={2} maxLength={50} />
