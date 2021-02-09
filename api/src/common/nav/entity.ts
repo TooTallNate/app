@@ -31,6 +31,7 @@ export interface NavJob {
   Start_Weight: number;
   Start_Date: string;
   Job_Posting_Group: string;
+  Project_Manager: string;
 }
 
 export interface NavReason {

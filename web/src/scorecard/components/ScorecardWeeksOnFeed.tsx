@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
@@ -30,11 +31,12 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
 
   useEffect(() => {
     let weeksOnFeed;
-    if (pigJob && pigJob.startDate) {
-      const today = new Date();
-      const postingDate = new Date(pigJob.startDate);
-      const diff = Math.abs(today.valueOf() - postingDate.valueOf());
-      weeksOnFeed = Math.floor(Math.ceil(diff / (1000 * 3600 * 24)) / 7);
+    if (pigJob && pigJob.groupStartDate) {
+      const groupStartDate = new Date(pigJob.groupStartDate);
+      const diff = formatDistanceToNowStrict(groupStartDate, {
+        unit: "day"
+      }).split(" ")[0];
+      weeksOnFeed = Math.floor(Math.ceil(Number(diff)) / 7);
     } else {
       weeksOnFeed = undefined;
     }

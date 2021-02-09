@@ -32,6 +32,9 @@ import ScorecardTargetTemp, {
 import ScorecardTempInput, {
   isComplete as isTempComplete
 } from "./ScorecardTemp";
+import ScorecardPassFail, {
+  isComplete as isPassFailComplete
+} from "./ScorecardPassFail";
 import { FormValue } from "../contexts/scorecard";
 
 export interface ScorecardPageComponentProps {
@@ -69,6 +72,8 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardTargetTemp {...props} />;
     case "TEMP":
       return <ScorecardTempInput {...props} />;
+    case "PASSFAIL":
+      return <ScorecardPassFail {...props} />;
     default:
       return null;
   }
@@ -87,7 +92,8 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   MORTALITY: isMortalityComplete,
   POSTDATE: isPostingDateComplete,
   TEMPTARGET: isTargetTempComplete,
-  TEMP: isTempComplete
+  TEMP: isTempComplete,
+  PASSFAIL: isPassFailComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {

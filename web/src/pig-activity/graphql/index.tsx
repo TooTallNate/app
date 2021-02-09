@@ -23,7 +23,9 @@ export type Job = {
   inventory?: Maybe<Scalars["Int"]>;
   deadQuantity?: Maybe<Scalars["Int"]>;
   startDate?: Maybe<Scalars["String"]>;
+  groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
+  projectManager?: Maybe<User>;
 };
 
 export type Item = {
@@ -87,6 +89,7 @@ export type Query = {
   scorecardConfig?: Maybe<ScorecardConfig>;
   scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
+  users: Array<User>;
 };
 
 export type QueryJobArgs = {

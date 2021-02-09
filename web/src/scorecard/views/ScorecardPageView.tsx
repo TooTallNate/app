@@ -25,6 +25,7 @@ const ScorecardPageView: React.FC = () => {
   const pageNumber = parseInt(params.page) - 1;
   const pageCount = formConfig.length;
   const pageConfig = formConfig[pageNumber];
+  const { getValues } = formContext;
 
   const onSubmit: OnSubmit<Record<string, any>> = async data => {
     try {
@@ -53,12 +54,14 @@ const ScorecardPageView: React.FC = () => {
           history.push(match.path.replace(":page", `${pageNumber}`));
         }
         break;
-      default:
+      case "next":
         if (pageNumber + 1 < pageCount) {
           history.push(match.path.replace(":page", `${pageNumber + 2}`));
         } else {
           history.push(match.path.replace("page/:page", "submit"));
         }
+        break;
+      default:
         break;
     }
   };
@@ -70,6 +73,20 @@ const ScorecardPageView: React.FC = () => {
         <Link
           to={match.path.replace("page/:page", "submit")}
           className="text-blue-700"
+          onClick={async e => {
+            e.stopPropagation();
+            e.preventDefault();
+            try {
+              await saveProgress(getValues({ nest: true }));
+            } catch {
+              setMessage({
+                level: "error",
+                message: "Error occurred while saving scorecard."
+              });
+              return;
+            }
+            history.push(match.path.replace("page/:page", "submit"));
+          }}
         >
           Summary
         </Link>

@@ -1,3 +1,4 @@
+import { userInfo } from "os";
 import {
   JobResolvers,
   ReasonResolvers,
@@ -6,6 +7,11 @@ import {
   ItemResolvers,
   QueryResolvers
 } from "./graphql";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict"
+import { format } from "date-fns";
+
+const DATE_FORMAT = 'yyyy-MM-dd';
 
 const Resource: ResourceResolvers = {
   number: resource => resource.No,
@@ -22,9 +28,32 @@ const Job: JobResolvers = {
   inventory: job => job.Inventory_Left,
   deadQuantity: job => job.Dead_Quantity,
   startDate: job => job.Start_Date,
+  groupStartDate: job => {
+    const year = Number('20' + job.No.substring(0,2));
+    const week = Number(job.No.substring(2,4));
+    const date = getDateOfISOWeek(week, year);
+    const startDate = lastDayOfWeek(date, {weekStartsOn: 2 });
+    const groupStartDate = format(startDate, DATE_FORMAT);
+    return groupStartDate;
+  },
   async location(job, _, { dataSources }) {
     return dataSources.navLocation.getByCode(job.Site);
+  },
+  async projectManager(job, _, { dataSources }) {
+    if (job.Project_Manager)
+      return dataSources.navUser.getByUsername(job.Project_Manager)
   }
+};
+
+const getDateOfISOWeek = (w: number, y: number) => {
+  var simple = new Date(y, 0, 1 + (w - 1) * 7);
+  var dow = simple.getDay();
+  var ISOweekStart = simple;
+  if (dow <= 4)
+      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else
+      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
 };
 
 const Item: ItemResolvers = {

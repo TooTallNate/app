@@ -29,6 +29,7 @@ query ScorecardPigJob($job: String!) {
     number
     description
     startDate
+    groupStartDate
     deadQuantity
   }
 }
@@ -54,6 +55,13 @@ query ScorecardPeople {
   }
 }
 
+query ScorecardUsers {
+  users {
+    username
+    name
+  }
+}
+
 query Scorecard($job: String!) {
   job: job(number: $job) {
     number
@@ -62,6 +70,9 @@ query Scorecard($job: String!) {
     }
     personResponsible {
       number
+    }
+    projectManager {
+      username
     }
   }
   scorecardConfig(job: $job) {
