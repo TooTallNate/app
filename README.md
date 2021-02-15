@@ -19,4 +19,23 @@
 * Run `npm run test` to run tests on both the web and api projects.
 * Run `npm run generate` to update typings after changing the GraphQL schema.
 
+## Release
+When you have a batch of PRs merged to master:
+1. In master run `npm version [major|minor|patch]
+1. Push new commit and tag
+1. Add release in GitHub with description of changes and links to merged PRs
+
+## Architecture
+
+```
+ |       React
+Web        |
+ |    Apollo Client
+           |
+ |    Apollo Server
+API     /     \
+ |    NAV   MongoDB
+```
+ 
+
 
