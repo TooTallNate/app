@@ -7,6 +7,9 @@ import NumberInput from "../../common/components/input/NumberInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import { FormValue, useScorecard } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
+import { Spacing } from "../../common/components/layout/spacing";
+import VerticalSpacer from "../../common/components/layout/VerticalSpacer";
+import MultilineTextInput from "../../common/components/input/MultilineTextInput";
 
 export interface ScorecardHealthInputProps {
   label: string;
@@ -24,32 +27,46 @@ const ScorecardHealthInput: React.FC<ScorecardHealthInputProps> = ({
   const { formState } = useScorecard();
   const { setValue } = useFormContext();
   const name = `${id}.numericValue`;
-  const { numericValue } = formState[id] || {};
+  const commentsName = `${id}.stringValue`;
+  const { stringValue, numericValue } = formState[id] || {};
 
   useEffect(() => {
     setValue(name, numericValue);
   }, [name, numericValue, setValue]);
 
+  useEffect(() => {
+    setValue(commentsName, stringValue ? stringValue : undefined);
+  }, [commentsName, setValue, stringValue]);
+
   return (
-    <FormField
-      name={name}
-      rules={{
-        min: {
-          value: min,
-          message: `Must be at least ${min}.`
-        },
-        max: {
-          value: max,
-          message: `Must be at most ${max}.`
-        }
-      }}
-    >
-      <FormFieldLabel>{label} (%)</FormFieldLabel>
-      <FormFieldInput>
-        <NumberInput className="w-16" />
-      </FormFieldInput>
-      <FormFieldErrors />
-    </FormField>
+    <>
+      <FormField
+        name={name}
+        rules={{
+          min: {
+            value: min,
+            message: `Must be at least ${min}.`
+          },
+          max: {
+            value: max,
+            message: `Must be at most ${max}.`
+          }
+        }}
+      >
+        <FormFieldLabel>{label} (%)</FormFieldLabel>
+        <FormFieldInput>
+          <NumberInput className="w-16" />
+        </FormFieldInput>
+        <FormFieldErrors />
+      </FormField>
+      <VerticalSpacer spacing={Spacing.S} />
+      <FormField name={commentsName}>
+        <FormFieldLabel>Comments</FormFieldLabel>
+        <FormFieldInput>
+          <MultilineTextInput rows={2} maxLength={50} />
+        </FormFieldInput>
+      </FormField>
+    </>
   );
 };
 
