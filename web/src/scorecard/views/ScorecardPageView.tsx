@@ -45,7 +45,7 @@ const ScorecardPageView: React.FC = () => {
           level: "success",
           timeout: 2000
         });
-        history.push("/");
+        history.push("/scorecard");
         break;
       case "back":
         if (pageNumber === 0) {

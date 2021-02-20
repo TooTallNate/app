@@ -43,12 +43,12 @@ const ScorecardSubmitView: React.FC = () => {
         });
         break;
       case "save":
-        history.push("/");
+        history.push("/scorecard");
         break;
       default:
         try {
           await submit();
-          history.push("/");
+          history.push("/scorecard");
         } catch {
           setMessage({
             level: "error",
