@@ -112,7 +112,7 @@ const ActivityMortalityView: React.FC = () => {
         level: "success",
         timeout: 2000
       });
-      history.push("/");
+      history.push("/pig-activity");
     } catch (e) {
       setMessage({
         message: e.toString(),
@@ -144,7 +144,7 @@ const ActivityMortalityView: React.FC = () => {
         level: "success",
         timeout: 2000
       });
-      history.push("/");
+      history.push("/pig-activity");
     } catch (e) {
       setMessage({
         message: e.toString(),
