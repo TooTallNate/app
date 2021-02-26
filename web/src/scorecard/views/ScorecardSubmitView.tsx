@@ -36,11 +36,6 @@ const ScorecardSubmitView: React.FC = () => {
     switch (submitAction.current) {
       case "back":
         history.push(match.path.replace("submit", `page/${formConfig.length}`));
-        addMessage({
-          level: "success",
-          message: "Scorecard posted successully!",
-          timeout: 3000
-        });
         break;
       case "save":
         history.push("/scorecard");
@@ -49,6 +44,11 @@ const ScorecardSubmitView: React.FC = () => {
         try {
           await submit();
           history.push("/scorecard");
+          addMessage({
+            level: "success",
+            message: "Scorecard posted successully!",
+            timeout: 3000
+          });
         } catch {
           setMessage({
             level: "error",
