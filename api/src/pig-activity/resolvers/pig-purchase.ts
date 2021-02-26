@@ -82,12 +82,18 @@ export const PigPurchaseMutations: MutationResolvers = {
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Document_No: getDocumentNumber("PURCH", user.name),
         Description: input.comments || " ",
-        Location_Code: job.Site,
+        Location_Code: standardJournalLines.Location_Code
+          ? standardJournalLines.Location_Code
+          : job.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
         Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center,
+        Shortcut_Dimension_1_Code: standardJournalLines.Shortcut_Dimension_1_Code
+          ? standardJournalLines.Shortcut_Dimension_1_Code
+          : job.Entity,
+        Shortcut_Dimension_2_Code: standardJournalLines.Shortcut_Dimension_2_Code
+          ? standardJournalLines.Shortcut_Dimension_2_Code
+          : job.Cost_Center,
         Meta: input.smallPigQuantity
       },
       dataSources.navItemJournal

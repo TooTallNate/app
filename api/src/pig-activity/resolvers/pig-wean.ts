@@ -79,7 +79,9 @@ export const PigWeanMutations: MutationResolvers = {
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Document_No: getDocumentNumber("WEAN", user.name),
         Description: input.comments,
-        Location_Code: job.Site,
+        Location_Code: standardJournal.Location_Code
+          ? standardJournal.Location_Code
+          : job.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
         Job_No: input.job,

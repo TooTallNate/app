@@ -99,12 +99,16 @@ export const PigMortalityMutations: MutationResolvers = {
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
             Document_No: getDocumentNumber("MORT", user.name),
             Description: input.comments,
-            Location_Code: job.Site,
+            Location_Code: line.Location_Code ? line.Location_Code : job.Site,
             Quantity: entry.quantity,
             Weight: entry.quantity * weight,
             Job_No: input.job,
-            Shortcut_Dimension_1_Code: job.Entity,
-            Shortcut_Dimension_2_Code: job.Cost_Center
+            Shortcut_Dimension_1_Code: line.Shortcut_Dimension_1_Code
+              ? line.Shortcut_Dimension_1_Code
+              : job.Entity,
+            Shortcut_Dimension_2_Code: line.Shortcut_Dimension_2_Code
+              ? line.Shortcut_Dimension_2_Code
+              : job.Cost_Center
           },
           dataSources.navItemJournal
         );

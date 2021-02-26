@@ -9,7 +9,6 @@ import UserSettingsModel, {
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
 import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
-import { template } from "@babel/core";
 
 export function postItemJournal(
   entry: Partial<NavItemJournalLine>,

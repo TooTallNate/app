@@ -41,14 +41,11 @@ export const PigGradeOffEvent: PigGradeOffEventResolvers = {
   code: journal => journal.Code,
   description: journal => journal.Description,
   async reasons(pigGradeOffEventTypes, _, { dataSources }) {
-    // fetching journal lines
     const lines = await dataSources.navItemJournal.getStandardJournalLines({
       code: pigGradeOffEventTypes.Code,
       template: NavItemJournalTemplate.GradeOff
     });
-    // extract reason codes
     let reasonCodes = lines.map(line => line.Reason_Code);
-    //fetch reason objects from nav
     return await dataSources.navConfig.getReasonCodeDescList(reasonCodes);
   }
 };
@@ -95,12 +92,16 @@ export const PigGradeOffMutations: MutationResolvers = {
             Journal_Batch_Name: NavItemJournalBatch.FarmApp,
             Document_No: getDocumentNumber("GRDOFF", user.name),
             Description: input.comments,
-            Location_Code: job.Site,
+            Location_Code: line.Location_Code ? line.Location_Code : job.Site,
             Quantity: entry.quantity,
             Weight: input.pigWeight * entry.quantity,
             Job_No: input.job,
-            Shortcut_Dimension_1_Code: job.Entity,
-            Shortcut_Dimension_2_Code: job.Cost_Center
+            Shortcut_Dimension_1_Code: line.Shortcut_Dimension_1_Code
+              ? line.Shortcut_Dimension_1_Code
+              : job.Entity,
+            Shortcut_Dimension_2_Code: line.Shortcut_Dimension_2_Code
+              ? line.Shortcut_Dimension_2_Code
+              : job.Cost_Center
           },
           dataSources.navItemJournal
         );

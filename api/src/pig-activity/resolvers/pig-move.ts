@@ -97,12 +97,18 @@ export const PigMoveMutations: MutationResolvers = {
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Document_No: docNo,
         Description: input.comments,
-        Location_Code: fromJob.Site,
+        Location_Code: standardJournalNeg.Location_Code
+          ? standardJournalNeg.Location_Code
+          : fromJob.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
         Job_No: input.fromJob,
-        Shortcut_Dimension_1_Code: fromJob.Entity,
-        Shortcut_Dimension_2_Code: fromJob.Cost_Center
+        Shortcut_Dimension_1_Code: standardJournalNeg.Shortcut_Dimension_1_Code
+          ? standardJournalNeg.Shortcut_Dimension_2_Code
+          : fromJob.Entity,
+        Shortcut_Dimension_2_Code: standardJournalNeg.Shortcut_Dimension_2_Code
+          ? standardJournalNeg.Shortcut_Dimension_2_Code
+          : fromJob.Cost_Center
       },
       dataSources.navItemJournal
     );
@@ -116,8 +122,12 @@ export const PigMoveMutations: MutationResolvers = {
         Quantity: input.quantity,
         Weight: input.totalWeight,
         Job_No: input.toJob,
-        Shortcut_Dimension_1_Code: toJob.Entity,
-        Shortcut_Dimension_2_Code: toJob.Cost_Center,
+        Shortcut_Dimension_1_Code: standardJournalPos.Shortcut_Dimension_1_Code
+          ? standardJournalPos.Shortcut_Dimension_2_Code
+          : fromJob.Entity,
+        Shortcut_Dimension_2_Code: standardJournalPos.Shortcut_Dimension_2_Code
+          ? standardJournalPos.Shortcut_Dimension_2_Code
+          : fromJob.Cost_Center,
         Meta: input.smallPigQuantity
       },
       dataSources.navItemJournal
