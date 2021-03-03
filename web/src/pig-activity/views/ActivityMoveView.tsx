@@ -26,9 +26,11 @@ import InventoryField from "../components/InventoryField";
 import TotalWeightField from "../components/TotalWeightField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   toJob: string;
   quantity: number;
   smallPigQuantity?: number;
@@ -59,6 +61,7 @@ const ActivityMoveView: React.FC = () => {
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
       if (pigMove.smallPigQuantity)
         setValue("smallPigQuantity", pigMove.smallPigQuantity);
+      if (pigMove.postingDate) setValue("postingDate", pigMove.postingDate);
       if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
       if (pigMove.comments) setValue("comments", pigMove.comments);
     }
@@ -178,6 +181,13 @@ const ActivityMoveView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

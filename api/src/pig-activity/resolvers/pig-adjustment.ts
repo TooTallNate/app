@@ -92,6 +92,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: Math.abs(input.quantity),
         Weight: input.totalWeight,
+        Posting_Date: input.postingDate,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: job.Entity,
         Shortcut_Dimension_2_Code: job.Cost_Center

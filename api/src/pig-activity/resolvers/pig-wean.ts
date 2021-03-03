@@ -82,6 +82,7 @@ export const PigWeanMutations: MutationResolvers = {
         Location_Code: job.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
+        Posting_Date: input.postingDate,
         Job_No: input.job,
         Meta: input.smallPigQuantity
       },

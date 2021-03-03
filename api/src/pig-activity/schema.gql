@@ -58,6 +58,7 @@ input PigOptionalQuantityInput {
 
 type PigAdjustment {
   event: PigAdjustmentEvent
+  postingDate: String
   job: Job!
   quantity: Int
   totalWeight: Float
@@ -66,6 +67,7 @@ type PigAdjustment {
 
 input PostPigAdjustmentInput {
   event: String!
+  postingDate: String!
   job: String!
   quantity: Int!
   totalWeight: Float!
@@ -74,6 +76,7 @@ input PostPigAdjustmentInput {
 
 input SavePigAdjustmentInput {
   event: String!
+  postingDate: String
   job: String!
   quantity: Int
   totalWeight: Float
@@ -89,6 +92,7 @@ type PigAdjustmentResult  {
 
 type PigGradeOff {
   event: PigGradeOffEvent
+  postingDate: String
   job: Job!
   quantities: [PigQuantity!]!
   pigWeight: Float
@@ -97,6 +101,7 @@ type PigGradeOff {
 
 input PostPigGradeOffInput {
   event: String!
+  postingDate: String!
   job: String!
   quantities: [PigQuantityInput!]!
   pigWeight: Float!
@@ -105,6 +110,7 @@ input PostPigGradeOffInput {
 
 input SavePigGradeOffInput {
   event: String
+  postingDate: String
   job: String!
   quantities: [PigOptionalQuantityInput!]
   pigWeight: Float
@@ -120,6 +126,7 @@ type PigGradeOffResult {
 
 type PigMortality {
   event: PigMortalityEvent
+  postingDate: String
   job: Job!
   quantities: [PigQuantity!]
   comments: String
@@ -127,6 +134,7 @@ type PigMortality {
 
 input PostPigMortalityInput {
   event: String!
+  postingDate: String!
   job: String!
   quantities: [PigQuantityInput!]
   comments: String
@@ -134,6 +142,7 @@ input PostPigMortalityInput {
 
 input SavePigMortalityInput {
   event: String
+  postingDate: String
   job: String!
   quantities: [PigOptionalQuantityInput!]
   comments: String
@@ -148,6 +157,7 @@ type PigMortalityResult {
 
 type PigMove {
   event: PigMoveEvent
+  postingDate: String
   fromJob: Job!
   toJob: Job
   quantity: Int
@@ -158,6 +168,7 @@ type PigMove {
 
 input PostPigMoveInput {
   event: String!
+  postingDate: String!
   fromJob: String!
   toJob: String!
   quantity: Int!
@@ -168,6 +179,7 @@ input PostPigMoveInput {
 
 input SavePigMoveInput {
   event: String
+  postingDate: String
   fromJob: String!
   toJob: String
   quantity: Int
@@ -185,6 +197,7 @@ type PigMoveResult {
 
 type PigPurchase {
   event: PigPurchaseEvent
+  postingDate: String
   job: Job!
   quantity: Int
   smallPigQuantity: Int
@@ -194,6 +207,7 @@ type PigPurchase {
 
 input PostPigPurchaseInput {
   event: String!
+  postingDate: String!
   job: String!
   quantity: Int!
   smallPigQuantity: Int
@@ -203,6 +217,7 @@ input PostPigPurchaseInput {
 
 input SavePigPurchaseInput {
   event: String!
+  postingDate: String
   job: String!
   quantity: Int
   smallPigQuantity: Int
@@ -218,6 +233,7 @@ type PigPurchaseResult {
 
 type PigWean {
   event: PigWeanEvent
+  postingDate: String
   job: Job!
   quantity: Int
   smallPigQuantity: Int
@@ -227,6 +243,7 @@ type PigWean {
 
 input PostPigWeanInput {
   event: String!
+  postingDate: String!
   job: String!
   quantity: Int!
   smallPigQuantity: Int
@@ -236,6 +253,7 @@ input PostPigWeanInput {
 
 input SavePigWeanInput {
   event: String
+  postingDate: String
   job: String!
   quantity: Int
   smallPigQuantity: Int

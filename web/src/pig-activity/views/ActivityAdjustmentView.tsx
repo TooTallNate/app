@@ -26,9 +26,11 @@ import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   quantity: number;
   totalWeight: number;
   comments?: string;
@@ -55,6 +57,9 @@ const ActivityAdjustmentView: React.FC = () => {
         setValue("event", pigAdjustmentEventTypes[0].code);
       } else if (pigAdjustment.event)
         setValue("event", pigAdjustment.event.code);
+      if (pigAdjustment.postingDate) {
+        setValue("postingDate", pigAdjustment.postingDate);
+      }
       if (pigAdjustment.quantity) {
         setValue("quantity", Math.abs(pigAdjustment.quantity));
         setQuantitySign(pigAdjustment.quantity >= 0 ? 1 : -1);
@@ -145,6 +150,13 @@ const ActivityAdjustmentView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

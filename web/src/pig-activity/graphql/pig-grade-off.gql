@@ -12,6 +12,7 @@ fragment PigGradeOffFragment on PigGradeOff {
     code
     quantity
   }
+  postingDate
   pigWeight
   comments
 }

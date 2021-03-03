@@ -102,6 +102,7 @@ export const PigMortalityMutations: MutationResolvers = {
             Location_Code: job.Site,
             Quantity: entry.quantity,
             Weight: entry.quantity * weight,
+            Posting_Date: input.postingDate,
             Job_No: input.job,
             Shortcut_Dimension_1_Code: job.Entity,
             Shortcut_Dimension_2_Code: job.Cost_Center
