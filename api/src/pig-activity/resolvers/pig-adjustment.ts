@@ -89,12 +89,18 @@ export const PigAdjustmentMutations: MutationResolvers = {
           input.quantity >= 0 ? NavEntryType.Positive : NavEntryType.Negative,
         Document_No: getDocumentNumber("ADJ", user.name),
         Description: input.comments,
-        Location_Code: job.Site,
+        Location_Code: standardJournal.Location_Code
+          ? standardJournal.Location_Code
+          : job.Site,
         Quantity: Math.abs(input.quantity),
         Weight: input.totalWeight,
         Job_No: input.job,
-        Shortcut_Dimension_1_Code: job.Entity,
-        Shortcut_Dimension_2_Code: job.Cost_Center
+        Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
+          ? standardJournal.Shortcut_Dimension_1_Code
+          : job.Entity,
+        Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
+          ? standardJournal.Shortcut_Dimension_2_Code
+          : job.Cost_Center
       },
       dataSources.navItemJournal
     );
