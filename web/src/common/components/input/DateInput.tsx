@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
+import { dateInputDate } from "../../../common/utils";
 import { useField } from "../form/FormField";
-
 interface DateInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {
   value?: string;
@@ -13,17 +13,14 @@ const formattedDate = (d: string) => {
   else return "";
 };
 
-const unFormattedDate = (d: string) => {
+const unFormattedDate = (d: string): string => {
   const [mm, dd, yyyy] = d.split("/");
   if (d && mm && dd && yyyy) return `${yyyy}-${mm}-${dd}`;
-  else return "";
+  else return dateInputDate(new Date());
 };
 
 const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
-  function DateInput(
-    { className, onChange, value, autoComplete = "off", ...props },
-    ref
-  ) {
+  function DateInput({ className, onChange, value, ...props }, ref) {
     const fieldConfig = useField();
 
     const labelId =
@@ -34,7 +31,6 @@ const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
       <input
         type="date"
         {...props}
-        autoComplete={autoComplete}
         aria-labelledby={labelId}
         name={name}
         value={unFormattedDate(value || "")}
