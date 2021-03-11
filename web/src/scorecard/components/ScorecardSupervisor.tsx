@@ -25,10 +25,6 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
   const name = `${id}.stringValue`;
   const { stringValue } = formState[id] || {};
 
-  // useEffect(() => {
-  //   setValue(name, stringValue);
-  // }, [stringValue, name, setValue]);
-
   useEffect(() => {
     setValue(
       name,
@@ -36,16 +32,24 @@ const ScorecardSupervisor: React.FC<ScorecardSupervisorProps> = ({
     );
   }, [job, name, setValue, stringValue]);
 
+  //comment
+
   return (
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput>
         <TypeaheadInput
-          items={((data && data.users) || []).map(user => ({
-            title:
-              user.name || (user.username || "").split("/")[1] || user.username,
-            value: user.username
-          }))}
+          items={((data && data.users) || [])
+            .filter(person => {
+              return person.name.length > 0;
+            })
+            .map(user => ({
+              title:
+                user.name ||
+                (user.username || "").split("/")[1] ||
+                user.username,
+              value: user.username
+            }))}
         />
       </FormFieldInput>
       <FormFieldErrors />
