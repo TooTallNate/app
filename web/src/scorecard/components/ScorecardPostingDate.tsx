@@ -6,6 +6,7 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import DateInput from "../../common/components/input/DateInput";
+import { dateInputDate, formInputDate } from "../../common/utils";
 import { FormValue, useScorecard } from "../contexts/scorecard";
 
 export interface ScorecardPostingDateProps {
@@ -25,7 +26,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(name, stringValue);
+    setValue(name, stringValue || formInputDate(dateInputDate(new Date())));
   }, [name, setValue, stringValue]);
 
   return (
@@ -42,7 +43,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
     >
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput>
-        <DateInput />
+        <DateInput separator="/" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

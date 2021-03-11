@@ -1,32 +1,32 @@
 import React, { useState } from "react";
-import View from "../../common/components/view/View";
-import Title from "../../common/components/view/ViewTitle";
-import ViewHeader from "../../common/components/view/ViewHeader";
-import NumberInput from "../../common/components/input/NumberInput";
-import { useParams, useHistory } from "react-router";
-import {
-  usePigAdjustmentQuery,
-  useSavePigAdjustmentMutation,
-  usePostPigAdjustmentMutation
-} from "../graphql";
-import { useFlash } from "../../common/contexts/flash";
+import { OnSubmit, useForm } from "react-hook-form";
+import { useHistory, useParams } from "react-router";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormSubmit from "../../common/components/form/FormSubmit";
-import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../../common/components/input/Button";
+import DateInput from "../../common/components/input/DateInput";
+import NumberInput from "../../common/components/input/NumberInput";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import BackButton from "../../common/components/view/BackButton";
+import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import Title from "../../common/components/view/ViewTitle";
+import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
-import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
-import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import DateInput from "../../common/components/input/DateInput";
+import TotalWeightField from "../components/TotalWeightField";
+import {
+  usePigAdjustmentQuery,
+  usePostPigAdjustmentMutation,
+  useSavePigAdjustmentMutation
+} from "../graphql";
 
 interface FormData {
   event: string;

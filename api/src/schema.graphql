@@ -142,7 +142,7 @@ type PigAdjustment {
 
 input PostPigAdjustmentInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   job: String!
   quantity: Int!
   totalWeight: Float!
@@ -175,7 +175,7 @@ type PigGradeOff {
 
 input PostPigGradeOffInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   job: String!
   quantities: [PigQuantityInput!]!
   pigWeight: Float!
@@ -207,7 +207,7 @@ type PigMortality {
 
 input PostPigMortalityInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   job: String!
   quantities: [PigQuantityInput!]
   comments: String
@@ -240,7 +240,7 @@ type PigMove {
 
 input PostPigMoveInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   fromJob: String!
   toJob: String!
   quantity: Int!
@@ -278,7 +278,7 @@ type PigPurchase {
 
 input PostPigPurchaseInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   job: String!
   quantity: Int!
   smallPigQuantity: Int
@@ -314,7 +314,7 @@ type PigWean {
 
 input PostPigWeanInput {
   event: String!
-  postingDate: String!
+  postingDate: String
   job: String!
   quantity: Int!
   smallPigQuantity: Int

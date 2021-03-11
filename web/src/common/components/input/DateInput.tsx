@@ -1,26 +1,27 @@
 import React, { ComponentProps } from "react";
-import { dateInputDate } from "../../../common/utils";
+import { dateInputDate, formInputDate } from "../../../common/utils";
 import { useField } from "../form/FormField";
+
 interface DateInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {
   value?: string;
+  separator?: string;
   onChange?(value: string): void;
 }
 
-const formattedDate = (d: string) => {
-  const [yyyy, mm, dd] = d.split("-");
-  if (d && mm && dd && yyyy) return `${mm}/${dd}/${yyyy}`;
-  else return "";
+const formattedDate = (d: string, separator: string) => {
+  if (!separator) return d;
+  return formInputDate(d) || dateInputDate(new Date());
 };
 
-const unFormattedDate = (d: string): string => {
-  const [mm, dd, yyyy] = d.split("/");
-  if (d && mm && dd && yyyy) return `${yyyy}-${mm}-${dd}`;
+const unFormattedDate = (d: string, separator: string): string => {
+  const [mm, dd, yyyy] = d.split(separator || "-");
+  if (d && mm && dd && yyyy) return separator ? `${yyyy}-${mm}-${dd}` : d;
   else return dateInputDate(new Date());
 };
 
 const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
-  function DateInput({ className, onChange, value, ...props }, ref) {
+  function DateInput({ className, onChange, value, separator, ...props }, ref) {
     const fieldConfig = useField();
 
     const labelId =
@@ -33,7 +34,7 @@ const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
         {...props}
         aria-labelledby={labelId}
         name={name}
-        value={unFormattedDate(value || "")}
+        value={unFormattedDate(value || "", separator || "")}
         min=""
         max=""
         className={`
@@ -44,7 +45,11 @@ const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
           ${className}
         `}
         onChange={e =>
-          onChange && onChange(formattedDate(e.target.value || "") || "")
+          onChange &&
+          onChange(
+            formattedDate(e.target.value, separator || "") ||
+              dateInputDate(new Date())
+          )
         }
         ref={ref}
       />
