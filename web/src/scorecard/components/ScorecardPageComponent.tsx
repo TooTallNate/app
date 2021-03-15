@@ -89,7 +89,7 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   SCORE10: isScoresComplete,
   HEALTH: isHealthInputComplete,
   WEEKSONFEED: isWeeksOnFeedComplete,
-  MORTALITY: true,
+  MORTALITY: isMortalityComplete,
   POSTDATE: isPostingDateComplete,
   TEMPTARGET: isTargetTempComplete,
   TEMP: isTempComplete,
