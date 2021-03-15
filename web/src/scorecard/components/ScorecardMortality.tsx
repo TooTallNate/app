@@ -28,7 +28,7 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    if (pigJob && pigJob.deadQuantity) {
+    if (pigJob && pigJob.deadQuantity && pigJob.deadQuantity > 0) {
       setValue(name, pigJob.deadQuantity);
     } else {
       setValue(name, "Unknown");
