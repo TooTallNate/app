@@ -52,6 +52,6 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   );
 };
 
-export const isMortalityComplete = true;
+export const isComplete = true;
 
 export default ScorecardMortality;
