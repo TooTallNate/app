@@ -52,6 +52,6 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   );
 };
 
-export const isComplete = ({ numericValue }: FormValue) => numericValue;
+export const isMortalityComplete = ({ numericValue }: FormValue) => numericValue;
 
 export default ScorecardMortality;
