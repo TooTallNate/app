@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-
-import FormField from "../../common/components/form/FormField";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { FormValue } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StaticValue from "../../common/components/input/StaticValue";
 import usePigJob from "./usePigJob";
 
@@ -31,7 +29,7 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
     if (pigJob && pigJob.deadQuantity && pigJob.deadQuantity > 0) {
       setValue(name, pigJob.deadQuantity);
     } else {
-      setValue(name, "Unknown");
+      setValue(name, null);
     }
   }, [pigJob, setValue, name]);
 
