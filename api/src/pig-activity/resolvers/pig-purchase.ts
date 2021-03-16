@@ -87,6 +87,7 @@ export const PigPurchaseMutations: MutationResolvers = {
           : job.Site,
         Quantity: input.quantity,
         Weight: input.totalWeight,
+        Posting_Date: input.postingDate,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: standardJournalLines.Shortcut_Dimension_1_Code
           ? standardJournalLines.Shortcut_Dimension_1_Code

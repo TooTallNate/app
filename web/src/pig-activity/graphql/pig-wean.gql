@@ -7,7 +7,8 @@ fragment PigWeanFragment on PigWean {
     description
     inventory
     deadQuantity
-  }  
+  }
+  postingDate
   quantity
   smallPigQuantity
   totalWeight

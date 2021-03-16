@@ -26,9 +26,11 @@ import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   quantity: number;
   smallPigQuantity?: number;
   totalWeight: number;
@@ -55,6 +57,7 @@ const ActivityWeanView: React.FC = () => {
       } else if (pigWean.event) setValue("event", pigWean.event.code);
       if (pigWean.quantity) setValue("quantity", pigWean.quantity);
       if (pigWean.totalWeight) setValue("totalWeight", pigWean.totalWeight);
+      if (pigWean.postingDate) setValue("postingDate", pigWean.postingDate);
       if (pigWean.comments) setValue("comments", pigWean.comments);
     }
   });
@@ -147,6 +150,13 @@ const ActivityWeanView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

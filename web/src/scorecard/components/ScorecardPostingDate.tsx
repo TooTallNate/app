@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
 import isMatch from "date-fns/isMatch";
-import format from "date-fns/format";
-
-import FormField from "../../common/components/form/FormField";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { FormValue, useScorecard } from "../contexts/scorecard";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import TextInput from "../../common/components/input/TextInput";
+import FormField from "../../common/components/form/FormField";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import DateInput from "../../common/components/input/DateInput";
+import { dateInputDate, formInputDate } from "../../common/utils";
+import { FormValue, useScorecard } from "../contexts/scorecard";
 
 export interface ScorecardPostingDateProps {
   label: string;
@@ -27,7 +26,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
   const { stringValue } = formState[id] || {};
 
   useEffect(() => {
-    setValue(name, stringValue ? stringValue : format(new Date(), DATEFORMAT));
+    setValue(name, stringValue || formInputDate(dateInputDate(new Date())));
   }, [name, setValue, stringValue]);
 
   return (
@@ -44,7 +43,7 @@ const ScorecardPostingDate: React.FC<ScorecardPostingDateProps> = ({
     >
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput>
-        <TextInput />
+        <DateInput separator="/" />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>

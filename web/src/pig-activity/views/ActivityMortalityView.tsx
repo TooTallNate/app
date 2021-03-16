@@ -27,9 +27,11 @@ import JobField from "../components/JobField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import StaticValue from "../../common/components/input/StaticValue";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   quantities: { [code: string]: number };
   comments?: string;
 }
@@ -57,6 +59,8 @@ const ActivityMortalityView: React.FC = () => {
       if (pigMortalityEventTypes.length === 1) {
         setValue("event", pigMortalityEventTypes[0].code);
       } else if (pigMortality.event) setValue("event", pigMortality.event.code);
+      if (pigMortality.postingDate)
+        setValue("postingDate", pigMortality.postingDate);
       setTimeout(() => {
         if (pigMortality.quantities)
           setValue(
@@ -88,6 +92,7 @@ const ActivityMortalityView: React.FC = () => {
 
   const onSubmit: OnSubmit<FormData> = async ({
     event,
+    postingDate,
     quantities,
     comments
   }) => {
@@ -96,6 +101,7 @@ const ActivityMortalityView: React.FC = () => {
         variables: {
           input: {
             event,
+            postingDate,
             quantities: Object.entries(quantities)
               .filter(([, quantity]) => !!quantity)
               .map(([code, quantity]) => ({
@@ -123,12 +129,13 @@ const ActivityMortalityView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { event, quantities, comments } = getValues({
+      const { event, quantities, postingDate, comments } = getValues({
         nest: true
       });
       await save({
         variables: {
           input: {
+            postingDate,
             event,
             quantities: Object.entries(quantities).map(([code, quantity]) => ({
               code,
@@ -180,6 +187,13 @@ const ActivityMortalityView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

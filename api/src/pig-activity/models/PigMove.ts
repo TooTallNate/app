@@ -5,6 +5,7 @@ export interface PigMoveDocument extends PigActivityDocument {
   fromJob: string;
   toJob: string;
   event: string;
+  postingDate: String;
   quantity: number;
   smallPigQuantity: number;
   totalWeight: number;
@@ -17,6 +18,7 @@ const PigMoveSchema = new Schema({
     required: true,
     unique: true
   },
+  postingDate: String,
   toJob: String,
   event: String,
   quantity: Number,

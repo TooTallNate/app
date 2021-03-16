@@ -16,6 +16,7 @@ const PigWeanSchema = new Schema({
     required: true,
     unique: true
   },
+  postingDate: String,
   event: String,
   quantity: Number,
   smallPigQuantity: Number,

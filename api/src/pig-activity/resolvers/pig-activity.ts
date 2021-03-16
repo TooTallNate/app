@@ -15,8 +15,8 @@ export function postItemJournal(
   dataSource: NavItemJournalDataSource
 ): Promise<NavItemJournalLine> {
   const date = navDate(new Date());
-  entry.Posting_Date = date;
   entry.Document_Date = date;
+  entry.Posting_Date = entry.Posting_Date || date;
   entry.Description = entry.Description || " ";
   return dataSource.postJournalLine(entry);
 }

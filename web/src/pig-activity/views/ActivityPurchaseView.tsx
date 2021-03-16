@@ -26,9 +26,11 @@ import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   quantity: number;
   smallPigQuantity?: number;
   totalWeight: number;
@@ -58,6 +60,10 @@ const ActivityPurchaseView: React.FC = () => {
         setValue("smallPigQuantity", pigPurchase.smallPigQuantity);
       if (pigPurchase.totalWeight)
         setValue("totalWeight", pigPurchase.totalWeight);
+      if (pigPurchase.postingDate)
+        setValue("postingDate", pigPurchase.postingDate);
+      if (pigPurchase.postingDate)
+        setValue("postingDate", pigPurchase.postingDate);
       if (pigPurchase.comments) setValue("comments", pigPurchase.comments);
     }
   });
@@ -149,6 +155,13 @@ const ActivityPurchaseView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
