@@ -36,7 +36,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
       const groupStartDate = new Date(pigJob.groupStartDate).getTime();
       const nowDate = new Date().getTime();
       const diff = (nowDate - groupStartDate) / MS_TO_DAYS_MULTIPLIER;
-      const value = Number(diff) / 7;
+      const value = Math.floor(Number(diff) / 7);
 
       // defaulting 0 value to 0.5 to accommodate NAV
       weeksOnFeed = value > 0 ? value : 0.5;
