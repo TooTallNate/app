@@ -26,7 +26,29 @@ query PigMortality($job: String!) {
     }
   }
   pigMortality(job: $job) {
-    ...PigMortalityFragment
+    event {
+    code
+  }
+  job {
+    number
+    description
+    inventory
+    deadQuantity
+    groupStartDate
+  }  
+  quantities {
+    code
+    quantity
+  }
+  postingDate
+  comments
+  }
+}
+
+query PigMortalityWeight($code: String!) {
+  resource(code: $code) {
+    number
+    unitPrice
   }
 }
 
