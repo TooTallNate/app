@@ -94,6 +94,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
           : job.Site,
         Quantity: Math.abs(input.quantity),
         Weight: input.totalWeight,
+        Posting_Date: input.postingDate,
         Job_No: input.job,
         Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
           ? standardJournal.Shortcut_Dimension_1_Code

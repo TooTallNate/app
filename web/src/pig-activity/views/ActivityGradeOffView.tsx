@@ -25,9 +25,11 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
+import DateInput from "../../common/components/input/DateInput";
 
 interface FormData {
   event: string;
+  postingDate: string;
   newQuantityReason?: string;
   quantities: { [code: string]: number };
   pigWeight: number;
@@ -57,6 +59,8 @@ const ActivityGradeOffView: React.FC = () => {
       } else if (pigGradeOff.event) setValue("event", pigGradeOff.event.code);
       if (pigGradeOff.pigWeight) setValue("pigWeight", pigGradeOff.pigWeight);
       if (pigGradeOff.comments) setValue("comments", pigGradeOff.comments);
+      if (pigGradeOff.postingDate)
+        setValue("postingDate", pigGradeOff.postingDate);
       setTimeout(() => {
         if (pigGradeOff.quantities) {
           setValue(
@@ -90,6 +94,7 @@ const ActivityGradeOffView: React.FC = () => {
     event,
     pigWeight,
     comments,
+    postingDate,
     quantities
   }) => {
     try {
@@ -99,6 +104,7 @@ const ActivityGradeOffView: React.FC = () => {
             event,
             pigWeight,
             comments,
+            postingDate,
             quantities: Object.entries(quantities)
               .filter(([, quantity]) => !!quantity)
               .map(([code, quantity]) => ({
@@ -125,12 +131,15 @@ const ActivityGradeOffView: React.FC = () => {
 
   const onSave = async () => {
     try {
-      const { event, pigWeight, comments, quantities } = getValues({
-        nest: true
-      });
+      const { event, postingDate, pigWeight, comments, quantities } = getValues(
+        {
+          nest: true
+        }
+      );
       await save({
         variables: {
           input: {
+            postingDate,
             event,
             pigWeight,
             comments,
@@ -183,6 +192,13 @@ const ActivityGradeOffView: React.FC = () => {
                     title: event.description
                   }))}
                 />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

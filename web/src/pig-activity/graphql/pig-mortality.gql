@@ -12,6 +12,7 @@ fragment PigMortalityFragment on PigMortality {
     code
     quantity
   }
+  postingDate
   comments
 }
 

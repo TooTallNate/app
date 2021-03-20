@@ -4,6 +4,7 @@ import { Schema } from "mongoose";
 export interface PigPurchaseDocument extends PigActivityDocument {
   job: string;
   event: string;
+  postingDate: String;
   quantity: number;
   smallPigQuantity: number;
   totalWeight: number;
@@ -16,6 +17,7 @@ const PigPurchaseSchema = new Schema({
     required: true,
     unique: true
   },
+  postingDate: String,
   event: String,
   quantity: Number,
   smallPigQuantity: Number,

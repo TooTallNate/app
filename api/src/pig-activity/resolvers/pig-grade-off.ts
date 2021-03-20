@@ -95,6 +95,7 @@ export const PigGradeOffMutations: MutationResolvers = {
             Location_Code: line.Location_Code ? line.Location_Code : job.Site,
             Quantity: entry.quantity,
             Weight: input.pigWeight * entry.quantity,
+            Posting_Date: input.postingDate,
             Job_No: input.job,
             Shortcut_Dimension_1_Code: line.Shortcut_Dimension_1_Code
               ? line.Shortcut_Dimension_1_Code

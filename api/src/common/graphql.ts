@@ -232,6 +232,7 @@ export type PigOptionalQuantityInput = {
 export type PigAdjustment = {
   __typename?: "PigAdjustment";
   event?: Maybe<PigAdjustmentEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
@@ -240,6 +241,7 @@ export type PigAdjustment = {
 
 export type PostPigAdjustmentInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
@@ -248,6 +250,7 @@ export type PostPigAdjustmentInput = {
 
 export type SavePigAdjustmentInput = {
   event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
@@ -264,6 +267,7 @@ export type PigAdjustmentResult = {
 export type PigGradeOff = {
   __typename?: "PigGradeOff";
   event?: Maybe<PigGradeOffEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -272,6 +276,7 @@ export type PigGradeOff = {
 
 export type PostPigGradeOffInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -280,6 +285,7 @@ export type PostPigGradeOffInput = {
 
 export type SavePigGradeOffInput = {
   event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
@@ -296,6 +302,7 @@ export type PigGradeOffResult = {
 export type PigMortality = {
   __typename?: "PigMortality";
   event?: Maybe<PigMortalityEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantities?: Maybe<Array<PigQuantity>>;
   comments?: Maybe<Scalars["String"]>;
@@ -303,6 +310,7 @@ export type PigMortality = {
 
 export type PostPigMortalityInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   job: Scalars["String"];
   quantities?: Maybe<Array<PigQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
@@ -310,6 +318,7 @@ export type PostPigMortalityInput = {
 
 export type SavePigMortalityInput = {
   event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
@@ -325,6 +334,7 @@ export type PigMortalityResult = {
 export type PigMove = {
   __typename?: "PigMove";
   event?: Maybe<PigMoveEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   fromJob: Job;
   toJob?: Maybe<Job>;
   quantity?: Maybe<Scalars["Int"]>;
@@ -335,6 +345,7 @@ export type PigMove = {
 
 export type PostPigMoveInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   fromJob: Scalars["String"];
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
@@ -345,6 +356,7 @@ export type PostPigMoveInput = {
 
 export type SavePigMoveInput = {
   event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
   fromJob: Scalars["String"];
   toJob?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Int"]>;
@@ -363,6 +375,7 @@ export type PigMoveResult = {
 export type PigPurchase = {
   __typename?: "PigPurchase";
   event?: Maybe<PigPurchaseEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -372,6 +385,7 @@ export type PigPurchase = {
 
 export type PostPigPurchaseInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -381,6 +395,7 @@ export type PostPigPurchaseInput = {
 
 export type SavePigPurchaseInput = {
   event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -398,6 +413,7 @@ export type PigPurchaseResult = {
 export type PigWean = {
   __typename?: "PigWean";
   event?: Maybe<PigWeanEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -407,6 +423,7 @@ export type PigWean = {
 
 export type PostPigWeanInput = {
   event: Scalars["String"];
+  postingDate: Scalars["String"];
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -416,6 +433,7 @@ export type PostPigWeanInput = {
 
 export type SavePigWeanInput = {
   event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -1233,6 +1251,11 @@ export type PigAdjustmentResolvers<
     ParentType,
     ContextType
   >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   totalWeight?: Resolver<
@@ -1268,6 +1291,11 @@ export type PigGradeOffResolvers<
 > = ResolversObject<{
   event?: Resolver<
     Maybe<ResolversTypes["PigGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -1309,6 +1337,11 @@ export type PigMortalityResolvers<
     ParentType,
     ContextType
   >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantities?: Resolver<
     Maybe<Array<ResolversTypes["PigQuantity"]>>,
@@ -1343,6 +1376,11 @@ export type PigMoveResolvers<
 > = ResolversObject<{
   event?: Resolver<
     Maybe<ResolversTypes["PigMoveEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -1386,6 +1424,11 @@ export type PigPurchaseResolvers<
     ParentType,
     ContextType
   >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   smallPigQuantity?: Resolver<
@@ -1426,6 +1469,11 @@ export type PigWeanResolvers<
 > = ResolversObject<{
   event?: Resolver<
     Maybe<ResolversTypes["PigWeanEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;

@@ -11,6 +11,7 @@ fragment PigMoveFragment on PigMove {
   toJob {
     number
   }
+  postingDate
   quantity
   smallPigQuantity
   totalWeight
