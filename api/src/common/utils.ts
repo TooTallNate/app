@@ -19,7 +19,7 @@ export function parseNavDate(dateStr: string) {
   );
 }
 
-export function getDateOfISOWeek(w: number, y: number) {
+export function getDateFromWeekNumber(w: number, y: number) {
   var simple = new Date(y, 0, 1 + (w - 1) * 7);
   var dow = simple.getDay();
   var ISOweekStart = simple;

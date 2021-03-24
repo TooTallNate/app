@@ -8,7 +8,7 @@ import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import {
   getDocumentNumber,
   parseNavDate,
-  getDateOfISOWeek
+  getDateFromWeekNumber
 } from "../../common/utils";
 import PigMortalityModel from "../models/PigMortality";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
@@ -91,7 +91,7 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const jobYear = Number("20" + job.No.substring(0, 2));
     const jobWeek = Number(job.No.substring(2, 4));
-    const date = getDateOfISOWeek(jobWeek, jobYear);
+    const date = getDateFromWeekNumber(jobWeek, jobYear);
     const startDate = lastDayOfWeek(date, { weekStartsOn: 2 });
     const groupStartDate = format(startDate, "yyyy-MM-dd");
     const diff = formatDistanceToNowStrict(new Date(groupStartDate), {

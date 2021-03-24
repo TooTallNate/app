@@ -7,7 +7,7 @@ import {
   ItemResolvers,
   QueryResolvers
 } from "./graphql";
-import { getDateOfISOWeek } from "../common/utils";
+import { getDateFromWeekNumber } from "../common/utils";
 import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import { format } from "date-fns";
 
@@ -31,7 +31,7 @@ const Job: JobResolvers = {
   groupStartDate: job => {
     const year = Number("20" + job.No.substring(0, 2));
     const week = Number(job.No.substring(2, 4));
-    const date = getDateOfISOWeek(week, year);
+    const date = getDateFromWeekNumber(week, year);
     const startDate = lastDayOfWeek(date, { weekStartsOn: 2 });
     const groupStartDate = format(startDate, DATE_FORMAT);
     return groupStartDate;
