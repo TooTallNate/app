@@ -778,40 +778,7 @@ export type PigMortalityQuery = { __typename?: "Query" } & {
         >;
       }
   >;
-  pigMortality: { __typename?: "PigMortality" } & Pick<
-    PigMortality,
-    "postingDate" | "comments"
-  > & {
-      event?: Maybe<
-        { __typename?: "PigMortalityEvent" } & Pick<PigMortalityEvent, "code">
-      >;
-      job: { __typename?: "Job" } & Pick<
-        Job,
-        | "number"
-        | "description"
-        | "inventory"
-        | "deadQuantity"
-        | "groupStartDate"
-      >;
-      quantities?: Maybe<
-        Array<
-          { __typename?: "PigQuantity" } & Pick<
-            PigQuantity,
-            "code" | "quantity"
-          >
-        >
-      >;
-    };
-};
-
-export type PigMortalityWeightQueryVariables = {
-  code: Scalars["String"];
-};
-
-export type PigMortalityWeightQuery = { __typename?: "Query" } & {
-  resource?: Maybe<
-    { __typename?: "Resource" } & Pick<Resource, "number" | "unitPrice">
-  >;
+  pigMortality: { __typename?: "PigMortality" } & PigMortalityFragmentFragment;
 };
 
 export type SavePigMortalityMutationVariables = {
@@ -1533,24 +1500,10 @@ export const PigMortalityDocument = gql`
       }
     }
     pigMortality(job: $job) {
-      event {
-        code
-      }
-      job {
-        number
-        description
-        inventory
-        deadQuantity
-        groupStartDate
-      }
-      quantities {
-        code
-        quantity
-      }
-      postingDate
-      comments
+      ...PigMortalityFragment
     }
   }
+  ${PigMortalityFragmentFragmentDoc}
 `;
 
 /**
@@ -1600,63 +1553,6 @@ export type PigMortalityLazyQueryHookResult = ReturnType<
 export type PigMortalityQueryResult = Apollo.QueryResult<
   PigMortalityQuery,
   PigMortalityQueryVariables
->;
-export const PigMortalityWeightDocument = gql`
-  query PigMortalityWeight($code: String!) {
-    resource(code: $code) {
-      number
-      unitPrice
-    }
-  }
-`;
-
-/**
- * __usePigMortalityWeightQuery__
- *
- * To run a query within a React component, call `usePigMortalityWeightQuery` and pass it any options that fit your needs.
- * When your component renders, `usePigMortalityWeightQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePigMortalityWeightQuery({
- *   variables: {
- *      code: // value for 'code'
- *   },
- * });
- */
-export function usePigMortalityWeightQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    PigMortalityWeightQuery,
-    PigMortalityWeightQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    PigMortalityWeightQuery,
-    PigMortalityWeightQueryVariables
-  >(PigMortalityWeightDocument, baseOptions);
-}
-export function usePigMortalityWeightLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    PigMortalityWeightQuery,
-    PigMortalityWeightQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    PigMortalityWeightQuery,
-    PigMortalityWeightQueryVariables
-  >(PigMortalityWeightDocument, baseOptions);
-}
-export type PigMortalityWeightQueryHookResult = ReturnType<
-  typeof usePigMortalityWeightQuery
->;
-export type PigMortalityWeightLazyQueryHookResult = ReturnType<
-  typeof usePigMortalityWeightLazyQuery
->;
-export type PigMortalityWeightQueryResult = Apollo.QueryResult<
-  PigMortalityWeightQuery,
-  PigMortalityWeightQueryVariables
 >;
 export const SavePigMortalityDocument = gql`
   mutation SavePigMortality($input: SavePigMortalityInput!) {

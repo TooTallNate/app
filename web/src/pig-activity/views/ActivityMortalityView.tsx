@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import {} from "../../common/components/styled";
+import React from "react";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -8,8 +7,7 @@ import { useParams, useHistory } from "react-router";
 import {
   usePigMortalityQuery,
   useSavePigMortalityMutation,
-  usePostPigMortalityMutation,
-  usePigMortalityWeightLazyQuery
+  usePostPigMortalityMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -29,7 +27,6 @@ import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import DateInput from "../../common/components/input/DateInput";
-import { formatDistanceToNowStrict } from "date-fns";
 
 interface FormData {
   event: string;
@@ -46,10 +43,7 @@ interface ViewParams {
 const ActivityMortalityView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-  const [
-    loadResource,
-    { data: resourceData }
-  ] = usePigMortalityWeightLazyQuery();
+
   const formContext = useForm<FormData>({
     defaultValues: {
       quantities: {}
@@ -79,35 +73,6 @@ const ActivityMortalityView: React.FC = () => {
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
     }
   });
-
-  useEffect(() => {
-    if (
-      data &&
-      data.pigMortality &&
-      data.pigMortality.job &&
-      data.pigMortality.job.groupStartDate
-    ) {
-      const groupStartDate = new Date(data.pigMortality.job.groupStartDate);
-      const diff = formatDistanceToNowStrict(groupStartDate, {
-        unit: "day"
-      }).split(" ")[0];
-      const tempWeeks = Math.min(23, Math.floor(Math.ceil(Number(diff)) / 7));
-      console.log(`Week number = ${tempWeeks}`);
-      const resourceNo = `${tempWeeks}MORTALITY`;
-      loadResource({ variables: { code: resourceNo } });
-    }
-  }, [data, loadResource]);
-
-  useEffect(() => {
-    if (
-      resourceData &&
-      resourceData.resource &&
-      resourceData.resource.unitPrice
-    ) {
-      console.log(resourceData.resource.unitPrice);
-    }
-  }, [resourceData, data]);
-
   const [post] = usePostPigMortalityMutation();
   const [save] = useSavePigMortalityMutation();
   const { setMessage } = useFlash();

@@ -5,10 +5,15 @@ import {
   PigMortalityEventResolvers
 } from "../../common/graphql";
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
-import { getDocumentNumber, parseNavDate } from "../../common/utils";
+import {
+  getDocumentNumber,
+  parseNavDate,
+  getDateOfISOWeek
+} from "../../common/utils";
 import PigMortalityModel from "../models/PigMortality";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, formatDistanceToNowStrict, format } from "date-fns";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { dataSources }) {
@@ -83,10 +88,19 @@ export const PigMortalityMutations: MutationResolvers = {
     }
 
     const job = await dataSources.navJob.getByNo(input.job);
-    const startWeight = 0.8 * (job.Start_Weight / job.Start_Quantity);
-    const growthFactor = job.Barn_Type === "Nursery" ? 0.5 : 1.5;
-    const barnDays = differenceInDays(new Date(), parseNavDate(job.Start_Date));
-    const weight = startWeight + growthFactor * barnDays;
+
+    const jobYear = Number("20" + job.No.substring(0, 2));
+    const jobWeek = Number(job.No.substring(2, 4));
+    const date = getDateOfISOWeek(jobWeek, jobYear);
+    const startDate = lastDayOfWeek(date, { weekStartsOn: 2 });
+    const groupStartDate = format(startDate, "yyyy-MM-dd");
+    const diff = formatDistanceToNowStrict(new Date(groupStartDate), {
+      unit: "day"
+    }).split(" ")[0];
+    const tempWeeks = Math.min(23, Math.floor(Math.ceil(Number(diff)) / 7));
+    const resourceNo = `${tempWeeks}MORTALITY`;
+    const resource = await dataSources.navResource.getByCode(resourceNo);
+    const weight = Number(resource.Unit_Price);
 
     for (const entry of input.quantities) {
       const line = standardJournalLines.find(
