@@ -40,7 +40,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
       // defaulting 0 value to 0.5 to accommodate NAV
       weeksOnFeed = value > 0 ? value : 0.5;
     } else {
-      weeksOnFeed = undefined;
+      weeksOnFeed = 0.5;
     }
     setValue(name, weeksOnFeed);
   }, [pigJob, setValue, name]);
