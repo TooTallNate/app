@@ -68,7 +68,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       return <ScorecardMortality {...props} />;
     case "POSTDATE":
       return <ScorecardPostingDate {...props} />;
-    case "TEMPTARGET":
+    case "TARGETTEMP":
       return <ScorecardTargetTemp {...props} />;
     case "TEMP":
       return <ScorecardTempInput {...props} />;
@@ -91,7 +91,7 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   WEEKSONFEED: isWeeksOnFeedComplete,
   MORTALITY: isMortalityComplete,
   POSTDATE: isPostingDateComplete,
-  TEMPTARGET: isTargetTempComplete,
+  TARGETTEMP: isTargetTempComplete,
   TEMP: isTempComplete,
   PASSFAIL: isPassFailComplete
 };

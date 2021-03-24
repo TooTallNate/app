@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-
-import FormField from "../../common/components/form/FormField";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { FormValue } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StaticValue from "../../common/components/input/StaticValue";
 import usePigJob from "./usePigJob";
 
@@ -28,10 +26,10 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    if (pigJob && pigJob.deadQuantity) {
+    if (pigJob && pigJob.deadQuantity && pigJob.deadQuantity > 0) {
       setValue(name, pigJob.deadQuantity);
     } else {
-      setValue(name, "Unknown");
+      setValue(name, null);
     }
   }, [pigJob, setValue, name]);
 
@@ -43,9 +41,7 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
       <FormFieldInput noRegister>
         <StaticValue
           value={
-            typeof deadQuantity === "number"
-              ? `${deadQuantity} deads`
-              : "Unknown"
+            typeof deadQuantity === "number" ? `${deadQuantity} deads` : "None"
           }
         />
       </FormFieldInput>
@@ -54,7 +50,6 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   );
 };
 
-export const isComplete = ({ numericValue }: FormValue) =>
-  typeof numericValue === "number";
+export const isComplete = () => true;
 
 export default ScorecardMortality;
