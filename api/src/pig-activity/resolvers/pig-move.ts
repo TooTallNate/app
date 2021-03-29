@@ -105,7 +105,7 @@ export const PigMoveMutations: MutationResolvers = {
         Posting_Date: input.postingDate,
         Job_No: input.fromJob,
         Shortcut_Dimension_1_Code: standardJournalNeg.Shortcut_Dimension_1_Code
-          ? standardJournalNeg.Shortcut_Dimension_2_Code
+          ? standardJournalNeg.Shortcut_Dimension_1_Code
           : fromJob.Entity,
         Shortcut_Dimension_2_Code: standardJournalNeg.Shortcut_Dimension_2_Code
           ? standardJournalNeg.Shortcut_Dimension_2_Code
@@ -125,7 +125,7 @@ export const PigMoveMutations: MutationResolvers = {
         Posting_Date: input.postingDate,
         Job_No: input.toJob,
         Shortcut_Dimension_1_Code: standardJournalPos.Shortcut_Dimension_1_Code
-          ? standardJournalPos.Shortcut_Dimension_2_Code
+          ? standardJournalPos.Shortcut_Dimension_1_Code
           : fromJob.Entity,
         Shortcut_Dimension_2_Code: standardJournalPos.Shortcut_Dimension_2_Code
           ? standardJournalPos.Shortcut_Dimension_2_Code

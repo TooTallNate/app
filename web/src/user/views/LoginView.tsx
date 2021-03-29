@@ -52,7 +52,7 @@ const LoginView: React.FC = () => {
         });
       } else {
         addMessage({
-          message: "An unknown error occred.",
+          message: "An unknown error occurred.",
           level: "error"
         });
       }
