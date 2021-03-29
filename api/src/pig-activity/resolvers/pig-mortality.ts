@@ -1,19 +1,15 @@
+import { format, formatDistanceToNowStrict } from "date-fns";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import {
   MutationResolvers,
-  QueryResolvers,
+  PigMortalityEventResolvers,
   PigMortalityResolvers,
-  PigMortalityEventResolvers
+  QueryResolvers
 } from "../../common/graphql";
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
-import {
-  getDocumentNumber,
-  parseNavDate,
-  getDateFromWeekNumber
-} from "../../common/utils";
+import { getDateFromWeekNumber, getDocumentNumber } from "../../common/utils";
 import PigMortalityModel from "../models/PigMortality";
 import { postItemJournal, updateUserSettings } from "./pig-activity";
-import { differenceInDays, formatDistanceToNowStrict, format } from "date-fns";
-import lastDayOfWeek from "date-fns/lastDayOfWeek";
 
 export const PigMortality: PigMortalityResolvers = {
   job(pigMortality, _, { dataSources }) {
@@ -129,6 +125,7 @@ export const PigMortalityMutations: MutationResolvers = {
         );
       }
     }
+
     const userSettings = await updateUserSettings({
       username: user.username,
       pigJob: input.job,

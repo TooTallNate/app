@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
-import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
-
-import FormField from "../../common/components/form/FormField";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import { FormValue } from "../contexts/scorecard";
 import { useFormContext } from "react-hook-form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StaticValue from "../../common/components/input/StaticValue";
+import { FormValue } from "../contexts/scorecard";
 import usePigJob from "./usePigJob";
 
 export interface ScorecardWeeksOnFeedProps {
   label: string;
   id: string;
 }
+
+const MS_TO_DAYS_MULTIPLIER = 1000 * 60 * 60 * 24;
 
 const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   label,
@@ -30,28 +30,29 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    let weeksOnFeed;
+    let weeksOnFeed: number | undefined;
     if (pigJob && pigJob.groupStartDate) {
-      const groupStartDate = new Date(pigJob.groupStartDate);
-      const diff = formatDistanceToNowStrict(groupStartDate, {
-        unit: "day"
-      }).split(" ")[0];
-      weeksOnFeed = Math.floor(Math.ceil(Number(diff)) / 7);
+      const groupStartDate = new Date(pigJob.groupStartDate).getTime();
+      const nowDate = new Date().getTime();
+      const diff = (nowDate - groupStartDate) / MS_TO_DAYS_MULTIPLIER;
+      const value = Math.floor(Number(diff) / 7);
+
+      // defaulting 0 value to 0.5 to accommodate NAV
+      weeksOnFeed = value > 0 ? value : 0.5;
     } else {
-      weeksOnFeed = undefined;
+      weeksOnFeed = 0.5;
     }
     setValue(name, weeksOnFeed);
   }, [pigJob, setValue, name]);
+
+  const displayValue = (v: number | undefined): number =>
+    typeof v === "number" && v >= 1 ? v : 0;
 
   return (
     <FormField name={name}>
       <FormFieldLabel>{label}</FormFieldLabel>
       <FormFieldInput noRegister>
-        <StaticValue
-          value={
-            typeof weeksOnFeed === "number" ? `${weeksOnFeed} weeks` : "Unknown"
-          }
-        />
+        <StaticValue value={displayValue(weeksOnFeed)} />
       </FormFieldInput>
       <FormFieldErrors />
     </FormField>
