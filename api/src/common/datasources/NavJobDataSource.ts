@@ -21,7 +21,9 @@ export default class PigJobNavDataSource extends NavDataSource {
   }
 
   getByNo(no: string): Promise<NavJob | undefined> {
-    return this.get(`/Jobs('${no}')`);
+    const resp = this.get(`/Jobs('${no}')`).catch(() => null);
+
+    return resp;
   }
 
   getAll({
