@@ -241,7 +241,7 @@ export type PigAdjustment = {
 
 export type PostPigAdjustmentInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
@@ -276,7 +276,7 @@ export type PigGradeOff = {
 
 export type PostPigGradeOffInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
@@ -310,7 +310,7 @@ export type PigMortality = {
 
 export type PostPigMortalityInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantities?: Maybe<Array<PigQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
@@ -345,7 +345,7 @@ export type PigMove = {
 
 export type PostPigMoveInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   fromJob: Scalars["String"];
   toJob: Scalars["String"];
   quantity: Scalars["Int"];
@@ -385,7 +385,7 @@ export type PigPurchase = {
 
 export type PostPigPurchaseInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;
@@ -423,7 +423,7 @@ export type PigWean = {
 
 export type PostPigWeanInput = {
   event: Scalars["String"];
-  postingDate: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   smallPigQuantity?: Maybe<Scalars["Int"]>;

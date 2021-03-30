@@ -1,5 +1,4 @@
 import React from "react";
-import {} from "../../common/components/styled";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
