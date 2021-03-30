@@ -93,7 +93,7 @@ export const PigMortalityMutations: MutationResolvers = {
     const diff = formatDistanceToNowStrict(new Date(groupStartDate), {
       unit: "day"
     }).split(" ")[0];
-    const tempWeeks = Math.min(23, Math.floor(Math.ceil(Number(diff)) / 7));
+    const tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
     const resourceNo = `${tempWeeks}MORTALITY`;
     const resource = await dataSources.navResource.getByCode(resourceNo);
     const weight = Number(resource.Unit_Price);
