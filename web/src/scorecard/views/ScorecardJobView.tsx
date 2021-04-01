@@ -40,7 +40,7 @@ const ScorecardJobView: React.FC = () => {
   return (
     <View>
       <ViewHeader>
-        <Title>Job Selection</Title>
+        <Title>Group Selection</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
         {data && (
