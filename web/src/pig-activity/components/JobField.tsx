@@ -13,10 +13,7 @@ export interface JobFieldProps {
 const JobField: React.FC<JobFieldProps> = ({ number, description }) => {
   return (
     <FormField name="job">
-      <FormFieldLabel>Job</FormFieldLabel>
-      <FormFieldInput noRegister>
-        <StaticValue value={`${number} ${description}`} />
-      </FormFieldInput>
+      <FormFieldLabel>{`${number} ${description}`}</FormFieldLabel>
       <FormFieldErrors />
     </FormField>
   );

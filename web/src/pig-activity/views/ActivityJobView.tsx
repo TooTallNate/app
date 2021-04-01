@@ -50,7 +50,7 @@ const ActivityJobView: React.FC = () => {
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Job Selection</Title>
+        <Title>Group Selection</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
         {data && (
@@ -61,9 +61,9 @@ const ActivityJobView: React.FC = () => {
                 required: "The job field is required."
               }}
             >
-              <FormFieldLabel>
-                {params.activity === "move" ? "From Job" : "Job"}
-              </FormFieldLabel>
+              {params.activity === "move" ? (
+                <FormFieldLabel>From Group</FormFieldLabel>
+              ) : null}
               <FormFieldInput>
                 <TypeaheadInput
                   sort="desc"

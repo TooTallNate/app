@@ -178,6 +178,10 @@ const ActivityGradeOffView: React.FC = () => {
               number={data.pigGradeOff.job.number}
               description={data.pigGradeOff.job.description}
             />
+            <InventoryField
+              inventory={data.pigGradeOff.job.inventory || 0}
+              deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
+            />
             <FormField
               name="event"
               rules={{
@@ -202,10 +206,6 @@ const ActivityGradeOffView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <InventoryField
-              inventory={data.pigGradeOff.job.inventory || 0}
-              deadQuantity={data.pigGradeOff.job.deadQuantity || 0}
-            />
             {eventConfig &&
               eventConfig.reasons.map(reason => {
                 return (

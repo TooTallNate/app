@@ -141,6 +141,10 @@ const ActivityPurchaseView: React.FC = () => {
               number={data.pigPurchase.job.number}
               description={data.pigPurchase.job.description}
             />
+            <InventoryField
+              inventory={data.pigPurchase.job.inventory || 0}
+              deadQuantity={data.pigPurchase.job.deadQuantity || 0}
+            />
             <FormField
               name="event"
               rules={{
@@ -165,10 +169,6 @@ const ActivityPurchaseView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <InventoryField
-              inventory={data.pigPurchase.job.inventory || 0}
-              deadQuantity={data.pigPurchase.job.deadQuantity || 0}
-            />
             <QuantityAndSmallsField />
             <TotalWeightField />
             <CommentsField />

@@ -136,6 +136,10 @@ const ActivityAdjustmentView: React.FC = () => {
               number={data.pigAdjustment.job.number}
               description={data.pigAdjustment.job.description}
             />
+            <InventoryField
+              inventory={data.pigAdjustment.job.inventory || 0}
+              deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
+            />
             <FormField
               name="event"
               rules={{
@@ -160,10 +164,6 @@ const ActivityAdjustmentView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <InventoryField
-              inventory={data.pigAdjustment.job.inventory || 0}
-              deadQuantity={data.pigAdjustment.job.deadQuantity || 0}
-            />
             <FormField
               name="quantity"
               rules={{

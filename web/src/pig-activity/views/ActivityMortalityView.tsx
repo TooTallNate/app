@@ -172,6 +172,10 @@ const ActivityMortalityView: React.FC = () => {
               number={data.pigMortality.job.number}
               description={data.pigMortality.job.description}
             />
+            <InventoryField
+              inventory={data.pigMortality.job.inventory || 0}
+              deadQuantity={data.pigMortality.job.deadQuantity || 0}
+            />
             <FormField
               name="event"
               rules={{
@@ -196,10 +200,6 @@ const ActivityMortalityView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <InventoryField
-              inventory={data.pigMortality.job.inventory || 0}
-              deadQuantity={data.pigMortality.job.deadQuantity || 0}
-            />
             {eventConfig &&
               eventConfig.reasons.map(reason => {
                 return (

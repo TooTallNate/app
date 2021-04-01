@@ -136,6 +136,10 @@ const ActivityWeanView: React.FC = () => {
               number={data.pigWean.job.number}
               description={data.pigWean.job.description}
             />
+            <InventoryField
+              inventory={data.pigWean.job.inventory || 0}
+              deadQuantity={data.pigWean.job.deadQuantity || 0}
+            />
             <FormField
               name="event"
               rules={{
@@ -160,10 +164,6 @@ const ActivityWeanView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <InventoryField
-              inventory={data.pigWean.job.inventory || 0}
-              deadQuantity={data.pigWean.job.deadQuantity || 0}
-            />
             <QuantityAndSmallsField />
             <TotalWeightField />
             <CommentsField />
