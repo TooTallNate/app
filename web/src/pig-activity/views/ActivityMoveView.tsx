@@ -138,7 +138,7 @@ const ActivityMoveView: React.FC = () => {
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="fromJob">
-              <FormFieldLabel>From Job</FormFieldLabel>
+              <FormFieldLabel>From Group</FormFieldLabel>
               <FormFieldInput noRegister>
                 <StaticValue
                   value={`${data.pigMove.fromJob.number} ${data.pigMove.fromJob.description}`}
@@ -155,7 +155,7 @@ const ActivityMoveView: React.FC = () => {
               name="toJob"
               rules={{ required: "The to job field is required." }}
             >
-              <FormFieldLabel>To Job</FormFieldLabel>
+              <FormFieldLabel>To Group</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   sort="desc"
