@@ -18,6 +18,7 @@ generates:
         User: "./nav#NavUser"
         Job: "./nav#NavJob"
         Item: "./nav#NavItem"
+        ItemJournalTemplate: "./nav#ItemJournalTemplateObject"
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
@@ -79,4 +80,3 @@ generates:
     hooks:
       afterOneFileWrite:
         - eslint --fix
-

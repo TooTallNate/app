@@ -55,7 +55,6 @@ input PigOptionalQuantityInput {
   quantity: Int
 }
 
-
 type PigAdjustment {
   event: PigAdjustmentEvent
   postingDate: String
@@ -83,12 +82,11 @@ input SavePigAdjustmentInput {
   comments: String
 }
 
-type PigAdjustmentResult  {
+type PigAdjustmentResult {
   success: Boolean!
   pigAdjustment: PigAdjustment!
   defaults: PigActivityDefaults!
 }
-
 
 type PigGradeOff {
   event: PigGradeOffEvent
@@ -123,7 +121,6 @@ type PigGradeOffResult {
   defaults: PigActivityDefaults!
 }
 
-
 type PigMortality {
   event: PigMortalityEvent
   postingDate: String
@@ -153,7 +150,6 @@ type PigMortalityResult {
   pigMortality: PigMortality!
   defaults: PigActivityDefaults!
 }
-
 
 type PigMove {
   event: PigMoveEvent
@@ -193,7 +189,6 @@ type PigMoveResult {
   pigMove: PigMove!
   defaults: PigActivityDefaults!
 }
-
 
 type PigPurchase {
   event: PigPurchaseEvent
@@ -267,6 +262,13 @@ type PigWeanResult {
   defaults: PigActivityDefaults!
 }
 
+type ItemJournalTemplate {
+  name: String!
+  description: String!
+  type: String!
+  sourceCode: String!
+  reasonCode: String!
+}
 
 type Query {
   animals: [Item!]!
@@ -284,6 +286,7 @@ type Query {
   pigPurchaseEventTypes: [PigPurchaseEvent!]!
   pigAdjustmentEventTypes: [PigAdjustmentEvent!]!
   pigMortalityEventTypes: [PigMortalityEvent!]!
+  itemJournalTemplates: [ItemJournalTemplate!]
 }
 
 type Mutation {

@@ -1,15 +1,14 @@
-import { userInfo } from "os";
-import {
-  JobResolvers,
-  ReasonResolvers,
-  ResourceResolvers,
-  LocationResolvers,
-  ItemResolvers,
-  QueryResolvers
-} from "./graphql";
-import { getDateFromWeekNumber } from "../common/utils";
-import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import { format } from "date-fns";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
+import { getDateFromWeekNumber } from "../common/utils";
+import {
+  ItemResolvers,
+  JobResolvers,
+  LocationResolvers,
+  QueryResolvers,
+  ReasonResolvers,
+  ResourceResolvers
+} from "./graphql";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 

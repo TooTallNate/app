@@ -48,6 +48,7 @@ input ResourceFilter {
 
 type Query {
   animals: [Item!]!
+  itemJournalTemplates: [ItemJournalTemplate!]
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
   locations: [Location!]!
@@ -336,6 +337,14 @@ type PigWeanResult {
   success: Boolean!
   pigWean: PigWean!
   defaults: PigActivityDefaults!
+}
+
+type ItemJournalTemplate {
+  name: String!
+  description: String!
+  type: String!
+  sourceCode: String!
+  reasonCode: String!
 }
 
 type Mutation {

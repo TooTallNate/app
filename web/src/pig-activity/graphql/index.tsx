@@ -66,6 +66,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -425,6 +426,15 @@ export type PigWeanResult = {
   defaults: PigActivityDefaults;
 };
 
+export type ItemJournalTemplate = {
+  __typename?: "ItemJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   login: LoginResult;
@@ -623,6 +633,14 @@ export type PigActivityJobsQuery = { __typename?: "Query" } & {
   pigActivityDefaults: { __typename?: "PigActivityDefaults" } & {
     job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
   };
+  itemJournalTemplates?: Maybe<
+    Array<
+      { __typename?: "ItemJournalTemplate" } & Pick<
+        ItemJournalTemplate,
+        "name" | "description" | "type" | "reasonCode" | "sourceCode"
+      >
+    >
+  >;
   pigActivityJobs: Array<
     { __typename?: "Job" } & Pick<
       Job,
@@ -1088,6 +1106,13 @@ export const PigActivityJobsDocument = gql`
       job {
         number
       }
+    }
+    itemJournalTemplates {
+      name
+      description
+      type
+      reasonCode
+      sourceCode
     }
     pigActivityJobs {
       number

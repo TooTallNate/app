@@ -1,7 +1,8 @@
 import {
   QueryResolvers,
   PigActivityDefaultsResolvers,
-  InclusivityMode
+  InclusivityMode,
+  ItemJournalTemplateResolvers
 } from "../../common/graphql";
 import { NavItemJournalLine } from "../../common/nav";
 import UserSettingsModel, {
@@ -9,6 +10,25 @@ import UserSettingsModel, {
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
 import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
+
+export const ItemJournalTemplate: ItemJournalTemplateResolvers = {
+  name: itemJournalTemplate => itemJournalTemplate.Name,
+  description: itemJournalTemplate => itemJournalTemplate.Description,
+  type: itemJournalTemplate => itemJournalTemplate.Type,
+  sourceCode: itemJournalTemplate => itemJournalTemplate.Source_Code,
+  reasonCode: itemJournalTemplate => itemJournalTemplate.Reason_Code
+};
+
+export function getItemJournalTemplate(
+  entry: Partial<NavItemJournalLine>,
+  dataSource: NavItemJournalDataSource
+): Promise<NavItemJournalLine> {
+  const date = navDate(new Date());
+  entry.Document_Date = date;
+  entry.Posting_Date = entry.Posting_Date || date;
+  entry.Description = entry.Description || " ";
+  return dataSource.postJournalLine(entry);
+}
 
 export function postItemJournal(
   entry: Partial<NavItemJournalLine>,
@@ -69,6 +89,9 @@ export const PigActivityDefaults: PigActivityDefaultsResolvers = {
 };
 
 export const PigActivityQueries: QueryResolvers = {
+  async itemJournalTemplates(_, __, { dataSources }) {
+    return dataSources.navItemJournal.getItemJournalTemplate();
+  },
   async animals(_, __, { dataSources }) {
     return dataSources.navConfig.getItems({
       postingGroups: ["SOWS", "MARKET HOGS"]

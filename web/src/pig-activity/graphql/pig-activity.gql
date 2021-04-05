@@ -14,6 +14,13 @@ query PigActivityJobs {
       number
     }
   }
+  itemJournalTemplates {
+    name
+    description
+    type
+    reasonCode
+    sourceCode
+  }
   pigActivityJobs {
     number
     description
