@@ -1,9 +1,7 @@
 import React from "react";
 import FormField from "../../common/components/form/FormField";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import StaticValue from "../../common/components/input/StaticValue";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 
 export interface JobFieldProps {
   number: string;

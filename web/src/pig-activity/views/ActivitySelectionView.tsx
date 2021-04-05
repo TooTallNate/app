@@ -11,7 +11,9 @@ import { usePigActivityJobsQuery, ItemJournalTemplate } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 
 const ActivitySelectionView: React.FC = () => {
-  const [navigationLinks, setNavigationLinks] = useState([]);
+  const [navigationLinks, setNavigationLinks] = useState(
+    new Array<ItemJournalTemplate | NavLinkType>()
+  );
   const match = useRouteMatch();
   const { setMessage } = useFlash();
 
@@ -48,7 +50,7 @@ const ActivitySelectionView: React.FC = () => {
       <ViewContent loading={loading}>
         <StackedNav>
           {navigationLinks.map(template => {
-            const navLink = { ...template, ...T[template.reasonCode] };
+            const navLink = { ...template, ...T[template.reasonCode || ""] };
             return (
               <StackedNavLink
                 key={`activityLink-${navLink.id}`}
@@ -66,7 +68,7 @@ const ActivitySelectionView: React.FC = () => {
 
 export default ActivitySelectionView;
 
-interface NavLinkType {
+interface NavLinkType extends Partial<ItemJournalTemplate> {
   sort: number;
   route: string;
   id: string;
