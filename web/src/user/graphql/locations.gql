@@ -12,6 +12,7 @@ query Locations {
     name
   }
   user {
+    username
     locations {
       ...UserLocationsFields
     }

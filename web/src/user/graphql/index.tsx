@@ -621,9 +621,11 @@ export type LocationsQuery = { __typename?: "Query" } & {
     { __typename?: "Location" } & Pick<Location, "code" | "name">
   >;
   user?: Maybe<
-    { __typename?: "User" } & {
-      locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
-    }
+    { __typename?: "User" } & Pick<User, "username"> & {
+        locations: {
+          __typename?: "UserLocations";
+        } & UserLocationsFieldsFragment;
+      }
   >;
 };
 
@@ -686,6 +688,7 @@ export const LocationsDocument = gql`
       name
     }
     user {
+      username
       locations {
         ...UserLocationsFields
       }
