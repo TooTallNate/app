@@ -24,7 +24,7 @@ const ActivitySelectionView: React.FC = () => {
         // Try custom sort specified above
         setNavigationLinks(
           [...sortedData].sort(
-            (a, b) => T["a.reasonCode"].sort - T[b.reasonCode].sort
+            (a, b) => T[a.reasonCode].sort - T[b.reasonCode].sort
           )
         );
       } catch {
