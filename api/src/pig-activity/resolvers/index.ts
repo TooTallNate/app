@@ -1,4 +1,8 @@
-import { PigActivityDefaults, PigActivityQueries } from "./pig-activity";
+import {
+  ItemJournalTemplate,
+  PigActivityDefaults,
+  PigActivityQueries
+} from "./pig-activity";
 import {
   PigAdjustment,
   PigAdjustmentQueries,
@@ -56,6 +60,7 @@ export const mutations = {
 };
 
 export const types = {
+  ItemJournalTemplate,
   PigActivityDefaults,
   PigAdjustment,
   PigGradeOff,

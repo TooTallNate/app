@@ -66,6 +66,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -423,6 +424,15 @@ export type PigWeanResult = {
   success: Scalars["Boolean"];
   pigWean: PigWean;
   defaults: PigActivityDefaults;
+};
+
+export type ItemJournalTemplate = {
+  __typename?: "ItemJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
 };
 
 export type Mutation = {

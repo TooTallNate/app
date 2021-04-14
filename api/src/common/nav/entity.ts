@@ -107,3 +107,11 @@ export interface NavJobTask {
   Totaling: number;
   Job_Posting_Group: string;
 }
+
+export interface ItemJournalTemplateObject {
+  Name: string;
+  Description: string;
+  Type: string;
+  Source_Code: string;
+  Reason_Code: string;
+}

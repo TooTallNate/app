@@ -1,4 +1,8 @@
-import { NavItemJournalLine, NavStandardItemJournal } from "../nav";
+import {
+  ItemJournalTemplateObject,
+  NavItemJournalLine,
+  NavStandardItemJournal
+} from "../nav";
 import NavDataSource from "./NavDataSource";
 
 export interface StandardJournalOptions {
@@ -36,6 +40,10 @@ export default class NavItemJournalDataSource extends NavDataSource {
     return this.get(
       `/StandardItemJournals(Journal_Template_Name='${options.template}', Code='${options.code}')`
     );
+  }
+
+  getItemJournalTemplate(): Promise<ItemJournalTemplateObject[] | null> {
+    return this.get(`/ItemJournalTemplate`);
   }
 
   getStandardJournals(template: string): Promise<NavStandardItemJournal[]> {

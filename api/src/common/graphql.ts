@@ -3,6 +3,7 @@ import {
   NavUser,
   NavJob,
   NavItem,
+  ItemJournalTemplateObject,
   NavResource,
   NavReason,
   NavLocation,
@@ -89,6 +90,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
@@ -446,6 +448,15 @@ export type PigWeanResult = {
   success: Scalars["Boolean"];
   pigWean: PigWean;
   defaults: PigActivityDefaults;
+};
+
+export type ItemJournalTemplate = {
+  __typename?: "ItemJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
 };
 
 export type Mutation = {
@@ -820,6 +831,7 @@ export type ResolversTypes = ResolversObject<{
       defaults: ResolversTypes["PigActivityDefaults"];
     }
   >;
+  ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
   Mutation: ResolverTypeWrapper<{}>;
   ScorecardGroup: ResolverTypeWrapper<NavJobPostingGroup>;
   ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
@@ -923,6 +935,7 @@ export type ResolversParentTypes = ResolversObject<{
     pigWean: ResolversParentTypes["PigWean"];
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
+  ItemJournalTemplate: ItemJournalTemplateObject;
   Mutation: {};
   ScorecardGroup: NavJobPostingGroup;
   ScorecardElement: ScorecardElement;
@@ -1029,6 +1042,11 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  itemJournalTemplates?: Resolver<
+    Maybe<Array<ResolversTypes["ItemJournalTemplate"]>>,
+    ParentType,
+    ContextType
+  >;
   job?: Resolver<
     Maybe<ResolversTypes["Job"]>,
     ParentType,
@@ -1507,6 +1525,18 @@ export type PigWeanResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type ItemJournalTemplateResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ItemJournalTemplate"] = ResolversParentTypes["ItemJournalTemplate"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  sourceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type MutationResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
@@ -1782,6 +1812,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PigPurchaseResult?: PigPurchaseResultResolvers<ContextType>;
   PigWean?: PigWeanResolvers<ContextType>;
   PigWeanResult?: PigWeanResultResolvers<ContextType>;
+  ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
   ScorecardElement?: ScorecardElementResolvers<ContextType>;
