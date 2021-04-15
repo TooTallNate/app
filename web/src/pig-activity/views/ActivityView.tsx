@@ -8,17 +8,24 @@ import ActivityGradeOffView from "./ActivityGradeOffView";
 import ActivityAdjustmentView from "./ActivityAdjustmentView";
 import ActivityJobView from "./ActivityJobView";
 import ActivitySelectionView from "./ActivitySelectionView";
+import ActivityMoveJobView from "./ActivityMoveJobView";
 
 const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
   match
 }) => {
+  console.log(match);
   return (
     <Switch>
       <Route exact path={`${match.url}`} component={ActivitySelectionView} />
       <Route
         exact
-        path={`${match.url}/:activity(purchase|wean|mortality|move|grade-off|adjustment)`}
+        path={`${match.url}/:activity(purchase|wean|mortality|grade-off|adjustment)`}
         component={ActivityJobView}
+      />
+      <Route
+        exact
+        path={`${match.url}/:activity(move)`}
+        component={ActivityMoveJobView}
       />
       <Route
         path={`${match.url}/purchase/:job`}

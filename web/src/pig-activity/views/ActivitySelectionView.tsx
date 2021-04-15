@@ -11,6 +11,8 @@ import ViewContent from "../../common/components/view/ViewContent";
 const ActivitySelectionView: React.FC = () => {
   const match = useRouteMatch();
 
+  console.log(match);
+
   return (
     <View>
       <ViewHeader>
