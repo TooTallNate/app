@@ -23,9 +23,7 @@ const ActivitySelectionView: React.FC = () => {
       try {
         // Try custom sort specified above
         setNavigationLinks(
-          [...sortedData].sort(
-            (a, b) => T[a.reasonCode].sort - T[b.reasonCode].sort
-          )
+          [...sortedData].sort((a, b) => T[a.name].sort - T[b.name].sort)
         );
       } catch {
         // On sort failure, use api response
@@ -50,14 +48,18 @@ const ActivitySelectionView: React.FC = () => {
       <ViewContent loading={loading}>
         <StackedNav>
           {navigationLinks.map(template => {
-            const navLink = { ...template, ...T[template.reasonCode || ""] };
+            const navLink = { ...template, ...T[template.name || ""] };
             return (
-              <StackedNavLink
-                key={`activityLink-${navLink.id}`}
-                to={`${match.url}${navLink.route}`}
-              >
-                {navLink.description || navLink.label}
-              </StackedNavLink>
+              <>
+                {navLink.route && (
+                  <StackedNavLink
+                    key={`activityLink-${template.name}`}
+                    to={`${match.url}${navLink.route}`}
+                  >
+                    {navLink.description || navLink.defaultLabel}
+                  </StackedNavLink>
+                )}
+              </>
             );
           })}
         </StackedNav>
@@ -71,8 +73,7 @@ export default ActivitySelectionView;
 interface NavLinkType extends Partial<ItemJournalTemplate> {
   sort: number;
   route: string;
-  id: string;
-  label: string;
+  defaultLabel: string;
 }
 
 interface TypeMap {
@@ -80,20 +81,10 @@ interface TypeMap {
 }
 
 const T: TypeMap = {
-  WEAN: { sort: 1, route: "/wean", id: "WEAN", label: "Wean" },
-  "DEAD-NAT": {
-    sort: 2,
-    route: "/mortality",
-    id: "DEAD-NAT",
-    label: "Mortality"
-  },
-  MOVE: { sort: 3, route: "/move", id: "MOVE", label: "Move" },
-  "GR-UNTHRIF": {
-    sort: 4,
-    route: "/grade-off",
-    id: "GR-UNTHRIF",
-    label: "Grade Off"
-  },
-  ADJ: { sort: 5, route: "/adjustment", id: "ADJ", label: "Adjustment" },
-  PURCH: { sort: 6, route: "/purchase", id: "PURCH", label: "Purchase" }
+  WEAN: { sort: 1, route: "/wean", defaultLabel: "Wean" },
+  MORTALITY: { sort: 2, route: "/mortality", defaultLabel: "Mortality" },
+  MOVE: { sort: 3, route: "/move", defaultLabel: "Move" },
+  GRADEOFF: { sort: 4, route: "/grade-off", defaultLabel: "Grade Off" },
+  QTYADJ: { sort: 5, route: "/adjustment", defaultLabel: "Adjustment" },
+  PURCHASE: { sort: 6, route: "/purchase", defaultLabel: "Purchase" }
 };
