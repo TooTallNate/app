@@ -36,7 +36,10 @@ const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
         path={`${match.url}/mortality/:job`}
         component={ActivityMortalityView}
       />
-      <Route path={`${match.url}/move/:job`} component={ActivityMoveView} />
+      <Route
+        path={`${match.url}/move/:fromJob/:toJob`}
+        component={ActivityMoveView}
+      />
       <Route
         path={`${match.url}/grade-off/:job`}
         component={ActivityGradeOffView}

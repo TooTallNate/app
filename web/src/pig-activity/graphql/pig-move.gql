@@ -10,6 +10,9 @@ fragment PigMoveFragment on PigMove {
   }
   toJob {
     number
+    description
+    inventory
+    deadQuantity
   }
   postingDate
   quantity
@@ -29,6 +32,15 @@ query PigMove($job: String!) {
   }
   pigMove(job: $job) {
     ...PigMoveFragment
+  }
+}
+
+query PigJob($job: String!) {
+  job(number: $job) {
+    number
+    description
+    inventory
+    deadQuantity
   }
 }
 

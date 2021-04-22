@@ -34,7 +34,7 @@ const ActivityJobView: React.FC = () => {
   });
 
   const onSubmit: OnSubmit<FormData> = data => {
-    history.push(`${match.url}/${data.fromJob}&${data.toJob}`);
+    history.push(`${match.url}/${data.fromJob}/${data.toJob}`);
   };
 
   const fromJobNumber = formContext.watch("fromJob");
