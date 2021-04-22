@@ -5,7 +5,6 @@ import NavResourceDataSource from "./NavResourceDataSource";
 import NavItemJournalDataSource from "./NavItemJournalDataSource";
 import NavJobJournalDataSource from "./NavJobJournalDataSource";
 import NavConfigDataSouce from "./NavConfigDataSource";
-
 export interface DataSources {
   [source: string]: any;
   navUser: NavUserDataSource;
