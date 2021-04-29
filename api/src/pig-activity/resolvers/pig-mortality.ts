@@ -96,7 +96,7 @@ export const PigMortalityMutations: MutationResolvers = {
       const diff = formatDistanceToNowStrict(new Date(groupStartDate), {
         unit: "day"
       }).split(" ")[0];
-      const tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
+      tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
     } catch {
       tempWeeks = 24;
       console.log("Date unable to be parsed");
