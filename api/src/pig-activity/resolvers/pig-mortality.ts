@@ -85,15 +85,22 @@ export const PigMortalityMutations: MutationResolvers = {
 
     const job = await dataSources.navJob.getByNo(input.job);
 
-    const jobYear = Number("20" + job.No.substring(0, 2));
-    const jobWeek = Number(job.No.substring(2, 4));
-    const date = getDateFromWeekNumber(jobWeek, jobYear);
-    const startDate = lastDayOfWeek(date, { weekStartsOn: 2 });
-    const groupStartDate = format(startDate, "yyyy-MM-dd");
-    const diff = formatDistanceToNowStrict(new Date(groupStartDate), {
-      unit: "day"
-    }).split(" ")[0];
-    const tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
+    let tempWeeks;
+
+    try {
+      const jobYear = Number("20" + job.No.substring(0, 2));
+      const jobWeek = Number(job.No.substring(2, 4));
+      const date = getDateFromWeekNumber(jobWeek, jobYear);
+      const startDate = lastDayOfWeek(date, { weekStartsOn: 2 });
+      const groupStartDate = format(startDate, "yyyy-MM-dd");
+      const diff = formatDistanceToNowStrict(new Date(groupStartDate), {
+        unit: "day"
+      }).split(" ")[0];
+      const tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
+    } catch {
+      tempWeeks = 24;
+      console.log("Date unable to be parsed");
+    }
     const resourceNo = `${tempWeeks}MORTALITY`;
     const resource = await dataSources.navResource.getByCode(resourceNo);
     const weight = Number(resource.Unit_Price);
