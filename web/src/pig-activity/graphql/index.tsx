@@ -832,7 +832,12 @@ export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
     >;
-    toJob?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    toJob?: Maybe<
+      { __typename?: "Job" } & Pick<
+        Job,
+        "number" | "description" | "inventory" | "deadQuantity"
+      >
+    >;
   };
 
 export type PigMoveQueryVariables = {
@@ -847,6 +852,19 @@ export type PigMoveQuery = { __typename?: "Query" } & {
     { __typename?: "Job" } & Pick<Job, "number" | "description">
   >;
   pigMove: { __typename?: "PigMove" } & PigMoveFragmentFragment;
+};
+
+export type PigJobQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type PigJobQuery = { __typename?: "Query" } & {
+  job?: Maybe<
+    { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >
+  >;
 };
 
 export type SavePigMoveMutationVariables = {
@@ -1056,6 +1074,9 @@ export const PigMoveFragmentFragmentDoc = gql`
     }
     toJob {
       number
+      description
+      inventory
+      deadQuantity
     }
     postingDate
     quantity
@@ -1739,6 +1760,55 @@ export type PigMoveLazyQueryHookResult = ReturnType<typeof usePigMoveLazyQuery>;
 export type PigMoveQueryResult = Apollo.QueryResult<
   PigMoveQuery,
   PigMoveQueryVariables
+>;
+export const PigJobDocument = gql`
+  query PigJob($job: String!) {
+    job(number: $job) {
+      number
+      description
+      inventory
+      deadQuantity
+    }
+  }
+`;
+
+/**
+ * __usePigJobQuery__
+ *
+ * To run a query within a React component, call `usePigJobQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePigJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePigJobQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function usePigJobQuery(
+  baseOptions: Apollo.QueryHookOptions<PigJobQuery, PigJobQueryVariables>
+) {
+  return Apollo.useQuery<PigJobQuery, PigJobQueryVariables>(
+    PigJobDocument,
+    baseOptions
+  );
+}
+export function usePigJobLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<PigJobQuery, PigJobQueryVariables>
+) {
+  return Apollo.useLazyQuery<PigJobQuery, PigJobQueryVariables>(
+    PigJobDocument,
+    baseOptions
+  );
+}
+export type PigJobQueryHookResult = ReturnType<typeof usePigJobQuery>;
+export type PigJobLazyQueryHookResult = ReturnType<typeof usePigJobLazyQuery>;
+export type PigJobQueryResult = Apollo.QueryResult<
+  PigJobQuery,
+  PigJobQueryVariables
 >;
 export const SavePigMoveDocument = gql`
   mutation SavePigMove($input: SavePigMoveInput!) {
