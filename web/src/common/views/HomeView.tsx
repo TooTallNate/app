@@ -16,6 +16,9 @@ const HomeView: React.FC = () => {
         <StackedNav>
           <StackedNavLink to="/pig-activity">Pig Activity</StackedNavLink>
           <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
+          <StackedNavLink to="/fuel-maintenance">
+            Fuel and Maintenance
+          </StackedNavLink>
         </StackedNav>
       </ViewContent>
     </View>
