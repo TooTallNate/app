@@ -491,7 +491,6 @@ module.exports = {
     wordBreak: ["responsive"],
     zIndex: ["responsive"]
   },
-  corePlugins: {},
   plugins: [
     function({ addVariant, e }) {
       // Add checked:<class> variant which applies the style if element or any of its previous siblings are checked.

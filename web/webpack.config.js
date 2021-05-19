@@ -231,7 +231,11 @@ module.exports = {
       "process.env": {
         // Required for React to use production build.
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        SENTRY_DSN_WEB: JSON.stringify(process.env.SENTRY_DSN_WEB)
+        SENTRY_DSN_WEB: JSON.stringify(process.env.SENTRY_DSN_WEB),
+        AWS_ACCESS_ID: JSON.stringify(process.env.AWS_ACCESS_ID),
+        AWS_ACCESS_KEY: JSON.stringify(process.env.AWS_ACCESS_KEY),
+        AWS_BUCKET_NAME: JSON.stringify(process.env.AWS_BUCKET_NAME),
+        AWS_REGION: JSON.stringify(process.env.AWS_REGION)
       }
     }),
     // Warn when importing incorrect paths

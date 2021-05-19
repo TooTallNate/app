@@ -1,3 +1,5 @@
+declare module "react-aws-s3";
+
 declare module "tailwind.macro" {
   type ReactClassPropKeys = keyof React.ClassAttributes<any>;
   type PropsOf<

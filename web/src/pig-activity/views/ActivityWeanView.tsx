@@ -1,33 +1,36 @@
 import React, { useEffect } from "react";
-import Title from "../../common/components/view/ViewTitle";
-import View from "../../common/components/view/View";
-import ViewHeader from "../../common/components/view/ViewHeader";
-import { useParams, useHistory } from "react-router";
-import {
-  usePigWeanQuery,
-  useSavePigWeanMutation,
-  usePostPigWeanMutation
-} from "../graphql";
-import { useFlash } from "../../common/contexts/flash";
-import Form from "../../common/components/form/Form";
-import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
+import { useHistory, useParams } from "react-router";
+import Form from "../../common/components/form/Form";
+import FormField from "../../common/components/form/FormField";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormSubmit from "../../common/components/form/FormSubmit";
 import Button from "../../common/components/input/Button";
+import DateInput from "../../common/components/input/DateInput";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import BackButton from "../../common/components/view/BackButton";
+import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
+import ViewHeader from "../../common/components/view/ViewHeader";
+import Title from "../../common/components/view/ViewTitle";
+import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../components/CommentsField";
+import ImageUploadField from "../components/ImageUploadField";
 import InventoryField from "../components/InventoryField";
-import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
-import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormField from "../../common/components/form/FormField";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import DateInput from "../../common/components/input/DateInput";
+import TotalWeightField from "../components/TotalWeightField";
+import {
+  usePigWeanQuery,
+  usePostPigWeanMutation,
+  useSavePigWeanMutation
+} from "../graphql";
 
+const IMAGE =
+  "https://www.treehugger.com/thmb/aOmgLLmSXABYpnuiPvPwrM9SZc8=/1365x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/duckling-close-up-500315849-572917c93df78ced1f0b99ec.jpg";
 interface FormData {
   event: string;
   postingDate: string;
@@ -132,40 +135,7 @@ const ActivityWeanView: React.FC = () => {
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <JobField
-              number={data.pigWean.job.number}
-              description={data.pigWean.job.description}
-            />
-            <InventoryField
-              inventory={data.pigWean.job.inventory || 0}
-              deadQuantity={data.pigWean.job.deadQuantity || 0}
-            />
-            <FormField
-              name="event"
-              rules={{
-                required: "The event field is required."
-              }}
-            >
-              <FormFieldLabel>Event</FormFieldLabel>
-              <FormFieldInput>
-                <TypeaheadInput
-                  items={data.pigWeanEventTypes.map(event => ({
-                    value: event.code,
-                    title: event.description
-                  }))}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <FormField name="postingDate">
-              <FormFieldLabel>Activity Date</FormFieldLabel>
-              <FormFieldInput>
-                <DateInput />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <QuantityAndSmallsField />
-            <TotalWeightField />
+            <ImageUploadField />
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
