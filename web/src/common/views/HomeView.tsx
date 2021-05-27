@@ -5,6 +5,7 @@ import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import ViewContent from "../components/view/ViewContent";
+import QRCodeReader from "../components/input/QRCodeReader";
 
 const HomeView: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const HomeView: React.FC = () => {
           <StackedNavLink to="/pig-activity">Pig Activity</StackedNavLink>
           <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
         </StackedNav>
+        <QRCodeReader />
       </ViewContent>
     </View>
   );
