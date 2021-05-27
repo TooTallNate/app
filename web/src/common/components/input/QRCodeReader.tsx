@@ -4,32 +4,19 @@ import {
   FormatException,
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
-import React, { useEffect, useState } from "react";
-import Button from "./Button";
+import React from "react";
 
 const QRCodeReader = () => {
-  function decodeOnce(codeReader, selectedDeviceId) {
-    codeReader
-      .decodeFromInputVideoDevice(selectedDeviceId, "video")
-      .then(result => {
-        console.log(result);
-        document.getElementById("result").textContent = result.text;
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("result").textContent = err;
-      });
-  }
-
-  function decodeContinuously(codeReader, selectedDeviceId) {
+  function decodeContinuously(codeReader: any, selectedDeviceId: string) {
     codeReader.decodeFromInputVideoDeviceContinuously(
       selectedDeviceId,
       "video",
-      (result, err) => {
+      (result: any, err: any) => {
+        const resultTxt = document.getElementById("result");
         if (result) {
           // properly decoded qr code
           console.log("Found QR code!", result);
-          document.getElementById("result").textContent = result.text;
+          if (resultTxt) resultTxt.textContent = result.text;
         }
 
         if (err) {
@@ -60,50 +47,34 @@ const QRCodeReader = () => {
   }
 
   window.addEventListener("load", function() {
-    let selectedDeviceId;
+    let selectedDeviceId: string;
     const codeReader = new BrowserQRCodeReader();
     console.log("ZXing code reader initialized");
 
     codeReader
       .getVideoInputDevices()
       .then(videoInputDevices => {
-        const sourceSelect = document.getElementById("sourceSelect");
-        selectedDeviceId = videoInputDevices[0].deviceId;
-        if (videoInputDevices.length >= 1) {
-          videoInputDevices.forEach(element => {
-            const sourceOption = document.createElement("option");
-            sourceOption.text = element.label;
-            sourceOption.value = element.deviceId;
-            sourceSelect.appendChild(sourceOption);
+        selectedDeviceId = videoInputDevices[0].deviceId || "";
+
+        const btn = document.getElementById("startButton");
+        const resetBtn = document.getElementById("resetButton");
+        const resultTxt = document.getElementById("result");
+
+        btn &&
+          btn.addEventListener("click", () => {
+            decodeContinuously(codeReader, selectedDeviceId);
+
+            console.log(
+              `Started decode from camera with id ${selectedDeviceId}`
+            );
           });
 
-          sourceSelect.onchange = () => {
-            selectedDeviceId = sourceSelect.value;
-          };
-
-          const sourceSelectPanel = document.getElementById(
-            "sourceSelectPanel"
-          );
-          sourceSelectPanel.style.display = "block";
-        }
-
-        document.getElementById("startButton").addEventListener("click", () => {
-          const decodingStyle = document.getElementById("decoding-style").value;
-
-          if (decodingStyle == "once") {
-            decodeOnce(codeReader, selectedDeviceId);
-          } else {
-            decodeContinuously(codeReader, selectedDeviceId);
-          }
-
-          console.log(`Started decode from camera with id ${selectedDeviceId}`);
-        });
-
-        document.getElementById("resetButton").addEventListener("click", () => {
-          codeReader.reset();
-          document.getElementById("result").textContent = "";
-          console.log("Reset.");
-        });
+        resetBtn &&
+          resetBtn.addEventListener("click", () => {
+            codeReader.reset();
+            if (resultTxt) resultTxt.textContent = "";
+            console.log("Reset.");
+          });
       })
       .catch(err => {
         console.error(err);
