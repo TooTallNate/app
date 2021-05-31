@@ -4,24 +4,36 @@ import {
   FormatException,
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const QRCodeReader = () => {
   const codeReader = new BrowserQRCodeReader();
 
   const [deviceId, setDeviceId] = useState("");
+  const [resultTxt, setResultTxt] = useState("");
+
+  useEffect(() => {
+    console.log("ZXing code reader initialized");
+    codeReader
+      .getVideoInputDevices()
+      .then(videoInputDevices => {
+        setDeviceId(videoInputDevices[0].deviceId || "");
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  });
 
   function decodeContinuously(selectedDeviceId: string) {
     codeReader.decodeFromInputVideoDeviceContinuously(
       selectedDeviceId,
       "video",
       (result: any, err: any) => {
-        const resultTxt = document.getElementById("result");
         if (result) {
           // properly decoded qr code
           console.log("Found QR code!", result);
           codeReader.reset();
-          if (resultTxt) resultTxt.textContent = result.text;
+          setResultTxt(result);
         }
 
         if (err) {
@@ -42,50 +54,19 @@ const QRCodeReader = () => {
   }
 
   function startClicked() {
-    alert(deviceId);
-
-    console.log("STARTED >>>>>>>");
+    alert(`STARTED >>>>>>> ${deviceId}`);
     decodeContinuously(deviceId);
-
-    console.log(`Started decode from camera with id ${"selectedDeviceId"}`);
   }
 
   function resetClicked() {
+    setResultTxt("");
     codeReader.stopContinuousDecode();
     codeReader.reset();
-    console.log("RESET >>>>>>>");
   }
-
-  window.addEventListener("load", function() {
-    console.log("ZXing code reader initialized");
-
-    codeReader
-      .getVideoInputDevices()
-      .then(videoInputDevices => {
-        setDeviceId(videoInputDevices[0].deviceId || "");
-
-        const btn = document.getElementById("startButton");
-        const resetBtn = document.getElementById("resetButton");
-        const resultTxt = document.getElementById("result");
-
-        // btn && btn.addEventListener("click", () => {});
-
-        resetBtn &&
-          resetBtn.addEventListener("click", () => {
-            codeReader.reset();
-            if (resultTxt) resultTxt.textContent = "";
-            console.log("Reset.");
-          });
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  });
 
   return (
     <div>
       <section className="container" id="demo-content">
-        <h1 className="title">Scan QR Code from Video Camera</h1>
         <div>
           <button
             className="button"
@@ -121,16 +102,8 @@ const QRCodeReader = () => {
 
         <label>Result:</label>
         <pre>
-          <code id="result"></code>
+          <code id="result">{resultTxt}</code>
         </pre>
-
-        <p>
-          See the{" "}
-          <a href="https://github.com/zxing-js/library/tree/master/docs/examples/qr-camera/">
-            source code
-          </a>{" "}
-          for this example.
-        </p>
       </section>
     </div>
   );
