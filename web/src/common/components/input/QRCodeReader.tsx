@@ -4,10 +4,14 @@ import {
   FormatException,
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
-import React from "react";
+import React, { useState } from "react";
 
 const QRCodeReader = () => {
-  function decodeContinuously(codeReader: any, selectedDeviceId: string) {
+  const codeReader = new BrowserQRCodeReader();
+
+  const [deviceId, setDeviceId] = useState("");
+
+  function decodeContinuously(selectedDeviceId: string) {
     codeReader.decodeFromInputVideoDeviceContinuously(
       selectedDeviceId,
       "video",
@@ -16,20 +20,11 @@ const QRCodeReader = () => {
         if (result) {
           // properly decoded qr code
           console.log("Found QR code!", result);
+          codeReader.reset();
           if (resultTxt) resultTxt.textContent = result.text;
         }
 
         if (err) {
-          // As long as this error belongs into one of the following categories
-          // the code reader is going to continue as excepted. Any other error
-          // will stop the decoding loop.
-          //
-          // Excepted Exceptions:
-          //
-          //  - NotFoundException
-          //  - ChecksumException
-          //  - FormatException
-
           if (err instanceof NotFoundException) {
             console.log("No QR code found.");
           }
@@ -46,28 +41,34 @@ const QRCodeReader = () => {
     );
   }
 
+  function startClicked() {
+    alert(deviceId);
+
+    console.log("STARTED >>>>>>>");
+    decodeContinuously(deviceId);
+
+    console.log(`Started decode from camera with id ${"selectedDeviceId"}`);
+  }
+
+  function resetClicked() {
+    codeReader.stopContinuousDecode();
+    codeReader.reset();
+    console.log("RESET >>>>>>>");
+  }
+
   window.addEventListener("load", function() {
-    let selectedDeviceId: string;
-    const codeReader = new BrowserQRCodeReader();
     console.log("ZXing code reader initialized");
 
     codeReader
       .getVideoInputDevices()
       .then(videoInputDevices => {
-        selectedDeviceId = videoInputDevices[0].deviceId || "";
+        setDeviceId(videoInputDevices[0].deviceId || "");
 
         const btn = document.getElementById("startButton");
         const resetBtn = document.getElementById("resetButton");
         const resultTxt = document.getElementById("result");
 
-        btn &&
-          btn.addEventListener("click", () => {
-            decodeContinuously(codeReader, selectedDeviceId);
-
-            console.log(
-              `Started decode from camera with id ${selectedDeviceId}`
-            );
-          });
+        // btn && btn.addEventListener("click", () => {});
 
         resetBtn &&
           resetBtn.addEventListener("click", () => {
@@ -86,13 +87,21 @@ const QRCodeReader = () => {
       <section className="container" id="demo-content">
         <h1 className="title">Scan QR Code from Video Camera</h1>
         <div>
-          <button className="button" id="startButton">
+          <button
+            className="button"
+            id="startButton"
+            onClick={() => startClicked()}
+          >
             Start
           </button>
           <br />
-          <a className="button" id="resetButton">
+          <button
+            className="button"
+            id="resetButton"
+            onClick={() => resetClicked()}
+          >
             Reset
-          </a>
+          </button>
         </div>
 
         <div>
