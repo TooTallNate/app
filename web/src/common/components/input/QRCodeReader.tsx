@@ -25,7 +25,7 @@ const QRCodeReader = () => {
   });
 
   const ErrorMsg = (msg: string) =>
-    setMessage({ message: msg, level: "error" });
+    setMessage({ message: msg, level: "error", timeout: 2000 });
 
   async function getDeviceId() {
     await codeReader
