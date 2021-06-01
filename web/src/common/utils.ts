@@ -15,3 +15,15 @@ export function formInputDate(d: string): string {
 export function dateInputDate(date: Date) {
   return format(date, "yyyy-MM-dd");
 }
+
+export function UrlParseFromQR(url: string): string {
+  let relativeUrl = "";
+  if (!url) throw new Error("Unable to find text value in QR code.");
+  try {
+    const split = url.split(".com")[1];
+    if (split) relativeUrl = split;
+  } catch {
+    throw new Error("Unable to find relative URL in QR code.");
+  }
+  return relativeUrl;
+}

@@ -1,3 +1,4 @@
+import { XIcon } from "@heroicons/react/outline";
 import {
   BrowserQRCodeReader,
   ChecksumException,
@@ -5,56 +6,65 @@ import {
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
 import React, { useEffect, useState } from "react";
-import { XIcon } from "@heroicons/react/outline";
+import { useHistory } from "react-router";
+import { useFlash } from "../../contexts/flash";
+import { UrlParseFromQR } from "../../utils";
 import Button from "./Button";
 
 const codeReader = new BrowserQRCodeReader();
 
 const QRCodeReader = () => {
-  const [open, setOpen] = useState(true);
+  const { setMessage } = useFlash();
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
   const [deviceId, setDeviceId] = useState("");
 
   useEffect(() => {
-    if (open) {
-      codeReader
-        .getVideoInputDevices()
-        .then(videoInputDevices => {
-          setDeviceId(videoInputDevices[0].deviceId || "");
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    } else {
-      codeReader.reset();
-    }
+    if (open) getDeviceId();
+    else reset();
   });
+
+  const ErrorMsg = (msg: string) =>
+    setMessage({ message: msg, level: "error" });
+
+  async function getDeviceId() {
+    await codeReader
+      .getVideoInputDevices()
+      .then(videoInputDevices => {
+        setDeviceId(videoInputDevices[0].deviceId || "");
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
   function startDecode() {
     setOpen(true);
+    if (!deviceId) getDeviceId();
     codeReader.decodeFromInputVideoDeviceContinuously(
       deviceId,
       "video",
       (result: any, err: any) => {
-        //result properly found
-        if (result && result.text) {
-          reset();
-        }
-
+        if (result) processUrl(UrlParseFromQR(result.text));
         if (err) {
-          if (err instanceof NotFoundException) {
-            console.log("No QR code found.");
-          }
-
-          if (err instanceof ChecksumException) {
-            console.log("A code was found, but it's read value was not valid.");
-          }
-
-          if (err instanceof FormatException) {
-            console.log("A code was found, but it was in a invalid format.");
+          switch (err.constructor) {
+            case NotFoundException:
+            case ChecksumException:
+            case FormatException:
+              break;
+            default:
+              ErrorMsg(err.message || "Uncaught error while decoding.");
+              reset();
+              break;
           }
         }
       }
     );
+  }
+
+  function processUrl(url: string) {
+    reset();
+    history.push(url);
   }
 
   function reset() {
@@ -62,15 +72,6 @@ const QRCodeReader = () => {
     codeReader.reset();
     setOpen(false);
   }
-
-  const VideoBlock = () => (
-    <div
-      className="border-2 p-3 border-dashed border-gray-200 justify-center"
-      aria-hidden="true"
-    >
-      <video id="video" className="mx-auto" />
-    </div>
-  );
 
   return (
     <div>
@@ -88,7 +89,6 @@ const QRCodeReader = () => {
           <div
             className="absolute inset-0 bg-gray-900 opacity-75 transition-opacity"
             aria-hidden="true"
-            onClick={reset}
           />
 
           <div className="fixed inset-y-0 mt-48 w-full flex">
@@ -114,7 +114,14 @@ const QRCodeReader = () => {
                   </div>
                 </div>
                 <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                  {open && <VideoBlock />}
+                  {open && (
+                    <div
+                      className="border-2 p-3 border-dashed border-gray-200 justify-center"
+                      aria-hidden="true"
+                    >
+                      <video id="video" className="mx-auto" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-shrink-0 px-4 py-4 flex justify-center">
                   <Button
