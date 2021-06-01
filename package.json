@@ -45,6 +45,8 @@
     "@fortawesome/free-solid-svg-icons": "5.11.2",
     "@fortawesome/react-fontawesome": "0.1.7",
     "@graphql-tools/schema": "6.0.9",
+    "@headlessui/react": "^1.2.0",
+    "@heroicons/react": "^1.0.1",
     "@sentry/browser": "^5.17.0",
     "@sentry/node": "5.17.0",
     "@zxing/library": "^0.18.5",
