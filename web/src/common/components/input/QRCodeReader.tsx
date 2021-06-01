@@ -119,7 +119,7 @@ const QRCodeReader = () => {
                       className="border-2 p-3 border-dashed border-gray-200 justify-center"
                       aria-hidden="true"
                     >
-                      <video id="video" className="mx-auto" />
+                      <video id="video" className="mx-auto" height="300" />
                     </div>
                   )}
                 </div>
