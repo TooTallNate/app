@@ -11,39 +11,31 @@ import { useFlash } from "../../contexts/flash";
 import { UrlParseFromQR } from "../../utils";
 import Button from "./Button";
 
+const VIDEO_ELEMENT_ID = "qr_video_el";
 const codeReader = new BrowserQRCodeReader();
-
 const QRCodeReader = () => {
   const { setMessage } = useFlash();
   const history = useHistory();
-  const [open, setOpen] = useState(true);
-  const [deviceId, setDeviceId] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (open) getDeviceId();
-    else reset();
+    if (!open) reset();
   });
 
   const ErrorMsg = (msg: string) =>
     setMessage({ message: msg, level: "error", timeout: 2000 });
 
-  async function getDeviceId() {
-    await codeReader
-      .getVideoInputDevices()
-      .then(videoInputDevices => {
-        setDeviceId(videoInputDevices[0].deviceId || "");
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
   function startDecode() {
     setOpen(true);
-    if (!deviceId) getDeviceId();
-    codeReader.decodeFromInputVideoDeviceContinuously(
-      deviceId,
-      "video",
+
+    const constraints: MediaStreamConstraints = {
+      audio: false,
+      video: { facingMode: "environment" }
+    };
+
+    codeReader.decodeFromConstraints(
+      constraints,
+      VIDEO_ELEMENT_ID,
       (result: any, err: any) => {
         if (result) processUrl(UrlParseFromQR(result.text));
         if (err) {
@@ -91,10 +83,12 @@ const QRCodeReader = () => {
   );
 
   const VideoRecorder = () => (
-    <video
-      id="video"
-      className="border-2 border-dashed border-gray-200 rounded-lg p-3"
-    />
+    <div className="max-h-3/4">
+      <video
+        id={VIDEO_ELEMENT_ID}
+        className="border-2 border-dashed border-gray-200 rounded-lg p-3"
+      />
+    </div>
   );
 
   return (
