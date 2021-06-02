@@ -86,12 +86,7 @@ const QRCodeReader = () => {
         hidden={!open}
       >
         <div className="absolute inset-0 overflow-hidden" onClick={reset}>
-          <div
-            className="absolute inset-0 bg-gray-900 opacity-75 transition-opacity"
-            aria-hidden="true"
-          />
-
-          <div className="fixed inset-y-0 mt-48 w-full flex">
+          <div className="fixed inset-y-0 w-full flex">
             <div className="w-screen">
               <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll rounded-t-lg">
                 <div className="px-4 sm:px-6">
