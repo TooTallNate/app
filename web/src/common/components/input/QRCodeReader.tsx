@@ -5,36 +5,29 @@ import {
   FormatException,
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useFlash } from "../../contexts/flash";
 import { UrlParseFromQR } from "../../utils";
 import Button from "./Button";
 
-const VIDEO_ELEMENT_ID = "qr_video_el";
 const codeReader = new BrowserQRCodeReader();
+const VIDEO_ELEMENT_ID = "qr_video_el";
+const DEFAULT_VID_CONSTRAINTS: MediaStreamConstraints = {
+  audio: false,
+  video: { facingMode: "environment" }
+};
+
 const QRCodeReader = () => {
   const { setMessage } = useFlash();
   const history = useHistory();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (!open) reset();
-  });
-
-  const ErrorMsg = (msg: string) =>
-    setMessage({ message: msg, level: "error", timeout: 2000 });
-
   function startDecode() {
     setOpen(true);
 
-    const constraints: MediaStreamConstraints = {
-      audio: false,
-      video: { facingMode: "environment" }
-    };
-
     codeReader.decodeFromConstraints(
-      constraints,
+      DEFAULT_VID_CONSTRAINTS,
       VIDEO_ELEMENT_ID,
       (result: any, err: any) => {
         if (result) processUrl(UrlParseFromQR(result.text));
@@ -45,7 +38,11 @@ const QRCodeReader = () => {
             case FormatException:
               break;
             default:
-              ErrorMsg(err.message || "Uncaught error while decoding.");
+              setMessage({
+                message: err.message || "Uncaught error while decoding.",
+                level: "error",
+                timeout: 2000
+              });
               reset();
               break;
           }
@@ -70,15 +67,13 @@ const QRCodeReader = () => {
       <h2 className="text-lg font-medium text-gray-900" id="slide-over-title">
         Scan QR Code
       </h2>
-      <div className="ml-3 h-7 flex items-center">
-        <button
-          className="bg-white rounded-md text-gray-800 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={reset}
-        >
-          <span className="sr-only">Close panel</span>
-          <XIcon className="h-6 w-6" aria-hidden="true" />
-        </button>
-      </div>
+      <button
+        className="bg-white rounded-md text-gray-800 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        onClick={reset}
+      >
+        <span className="sr-only">Close panel</span>
+        <XIcon className="h-6 w-6" aria-hidden="true" />
+      </button>
     </div>
   );
 
@@ -111,7 +106,7 @@ const QRCodeReader = () => {
           <div className="flex justify-center align-center mt-auto mb-auto">
             <VideoRecorder />
           </div>
-          <div className="mt-auto">
+          <div className="flex mt-auto justify-center">
             <Button
               type="button"
               className="w-full max-w-xl bg-white border border-gray-300 text-red-600 hover:bg-gray-200"
