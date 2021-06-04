@@ -157,3 +157,10 @@ export interface NavExpenseCode {
   Description: string;
   Maintenance_Expense_Account: string;
 }
+
+export interface NavMaintenanceInterval {
+  Maintenance_Code: string;
+  Fixed_Asset_No: string;
+  MaintenanceInterval: number;
+  Unit_of_Measure_Code: string;
+}
