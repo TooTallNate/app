@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import Title from "../../common/components/view/ViewTitle";
 import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
@@ -10,34 +10,34 @@ import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import StackedInput from "../../common/components/input/StackedInput";
-import StackedButton from "../../common/components/input/StackedButton";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import Button from "../../common/components/input/Button";
+import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import FormSubmit from "../../common/components/form/FormSubmit";
+import StackedRadioButton from "../../common/components/input/StackedRadioButton";
+import { useFuelAssetsQuery } from "../graphql";
 
 interface FormData {
   event: string;
   asset: string;
 }
 
-const tempData = [
-  {
-    key: "hello"
-  },
-  {
-    key: "world"
-  }
-];
-
 const EventSelectionView: React.FC = () => {
+  const history = useHistory();
   const formContext = useForm<FormData>();
-  const { getValues, watch } = formContext;
+  const { loading, data } = useFuelAssetsQuery();
 
   const match = useRouteMatch();
-  console.log(match);
+  //console.log(match);
 
-  const onSubmit: OnSubmit<FormData> = async data => {
-    console.log(data);
+  const onSubmit: OnSubmit<FormData> = data => {
+    history.push(`${match.url}/${data.event}/${data.asset}`);
+  };
+
+  const onBack = () => {
+    history.push("/");
   };
 
   return (
@@ -46,39 +46,53 @@ const EventSelectionView: React.FC = () => {
         <BackButton />
         <Title>Event and Asset Selection</Title>
       </ViewHeader>
-      <ViewContent>
-        <Form context={formContext} onSubmit={onSubmit}>
-          <FormField
-            name="event"
-            rules={{
-              required: "An event is required"
-            }}
-          >
-            <FormFieldInput>
-              <StackedInput orientation="vertical">
-                <StackedButton value={"fuel"}>Fuel</StackedButton>
-                <StackedButton value={"maintenance"}>Maintenance</StackedButton>
-              </StackedInput>
-            </FormFieldInput>
-            <FormFieldErrors />
-          </FormField>
-          <FormField
-            name="asset"
-            rules={{
-              required: "An asset is required"
-            }}
-          >
-            <FormFieldLabel>Select Asset</FormFieldLabel>
-            <FormFieldInput>
-              <TypeaheadInput
-                items={tempData.map(x => ({
-                  value: x.key,
-                  title: x.key
-                }))}
-              />
-            </FormFieldInput>
-          </FormField>
-        </Form>
+      <ViewContent loading={loading}>
+        {data && (
+          <Form context={formContext} onSubmit={onSubmit}>
+            <FormField
+              name="event"
+              rules={{
+                required: "An event is required"
+              }}
+            >
+              <FormFieldLabel className="hidden">Event</FormFieldLabel>
+              <FormFieldInput>
+                <StackedInput orientation="vertical">
+                  <StackedRadioButton value={"fuel"}>Fuel</StackedRadioButton>
+                  <StackedRadioButton value={"maintenance"}>
+                    Maintenance
+                  </StackedRadioButton>
+                </StackedInput>
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="asset"
+              rules={{
+                required: "An asset is required"
+              }}
+            >
+              <FormFieldLabel>Select Asset</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.fuelAssets.map(asset => ({
+                    value: asset.number || "",
+                    title: asset.description || ""
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <div className="flex-grow" />
+            <div className="flex">
+              <Button className="w-full" onClick={onBack}>
+                Back
+              </Button>
+              <HorizontalSpacer />
+              <FormSubmit>Continue</FormSubmit>
+            </div>
+          </Form>
+        )}
       </ViewContent>
     </View>
   );

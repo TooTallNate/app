@@ -115,3 +115,45 @@ export interface ItemJournalTemplateObject {
   Source_Code: string;
   Reason_Code: string;
 }
+
+export interface NavFuelAsset {
+  No: string;
+  Dimension_Code: string;
+  Dimension_Value_Code: string;
+  Item_Description: string;
+  Last_Direct_Cost: number;
+  FA_No: string;
+  FA_Description: string;
+  FA_Class_Code: string;
+  FA_Subclass_Code: string;
+  Global_Dimension_1_Code: string;
+  Global_Dimension_2_Code: string;
+  Location_Code: string;
+  Image: string;
+  AuxiliaryIndex1: number;
+  AuxiliaryIndex2: string;
+}
+
+export interface NavFuelMaintenanceJournalLine {
+  Journal_Template_Name: string;
+  Journal_Batch_Name: string;
+  Document_No: string;
+  Posting_Date: string;
+  Account_Type: string;
+  Account_No: string;
+  FA_Posting_Type: string;
+  Maintenance_Code: string;
+  Bal_Account_No: string;
+  Shortcut_Dimension_1_Code: string;
+  Shortcut_Dimension_2_Code: string;
+  Quantity: number;
+  Meta: number;
+  Amount: number;
+  Description: string;
+}
+
+export interface NavExpenseCode {
+  Code: string;
+  Description: string;
+  Maintenance_Expense_Account: string;
+}

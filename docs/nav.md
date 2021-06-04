@@ -17,6 +17,7 @@
 * [Item Journals](#item-journals)
 * [Standard Item Journals](#standard-item-journals)
 * [Job Journals](#job-journals)
+* [Fuel Assets](#fuel-assets)
 
 #### Users
 Users who have access to NAV.
@@ -135,3 +136,8 @@ Manages transactions for jobs.
   * Job_Task_No (`string`) - The code of the job task this entry applies to.
   * No (`string -> Resource`) - The resource code this entry applies to.
   * Work_Type_Code (`string`) - The type of work this entry is for.
+
+  #### Fuel Assets
+  List of fuel assets
+  * Route: `/FuelFixedAssets`
+  * Key: `Unknown`

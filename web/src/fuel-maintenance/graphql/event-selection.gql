@@ -1,0 +1,8 @@
+query FuelAssets {
+    fuelAssets {
+        number
+        code
+        description
+        fuelType
+    }
+}

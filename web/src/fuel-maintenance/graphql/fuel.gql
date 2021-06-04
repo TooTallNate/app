@@ -1,0 +1,15 @@
+query FuelAsset($number: String!) {
+    fuelAsset(number: $number) {
+        number
+        code
+        description
+        fuelType
+        fuelCost
+    }
+}
+
+mutation PostFuel($input: PostFuelInput!) {
+  postFuel(input: $input) {
+    success
+  }
+}

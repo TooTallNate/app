@@ -12,7 +12,8 @@ export enum NavItemJournalBatch {
 }
 
 export enum NavJobJournalTemplate {
-  Job = "JOB"
+  Job = "JOB",
+  Asset = "ASSETS"
 }
 
 export enum NavJobJournalBatch {
