@@ -14,6 +14,7 @@ const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeM
 const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin");
 const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const safePostCssParser = require("postcss-safe-parser");
+const WebpackQRCodePlugin = require("webpack-dev-server-qr-code");
 
 if (!process.env.NODE_ENV !== "production") {
   require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
@@ -199,6 +200,7 @@ module.exports = {
     }
   },
   plugins: [
+    ifDev(() => new WebpackQRCodePlugin()),
     // Builds HTML template.
     new HtmlWebpackPlugin({
       inject: true,
