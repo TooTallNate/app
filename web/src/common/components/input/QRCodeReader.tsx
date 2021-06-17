@@ -23,9 +23,17 @@ const QRCodeReader = () => {
   const history = useHistory();
   const [open, setOpen] = useState(false);
 
-  function startDecode() {
+  async function startDecode() {
     setOpen(true);
-
+    const deviceList = await codeReader.listVideoInputDevices();
+    if (!deviceList || !deviceList[0]) {
+      setMessage({
+        message: "Did not find video input device",
+        level: "error",
+        timeout: 4000
+      });
+      return reset();
+    }
     codeReader.decodeFromConstraints(
       DEFAULT_VID_CONSTRAINTS,
       VIDEO_ELEMENT_ID,
@@ -42,7 +50,7 @@ const QRCodeReader = () => {
               setMessage({
                 message: err.message || "Uncaught error while decoding.",
                 level: "error",
-                timeout: 2000
+                timeout: 4000
               });
               reset();
               break;
