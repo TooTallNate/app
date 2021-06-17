@@ -63,7 +63,7 @@ const FuelView: React.FC = () => {
         level: "success",
         timeout: 2000
       });
-      history.push("/fuel-maintenance");
+      history.push("/fuel");
     } catch (e) {
       setMessage({
         message: e.toString(),
@@ -97,7 +97,9 @@ const FuelView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <FormField name="fuelType">
-              <FormFieldLabel>Fuel Type: {fuelAsset.fuelType}</FormFieldLabel>
+              <FormFieldLabel className="p-0">
+                Fuel Type: {fuelAsset.fuelType}
+              </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
             <FormField name="postingDate">
@@ -113,9 +115,10 @@ const FuelView: React.FC = () => {
                 required: "Number of gallons field is required."
               }}
             >
-              <FormFieldLabel>
-                # of Gallons at ${fuelAsset.fuelCost.toFixed(2)}
-              </FormFieldLabel>
+              <FormFieldLabel># of Gallons </FormFieldLabel>
+              <span className="ml-2">
+                @ ${fuelAsset.fuelCost.toFixed(2)}/gal
+              </span>
               <FormFieldInput>
                 <NumberInput className="w-32" />
               </FormFieldInput>
@@ -130,9 +133,7 @@ const FuelView: React.FC = () => {
             </FormField>
             <FormField
               name="mileage"
-              rules={{
-                required: "Number of miles field is required."
-              }}
+              rules={{ required: "Number of miles field is required." }}
             >
               <FormFieldLabel>Current Miles/Hours</FormFieldLabel>
               <FormFieldInput>

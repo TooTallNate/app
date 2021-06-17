@@ -2,7 +2,7 @@ import * as users from "./users/resolvers";
 import * as scorecard from "./scorecard/resolvers";
 import * as pigActivity from "./pig-activity/resolvers";
 import * as common from "./common/resolvers";
-import * as fuel from "./fuel-maintenance/resolvers";
+import * as fuel from "./fuel/resolvers";
 
 export default {
   Query: {

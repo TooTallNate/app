@@ -32,6 +32,7 @@ const QRCodeReader = () => {
       (result: any, err: any) => {
         if (result) processUrl(UrlParseFromQR(result.text));
         if (err) {
+          console.log("CAUGHT ERROR:", err);
           switch (err.constructor) {
             case NotFoundException:
             case ChecksumException:

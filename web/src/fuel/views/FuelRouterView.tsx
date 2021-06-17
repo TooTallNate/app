@@ -8,7 +8,7 @@ const FuelMaintenanceView: React.FC = () => {
   return (
     <Switch>
       <Route exact path={`${match.url}`} component={EventSelectionView} />
-      <Route exact path={`${match.url}/fuel/:asset`} component={FuelView} />
+      <Route exact path={`${match.url}/asset/:asset`} component={FuelView} />
       <Redirect to={`${match.url}`} />
     </Switch>
   );
