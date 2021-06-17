@@ -1,3 +1,4 @@
+import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import {
   BrowserQRCodeReader,
@@ -5,7 +6,7 @@ import {
   FormatException,
   NotFoundException
 } from "@zxing/library"; // use this path since v0.5.1
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router";
 import { useFlash } from "../../contexts/flash";
 import { UrlParseFromQR } from "../../utils";
@@ -40,7 +41,6 @@ const QRCodeReader = () => {
       (result: any, err: any) => {
         if (result) processUrl(UrlParseFromQR(result.text));
         if (err) {
-          console.log("CAUGHT ERROR:", err);
           switch (err.constructor) {
             case NotFoundException:
             case ChecksumException:
@@ -77,7 +77,7 @@ const QRCodeReader = () => {
         Scan QR Code
       </h2>
       <button
-        className="bg-white rounded-md text-gray-800 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="bg-white rounded-md text-gray-800 hover:text-gray-500 focus:shadow-outline focus:outline-none"
         onClick={reset}
       >
         <span className="sr-only">Close panel</span>
@@ -100,32 +100,46 @@ const QRCodeReader = () => {
       <Button onClick={startDecode} className="w-full">
         Scan QR Code
       </Button>
-      <div
-        className="fixed inset-0 overflow-hidden"
-        aria-labelledby="slide-over-title"
-        role="dialog"
-        aria-modal="true"
-        hidden={!open}
-      >
-        <div className="h-full flex flex-col bg-white overflow-y-scroll p-5">
-          <h2 className="sr-only" id="profile-overview-title">
-            Scan QR Code
-          </h2>
-          <ScannerHeader />
-          <div className="flex justify-center align-center mt-auto mb-auto">
-            <VideoRecorder />
-          </div>
-          <div className="flex mt-auto justify-center">
-            <Button
-              type="button"
-              className="w-full max-w-xl bg-white border border-gray-300 text-red-600 hover:bg-gray-200"
-              onClick={reset}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </div>
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog
+          as="div"
+          static
+          className="fixed inset-0 overflow-hidden"
+          open={open}
+          onClose={setOpen}
+        >
+          <Dialog.Overlay className="absolute inset-0 hidden" />
+
+          <Transition.Child
+            as={Fragment}
+            enter="transform transition ease-in-out"
+            enterFrom="translate-y-full"
+            enterTo="translate-y-0"
+            leave="transform transition ease-in-out"
+            leaveFrom="translate-y-0"
+            leaveTo="translate-y-full"
+          >
+            <div className="h-full flex flex-col bg-white overflow-y-scroll p-5">
+              <h2 className="sr-only" id="profile-overview-title">
+                Scan QR Code
+              </h2>
+              <ScannerHeader />
+              <div className="flex justify-center align-center mt-auto mb-auto">
+                <VideoRecorder />
+              </div>
+              <div className="flex mt-auto justify-center">
+                <Button
+                  type="button"
+                  className="w-full max-w-xl bg-white border border-gray-300 text-red-600 hover:bg-gray-200"
+                  onClick={reset}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition.Root>
     </div>
   );
 };
