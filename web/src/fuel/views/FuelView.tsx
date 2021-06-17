@@ -67,7 +67,8 @@ const FuelView: React.FC = () => {
     } catch (e) {
       setMessage({
         message: e.toString(),
-        level: "error"
+        level: "error",
+        timeout: 3000
       });
     }
   };
