@@ -200,7 +200,7 @@ module.exports = {
     }
   },
   plugins: [
-    new WebpackQRCodePlugin(),
+    ifDev(() => new WebpackQRCodePlugin()),
     // Builds HTML template.
     new HtmlWebpackPlugin({
       inject: true,

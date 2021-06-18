@@ -6,7 +6,8 @@ import { useParams, useHistory } from "react-router";
 import {
   usePigMoveQuery,
   useSavePigMoveMutation,
-  usePostPigMoveMutation
+  usePostPigMoveMutation,
+  usePigJobLazyQuery
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -39,25 +40,25 @@ interface FormData {
 }
 
 interface ViewParams {
-  job: string;
+  fromJob: string;
+  toJob: string;
   barnType: string;
 }
 
 const ActivityMoveView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
-
   const formContext = useForm<FormData>();
+  const [loadJobs, { data: toJobData }] = usePigJobLazyQuery();
   const { loading, data } = usePigMoveQuery({
     variables: {
-      job: params.job
+      job: params.fromJob
     },
     onCompleted({ pigMove, pigMoveEventTypes }) {
       const { setValue } = formContext;
       if (pigMoveEventTypes.length === 1) {
         setValue("event", pigMoveEventTypes[0].code);
       } else if (pigMove.event) setValue("event", pigMove.event.code);
-      if (pigMove.toJob) setValue("toJob", pigMove.toJob.number);
       if (pigMove.quantity) setValue("quantity", pigMove.quantity);
       if (pigMove.smallPigQuantity)
         setValue("smallPigQuantity", pigMove.smallPigQuantity);
@@ -77,7 +78,8 @@ const ActivityMoveView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            fromJob: params.job
+            fromJob: params.fromJob,
+            toJob: params.toJob
           }
         }
       });
@@ -101,7 +103,8 @@ const ActivityMoveView: React.FC = () => {
         variables: {
           input: {
             ...getValues(),
-            fromJob: params.job
+            fromJob: params.fromJob,
+            toJob: params.toJob
           }
         }
       });
@@ -128,6 +131,15 @@ const ActivityMoveView: React.FC = () => {
     }
   }, [triggerValidation, quantity, formState.isSubmitted]);
 
+  useEffect(() => {
+    if (params.toJob) {
+      loadJobs({ variables: { job: params.toJob } });
+    }
+    // if (toJobData && toJobData.job) {
+    //   console.log(toJobData.job);
+    // }
+  }, [loadJobs, params.toJob, toJobData]);
+
   return (
     <View>
       <ViewHeader>
@@ -151,22 +163,32 @@ const ActivityMoveView: React.FC = () => {
               inventory={data.pigMove.fromJob.inventory || 0}
               deadQuantity={data.pigMove.fromJob.deadQuantity || 0}
             />
-            <FormField
-              name="toJob"
-              rules={{ required: "The to job field is required." }}
-            >
+            <FormField name="toJob">
               <FormFieldLabel>To Group</FormFieldLabel>
-              <FormFieldInput>
-                <TypeaheadInput
-                  sort="desc"
-                  items={data.pigActivityJobs.map(job => ({
-                    value: job.number,
-                    title: `${job.number} ${job.description}`
-                  }))}
+              <FormFieldInput noRegister>
+                <StaticValue
+                  value={
+                    toJobData && toJobData.job
+                      ? `${toJobData.job.number} ${toJobData.job.description}`
+                      : ""
+                  }
                 />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <InventoryField
+              className="w-full mr-4"
+              inventory={
+                toJobData && toJobData.job && toJobData.job.inventory
+                  ? toJobData.job.inventory
+                  : 0
+              }
+              deadQuantity={
+                toJobData && toJobData.job && toJobData.job.deadQuantity
+                  ? toJobData.job.deadQuantity
+                  : 0
+              }
+            />
             <FormField
               name="event"
               rules={{

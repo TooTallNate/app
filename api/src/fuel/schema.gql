@@ -1,0 +1,31 @@
+type FuelAsset {
+    number: String!
+    code: String!
+    description: String!
+    fuelType: String!
+    fuelCost: Float!
+}
+
+input PostFuelInput {
+    asset: String!
+    #fuelType: String!
+    postingDate: String
+    gallons: Float!
+    #fuelCost: Float!
+    #totalCost: Float!
+    mileage: Int!
+    comments: String
+}
+
+type FuelResult {
+  success: Boolean!
+}
+
+type Query {
+    fuelAsset(number: String!): FuelAsset
+    fuelAssets: [FuelAsset!]!
+}
+
+type Mutation {
+  postFuel(input: PostFuelInput!): FuelResult!
+}

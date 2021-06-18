@@ -651,324 +651,192 @@ export type UpdateUserLocationsResult = {
   locations: UserLocations;
 };
 
-export type UserLocationsFieldsFragment = {
-  __typename?: "UserLocations";
-} & Pick<UserLocations, "mode"> & {
-    list: Array<{ __typename?: "Location" } & Pick<Location, "code" | "name">>;
-  };
+export type FuelAssetsQueryVariables = {};
 
-export type LocationsQueryVariables = {};
-
-export type LocationsQuery = { __typename?: "Query" } & {
-  locations: Array<
-    { __typename?: "Location" } & Pick<Location, "code" | "name">
-  >;
-  user?: Maybe<
-    { __typename?: "User" } & Pick<User, "username"> & {
-        locations: {
-          __typename?: "UserLocations";
-        } & UserLocationsFieldsFragment;
-      }
+export type FuelAssetsQuery = { __typename?: "Query" } & {
+  fuelAssets: Array<
+    { __typename?: "FuelAsset" } & Pick<
+      FuelAsset,
+      "number" | "code" | "description" | "fuelType"
+    >
   >;
 };
 
-export type UpdateLocationsMutationVariables = {
-  input: UpdateUserLocationsInput;
+export type FuelAssetQueryVariables = {
+  number: Scalars["String"];
 };
 
-export type UpdateLocationsMutation = { __typename?: "Mutation" } & {
-  updateUserLocations: { __typename?: "UpdateUserLocationsResult" } & {
-    locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
-  };
+export type FuelAssetQuery = { __typename?: "Query" } & {
+  fuelAsset?: Maybe<
+    { __typename?: "FuelAsset" } & Pick<
+      FuelAsset,
+      "number" | "code" | "description" | "fuelType" | "fuelCost"
+    >
+  >;
 };
 
-export type UserPartsFragment = { __typename?: "User" } & Pick<
-  User,
-  "username" | "name"
->;
-
-export type LoginMutationVariables = {
-  input: LoginInput;
+export type PostFuelMutationVariables = {
+  input: PostFuelInput;
 };
 
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "LoginResult" } & {
-    user: { __typename?: "User" } & UserPartsFragment;
-  };
+export type PostFuelMutation = { __typename?: "Mutation" } & {
+  postFuel: { __typename?: "FuelResult" } & Pick<FuelResult, "success">;
 };
 
-export type UserQueryVariables = {};
-
-export type UserQuery = { __typename?: "Query" } & {
-  user?: Maybe<{ __typename?: "User" } & UserPartsFragment>;
-};
-
-export type LogoutMutationVariables = {};
-
-export type LogoutMutation = { __typename?: "Mutation" } & {
-  logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
-};
-
-export const UserLocationsFieldsFragmentDoc = gql`
-  fragment UserLocationsFields on UserLocations {
-    mode
-    list {
+export const FuelAssetsDocument = gql`
+  query FuelAssets {
+    fuelAssets {
+      number
       code
-      name
+      description
+      fuelType
     }
   }
-`;
-export const UserPartsFragmentDoc = gql`
-  fragment UserParts on User {
-    username
-    name
-  }
-`;
-export const LocationsDocument = gql`
-  query Locations {
-    locations {
-      code
-      name
-    }
-    user {
-      username
-      locations {
-        ...UserLocationsFields
-      }
-    }
-  }
-  ${UserLocationsFieldsFragmentDoc}
 `;
 
 /**
- * __useLocationsQuery__
+ * __useFuelAssetsQuery__
  *
- * To run a query within a React component, call `useLocationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useLocationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFuelAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFuelAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useLocationsQuery({
+ * const { data, loading, error } = useFuelAssetsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useLocationsQuery(
-  baseOptions?: Apollo.QueryHookOptions<LocationsQuery, LocationsQueryVariables>
+export function useFuelAssetsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    FuelAssetsQuery,
+    FuelAssetsQueryVariables
+  >
 ) {
-  return Apollo.useQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
+  return Apollo.useQuery<FuelAssetsQuery, FuelAssetsQueryVariables>(
+    FuelAssetsDocument,
     baseOptions
   );
 }
-export function useLocationsLazyQuery(
+export function useFuelAssetsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    LocationsQuery,
-    LocationsQueryVariables
+    FuelAssetsQuery,
+    FuelAssetsQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
+  return Apollo.useLazyQuery<FuelAssetsQuery, FuelAssetsQueryVariables>(
+    FuelAssetsDocument,
     baseOptions
   );
 }
-export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
-export type LocationsLazyQueryHookResult = ReturnType<
-  typeof useLocationsLazyQuery
+export type FuelAssetsQueryHookResult = ReturnType<typeof useFuelAssetsQuery>;
+export type FuelAssetsLazyQueryHookResult = ReturnType<
+  typeof useFuelAssetsLazyQuery
 >;
-export type LocationsQueryResult = Apollo.QueryResult<
-  LocationsQuery,
-  LocationsQueryVariables
+export type FuelAssetsQueryResult = Apollo.QueryResult<
+  FuelAssetsQuery,
+  FuelAssetsQueryVariables
 >;
-export const UpdateLocationsDocument = gql`
-  mutation UpdateLocations($input: UpdateUserLocationsInput!) {
-    updateUserLocations(input: $input) {
-      locations {
-        ...UserLocationsFields
-      }
+export const FuelAssetDocument = gql`
+  query FuelAsset($number: String!) {
+    fuelAsset(number: $number) {
+      number
+      code
+      description
+      fuelType
+      fuelCost
     }
   }
-  ${UserLocationsFieldsFragmentDoc}
-`;
-export type UpdateLocationsMutationFn = Apollo.MutationFunction<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-
-/**
- * __useUpdateLocationsMutation__
- *
- * To run a mutation, you first call `useUpdateLocationsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateLocationsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateLocationsMutation, { data, loading, error }] = useUpdateLocationsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateLocationsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >(UpdateLocationsDocument, baseOptions);
-}
-export type UpdateLocationsMutationHookResult = ReturnType<
-  typeof useUpdateLocationsMutation
->;
-export type UpdateLocationsMutationResult = Apollo.MutationResult<
-  UpdateLocationsMutation
->;
-export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-export const LoginDocument = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      user {
-        ...UserParts
-      }
-    }
-  }
-  ${UserPartsFragmentDoc}
-`;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  );
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
-export const UserDocument = gql`
-  query User {
-    user {
-      ...UserParts
-    }
-  }
-  ${UserPartsFragmentDoc}
 `;
 
 /**
- * __useUserQuery__
+ * __useFuelAssetQuery__
  *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFuelAssetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFuelAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserQuery({
+ * const { data, loading, error } = useFuelAssetQuery({
  *   variables: {
+ *      number: // value for 'number'
  *   },
  * });
  */
-export function useUserQuery(
-  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
+export function useFuelAssetQuery(
+  baseOptions: Apollo.QueryHookOptions<FuelAssetQuery, FuelAssetQueryVariables>
 ) {
-  return Apollo.useQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
+  return Apollo.useQuery<FuelAssetQuery, FuelAssetQueryVariables>(
+    FuelAssetDocument,
     baseOptions
   );
 }
-export function useUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
+export function useFuelAssetLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FuelAssetQuery,
+    FuelAssetQueryVariables
+  >
 ) {
-  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
+  return Apollo.useLazyQuery<FuelAssetQuery, FuelAssetQueryVariables>(
+    FuelAssetDocument,
     baseOptions
   );
 }
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const LogoutDocument = gql`
-  mutation Logout {
-    logout {
+export type FuelAssetQueryHookResult = ReturnType<typeof useFuelAssetQuery>;
+export type FuelAssetLazyQueryHookResult = ReturnType<
+  typeof useFuelAssetLazyQuery
+>;
+export type FuelAssetQueryResult = Apollo.QueryResult<
+  FuelAssetQuery,
+  FuelAssetQueryVariables
+>;
+export const PostFuelDocument = gql`
+  mutation PostFuel($input: PostFuelInput!) {
+    postFuel(input: $input) {
       success
     }
   }
 `;
-export type LogoutMutationFn = Apollo.MutationFunction<
-  LogoutMutation,
-  LogoutMutationVariables
+export type PostFuelMutationFn = Apollo.MutationFunction<
+  PostFuelMutation,
+  PostFuelMutationVariables
 >;
 
 /**
- * __useLogoutMutation__
+ * __usePostFuelMutation__
  *
- * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * To run a mutation, you first call `usePostFuelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostFuelMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ * const [postFuelMutation, { data, loading, error }] = usePostFuelMutation({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useLogoutMutation(
+export function usePostFuelMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    LogoutMutation,
-    LogoutMutationVariables
+    PostFuelMutation,
+    PostFuelMutationVariables
   >
 ) {
-  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
-    LogoutDocument,
+  return Apollo.useMutation<PostFuelMutation, PostFuelMutationVariables>(
+    PostFuelDocument,
     baseOptions
   );
 }
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<
-  LogoutMutation,
-  LogoutMutationVariables
+export type PostFuelMutationHookResult = ReturnType<typeof usePostFuelMutation>;
+export type PostFuelMutationResult = Apollo.MutationResult<PostFuelMutation>;
+export type PostFuelMutationOptions = Apollo.BaseMutationOptions<
+  PostFuelMutation,
+  PostFuelMutationVariables
 >;

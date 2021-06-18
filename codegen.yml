@@ -38,6 +38,7 @@ generates:
         ScorecardGroup: "./nav#NavJobPostingGroup"
         Scorecard: "../scorecard/Scorecard#ScorecardDocument"
         ScorecardConfig: "./nav#NavJob"
+        FuelAsset: "./nav#NavFuelAsset"
     hooks:
       afterOneFileWrite:
         - eslint --fix
@@ -69,6 +70,19 @@ generates:
         - eslint --fix
   web/src/scorecard/graphql/index.tsx:
     documents: "web/src/scorecard/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
+  web/src/fuel/graphql/index.tsx:
+    documents: "web/src/fuel/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"

@@ -1,7 +1,7 @@
 export enum NavItemJournalTemplate {
   Mortality = "MORTALITY",
-  Adjustment = "QTY ADJ",
-  GradeOff = "GRADE OFF",
+  Adjustment = "QTYADJ",
+  GradeOff = "GRADEOFF",
   Move = "MOVE",
   Wean = "WEAN",
   Purchase = "PURCHASE"
@@ -12,7 +12,8 @@ export enum NavItemJournalBatch {
 }
 
 export enum NavJobJournalTemplate {
-  Job = "JOB"
+  Job = "JOB",
+  Asset = "ASSETS"
 }
 
 export enum NavJobJournalBatch {

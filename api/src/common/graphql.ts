@@ -8,7 +8,8 @@ import {
   NavReason,
   NavLocation,
   NavStandardItemJournal,
-  NavJobPostingGroup
+  NavJobPostingGroup,
+  NavFuelAsset
 } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
@@ -90,6 +91,8 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  fuelAsset?: Maybe<FuelAsset>;
+  fuelAssets: Array<FuelAsset>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
@@ -115,6 +118,10 @@ export type Query = {
   scorecardGroups: Array<ScorecardGroup>;
   user?: Maybe<User>;
   users: Array<User>;
+};
+
+export type QueryFuelAssetArgs = {
+  number: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -163,6 +170,118 @@ export type QueryScorecardArgs = {
 
 export type QueryScorecardConfigArgs = {
   job: Scalars["String"];
+};
+
+export type FuelAsset = {
+  __typename?: "FuelAsset";
+  number: Scalars["String"];
+  code: Scalars["String"];
+  description: Scalars["String"];
+  fuelType: Scalars["String"];
+  fuelCost: Scalars["Float"];
+};
+
+export type PostFuelInput = {
+  asset: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  gallons: Scalars["Float"];
+  mileage: Scalars["Int"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type FuelResult = {
+  __typename?: "FuelResult";
+  success: Scalars["Boolean"];
+};
+
+export type Mutation = {
+  __typename?: "Mutation";
+  login: LoginResult;
+  logout: LogoutResult;
+  postFuel: FuelResult;
+  postPigAdjustment: PigAdjustmentResult;
+  postPigGradeOff: PigGradeOffResult;
+  postPigMortality: PigMortalityResult;
+  postPigMove: PigMoveResult;
+  postPigPurchase: PigPurchaseResult;
+  postPigWean: PigWeanResult;
+  postScorecard: ScorecardResult;
+  savePigAdjustment: PigAdjustmentResult;
+  savePigGradeOff: PigGradeOffResult;
+  savePigMortality: PigMortalityResult;
+  savePigMove: PigMoveResult;
+  savePigPurchase: PigPurchaseResult;
+  savePigWean: PigWeanResult;
+  saveScorecard: ScorecardResult;
+  updateUserLocations: UpdateUserLocationsResult;
+};
+
+export type MutationLoginArgs = {
+  input: LoginInput;
+};
+
+export type MutationPostFuelArgs = {
+  input: PostFuelInput;
+};
+
+export type MutationPostPigAdjustmentArgs = {
+  input: PostPigAdjustmentInput;
+};
+
+export type MutationPostPigGradeOffArgs = {
+  input: PostPigGradeOffInput;
+};
+
+export type MutationPostPigMortalityArgs = {
+  input: PostPigMortalityInput;
+};
+
+export type MutationPostPigMoveArgs = {
+  input: PostPigMoveInput;
+};
+
+export type MutationPostPigPurchaseArgs = {
+  input: PostPigPurchaseInput;
+};
+
+export type MutationPostPigWeanArgs = {
+  input: PostPigWeanInput;
+};
+
+export type MutationPostScorecardArgs = {
+  input: PostScorecardInput;
+};
+
+export type MutationSavePigAdjustmentArgs = {
+  input: SavePigAdjustmentInput;
+};
+
+export type MutationSavePigGradeOffArgs = {
+  input: SavePigGradeOffInput;
+};
+
+export type MutationSavePigMortalityArgs = {
+  input: SavePigMortalityInput;
+};
+
+export type MutationSavePigMoveArgs = {
+  input: SavePigMoveInput;
+};
+
+export type MutationSavePigPurchaseArgs = {
+  input: SavePigPurchaseInput;
+};
+
+export type MutationSavePigWeanArgs = {
+  input: SavePigWeanInput;
+};
+
+export type MutationSaveScorecardArgs = {
+  input: PostScorecardInput;
+};
+
+export type MutationUpdateUserLocationsArgs = {
+  input: UpdateUserLocationsInput;
 };
 
 export type PigActivityDefaults = {
@@ -459,91 +578,6 @@ export type ItemJournalTemplate = {
   reasonCode: Scalars["String"];
 };
 
-export type Mutation = {
-  __typename?: "Mutation";
-  login: LoginResult;
-  logout: LogoutResult;
-  postPigAdjustment: PigAdjustmentResult;
-  postPigGradeOff: PigGradeOffResult;
-  postPigMortality: PigMortalityResult;
-  postPigMove: PigMoveResult;
-  postPigPurchase: PigPurchaseResult;
-  postPigWean: PigWeanResult;
-  postScorecard: ScorecardResult;
-  savePigAdjustment: PigAdjustmentResult;
-  savePigGradeOff: PigGradeOffResult;
-  savePigMortality: PigMortalityResult;
-  savePigMove: PigMoveResult;
-  savePigPurchase: PigPurchaseResult;
-  savePigWean: PigWeanResult;
-  saveScorecard: ScorecardResult;
-  updateUserLocations: UpdateUserLocationsResult;
-};
-
-export type MutationLoginArgs = {
-  input: LoginInput;
-};
-
-export type MutationPostPigAdjustmentArgs = {
-  input: PostPigAdjustmentInput;
-};
-
-export type MutationPostPigGradeOffArgs = {
-  input: PostPigGradeOffInput;
-};
-
-export type MutationPostPigMortalityArgs = {
-  input: PostPigMortalityInput;
-};
-
-export type MutationPostPigMoveArgs = {
-  input: PostPigMoveInput;
-};
-
-export type MutationPostPigPurchaseArgs = {
-  input: PostPigPurchaseInput;
-};
-
-export type MutationPostPigWeanArgs = {
-  input: PostPigWeanInput;
-};
-
-export type MutationPostScorecardArgs = {
-  input: PostScorecardInput;
-};
-
-export type MutationSavePigAdjustmentArgs = {
-  input: SavePigAdjustmentInput;
-};
-
-export type MutationSavePigGradeOffArgs = {
-  input: SavePigGradeOffInput;
-};
-
-export type MutationSavePigMortalityArgs = {
-  input: SavePigMortalityInput;
-};
-
-export type MutationSavePigMoveArgs = {
-  input: SavePigMoveInput;
-};
-
-export type MutationSavePigPurchaseArgs = {
-  input: SavePigPurchaseInput;
-};
-
-export type MutationSavePigWeanArgs = {
-  input: SavePigWeanInput;
-};
-
-export type MutationSaveScorecardArgs = {
-  input: PostScorecardInput;
-};
-
-export type MutationUpdateUserLocationsArgs = {
-  input: UpdateUserLocationsInput;
-};
-
 export type ScorecardGroup = {
   __typename?: "ScorecardGroup";
   code: Scalars["String"];
@@ -766,6 +800,10 @@ export type ResolversTypes = ResolversObject<{
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: ResolverTypeWrapper<{}>;
+  FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
+  PostFuelInput: PostFuelInput;
+  FuelResult: ResolverTypeWrapper<FuelResult>;
+  Mutation: ResolverTypeWrapper<{}>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
@@ -832,7 +870,6 @@ export type ResolversTypes = ResolversObject<{
     }
   >;
   ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
-  Mutation: ResolverTypeWrapper<{}>;
   ScorecardGroup: ResolverTypeWrapper<NavJobPostingGroup>;
   ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
@@ -879,6 +916,10 @@ export type ResolversParentTypes = ResolversObject<{
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: {};
+  FuelAsset: NavFuelAsset;
+  PostFuelInput: PostFuelInput;
+  FuelResult: FuelResult;
+  Mutation: {};
   PigActivityDefaults: UserSettingsDocument;
   PigWeanEvent: NavStandardItemJournal;
   PigGradeOffEvent: NavStandardItemJournal;
@@ -936,7 +977,6 @@ export type ResolversParentTypes = ResolversObject<{
     defaults: ResolversParentTypes["PigActivityDefaults"];
   };
   ItemJournalTemplate: ItemJournalTemplateObject;
-  Mutation: {};
   ScorecardGroup: NavJobPostingGroup;
   ScorecardElement: ScorecardElement;
   ID: Scalars["ID"];
@@ -1042,6 +1082,17 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  fuelAsset?: Resolver<
+    Maybe<ResolversTypes["FuelAsset"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFuelAssetArgs, "number">
+  >;
+  fuelAssets?: Resolver<
+    Array<ResolversTypes["FuelAsset"]>,
+    ParentType,
+    ContextType
+  >;
   itemJournalTemplates?: Resolver<
     Maybe<Array<ResolversTypes["ItemJournalTemplate"]>>,
     ParentType,
@@ -1171,6 +1222,135 @@ export type QueryResolvers<
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes["User"]>, ParentType, ContextType>;
+}>;
+
+export type FuelAssetResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["FuelAsset"] = ResolversParentTypes["FuelAsset"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  fuelType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  fuelCost?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type FuelResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["FuelResult"] = ResolversParentTypes["FuelResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type MutationResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
+> = ResolversObject<{
+  login?: Resolver<
+    ResolversTypes["LoginResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationLoginArgs, "input">
+  >;
+  logout?: Resolver<ResolversTypes["LogoutResult"], ParentType, ContextType>;
+  postFuel?: Resolver<
+    ResolversTypes["FuelResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostFuelArgs, "input">
+  >;
+  postPigAdjustment?: Resolver<
+    ResolversTypes["PigAdjustmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigAdjustmentArgs, "input">
+  >;
+  postPigGradeOff?: Resolver<
+    ResolversTypes["PigGradeOffResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigGradeOffArgs, "input">
+  >;
+  postPigMortality?: Resolver<
+    ResolversTypes["PigMortalityResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigMortalityArgs, "input">
+  >;
+  postPigMove?: Resolver<
+    ResolversTypes["PigMoveResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigMoveArgs, "input">
+  >;
+  postPigPurchase?: Resolver<
+    ResolversTypes["PigPurchaseResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigPurchaseArgs, "input">
+  >;
+  postPigWean?: Resolver<
+    ResolversTypes["PigWeanResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostPigWeanArgs, "input">
+  >;
+  postScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostScorecardArgs, "input">
+  >;
+  savePigAdjustment?: Resolver<
+    ResolversTypes["PigAdjustmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigAdjustmentArgs, "input">
+  >;
+  savePigGradeOff?: Resolver<
+    ResolversTypes["PigGradeOffResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigGradeOffArgs, "input">
+  >;
+  savePigMortality?: Resolver<
+    ResolversTypes["PigMortalityResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigMortalityArgs, "input">
+  >;
+  savePigMove?: Resolver<
+    ResolversTypes["PigMoveResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigMoveArgs, "input">
+  >;
+  savePigPurchase?: Resolver<
+    ResolversTypes["PigPurchaseResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigPurchaseArgs, "input">
+  >;
+  savePigWean?: Resolver<
+    ResolversTypes["PigWeanResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSavePigWeanArgs, "input">
+  >;
+  saveScorecard?: Resolver<
+    ResolversTypes["ScorecardResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSaveScorecardArgs, "input">
+  >;
+  updateUserLocations?: Resolver<
+    ResolversTypes["UpdateUserLocationsResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserLocationsArgs, "input">
+  >;
 }>;
 
 export type PigActivityDefaultsResolvers<
@@ -1537,109 +1717,6 @@ export type ItemJournalTemplateResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
-export type MutationResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
-> = ResolversObject<{
-  login?: Resolver<
-    ResolversTypes["LoginResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationLoginArgs, "input">
-  >;
-  logout?: Resolver<ResolversTypes["LogoutResult"], ParentType, ContextType>;
-  postPigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustmentResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigAdjustmentArgs, "input">
-  >;
-  postPigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOffResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigGradeOffArgs, "input">
-  >;
-  postPigMortality?: Resolver<
-    ResolversTypes["PigMortalityResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigMortalityArgs, "input">
-  >;
-  postPigMove?: Resolver<
-    ResolversTypes["PigMoveResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigMoveArgs, "input">
-  >;
-  postPigPurchase?: Resolver<
-    ResolversTypes["PigPurchaseResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigPurchaseArgs, "input">
-  >;
-  postPigWean?: Resolver<
-    ResolversTypes["PigWeanResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigWeanArgs, "input">
-  >;
-  postScorecard?: Resolver<
-    ResolversTypes["ScorecardResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostScorecardArgs, "input">
-  >;
-  savePigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustmentResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigAdjustmentArgs, "input">
-  >;
-  savePigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOffResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigGradeOffArgs, "input">
-  >;
-  savePigMortality?: Resolver<
-    ResolversTypes["PigMortalityResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigMortalityArgs, "input">
-  >;
-  savePigMove?: Resolver<
-    ResolversTypes["PigMoveResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigMoveArgs, "input">
-  >;
-  savePigPurchase?: Resolver<
-    ResolversTypes["PigPurchaseResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigPurchaseArgs, "input">
-  >;
-  savePigWean?: Resolver<
-    ResolversTypes["PigWeanResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSavePigWeanArgs, "input">
-  >;
-  saveScorecard?: Resolver<
-    ResolversTypes["ScorecardResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSaveScorecardArgs, "input">
-  >;
-  updateUserLocations?: Resolver<
-    ResolversTypes["UpdateUserLocationsResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationUpdateUserLocationsArgs, "input">
-  >;
-}>;
-
 export type ScorecardGroupResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["ScorecardGroup"] = ResolversParentTypes["ScorecardGroup"]
@@ -1791,6 +1868,9 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  FuelAsset?: FuelAssetResolvers<ContextType>;
+  FuelResult?: FuelResultResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
   PigWeanEvent?: PigWeanEventResolvers<ContextType>;
   PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;
@@ -1813,7 +1893,6 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   PigWean?: PigWeanResolvers<ContextType>;
   PigWeanResult?: PigWeanResultResolvers<ContextType>;
   ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
   ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
   ScorecardElement?: ScorecardElementResolvers<ContextType>;
   ScorecardPage?: ScorecardPageResolvers<ContextType>;

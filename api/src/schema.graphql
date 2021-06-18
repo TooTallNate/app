@@ -48,6 +48,8 @@ input ResourceFilter {
 
 type Query {
   animals: [Item!]!
+  fuelAsset(number: String!): FuelAsset
+  fuelAssets: [FuelAsset!]!
   itemJournalTemplates: [ItemJournalTemplate!]
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
@@ -73,6 +75,47 @@ type Query {
   scorecardGroups: [ScorecardGroup!]!
   user: User
   users: [User!]!
+}
+
+type FuelAsset {
+  number: String!
+  code: String!
+  description: String!
+  fuelType: String!
+  fuelCost: Float!
+}
+
+input PostFuelInput {
+  asset: String!
+  postingDate: String
+  gallons: Float!
+  mileage: Int!
+  comments: String
+}
+
+type FuelResult {
+  success: Boolean!
+}
+
+type Mutation {
+  login(input: LoginInput!): LoginResult!
+  logout: LogoutResult!
+  postFuel(input: PostFuelInput!): FuelResult!
+  postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
+  postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
+  postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
+  postPigMove(input: PostPigMoveInput!): PigMoveResult!
+  postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
+  postPigWean(input: PostPigWeanInput!): PigWeanResult!
+  postScorecard(input: PostScorecardInput!): ScorecardResult!
+  savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
+  savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
+  savePigMortality(input: SavePigMortalityInput!): PigMortalityResult!
+  savePigMove(input: SavePigMoveInput!): PigMoveResult!
+  savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
+  savePigWean(input: SavePigWeanInput!): PigWeanResult!
+  saveScorecard(input: PostScorecardInput!): ScorecardResult!
+  updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
 
 type PigActivityDefaults {
@@ -345,26 +388,6 @@ type ItemJournalTemplate {
   type: String!
   sourceCode: String!
   reasonCode: String!
-}
-
-type Mutation {
-  login(input: LoginInput!): LoginResult!
-  logout: LogoutResult!
-  postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
-  postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
-  postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
-  postPigMove(input: PostPigMoveInput!): PigMoveResult!
-  postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
-  postPigWean(input: PostPigWeanInput!): PigWeanResult!
-  postScorecard(input: PostScorecardInput!): ScorecardResult!
-  savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
-  savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
-  savePigMortality(input: SavePigMortalityInput!): PigMortalityResult!
-  savePigMove(input: SavePigMoveInput!): PigMoveResult!
-  savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
-  savePigWean(input: SavePigWeanInput!): PigWeanResult!
-  saveScorecard(input: PostScorecardInput!): ScorecardResult!
-  updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }
 
 type ScorecardGroup {
