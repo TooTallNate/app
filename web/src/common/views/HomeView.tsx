@@ -5,6 +5,8 @@ import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import ViewContent from "../components/view/ViewContent";
+import QRCodeReader from "../components/input/QRCodeReader";
+import Divider from "../components/layout/Divider";
 
 const HomeView: React.FC = () => {
   return (
@@ -16,10 +18,10 @@ const HomeView: React.FC = () => {
         <StackedNav>
           <StackedNavLink to="/pig-activity">Pig Activity</StackedNavLink>
           <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
-          <StackedNavLink to="/fuel-maintenance">
-            Fuel and Maintenance
-          </StackedNavLink>
+          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
         </StackedNav>
+        <Divider className="py-3" centerText="or" />
+        <QRCodeReader />
       </ViewContent>
     </View>
   );

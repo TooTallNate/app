@@ -1,7 +1,7 @@
 export enum NavItemJournalTemplate {
   Mortality = "MORTALITY",
   Adjustment = "QTYADJ",
-  GradeOff = "GRADE OFF",
+  GradeOff = "GRADEOFF",
   Move = "MOVE",
   Wean = "WEAN",
   Purchase = "PURCHASE"

@@ -81,8 +81,8 @@ generates:
     hooks:
       afterOneFileWrite:
         - eslint --fix
-  web/src/fuel-maintenance/graphql/index.tsx:
-    documents: "web/src/fuel-maintenance/graphql/*.gql"
+  web/src/fuel/graphql/index.tsx:
+    documents: "web/src/fuel/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"
