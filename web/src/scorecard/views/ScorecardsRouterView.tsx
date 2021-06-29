@@ -7,6 +7,7 @@ import ScorecardGroupView from "./ScorecardGroupView";
 
 const ScorecardsRouterView: React.FC = () => {
   const match = useRouteMatch();
+  console.log(match);
   return (
     <Switch>
       <Route exact path={`${match.url}`} component={ScorecardGroupView} />

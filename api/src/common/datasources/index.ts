@@ -5,6 +5,8 @@ import NavResourceDataSource from "./NavResourceDataSource";
 import NavItemJournalDataSource from "./NavItemJournalDataSource";
 import NavJobJournalDataSource from "./NavJobJournalDataSource";
 import NavConfigDataSouce from "./NavConfigDataSource";
+import NavFuelAssetDataSource from "./NavFuelAssetDataSource";
+import NavFuelMaintenanceJournalDataSource from "./NavFuelMaintenanceJournalDataSource";
 export interface DataSources {
   [source: string]: any;
   navUser: NavUserDataSource;
@@ -14,6 +16,8 @@ export interface DataSources {
   navItemJournal: NavItemJournalDataSource;
   navJobJournal: NavJobJournalDataSource;
   navConfig: NavConfigDataSouce;
+  navFuelAsset: NavFuelAssetDataSource;
+  navFuelMaintenanceJournal: NavFuelMaintenanceJournalDataSource;
 }
 
 export default (): DataSources => {
@@ -24,6 +28,8 @@ export default (): DataSources => {
     navResource: new NavResourceDataSource(),
     navItemJournal: new NavItemJournalDataSource(),
     navJobJournal: new NavJobJournalDataSource(),
-    navConfig: new NavConfigDataSouce()
+    navConfig: new NavConfigDataSouce(),
+    navFuelAsset: new NavFuelAssetDataSource(),
+    navFuelMaintenanceJournal: new NavFuelMaintenanceJournalDataSource()
   };
 };
