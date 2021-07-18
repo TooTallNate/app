@@ -18,6 +18,7 @@ type Job {
 type Item {
   number: String!
   description: String!
+  cost: Int
 }
 
 type Reason {
@@ -51,5 +52,6 @@ type Query {
   resource(code: String!): Resource
   jobs(input: JobFilter): [Job!]!
   job(number: String!): Job
+  item(number: String!): Item
 }
 

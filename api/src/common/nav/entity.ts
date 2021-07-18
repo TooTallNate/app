@@ -42,6 +42,7 @@ export interface NavReason {
 export interface NavItem {
   No: string;
   Description: string;
+  Last_Direct_Cost: number;
 }
 
 export interface NavLocation {
@@ -152,7 +153,7 @@ export interface NavFuelMaintenanceJournalLine {
   Description: string;
 }
 
-export interface NavExpenseCode {
+export interface NavMaintenanceExpense {
   Code: string;
   Description: string;
   Maintenance_Expense_Account: string;
@@ -163,4 +164,14 @@ export interface NavMaintenanceInterval {
   Fixed_Asset_No: string;
   MaintenanceInterval: number;
   Unit_of_Measure_Code: string;
+}
+
+export interface NavMaintenanceAsset {
+  No: string;
+  Description: string;
+  FA_Class_Code: string;
+  FA_Subclass_Code: string;
+  Global_Dimension_1_Code: string;
+  Global_Dimension_2_Code: string;
+  Location_Code: string;
 }

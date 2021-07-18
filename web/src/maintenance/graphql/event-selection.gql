@@ -1,0 +1,6 @@
+query MaintenanceAssets {
+    maintenanceAssets {
+        number
+        description
+    }
+}

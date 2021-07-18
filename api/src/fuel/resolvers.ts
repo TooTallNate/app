@@ -27,7 +27,7 @@ export const queries: QueryResolvers = {
 export const mutations: MutationResolvers = {
   async postFuel(_, { input }, { dataSources, user }) {
     const fuelAsset = await dataSources.navFuelAsset.getByNo(input.asset);
-    const docNo = getDocumentNumber("SCR", user.name);
+    const docNo = getDocumentNumber("FUEL", user.name);
     const account = await dataSources.navFuelAsset.getExpenseByCode(
       fuelAsset.Dimension_Code
     );

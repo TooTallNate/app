@@ -8,6 +8,7 @@ import { useAuth } from "./user/contexts/auth";
 import AccountRouterView from "./user/views/AccountRouterView";
 import ScorecardsRouterView from "./scorecard/views/ScorecardsRouterView";
 import FuelRouterView from "./fuel/views/FuelRouterView";
+import MaintenanceRouterView from "./maintenance/views/MaintenanceRouterView";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const AuthenticatedApp: React.FC = () => {
         <Route path="/pig-activity" component={ActivityView} />
         <Route path="/scorecard" component={ScorecardsRouterView} />
         <Route path="/fuel" component={FuelRouterView} />
+        <Route path="/maintenance" component={MaintenanceRouterView} />
         <Route path="/account" component={AccountRouterView} />
         <Redirect to="/" />
       </Switch>

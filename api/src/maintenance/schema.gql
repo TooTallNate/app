@@ -1,0 +1,48 @@
+type MaintenanceAsset {
+  number: String!
+  description: String
+  classCode: String
+}
+
+# type MaintenanceExpense {
+#   code: String!
+#   description: String
+#   account: String!
+# }
+
+type MaintenanceInterval {
+  code: String!
+  asset: String!
+  interval: Int
+  unitType: String
+}
+
+# an asset will reach out and grab the history as an array
+# type MaintenanceHistory {
+#   type: String!
+#   date: String!
+# }
+
+input PostMaintenanceInput {
+  asset: String!
+  postingDate: String
+  type: String!
+  mileage: Int!
+  workHours: Int!
+  totalCost: Int
+  comments: String
+}
+
+type MaintenanceResult {
+  success: Boolean!
+}
+
+type Query {
+  maintenanceAsset(number: String!): MaintenanceAsset
+  maintenanceAssets: [MaintenanceAsset!]!
+  maintenanceIntervals(assetNo: String!): [MaintenanceInterval!]!
+}
+
+type Mutation {
+  postMaintenance(input: PostMaintenanceInput!): MaintenanceResult!
+}

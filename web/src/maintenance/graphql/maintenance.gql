@@ -1,0 +1,21 @@
+query MaintenanceAsset($number: String!) {
+    maintenanceAsset(number: $number) {
+        number
+        description
+    }
+    maintenanceIntervals(assetNo: $number) {
+      code
+      interval
+      unitType
+    }
+    item(number: "LABOR") {
+      number
+      cost
+    }
+}
+
+mutation PostMaintenance($input: PostMaintenanceInput!) {
+  postMaintenance(input: $input) {
+    success
+  }
+}
