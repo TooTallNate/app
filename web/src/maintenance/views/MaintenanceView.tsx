@@ -31,7 +31,7 @@ interface ViewParams {
 interface FormData {
   asset: string;
   postingDate?: string;
-  type: number;
+  type: string;
   mileage: number;
   workHours: number;
   comments?: string;
@@ -42,6 +42,7 @@ const MaintenanceView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
   const formContext = useForm<FormData>();
+  const [itemCost, setItemCost] = useState(0);
   const { loading, data } = useMaintenanceAssetQuery({
     variables: {
       number: params.asset
@@ -53,30 +54,36 @@ const MaintenanceView: React.FC = () => {
   const [post] = usePostMaintenanceMutation();
 
   const onSubmit: OnSubmit<FormData> = async data => {
-    // try {
-    //   await post({
-    //     variables: {
-    //       input: {
-    //         ...data,
-    //         asset: params.asset
-    //       }
-    //     }
-    //   });
-    //   setMessage({
-    //     message: "Entry recorded successfully.",
-    //     level: "success",
-    //     timeout: 2000
-    //   });
-    //   history.push("/fuel");
-    // } catch (e) {
-    //   setMessage({
-    //     message: e.toString(),
-    //     level: "error",
-    //     timeout: 3000
-    //   });
-    // }
-    console.log(data);
+    try {
+      await post({
+        variables: {
+          input: {
+            ...data,
+            asset: params.asset
+          }
+        }
+      });
+      console.log(JSON.stringify(data, null, 2));
+      setMessage({
+        message: "Entry recorded successfully.",
+        level: "success",
+        timeout: 2000
+      });
+      history.push("/maintenance");
+    } catch (e) {
+      setMessage({
+        message: e.toString(),
+        level: "error",
+        timeout: 3000
+      });
+    }
   };
+
+  useEffect(() => {
+    if (data && data.item && data.item.cost) {
+      setItemCost(data.item.cost);
+    }
+  }, [data]);
 
   const workHours = watch("workHours") || 0;
 
@@ -143,9 +150,7 @@ const MaintenanceView: React.FC = () => {
               rules={{ required: "Number of work hours field is required." }}
             >
               <FormFieldLabel>Work Hours</FormFieldLabel>
-              <span className="ml-2">
-                {/* @ ${((data && data.item && data.item.cost) || 0)?.toFixed(2)} */}
-              </span>
+              <span className="ml-2">@ ${itemCost.toFixed(2)}</span>
               <FormFieldInput>
                 <NumberInput className="w-32" />
               </FormFieldInput>

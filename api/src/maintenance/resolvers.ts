@@ -53,13 +53,15 @@ export const mutations: MutationResolvers = {
     const account = await dataSources.navMaintenanceAsset.getExpenseByCode(
       maintenanceAsset.FA_Class_Code
     );
+    const laborCost = await (await dataSources.navItemJournal.getItem("LABOR"))
+      .Last_Direct_Cost;
     // const date = navDate(
     //   input.postingDate
     //     ? parse(input.postingDate, "MM/dd/yyyy", new Date())
     //     : new Date()
     // );
 
-    const totalAmount: number = input.mileage;
+    const totalAmount: number = laborCost * input.workHours;
 
     await dataSources.navFuelMaintenanceJournal.postEntry({
       Journal_Template_Name: NavJobJournalTemplate.Asset,
@@ -75,7 +77,7 @@ export const mutations: MutationResolvers = {
       Shortcut_Dimension_2_Code: maintenanceAsset.Global_Dimension_2_Code,
       Quantity: input.mileage,
       Meta: input.mileage,
-      //Amount: totalAmount,
+      Amount: totalAmount,
       Description: input.comments
     });
     return { success: true };
