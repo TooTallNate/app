@@ -75,7 +75,7 @@ export const mutations: MutationResolvers = {
       Bal_Account_No: account.Maintenance_Expense_Account,
       Shortcut_Dimension_1_Code: maintenanceAsset.Global_Dimension_1_Code,
       Shortcut_Dimension_2_Code: maintenanceAsset.Global_Dimension_2_Code,
-      Quantity: input.mileage,
+      Quantity: input.workHours,
       Meta: input.mileage,
       Amount: totalAmount,
       Description: input.comments
