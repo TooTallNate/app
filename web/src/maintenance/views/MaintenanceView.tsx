@@ -32,7 +32,7 @@ interface FormData {
   asset: string;
   postingDate?: string;
   type: string;
-  mileage: number;
+  mileage?: number;
   workHours: number;
   comments?: string;
 }
@@ -135,10 +135,7 @@ const MaintenanceView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <FormField
-              name="mileage"
-              rules={{ required: "Number of miles field is required." }}
-            >
+            <FormField name="mileage">
               <FormFieldLabel>Current Miles/Hours</FormFieldLabel>
               <FormFieldInput>
                 <NumberInput className="w-32" />

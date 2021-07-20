@@ -327,8 +327,9 @@ export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   type: Scalars["String"];
-  mileage: Scalars["Int"];
+  mileage?: Maybe<Scalars["Int"]>;
   workHours: Scalars["Int"];
+  totalCost?: Maybe<Scalars["Int"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 

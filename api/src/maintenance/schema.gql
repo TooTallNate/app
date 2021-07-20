@@ -27,7 +27,7 @@ input PostMaintenanceInput {
   asset: String!
   postingDate: String
   type: String!
-  mileage: Int!
+  mileage: Int
   workHours: Int!
   totalCost: Int
   comments: String
