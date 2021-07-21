@@ -294,6 +294,7 @@ export type MaintenanceInterval = {
   asset: Scalars["String"];
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type PostMaintenanceInput = {
@@ -728,7 +729,7 @@ export type MaintenanceAssetQuery = { __typename?: "Query" } & {
   maintenanceIntervals: Array<
     { __typename?: "MaintenanceInterval" } & Pick<
       MaintenanceInterval,
-      "code" | "interval" | "unitType"
+      "code" | "interval" | "unitType" | "description"
     >
   >;
   item?: Maybe<{ __typename?: "Item" } & Pick<Item, "number" | "cost">>;
@@ -811,6 +812,7 @@ export const MaintenanceAssetDocument = gql`
       code
       interval
       unitType
+      description
     }
     item(number: "LABOR") {
       number

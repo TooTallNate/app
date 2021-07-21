@@ -321,6 +321,7 @@ export type MaintenanceInterval = {
   asset: Scalars["String"];
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type PostMaintenanceInput = {
@@ -1471,6 +1472,11 @@ export type MaintenanceIntervalResolvers<
   asset?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   interval?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   unitType?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

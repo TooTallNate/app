@@ -294,6 +294,7 @@ export type MaintenanceInterval = {
   asset: Scalars["String"];
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type PostMaintenanceInput = {

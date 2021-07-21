@@ -128,7 +128,7 @@ const MaintenanceView: React.FC = () => {
                   items={((data && data.maintenanceIntervals) || []).map(
                     interval => ({
                       value: interval.code || "",
-                      title: interval.code || ""
+                      title: interval.description || ""
                     })
                   )}
                 />

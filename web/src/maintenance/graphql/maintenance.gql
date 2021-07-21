@@ -7,6 +7,7 @@ query MaintenanceAsset($number: String!) {
       code
       interval
       unitType
+      description
     }
     item(number: "LABOR") {
       number

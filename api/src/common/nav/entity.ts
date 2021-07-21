@@ -164,6 +164,8 @@ export interface NavMaintenanceInterval {
   Fixed_Asset_No: string;
   MaintenanceInterval: number;
   Unit_of_Measure_Code: string;
+  Description: string;
+  Maintenance_Expense_Account: string;
 }
 
 export interface NavMaintenanceAsset {

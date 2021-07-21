@@ -15,6 +15,7 @@ type MaintenanceInterval {
   asset: String!
   interval: Int
   unitType: String
+  description: String
 }
 
 # an asset will reach out and grab the history as an array

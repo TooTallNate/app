@@ -9,8 +9,7 @@ import {
   NavJobJournalTemplate,
   NavMaintenanceInterval
 } from "../common/nav";
-import { getDocumentNumber, navDate } from "../common/utils";
-import { getItemJournalTemplate } from "../pig-activity/resolvers/pig-activity";
+import { getDocumentNumber } from "../common/utils";
 
 export const MaintenanceAsset: MaintenanceAssetResolvers = {
   number: navMaintenanceAsset => navMaintenanceAsset.No,
@@ -24,7 +23,8 @@ export const MaintenanceInterval: MaintenanceIntervalResolvers = {
   interval: navMaintenanceInterval =>
     navMaintenanceInterval.MaintenanceInterval,
   unitType: navMaintenanceInterval =>
-    navMaintenanceInterval.Unit_of_Measure_Code
+    navMaintenanceInterval.Unit_of_Measure_Code,
+  description: navMaintenanceInterval => navMaintenanceInterval.Description
 };
 
 export const queries: QueryResolvers = {
@@ -51,7 +51,7 @@ export const mutations: MutationResolvers = {
     );
     const docNo = getDocumentNumber("MAIN", user.name);
     const account = await dataSources.navMaintenanceAsset.getExpenseByCode(
-      maintenanceAsset.FA_Class_Code
+      input.type
     );
     const laborCost = await (await dataSources.navItemJournal.getItem("LABOR"))
       .Last_Direct_Cost;

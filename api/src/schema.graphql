@@ -135,6 +135,7 @@ type MaintenanceInterval {
   asset: String!
   interval: Int
   unitType: String
+  description: String
 }
 
 input PostMaintenanceInput {
