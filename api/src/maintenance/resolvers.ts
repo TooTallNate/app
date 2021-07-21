@@ -1,3 +1,4 @@
+import { parse } from "date-fns";
 import {
   MaintenanceAssetResolvers,
   MaintenanceIntervalResolvers,
@@ -9,7 +10,7 @@ import {
   NavJobJournalTemplate,
   NavMaintenanceInterval
 } from "../common/nav";
-import { getDocumentNumber } from "../common/utils";
+import { getDocumentNumber, navDate } from "../common/utils";
 
 export const MaintenanceAsset: MaintenanceAssetResolvers = {
   number: navMaintenanceAsset => navMaintenanceAsset.No,
@@ -56,13 +57,18 @@ export const mutations: MutationResolvers = {
     const laborCost = await (await dataSources.navItemJournal.getItem("LABOR"))
       .Last_Direct_Cost;
 
+    const date = navDate(
+      input.postingDate
+        ? parse(input.postingDate, "MM/dd/yyyy", new Date())
+        : new Date()
+    );
     const totalAmount: number = laborCost * input.workHours;
 
     await dataSources.navFuelMaintenanceJournal.postEntry({
       Journal_Template_Name: NavJobJournalTemplate.Asset,
       Journal_Batch_Name: NavJobJournalBatch.FarmApp,
       Document_No: docNo,
-      Posting_Date: input.postingDate,
+      Posting_Date: date,
       Account_Type: "Fixed Asset",
       Account_No: input.asset,
       FA_Posting_Type: "Maintenance",
