@@ -55,11 +55,6 @@ export const mutations: MutationResolvers = {
     );
     const laborCost = await (await dataSources.navItemJournal.getItem("LABOR"))
       .Last_Direct_Cost;
-    // const date = navDate(
-    //   input.postingDate
-    //     ? parse(input.postingDate, "MM/dd/yyyy", new Date())
-    //     : new Date()
-    // );
 
     const totalAmount: number = laborCost * input.workHours;
 
@@ -71,7 +66,7 @@ export const mutations: MutationResolvers = {
       Account_Type: "Fixed Asset",
       Account_No: input.asset,
       FA_Posting_Type: "Maintenance",
-      Maintenance_Code: maintenanceAsset.FA_Class_Code,
+      Maintenance_Code: input.type,
       Bal_Account_No: account.Maintenance_Expense_Account,
       Shortcut_Dimension_1_Code: maintenanceAsset.Global_Dimension_1_Code,
       Shortcut_Dimension_2_Code: maintenanceAsset.Global_Dimension_2_Code,
