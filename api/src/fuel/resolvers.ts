@@ -1,9 +1,11 @@
 import { parse } from "date-fns";
 import {
   FuelAssetResolvers,
+  InclusivityMode,
   MutationResolvers,
   QueryResolvers
 } from "../common/graphql";
+import UserSettingsModel from "../common/models/UserSettings";
 import { NavJobJournalBatch, NavJobJournalTemplate } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 
@@ -16,8 +18,22 @@ export const FuelAsset: FuelAssetResolvers = {
 };
 
 export const queries: QueryResolvers = {
-  async fuelAssets(_, __, { dataSources }) {
-    return await dataSources.navFuelAsset.getAll();
+  async fuelAssets(_, __, { user, navConfig, dataSources }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    });
+    if (settings && settings.locations.list) {
+      if (settings.locations.mode === InclusivityMode.Include) {
+        var includeLocations = settings.locations.list;
+      } else {
+        var excludeLocations = settings.locations.list;
+      }
+    }
+    return await dataSources.navFuelAsset.getAll({
+      includeLocations,
+      excludeLocations
+    });
   },
   async fuelAsset(_, { number }, { dataSources }) {
     return await dataSources.navFuelAsset.getByNo(number);
