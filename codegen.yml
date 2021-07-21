@@ -39,6 +39,8 @@ generates:
         Scorecard: "../scorecard/Scorecard#ScorecardDocument"
         ScorecardConfig: "./nav#NavJob"
         FuelAsset: "./nav#NavFuelAsset"
+        MaintenanceAsset: "./nav#NavMaintenanceAsset"
+        MaintenanceInterval: "./nav#NavMaintenanceInterval"
     hooks:
       afterOneFileWrite:
         - eslint --fix
@@ -83,6 +85,19 @@ generates:
         - eslint --fix
   web/src/fuel/graphql/index.tsx:
     documents: "web/src/fuel/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
+  web/src/maintenance/graphql/index.tsx:
+    documents: "web/src/maintenance/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"

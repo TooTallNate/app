@@ -27,15 +27,15 @@ export const queries: QueryResolvers = {
 export const mutations: MutationResolvers = {
   async postFuel(_, { input }, { dataSources, user }) {
     const fuelAsset = await dataSources.navFuelAsset.getByNo(input.asset);
-    const docNo = getDocumentNumber("SCR", user.name);
+    const docNo = getDocumentNumber("FUEL", user.name);
     const account = await dataSources.navFuelAsset.getExpenseByCode(
       fuelAsset.Dimension_Code
     );
-    // const date = navDate(
-    //   input.postingDate
-    //     ? parse(input.postingDate, "MM/dd/yyyy", new Date())
-    //     : new Date()
-    // );
+    const date = navDate(
+      input.postingDate
+        ? parse(input.postingDate, "MM/dd/yyyy", new Date())
+        : new Date()
+    );
 
     const totalAmount: number = input.gallons * fuelAsset.Last_Direct_Cost;
 
@@ -43,7 +43,7 @@ export const mutations: MutationResolvers = {
       Journal_Template_Name: NavJobJournalTemplate.Asset,
       Journal_Batch_Name: NavJobJournalBatch.FarmApp,
       Document_No: docNo,
-      Posting_Date: input.postingDate,
+      Posting_Date: date,
       Account_Type: "Fixed Asset",
       Account_No: input.asset,
       FA_Posting_Type: "Maintenance",

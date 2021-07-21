@@ -19,6 +19,7 @@ const HomeView: React.FC = () => {
           <StackedNavLink to="/pig-activity">Pig Activity</StackedNavLink>
           <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
           <StackedNavLink to="/fuel">Fuel</StackedNavLink>
+          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
         </StackedNav>
         <Divider className="py-3" centerText="or" />
         <QRCodeReader />

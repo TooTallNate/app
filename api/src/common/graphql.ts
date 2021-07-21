@@ -9,7 +9,9 @@ import {
   NavLocation,
   NavStandardItemJournal,
   NavJobPostingGroup,
-  NavFuelAsset
+  NavFuelAsset,
+  NavMaintenanceAsset,
+  NavMaintenanceInterval
 } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
@@ -57,6 +59,7 @@ export type Item = {
   __typename?: "Item";
   number: Scalars["String"];
   description: Scalars["String"];
+  cost?: Maybe<Scalars["Int"]>;
 };
 
 export type Reason = {
@@ -93,10 +96,14 @@ export type Query = {
   animals: Array<Item>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
+  item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   locations: Array<Location>;
+  maintenanceAsset?: Maybe<MaintenanceAsset>;
+  maintenanceAssets: Array<MaintenanceAsset>;
+  maintenanceIntervals: Array<MaintenanceInterval>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -124,12 +131,24 @@ export type QueryFuelAssetArgs = {
   number: Scalars["String"];
 };
 
+export type QueryItemArgs = {
+  number: Scalars["String"];
+};
+
 export type QueryJobArgs = {
   number: Scalars["String"];
 };
 
 export type QueryJobsArgs = {
   input?: Maybe<JobFilter>;
+};
+
+export type QueryMaintenanceAssetArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryMaintenanceIntervalsArgs = {
+  assetNo: Scalars["String"];
 };
 
 export type QueryPigAdjustmentArgs = {
@@ -199,6 +218,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postMaintenance: MaintenanceResult;
   postPigAdjustment: PigAdjustmentResult;
   postPigGradeOff: PigGradeOffResult;
   postPigMortality: PigMortalityResult;
@@ -222,6 +242,10 @@ export type MutationLoginArgs = {
 
 export type MutationPostFuelArgs = {
   input: PostFuelInput;
+};
+
+export type MutationPostMaintenanceArgs = {
+  input: PostMaintenanceInput;
 };
 
 export type MutationPostPigAdjustmentArgs = {
@@ -282,6 +306,37 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type MaintenanceAsset = {
+  __typename?: "MaintenanceAsset";
+  number: Scalars["String"];
+  description?: Maybe<Scalars["String"]>;
+  classCode?: Maybe<Scalars["String"]>;
+};
+
+export type MaintenanceInterval = {
+  __typename?: "MaintenanceInterval";
+  code: Scalars["String"];
+  asset: Scalars["String"];
+  interval?: Maybe<Scalars["Int"]>;
+  unitType?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
+};
+
+export type PostMaintenanceInput = {
+  asset: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  type: Scalars["String"];
+  mileage?: Maybe<Scalars["Int"]>;
+  workHours: Scalars["Int"];
+  totalCost?: Maybe<Scalars["Int"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type MaintenanceResult = {
+  __typename?: "MaintenanceResult";
+  success: Scalars["Boolean"];
 };
 
 export type PigActivityDefaults = {
@@ -804,6 +859,10 @@ export type ResolversTypes = ResolversObject<{
   PostFuelInput: PostFuelInput;
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
+  MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
+  MaintenanceInterval: ResolverTypeWrapper<NavMaintenanceInterval>;
+  PostMaintenanceInput: PostMaintenanceInput;
+  MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
@@ -920,6 +979,10 @@ export type ResolversParentTypes = ResolversObject<{
   PostFuelInput: PostFuelInput;
   FuelResult: FuelResult;
   Mutation: {};
+  MaintenanceAsset: NavMaintenanceAsset;
+  MaintenanceInterval: NavMaintenanceInterval;
+  PostMaintenanceInput: PostMaintenanceInput;
+  MaintenanceResult: MaintenanceResult;
   PigActivityDefaults: UserSettingsDocument;
   PigWeanEvent: NavStandardItemJournal;
   PigGradeOffEvent: NavStandardItemJournal;
@@ -1046,6 +1109,7 @@ export type ItemResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  cost?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1093,6 +1157,12 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  item?: Resolver<
+    Maybe<ResolversTypes["Item"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryItemArgs, "number">
+  >;
   itemJournalTemplates?: Resolver<
     Maybe<Array<ResolversTypes["ItemJournalTemplate"]>>,
     ParentType,
@@ -1114,6 +1184,23 @@ export type QueryResolvers<
     Array<ResolversTypes["Location"]>,
     ParentType,
     ContextType
+  >;
+  maintenanceAsset?: Resolver<
+    Maybe<ResolversTypes["MaintenanceAsset"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryMaintenanceAssetArgs, "number">
+  >;
+  maintenanceAssets?: Resolver<
+    Array<ResolversTypes["MaintenanceAsset"]>,
+    ParentType,
+    ContextType
+  >;
+  maintenanceIntervals?: Resolver<
+    Array<ResolversTypes["MaintenanceInterval"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryMaintenanceIntervalsArgs, "assetNo">
   >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
@@ -1261,6 +1348,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFuelArgs, "input">
   >;
+  postMaintenance?: Resolver<
+    ResolversTypes["MaintenanceResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostMaintenanceArgs, "input">
+  >;
   postPigAdjustment?: Resolver<
     ResolversTypes["PigAdjustmentResult"],
     ParentType,
@@ -1351,6 +1444,48 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateUserLocationsArgs, "input">
   >;
+}>;
+
+export type MaintenanceAssetResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MaintenanceAsset"] = ResolversParentTypes["MaintenanceAsset"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  classCode?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type MaintenanceIntervalResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MaintenanceInterval"] = ResolversParentTypes["MaintenanceInterval"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  asset?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  interval?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  unitType?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type MaintenanceResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MaintenanceResult"] = ResolversParentTypes["MaintenanceResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type PigActivityDefaultsResolvers<
@@ -1871,6 +2006,9 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FuelAsset?: FuelAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
+  MaintenanceInterval?: MaintenanceIntervalResolvers<ContextType>;
+  MaintenanceResult?: MaintenanceResultResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
   PigWeanEvent?: PigWeanEventResolvers<ContextType>;
   PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;

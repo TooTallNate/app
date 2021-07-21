@@ -704,324 +704,218 @@ export type UpdateUserLocationsResult = {
   locations: UserLocations;
 };
 
-export type UserLocationsFieldsFragment = {
-  __typename?: "UserLocations";
-} & Pick<UserLocations, "mode"> & {
-    list: Array<{ __typename?: "Location" } & Pick<Location, "code" | "name">>;
-  };
+export type MaintenanceAssetsQueryVariables = {};
 
-export type LocationsQueryVariables = {};
-
-export type LocationsQuery = { __typename?: "Query" } & {
-  locations: Array<
-    { __typename?: "Location" } & Pick<Location, "code" | "name">
-  >;
-  user?: Maybe<
-    { __typename?: "User" } & Pick<User, "username"> & {
-        locations: {
-          __typename?: "UserLocations";
-        } & UserLocationsFieldsFragment;
-      }
+export type MaintenanceAssetsQuery = { __typename?: "Query" } & {
+  maintenanceAssets: Array<
+    { __typename?: "MaintenanceAsset" } & Pick<
+      MaintenanceAsset,
+      "number" | "description"
+    >
   >;
 };
 
-export type UpdateLocationsMutationVariables = {
-  input: UpdateUserLocationsInput;
+export type MaintenanceAssetQueryVariables = {
+  number: Scalars["String"];
 };
 
-export type UpdateLocationsMutation = { __typename?: "Mutation" } & {
-  updateUserLocations: { __typename?: "UpdateUserLocationsResult" } & {
-    locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
-  };
+export type MaintenanceAssetQuery = { __typename?: "Query" } & {
+  maintenanceAsset?: Maybe<
+    { __typename?: "MaintenanceAsset" } & Pick<
+      MaintenanceAsset,
+      "number" | "description"
+    >
+  >;
+  maintenanceIntervals: Array<
+    { __typename?: "MaintenanceInterval" } & Pick<
+      MaintenanceInterval,
+      "code" | "interval" | "unitType" | "description"
+    >
+  >;
+  item?: Maybe<{ __typename?: "Item" } & Pick<Item, "number" | "cost">>;
 };
 
-export type UserPartsFragment = { __typename?: "User" } & Pick<
-  User,
-  "username" | "name"
->;
-
-export type LoginMutationVariables = {
-  input: LoginInput;
+export type PostMaintenanceMutationVariables = {
+  input: PostMaintenanceInput;
 };
 
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "LoginResult" } & {
-    user: { __typename?: "User" } & UserPartsFragment;
-  };
+export type PostMaintenanceMutation = { __typename?: "Mutation" } & {
+  postMaintenance: { __typename?: "MaintenanceResult" } & Pick<
+    MaintenanceResult,
+    "success"
+  >;
 };
 
-export type UserQueryVariables = {};
-
-export type UserQuery = { __typename?: "Query" } & {
-  user?: Maybe<{ __typename?: "User" } & UserPartsFragment>;
-};
-
-export type LogoutMutationVariables = {};
-
-export type LogoutMutation = { __typename?: "Mutation" } & {
-  logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
-};
-
-export const UserLocationsFieldsFragmentDoc = gql`
-  fragment UserLocationsFields on UserLocations {
-    mode
-    list {
-      code
-      name
+export const MaintenanceAssetsDocument = gql`
+  query MaintenanceAssets {
+    maintenanceAssets {
+      number
+      description
     }
   }
-`;
-export const UserPartsFragmentDoc = gql`
-  fragment UserParts on User {
-    username
-    name
-  }
-`;
-export const LocationsDocument = gql`
-  query Locations {
-    locations {
-      code
-      name
-    }
-    user {
-      username
-      locations {
-        ...UserLocationsFields
-      }
-    }
-  }
-  ${UserLocationsFieldsFragmentDoc}
 `;
 
 /**
- * __useLocationsQuery__
+ * __useMaintenanceAssetsQuery__
  *
- * To run a query within a React component, call `useLocationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useLocationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMaintenanceAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMaintenanceAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useLocationsQuery({
+ * const { data, loading, error } = useMaintenanceAssetsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useLocationsQuery(
-  baseOptions?: Apollo.QueryHookOptions<LocationsQuery, LocationsQueryVariables>
+export function useMaintenanceAssetsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    MaintenanceAssetsQuery,
+    MaintenanceAssetsQueryVariables
+  >
 ) {
-  return Apollo.useQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
-    baseOptions
-  );
+  return Apollo.useQuery<
+    MaintenanceAssetsQuery,
+    MaintenanceAssetsQueryVariables
+  >(MaintenanceAssetsDocument, baseOptions);
 }
-export function useLocationsLazyQuery(
+export function useMaintenanceAssetsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    LocationsQuery,
-    LocationsQueryVariables
+    MaintenanceAssetsQuery,
+    MaintenanceAssetsQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    MaintenanceAssetsQuery,
+    MaintenanceAssetsQueryVariables
+  >(MaintenanceAssetsDocument, baseOptions);
 }
-export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
-export type LocationsLazyQueryHookResult = ReturnType<
-  typeof useLocationsLazyQuery
+export type MaintenanceAssetsQueryHookResult = ReturnType<
+  typeof useMaintenanceAssetsQuery
 >;
-export type LocationsQueryResult = Apollo.QueryResult<
-  LocationsQuery,
-  LocationsQueryVariables
+export type MaintenanceAssetsLazyQueryHookResult = ReturnType<
+  typeof useMaintenanceAssetsLazyQuery
 >;
-export const UpdateLocationsDocument = gql`
-  mutation UpdateLocations($input: UpdateUserLocationsInput!) {
-    updateUserLocations(input: $input) {
-      locations {
-        ...UserLocationsFields
-      }
+export type MaintenanceAssetsQueryResult = Apollo.QueryResult<
+  MaintenanceAssetsQuery,
+  MaintenanceAssetsQueryVariables
+>;
+export const MaintenanceAssetDocument = gql`
+  query MaintenanceAsset($number: String!) {
+    maintenanceAsset(number: $number) {
+      number
+      description
+    }
+    maintenanceIntervals(assetNo: $number) {
+      code
+      interval
+      unitType
+      description
+    }
+    item(number: "LABOR") {
+      number
+      cost
     }
   }
-  ${UserLocationsFieldsFragmentDoc}
-`;
-export type UpdateLocationsMutationFn = Apollo.MutationFunction<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-
-/**
- * __useUpdateLocationsMutation__
- *
- * To run a mutation, you first call `useUpdateLocationsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateLocationsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateLocationsMutation, { data, loading, error }] = useUpdateLocationsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateLocationsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >(UpdateLocationsDocument, baseOptions);
-}
-export type UpdateLocationsMutationHookResult = ReturnType<
-  typeof useUpdateLocationsMutation
->;
-export type UpdateLocationsMutationResult = Apollo.MutationResult<
-  UpdateLocationsMutation
->;
-export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-export const LoginDocument = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      user {
-        ...UserParts
-      }
-    }
-  }
-  ${UserPartsFragmentDoc}
-`;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  );
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
-export const UserDocument = gql`
-  query User {
-    user {
-      ...UserParts
-    }
-  }
-  ${UserPartsFragmentDoc}
 `;
 
 /**
- * __useUserQuery__
+ * __useMaintenanceAssetQuery__
  *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMaintenanceAssetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMaintenanceAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserQuery({
+ * const { data, loading, error } = useMaintenanceAssetQuery({
  *   variables: {
+ *      number: // value for 'number'
  *   },
  * });
  */
-export function useUserQuery(
-  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
+export function useMaintenanceAssetQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    MaintenanceAssetQuery,
+    MaintenanceAssetQueryVariables
+  >
 ) {
-  return Apollo.useQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
+  return Apollo.useQuery<MaintenanceAssetQuery, MaintenanceAssetQueryVariables>(
+    MaintenanceAssetDocument,
     baseOptions
   );
 }
-export function useUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
+export function useMaintenanceAssetLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MaintenanceAssetQuery,
+    MaintenanceAssetQueryVariables
+  >
 ) {
-  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    MaintenanceAssetQuery,
+    MaintenanceAssetQueryVariables
+  >(MaintenanceAssetDocument, baseOptions);
 }
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const LogoutDocument = gql`
-  mutation Logout {
-    logout {
+export type MaintenanceAssetQueryHookResult = ReturnType<
+  typeof useMaintenanceAssetQuery
+>;
+export type MaintenanceAssetLazyQueryHookResult = ReturnType<
+  typeof useMaintenanceAssetLazyQuery
+>;
+export type MaintenanceAssetQueryResult = Apollo.QueryResult<
+  MaintenanceAssetQuery,
+  MaintenanceAssetQueryVariables
+>;
+export const PostMaintenanceDocument = gql`
+  mutation PostMaintenance($input: PostMaintenanceInput!) {
+    postMaintenance(input: $input) {
       success
     }
   }
 `;
-export type LogoutMutationFn = Apollo.MutationFunction<
-  LogoutMutation,
-  LogoutMutationVariables
+export type PostMaintenanceMutationFn = Apollo.MutationFunction<
+  PostMaintenanceMutation,
+  PostMaintenanceMutationVariables
 >;
 
 /**
- * __useLogoutMutation__
+ * __usePostMaintenanceMutation__
  *
- * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * To run a mutation, you first call `usePostMaintenanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostMaintenanceMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ * const [postMaintenanceMutation, { data, loading, error }] = usePostMaintenanceMutation({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useLogoutMutation(
+export function usePostMaintenanceMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    LogoutMutation,
-    LogoutMutationVariables
+    PostMaintenanceMutation,
+    PostMaintenanceMutationVariables
   >
 ) {
-  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
-    LogoutDocument,
-    baseOptions
-  );
+  return Apollo.useMutation<
+    PostMaintenanceMutation,
+    PostMaintenanceMutationVariables
+  >(PostMaintenanceDocument, baseOptions);
 }
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<
-  LogoutMutation,
-  LogoutMutationVariables
+export type PostMaintenanceMutationHookResult = ReturnType<
+  typeof usePostMaintenanceMutation
+>;
+export type PostMaintenanceMutationResult = Apollo.MutationResult<
+  PostMaintenanceMutation
+>;
+export type PostMaintenanceMutationOptions = Apollo.BaseMutationOptions<
+  PostMaintenanceMutation,
+  PostMaintenanceMutationVariables
 >;

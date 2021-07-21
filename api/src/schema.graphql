@@ -18,6 +18,7 @@ type Job {
 type Item {
   number: String!
   description: String!
+  cost: Int
 }
 
 type Reason {
@@ -50,10 +51,14 @@ type Query {
   animals: [Item!]!
   fuelAsset(number: String!): FuelAsset
   fuelAssets: [FuelAsset!]!
+  item(number: String!): Item
   itemJournalTemplates: [ItemJournalTemplate!]
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
   locations: [Location!]!
+  maintenanceAsset(number: String!): MaintenanceAsset
+  maintenanceAssets: [MaintenanceAsset!]!
+  maintenanceIntervals(assetNo: String!): [MaintenanceInterval!]!
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!
@@ -101,6 +106,7 @@ type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFuel(input: PostFuelInput!): FuelResult!
+  postMaintenance(input: PostMaintenanceInput!): MaintenanceResult!
   postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
   postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
   postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
@@ -116,6 +122,34 @@ type Mutation {
   savePigWean(input: SavePigWeanInput!): PigWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
+}
+
+type MaintenanceAsset {
+  number: String!
+  description: String
+  classCode: String
+}
+
+type MaintenanceInterval {
+  code: String!
+  asset: String!
+  interval: Int
+  unitType: String
+  description: String
+}
+
+input PostMaintenanceInput {
+  asset: String!
+  postingDate: String
+  type: String!
+  mileage: Int
+  workHours: Int!
+  totalCost: Int
+  comments: String
+}
+
+type MaintenanceResult {
+  success: Boolean!
 }
 
 type PigActivityDefaults {

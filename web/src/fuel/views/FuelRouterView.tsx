@@ -3,7 +3,7 @@ import { Route, Switch, Redirect, useRouteMatch } from "react-router-dom";
 import EventSelectionView from "./EventSelectionView";
 import FuelView from "./FuelView";
 
-const FuelMaintenanceView: React.FC = () => {
+const FuelRouterView: React.FC = () => {
   const match = useRouteMatch();
   return (
     <Switch>
@@ -14,4 +14,4 @@ const FuelMaintenanceView: React.FC = () => {
   );
 };
 
-export default FuelMaintenanceView;
+export default FuelRouterView;

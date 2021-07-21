@@ -1,5 +1,6 @@
 import {
   ItemJournalTemplateObject,
+  NavItem,
   NavItemJournalLine,
   NavStandardItemJournal
 } from "../nav";
@@ -52,5 +53,9 @@ export default class NavItemJournalDataSource extends NavDataSource {
     );
 
     return this.get(`/StandardItemJournals?$filter=${filter}`);
+  }
+
+  getItem(No: string): Promise<NavItem> {
+    return this.get(`/Items('${No}')`);
   }
 }
