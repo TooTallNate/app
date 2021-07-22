@@ -49,7 +49,7 @@ export const mutations: MutationResolvers = {
     );
     const date = navDate(
       input.postingDate
-        ? parse(input.postingDate, "MM/dd/yyyy", new Date())
+        ? parse(input.postingDate, "yyyy-MM-dd", new Date())
         : new Date()
     );
 
