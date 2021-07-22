@@ -94,7 +94,7 @@ export const PigActivityQueries: QueryResolvers = {
   },
   async animals(_, __, { dataSources }) {
     return dataSources.navConfig.getItems({
-      postingGroups: ["SOWS", "MARKET HOGS"]
+      postingGroups: ["SOWS", "MARKET HOGS", "CATTLE"]
     });
   },
   async pigActivityJobs(_, __, { user, navConfig, dataSources }) {

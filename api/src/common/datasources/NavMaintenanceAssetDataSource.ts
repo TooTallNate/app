@@ -5,11 +5,31 @@ import {
   NavMaintenanceInterval,
   NavItem
 } from "../nav";
+import { BooleanFilterExpression } from "../nav/filter";
 import NavDataSource from "./NavDataSource";
+import { JobFilter } from "./NavJobDataSource";
 
 export default class NavMaintenanceAssetDataSource extends NavDataSource {
-  getAll(): Promise<NavMaintenanceAsset[]> {
-    return this.get(`/MaintenanceFixedAssets`);
+  getAll({ excludeLocations, includeLocations }: JobFilter = {}): Promise<
+    NavMaintenanceAsset[]
+  > {
+    let odataFilter = this.buildFilter(f => {
+      const filters: BooleanFilterExpression[] = [];
+      if (includeLocations && includeLocations.length > 0) {
+        filters.push(
+          f.or(...includeLocations.map(loc => f.equals("Location_Code", loc)))
+        );
+      } else if (excludeLocations && excludeLocations.length > 0) {
+        filters.push(
+          f.and(
+            ...excludeLocations.map(loc => f.notEquals("Location_Code", loc))
+          )
+        );
+      }
+      return f.and(...filters);
+    });
+    const filterStr = odataFilter ? `$filter=${odataFilter}` : "";
+    return this.get(`/MaintenanceFixedAssets?${filterStr}`);
   }
 
   async getByNo(number: string): Promise<NavMaintenanceAsset | undefined> {

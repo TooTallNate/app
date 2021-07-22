@@ -4,12 +4,6 @@ type MaintenanceAsset {
   classCode: String
 }
 
-# type MaintenanceExpense {
-#   code: String!
-#   description: String
-#   account: String!
-# }
-
 type MaintenanceInterval {
   code: String!
   asset: String!
@@ -17,12 +11,6 @@ type MaintenanceInterval {
   unitType: String
   description: String
 }
-
-# an asset will reach out and grab the history as an array
-# type MaintenanceHistory {
-#   type: String!
-#   date: String!
-# }
 
 input PostMaintenanceInput {
   asset: String!
