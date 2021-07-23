@@ -29,8 +29,6 @@ import {
   useSavePigWeanMutation
 } from "../graphql";
 
-const IMAGE =
-  "https://www.treehugger.com/thmb/aOmgLLmSXABYpnuiPvPwrM9SZc8=/1365x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/duckling-close-up-500315849-572917c93df78ced1f0b99ec.jpg";
 interface FormData {
   event: string;
   postingDate: string;
@@ -135,8 +133,42 @@ const ActivityWeanView: React.FC = () => {
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <ImageUploadField />
+            <JobField
+              number={data.pigWean.job.number}
+              description={data.pigWean.job.description}
+            />
+            <InventoryField
+              inventory={data.pigWean.job.inventory || 0}
+              deadQuantity={data.pigWean.job.deadQuantity || 0}
+            />
+            <FormField
+              name="event"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Event</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.pigWeanEventTypes.map(event => ({
+                    value: event.code,
+                    title: event.description
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField name="postingDate">
+              <FormFieldLabel>Activity Date</FormFieldLabel>
+              <FormFieldInput>
+                <DateInput />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <QuantityAndSmallsField />
+            <TotalWeightField />
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
                 Save
