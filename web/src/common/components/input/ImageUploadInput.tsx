@@ -1,13 +1,12 @@
 import { TrashIcon, UploadIcon } from "@heroicons/react/solid";
 import React, { ChangeEvent, ComponentProps, useState } from "react";
-import S3 from "react-aws-s3";
 import { v4 as uuidv4 } from "uuid";
+import awsService from "../../../service/aws-service";
+import { AwsImageType } from "../../../service/aws-types";
 import { useFlash } from "../../contexts/flash";
 import { useCombinedRefs } from "../../useSharedRef";
 import { useField } from "../form/FormField";
 import Button from "./Button";
-import awsService from "../../../service/aws-service";
-import { AwsImageType } from "../../../service/aws-types";
 
 const IMAGE_LIMIT: number = 5;
 interface ImageUploadInputProps

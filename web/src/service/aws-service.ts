@@ -1,11 +1,4 @@
-import { PencilIcon, TrashIcon, UploadIcon } from "@heroicons/react/solid";
-import React, { ChangeEvent, ComponentProps, useState } from "react";
-import { useFlash } from "../../contexts/flash";
-import { useCombinedRefs } from "../../useSharedRef";
-import { useField } from "../form/FormField";
-import Button from "./Button";
 import S3 from "react-aws-s3";
-import { v4 as uuidv4 } from "uuid";
 import { AwsImageType } from "./aws-types";
 
 const AWS_CONFIG = {
