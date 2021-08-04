@@ -36,6 +36,7 @@ interface FormData {
   smallPigQuantity?: number;
   totalWeight: number;
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
