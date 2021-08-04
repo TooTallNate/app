@@ -12,6 +12,7 @@ fragment PigAdjustmentFragment on PigAdjustment {
   quantity
   totalWeight
   comments
+  imagesUID
 }
 
 query PigAdjustment($job: String!) {

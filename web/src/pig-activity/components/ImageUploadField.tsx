@@ -6,7 +6,7 @@ import ImageUploadInput from "../../common/components/input/ImageUploadInput";
 
 const ImageUploadField: React.FC<{}> = () => {
   return (
-    <FormField name="imageUpload" className="mb-6">
+    <FormField name="imagesUID" className="mb-6">
       <FormFieldInput>
         <ImageUploadInput />
       </FormFieldInput>

@@ -5,6 +5,7 @@ import { useCombinedRefs } from "../../useSharedRef";
 import { useField } from "../form/FormField";
 import Button from "./Button";
 import S3 from "react-aws-s3";
+import { v4 as uuidv4 } from "uuid";
 
 const IMAGE_LIMIT = 5;
 
@@ -17,9 +18,9 @@ type AwsImageType = {
 
 interface ImageUploadInputProps
   extends Omit<ComponentProps<"input">, "value" | "onChange"> {
-  value?: AwsImageType[];
+  value?: string;
   location?: string;
-  onChange(value: AwsImageType[]): void;
+  onChange?(value: string): void;
 }
 
 const ImageUploadInput = React.forwardRef<
@@ -56,8 +57,9 @@ const ImageUploadInput = React.forwardRef<
   function handleImageSelect(e: ChangeEvent<HTMLInputElement>) {
     try {
       let awsError = "";
+      const awsFolder = value || uuidv4();
       const FILE = e.target.files && e.target.files[0];
-      const FILENAME = e.target.files && e.target.files[0].name;
+      const FILENAME = FILE && `${awsFolder}/${FILE.name}`;
       ReactS3Client.uploadFile(FILE, FILENAME)
         .then((data: any) => {
           const appendList = uploadedImages[0] ? uploadedImages : [];
@@ -67,7 +69,8 @@ const ImageUploadInput = React.forwardRef<
               const newImageCount = appendList.push(data);
               setImageCount(newImageCount);
               setUploadedImages(appendList);
-              onChange(appendList);
+              console.log("awsFolder", awsFolder);
+              onChange && onChange(awsFolder);
             } else {
               awsError = data;
               throw new Error("Aws Upload Error.");

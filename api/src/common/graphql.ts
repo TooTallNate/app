@@ -358,6 +358,7 @@ export type PigAdjustment = {
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigAdjustmentInput = {
@@ -367,6 +368,7 @@ export type PostPigAdjustmentInput = {
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigAdjustmentInput = {
@@ -376,6 +378,7 @@ export type SavePigAdjustmentInput = {
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigAdjustmentResult = {
@@ -1462,6 +1465,11 @@ export type PigAdjustmentResolvers<
     ContextType
   >;
   comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  imagesUID?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

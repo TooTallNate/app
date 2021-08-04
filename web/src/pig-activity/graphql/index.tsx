@@ -333,6 +333,7 @@ export type PigAdjustment = {
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigAdjustmentInput = {
@@ -342,6 +343,7 @@ export type PostPigAdjustmentInput = {
   quantity: Scalars["Int"];
   totalWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigAdjustmentInput = {
@@ -351,6 +353,7 @@ export type SavePigAdjustmentInput = {
   quantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigAdjustmentResult = {
@@ -686,7 +689,7 @@ export type PigAdjustmentFragmentFragment = {
   __typename?: "PigAdjustment";
 } & Pick<
   PigAdjustment,
-  "postingDate" | "quantity" | "totalWeight" | "comments"
+  "postingDate" | "quantity" | "totalWeight" | "comments" | "imagesUID"
 > & {
     event?: Maybe<
       { __typename?: "PigAdjustmentEvent" } & Pick<PigAdjustmentEvent, "code">
@@ -1053,6 +1056,7 @@ export const PigAdjustmentFragmentFragmentDoc = gql`
     quantity
     totalWeight
     comments
+    imagesUID
   }
 `;
 export const PigGradeOffFragmentFragmentDoc = gql`

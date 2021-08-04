@@ -19,6 +19,7 @@ import ViewHeader from "../../common/components/view/ViewHeader";
 import Title from "../../common/components/view/ViewTitle";
 import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../components/CommentsField";
+import ImageUploadField from "../components/ImageUploadField";
 import InventoryField from "../components/InventoryField";
 import JobField from "../components/JobField";
 import TotalWeightField from "../components/TotalWeightField";
@@ -34,6 +35,7 @@ interface FormData {
   quantity: number;
   totalWeight: number;
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
@@ -67,6 +69,9 @@ const ActivityAdjustmentView: React.FC = () => {
       if (pigAdjustment.totalWeight)
         setValue("totalWeight", pigAdjustment.totalWeight);
       if (pigAdjustment.comments) setValue("comments", pigAdjustment.comments);
+      if (pigAdjustment.imagesUID) {
+        setValue("imagesUID", pigAdjustment.imagesUID);
+      }
     }
   });
   const [post] = usePostPigAdjustmentMutation();
@@ -191,6 +196,7 @@ const ActivityAdjustmentView: React.FC = () => {
             </FormField>
             <TotalWeightField />
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
                 Save

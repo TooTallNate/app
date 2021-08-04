@@ -62,6 +62,7 @@ type PigAdjustment {
   quantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 input PostPigAdjustmentInput {
@@ -71,6 +72,7 @@ input PostPigAdjustmentInput {
   quantity: Int!
   totalWeight: Float!
   comments: String
+  imagesUID: String
 }
 
 input SavePigAdjustmentInput {
@@ -80,6 +82,7 @@ input SavePigAdjustmentInput {
   quantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 type PigAdjustmentResult {

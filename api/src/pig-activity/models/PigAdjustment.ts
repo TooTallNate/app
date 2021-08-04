@@ -8,6 +8,7 @@ export interface PigAdjustmentDocument extends PigActivityDocument {
   quantity: number;
   totalWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigAdjustmentSchema = new Schema({
@@ -20,7 +21,8 @@ const PigAdjustmentSchema = new Schema({
   event: String,
   quantity: Number,
   totalWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigAdjustmentModel = PigActivityModel.discriminator<

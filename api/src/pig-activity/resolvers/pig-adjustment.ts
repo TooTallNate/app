@@ -102,6 +102,7 @@ export const PigAdjustmentMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
           ? standardJournal.Shortcut_Dimension_2_Code
           : job.Cost_Center
+        //nav_field_name: input.imagesUID
       },
       dataSources.navItemJournal
     );
