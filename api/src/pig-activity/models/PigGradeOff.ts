@@ -11,6 +11,7 @@ export interface PigGradeOffDocument extends PigActivityDocument {
   }[];
   pigWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigGradeOffSchema = new Schema({
@@ -29,7 +30,8 @@ const PigGradeOffSchema = new Schema({
     }
   ],
   pigWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigGradeOffModel = PigActivityModel.discriminator<PigGradeOffDocument>(

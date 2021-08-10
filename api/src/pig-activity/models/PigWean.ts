@@ -8,6 +8,7 @@ export interface PigWeanDocument extends PigActivityDocument {
   smallPigQuantity: number;
   totalWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigWeanSchema = new Schema({
@@ -21,7 +22,8 @@ const PigWeanSchema = new Schema({
   quantity: Number,
   smallPigQuantity: Number,
   totalWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigWeanModel = PigActivityModel.discriminator<PigWeanDocument>(

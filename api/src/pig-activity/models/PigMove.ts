@@ -10,6 +10,7 @@ export interface PigMoveDocument extends PigActivityDocument {
   smallPigQuantity: number;
   totalWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigMoveSchema = new Schema({
@@ -24,7 +25,8 @@ const PigMoveSchema = new Schema({
   quantity: Number,
   smallPigQuantity: Number,
   totalWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigMoveModel = PigActivityModel.discriminator<PigMoveDocument>(

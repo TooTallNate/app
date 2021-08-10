@@ -9,6 +9,7 @@ export interface PigPurchaseDocument extends PigActivityDocument {
   smallPigQuantity: number;
   totalWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigPurchaseSchema = new Schema({
@@ -22,7 +23,8 @@ const PigPurchaseSchema = new Schema({
   quantity: Number,
   smallPigQuantity: Number,
   totalWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigPurchaseModel = PigActivityModel.discriminator<PigPurchaseDocument>(

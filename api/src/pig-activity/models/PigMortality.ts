@@ -11,6 +11,7 @@ export interface PigMortalityDocument extends PigActivityDocument {
   }[];
   totalWeight: number;
   comments: string;
+  imagesUID: string;
 }
 
 const PigMortalitySchema = new Schema({
@@ -29,7 +30,8 @@ const PigMortalitySchema = new Schema({
     }
   ],
   totalWeight: Number,
-  comments: String
+  comments: String,
+  imagesUID: String
 });
 
 const PigMortalityModel = PigActivityModel.discriminator<PigMortalityDocument>(
