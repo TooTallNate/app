@@ -95,7 +95,8 @@ export const PigPurchaseMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: standardJournalLines.Shortcut_Dimension_2_Code
           ? standardJournalLines.Shortcut_Dimension_2_Code
           : job.Cost_Center,
-        Meta: input.smallPigQuantity
+        Meta: input.smallPigQuantity,
+        External_Document_No: input.imagesUID
       },
       dataSources.navItemJournal
     );

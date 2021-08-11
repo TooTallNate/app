@@ -14,6 +14,7 @@ fragment PigMortalityFragment on PigMortality {
   }
   postingDate
   comments
+  imagesUID
 }
 
 query PigMortality($job: String!) {

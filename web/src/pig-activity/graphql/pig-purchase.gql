@@ -13,6 +13,7 @@ fragment PigPurchaseFragment on PigPurchase {
   smallPigQuantity
   totalWeight
   comments
+  imagesUID
 }
 
 query PigPurchase($job: String!) {

@@ -27,6 +27,7 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import DateInput from "../../common/components/input/DateInput";
+import ImageUploadField from "../components/ImageUploadField";
 
 interface FormData {
   event: string;
@@ -35,6 +36,7 @@ interface FormData {
   smallPigQuantity?: number;
   totalWeight: number;
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
@@ -65,6 +67,9 @@ const ActivityPurchaseView: React.FC = () => {
       if (pigPurchase.postingDate)
         setValue("postingDate", pigPurchase.postingDate);
       if (pigPurchase.comments) setValue("comments", pigPurchase.comments);
+      if (pigPurchase.imagesUID) {
+        setValue("imagesUID", pigPurchase.imagesUID);
+      }
     }
   });
   const [post] = usePostPigPurchaseMutation();
@@ -172,6 +177,7 @@ const ActivityPurchaseView: React.FC = () => {
             <QuantityAndSmallsField />
             <TotalWeightField />
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
                 Save

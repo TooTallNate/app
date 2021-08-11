@@ -26,6 +26,7 @@ import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import DateInput from "../../common/components/input/DateInput";
+import ImageUploadField from "../components/ImageUploadField";
 
 interface FormData {
   event: string;
@@ -34,6 +35,7 @@ interface FormData {
   quantities: { [code: string]: number };
   pigWeight: number;
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
@@ -72,6 +74,9 @@ const ActivityGradeOffView: React.FC = () => {
           );
         }
       }, 100);
+      if (pigGradeOff.imagesUID) {
+        setValue("imagesUID", pigGradeOff.imagesUID);
+      }
     }
   });
   const [post] = usePostPigGradeOffMutation();
@@ -241,6 +246,7 @@ const ActivityGradeOffView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="mr-4 w-full" type="button" onClick={onSave}>
                 Save

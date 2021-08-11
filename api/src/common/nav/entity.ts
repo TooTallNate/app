@@ -62,6 +62,7 @@ export interface NavItemJournalLine {
   Document_Date: string;
   Entry_Type: NavEntryType;
   Document_No: string;
+  External_Document_No: string;
   Item_No: string;
   Description: string;
   Shortcut_Dimension_1_Code: string;

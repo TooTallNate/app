@@ -13,6 +13,7 @@ fragment PigWeanFragment on PigWean {
   smallPigQuantity
   totalWeight
   comments
+  imagesUID
 }
 
 query PigWean($job: String!) {

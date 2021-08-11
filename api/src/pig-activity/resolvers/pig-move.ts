@@ -109,7 +109,8 @@ export const PigMoveMutations: MutationResolvers = {
           : fromJob.Entity,
         Shortcut_Dimension_2_Code: standardJournalNeg.Shortcut_Dimension_2_Code
           ? standardJournalNeg.Shortcut_Dimension_2_Code
-          : fromJob.Cost_Center
+          : fromJob.Cost_Center,
+        External_Document_No: input.imagesUID
       },
       dataSources.navItemJournal
     );
@@ -130,7 +131,8 @@ export const PigMoveMutations: MutationResolvers = {
         Shortcut_Dimension_2_Code: standardJournalPos.Shortcut_Dimension_2_Code
           ? standardJournalPos.Shortcut_Dimension_2_Code
           : fromJob.Cost_Center,
-        Meta: input.smallPigQuantity
+        Meta: input.smallPigQuantity,
+        External_Document_No: input.imagesUID
       },
       dataSources.navItemJournal
     );

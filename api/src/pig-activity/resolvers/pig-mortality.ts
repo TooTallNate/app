@@ -126,7 +126,8 @@ export const PigMortalityMutations: MutationResolvers = {
               : job.Entity,
             Shortcut_Dimension_2_Code: line.Shortcut_Dimension_2_Code
               ? line.Shortcut_Dimension_2_Code
-              : job.Cost_Center
+              : job.Cost_Center,
+            External_Document_No: input.imagesUID
           },
           dataSources.navItemJournal
         );

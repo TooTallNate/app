@@ -101,8 +101,8 @@ export const PigAdjustmentMutations: MutationResolvers = {
           : job.Entity,
         Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
           ? standardJournal.Shortcut_Dimension_2_Code
-          : job.Cost_Center
-        //nav_field_name: input.imagesUID
+          : job.Cost_Center,
+        External_Document_No: input.imagesUID
       },
       dataSources.navItemJournal
     );

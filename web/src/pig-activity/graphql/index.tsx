@@ -371,6 +371,7 @@ export type PigGradeOff = {
   quantities: Array<PigQuantity>;
   pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigGradeOffInput = {
@@ -380,6 +381,7 @@ export type PostPigGradeOffInput = {
   quantities: Array<PigQuantityInput>;
   pigWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigGradeOffInput = {
@@ -389,6 +391,7 @@ export type SavePigGradeOffInput = {
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   pigWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigGradeOffResult = {
@@ -405,6 +408,7 @@ export type PigMortality = {
   job: Job;
   quantities?: Maybe<Array<PigQuantity>>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigMortalityInput = {
@@ -413,6 +417,7 @@ export type PostPigMortalityInput = {
   job: Scalars["String"];
   quantities?: Maybe<Array<PigQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigMortalityInput = {
@@ -421,6 +426,7 @@ export type SavePigMortalityInput = {
   job: Scalars["String"];
   quantities?: Maybe<Array<PigOptionalQuantityInput>>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigMortalityResult = {
@@ -440,6 +446,7 @@ export type PigMove = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigMoveInput = {
@@ -451,6 +458,7 @@ export type PostPigMoveInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigMoveInput = {
@@ -462,6 +470,7 @@ export type SavePigMoveInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigMoveResult = {
@@ -480,6 +489,7 @@ export type PigPurchase = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigPurchaseInput = {
@@ -490,6 +500,7 @@ export type PostPigPurchaseInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigPurchaseInput = {
@@ -500,6 +511,7 @@ export type SavePigPurchaseInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigPurchaseResult = {
@@ -518,6 +530,7 @@ export type PigWean = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PostPigWeanInput = {
@@ -528,6 +541,7 @@ export type PostPigWeanInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type SavePigWeanInput = {
@@ -538,6 +552,7 @@ export type SavePigWeanInput = {
   smallPigQuantity?: Maybe<Scalars["Int"]>;
   totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+  imagesUID?: Maybe<Scalars["String"]>;
 };
 
 export type PigWeanResult = {
@@ -748,7 +763,7 @@ export type PostPigAdjustmentMutation = { __typename?: "Mutation" } & {
 
 export type PigGradeOffFragmentFragment = { __typename?: "PigGradeOff" } & Pick<
   PigGradeOff,
-  "postingDate" | "pigWeight" | "comments"
+  "postingDate" | "pigWeight" | "comments" | "imagesUID"
 > & {
     event?: Maybe<
       { __typename?: "PigGradeOffEvent" } & Pick<PigGradeOffEvent, "code">
@@ -802,7 +817,7 @@ export type PostPigGradeOffMutation = { __typename?: "Mutation" } & {
 
 export type PigMortalityFragmentFragment = {
   __typename?: "PigMortality";
-} & Pick<PigMortality, "postingDate" | "comments"> & {
+} & Pick<PigMortality, "postingDate" | "comments" | "imagesUID"> & {
     event?: Maybe<
       { __typename?: "PigMortalityEvent" } & Pick<PigMortalityEvent, "code">
     >;
@@ -861,7 +876,12 @@ export type PostPigMortalityMutation = { __typename?: "Mutation" } & {
 
 export type PigMoveFragmentFragment = { __typename?: "PigMove" } & Pick<
   PigMove,
-  "postingDate" | "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
+  | "postingDate"
+  | "quantity"
+  | "smallPigQuantity"
+  | "totalWeight"
+  | "comments"
+  | "imagesUID"
 > & {
     event?: Maybe<{ __typename?: "PigMoveEvent" } & Pick<PigMoveEvent, "code">>;
     fromJob: { __typename?: "Job" } & Pick<
@@ -931,7 +951,12 @@ export type PostPigMoveMutation = { __typename?: "Mutation" } & {
 
 export type PigPurchaseFragmentFragment = { __typename?: "PigPurchase" } & Pick<
   PigPurchase,
-  "postingDate" | "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
+  | "postingDate"
+  | "quantity"
+  | "smallPigQuantity"
+  | "totalWeight"
+  | "comments"
+  | "imagesUID"
 > & {
     event?: Maybe<
       { __typename?: "PigPurchaseEvent" } & Pick<PigPurchaseEvent, "code">
@@ -984,7 +1009,12 @@ export type PostPigPurchaseMutation = { __typename?: "Mutation" } & {
 
 export type PigWeanFragmentFragment = { __typename?: "PigWean" } & Pick<
   PigWean,
-  "postingDate" | "quantity" | "smallPigQuantity" | "totalWeight" | "comments"
+  | "postingDate"
+  | "quantity"
+  | "smallPigQuantity"
+  | "totalWeight"
+  | "comments"
+  | "imagesUID"
 > & {
     event?: Maybe<{ __typename?: "PigWeanEvent" } & Pick<PigWeanEvent, "code">>;
     job: { __typename?: "Job" } & Pick<
@@ -1077,6 +1107,7 @@ export const PigGradeOffFragmentFragmentDoc = gql`
     postingDate
     pigWeight
     comments
+    imagesUID
   }
 `;
 export const PigMortalityFragmentFragmentDoc = gql`
@@ -1096,6 +1127,7 @@ export const PigMortalityFragmentFragmentDoc = gql`
     }
     postingDate
     comments
+    imagesUID
   }
 `;
 export const PigMoveFragmentFragmentDoc = gql`
@@ -1120,6 +1152,7 @@ export const PigMoveFragmentFragmentDoc = gql`
     smallPigQuantity
     totalWeight
     comments
+    imagesUID
   }
 `;
 export const PigPurchaseFragmentFragmentDoc = gql`
@@ -1138,6 +1171,7 @@ export const PigPurchaseFragmentFragmentDoc = gql`
     smallPigQuantity
     totalWeight
     comments
+    imagesUID
   }
 `;
 export const PigWeanFragmentFragmentDoc = gql`
@@ -1156,6 +1190,7 @@ export const PigWeanFragmentFragmentDoc = gql`
     smallPigQuantity
     totalWeight
     comments
+    imagesUID
   }
 `;
 export const PigActivityJobsDocument = gql`

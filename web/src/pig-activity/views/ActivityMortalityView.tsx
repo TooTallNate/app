@@ -27,12 +27,14 @@ import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import DateInput from "../../common/components/input/DateInput";
+import ImageUploadField from "../components/ImageUploadField";
 
 interface FormData {
   event: string;
   postingDate: string;
   quantities: { [code: string]: number };
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
@@ -71,6 +73,9 @@ const ActivityMortalityView: React.FC = () => {
           );
       }, 100);
       if (pigMortality.comments) setValue("comments", pigMortality.comments);
+      if (pigMortality.imagesUID) {
+        setValue("imagesUID", pigMortality.imagesUID);
+      }
     }
   });
   const [post] = usePostPigMortalityMutation();
@@ -223,6 +228,7 @@ const ActivityMortalityView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
                 Save

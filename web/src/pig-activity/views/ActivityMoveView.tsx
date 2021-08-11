@@ -28,6 +28,7 @@ import TotalWeightField from "../components/TotalWeightField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import DateInput from "../../common/components/input/DateInput";
+import ImageUploadField from "../components/ImageUploadField";
 
 interface FormData {
   event: string;
@@ -37,6 +38,7 @@ interface FormData {
   smallPigQuantity?: number;
   totalWeight: number;
   comments?: string;
+  imagesUID?: string;
 }
 
 interface ViewParams {
@@ -65,6 +67,9 @@ const ActivityMoveView: React.FC = () => {
       if (pigMove.postingDate) setValue("postingDate", pigMove.postingDate);
       if (pigMove.totalWeight) setValue("totalWeight", pigMove.totalWeight);
       if (pigMove.comments) setValue("comments", pigMove.comments);
+      if (pigMove.imagesUID) {
+        setValue("imagesUID", pigMove.imagesUID);
+      }
     }
   });
   const [post] = usePostPigMoveMutation();
@@ -216,6 +221,7 @@ const ActivityMoveView: React.FC = () => {
             <QuantityAndSmallsField />
             <TotalWeightField />
             <CommentsField />
+            <ImageUploadField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>
                 Save

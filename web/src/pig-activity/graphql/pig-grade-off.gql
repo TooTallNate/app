@@ -15,6 +15,7 @@ fragment PigGradeOffFragment on PigGradeOff {
   postingDate
   pigWeight
   comments
+  imagesUID
 }
 
 query PigGradeOff($job: String!) {

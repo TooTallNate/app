@@ -218,6 +218,7 @@ type PigGradeOff {
   quantities: [PigQuantity!]!
   pigWeight: Float
   comments: String
+  imagesUID: String
 }
 
 input PostPigGradeOffInput {
@@ -227,6 +228,7 @@ input PostPigGradeOffInput {
   quantities: [PigQuantityInput!]!
   pigWeight: Float!
   comments: String
+  imagesUID: String
 }
 
 input SavePigGradeOffInput {
@@ -236,6 +238,7 @@ input SavePigGradeOffInput {
   quantities: [PigOptionalQuantityInput!]
   pigWeight: Float
   comments: String
+  imagesUID: String
 }
 
 type PigGradeOffResult {
@@ -250,6 +253,7 @@ type PigMortality {
   job: Job!
   quantities: [PigQuantity!]
   comments: String
+  imagesUID: String
 }
 
 input PostPigMortalityInput {
@@ -258,6 +262,7 @@ input PostPigMortalityInput {
   job: String!
   quantities: [PigQuantityInput!]
   comments: String
+  imagesUID: String
 }
 
 input SavePigMortalityInput {
@@ -266,6 +271,7 @@ input SavePigMortalityInput {
   job: String!
   quantities: [PigOptionalQuantityInput!]
   comments: String
+  imagesUID: String
 }
 
 type PigMortalityResult {
@@ -283,6 +289,7 @@ type PigMove {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 input PostPigMoveInput {
@@ -294,6 +301,7 @@ input PostPigMoveInput {
   smallPigQuantity: Int
   totalWeight: Float!
   comments: String
+  imagesUID: String
 }
 
 input SavePigMoveInput {
@@ -305,6 +313,7 @@ input SavePigMoveInput {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 type PigMoveResult {
@@ -321,6 +330,7 @@ type PigPurchase {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 input PostPigPurchaseInput {
@@ -331,6 +341,7 @@ input PostPigPurchaseInput {
   smallPigQuantity: Int
   totalWeight: Float!
   comments: String
+  imagesUID: String
 }
 
 input SavePigPurchaseInput {
@@ -341,6 +352,7 @@ input SavePigPurchaseInput {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 type PigPurchaseResult {
@@ -357,6 +369,7 @@ type PigWean {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 input PostPigWeanInput {
@@ -367,6 +380,7 @@ input PostPigWeanInput {
   smallPigQuantity: Int
   totalWeight: Float!
   comments: String
+  imagesUID: String
 }
 
 input SavePigWeanInput {
@@ -377,6 +391,7 @@ input SavePigWeanInput {
   smallPigQuantity: Int
   totalWeight: Float
   comments: String
+  imagesUID: String
 }
 
 type PigWeanResult {

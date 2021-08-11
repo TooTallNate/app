@@ -19,6 +19,7 @@ fragment PigMoveFragment on PigMove {
   smallPigQuantity
   totalWeight
   comments
+  imagesUID
 }
 
 query PigMove($job: String!) {
