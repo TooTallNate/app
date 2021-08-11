@@ -30,7 +30,7 @@ const ImageUploadInput = React.forwardRef<
 
   const [uploading, setUploading] = useState(false);
   const [imageCount, setImageCount] = useState(0);
-  const [awsFolder, setAWSFolder] = useState(value || uuidv4());
+  const [awsFolder, setAWSFolder] = useState(value || uuidv4().substr(0, 34));
 
   const [uploadedImages, setUploadedImages] = useState(
     new Array<AwsImageType>()
@@ -45,7 +45,7 @@ const ImageUploadInput = React.forwardRef<
 
     try {
       let awsError = "";
-      const awsFolder = value || uuidv4();
+      const awsFolder = value || uuidv4().substr(0, 34);
       const file = e.target.files && e.target.files[0];
       const filename = file && `${awsFolder}/${file.name}`;
 
