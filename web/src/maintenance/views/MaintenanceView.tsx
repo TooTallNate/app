@@ -106,7 +106,7 @@ const MaintenanceView: React.FC = () => {
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="asset">
               <FormFieldLabel className="text-xl">
-                {data.maintenanceAsset.description}
+                {`${data.maintenanceAsset.number} - ${data.maintenanceAsset.description}`}
               </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
