@@ -159,21 +159,19 @@ export interface NavMaintenanceExpense {
   Maintenance_Expense_Account: string;
 }
 
-export interface NavMaintenanceInterval {
+export interface NavMaintenanceAsset {
   Maintenance_Code: string;
   Fixed_Asset_No: string;
   MaintenanceInterval: number;
   Unit_of_Measure_Code: string;
-  Description: string;
+  MaintenanceDescription: string;
   Maintenance_Expense_Account: string;
-}
-
-export interface NavMaintenanceAsset {
   No: string;
-  Description: string;
+  FADescription: string;
   FA_Class_Code: string;
   FA_Subclass_Code: string;
   Global_Dimension_1_Code: string;
   Global_Dimension_2_Code: string;
   Location_Code: string;
+  AuxiliaryIndex1: string;
 }

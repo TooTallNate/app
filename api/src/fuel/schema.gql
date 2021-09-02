@@ -8,12 +8,9 @@ type FuelAsset {
 
 input PostFuelInput {
     asset: String!
-    #fuelType: String!
     postingDate: String
     gallons: Float!
-    #fuelCost: Float!
-    #totalCost: Float!
-    mileage: Int!
+    mileage: Float!
     comments: String
 }
 

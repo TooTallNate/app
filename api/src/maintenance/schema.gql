@@ -2,23 +2,19 @@ type MaintenanceAsset {
   number: String!
   description: String
   classCode: String
-}
-
-type MaintenanceInterval {
   code: String!
-  asset: String!
   interval: Int
   unitType: String
-  description: String
+  maintenanceDesc: String
 }
 
 input PostMaintenanceInput {
   asset: String!
   postingDate: String
   type: String!
-  mileage: Int
-  workHours: Int!
-  totalCost: Int
+  mileage: Float
+  workHours: Float!
+  totalCost: Float
   comments: String
 }
 
@@ -29,7 +25,7 @@ type MaintenanceResult {
 type Query {
   maintenanceAsset(number: String!): MaintenanceAsset
   maintenanceAssets: [MaintenanceAsset!]!
-  maintenanceIntervals(assetNo: String!): [MaintenanceInterval!]!
+  maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
 }
 
 type Mutation {

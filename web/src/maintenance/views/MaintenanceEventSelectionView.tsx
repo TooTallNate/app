@@ -55,7 +55,7 @@ const MaintenanceEventSelectionView: React.FC = () => {
                 <TypeaheadInput
                   items={data.maintenanceAssets.map(asset => ({
                     value: asset.number || "",
-                    title: asset.description || ""
+                    title: `${asset.number} - ${asset.description}` || ""
                   }))}
                 />
               </FormFieldInput>
