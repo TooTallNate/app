@@ -1,8 +1,4 @@
-import {
-  NavMaintenanceExpense,
-  NavFuelAsset,
-  NavMaintenanceInterval
-} from "../nav";
+import { NavMaintenanceExpense, NavFuelAsset } from "../nav";
 import { BooleanFilterExpression } from "../nav/filter";
 import NavDataSource from "./NavDataSource";
 import { JobFilter } from "./NavJobDataSource";

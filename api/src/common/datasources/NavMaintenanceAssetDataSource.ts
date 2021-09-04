@@ -2,7 +2,6 @@ import {
   NavMaintenanceExpense,
   NavFuelAsset,
   NavMaintenanceAsset,
-  NavMaintenanceInterval,
   NavItem
 } from "../nav";
 import { BooleanFilterExpression } from "../nav/filter";
@@ -46,14 +45,12 @@ export default class NavMaintenanceAssetDataSource extends NavDataSource {
     return this.get(`/MaintenanceExpenseCodes('${code}')`);
   }
 
-  async getMaintenanceIntervalByAsset(
-    assetNo: string
-  ): Promise<NavMaintenanceInterval[]> {
+  async getAssetsByNo(assetNo: string): Promise<NavMaintenanceAsset[]> {
     let filter = this.buildFilter(f => f.equals("Fixed_Asset_No", assetNo));
-    const maintenanceInterval = await this.get(
-      `/MaintenanceInterval?$filter=${filter}`
+    const maintenanceAssets = await this.get(
+      `/MaintenanceFixedAssets?$filter=${filter}`
     );
-    return maintenanceInterval;
+    return maintenanceAssets;
   }
 
   async getItem(No: string): Promise<NavItem> {

@@ -23,6 +23,7 @@ import {
 import { useFlash } from "../../common/contexts/flash";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import StaticValue from "../../common/components/input/StaticValue";
+import DecimalInput from "../../common/components/input/DecimalInput";
 
 interface ViewParams {
   asset: string;
@@ -38,7 +39,7 @@ interface FormData {
 }
 
 const MaintenanceView: React.FC = () => {
-  const [totalCostState, setTotalCostState] = useState(0);
+  const [totalCostState, setTotalCostState] = useState("  ");
   const history = useHistory();
   const params = useParams<ViewParams>();
   const formContext = useForm<FormData>();
@@ -90,7 +91,7 @@ const MaintenanceView: React.FC = () => {
   useEffect(() => {
     if (data && data.item && data.item.cost) {
       const total: number = workHours * data.item.cost;
-      setTotalCostState(Math.round(total * 100) / 100);
+      setTotalCostState((Math.round(total * 100) / 100).toFixed(2));
     }
   }, [workHours, data]);
 
@@ -105,7 +106,7 @@ const MaintenanceView: React.FC = () => {
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="asset">
               <FormFieldLabel className="text-xl">
-                {data.maintenanceAsset.description}
+                {`${data.maintenanceAsset.number} - ${data.maintenanceAsset.description}`}
               </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
@@ -125,10 +126,10 @@ const MaintenanceView: React.FC = () => {
               <FormFieldLabel>Maintenance Type</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
-                  items={((data && data.maintenanceIntervals) || []).map(
+                  items={((data && data.maintenanceAssetsByNo) || []).map(
                     interval => ({
                       value: interval.code || "",
-                      title: interval.description || ""
+                      title: interval.maintenanceDesc || ""
                     })
                   )}
                 />
@@ -138,7 +139,7 @@ const MaintenanceView: React.FC = () => {
             <FormField name="mileage">
               <FormFieldLabel>Current Miles/Hours</FormFieldLabel>
               <FormFieldInput>
-                <NumberInput className="w-32" />
+                <DecimalInput decimalPlaces={2} step=".01" className="w-32" />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
@@ -149,7 +150,7 @@ const MaintenanceView: React.FC = () => {
               <FormFieldLabel>Work Hours</FormFieldLabel>
               <span className="ml-2">@ ${itemCost.toFixed(2)}</span>
               <FormFieldInput>
-                <NumberInput className="w-32" />
+                <DecimalInput decimalPlaces={2} step=".01" className="w-32" />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

@@ -10,8 +10,7 @@ import {
   NavStandardItemJournal,
   NavJobPostingGroup,
   NavFuelAsset,
-  NavMaintenanceAsset,
-  NavMaintenanceInterval
+  NavMaintenanceAsset
 } from "./nav";
 import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
 import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
@@ -103,7 +102,7 @@ export type Query = {
   locations: Array<Location>;
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
-  maintenanceIntervals: Array<MaintenanceInterval>;
+  maintenanceAssetsByNo: Array<MaintenanceAsset>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -147,7 +146,7 @@ export type QueryMaintenanceAssetArgs = {
   number: Scalars["String"];
 };
 
-export type QueryMaintenanceIntervalsArgs = {
+export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
@@ -204,7 +203,7 @@ export type PostFuelInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   gallons: Scalars["Float"];
-  mileage: Scalars["Int"];
+  mileage: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -313,24 +312,19 @@ export type MaintenanceAsset = {
   number: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
   classCode?: Maybe<Scalars["String"]>;
-};
-
-export type MaintenanceInterval = {
-  __typename?: "MaintenanceInterval";
   code: Scalars["String"];
-  asset: Scalars["String"];
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
+  maintenanceDesc?: Maybe<Scalars["String"]>;
 };
 
 export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   type: Scalars["String"];
-  mileage?: Maybe<Scalars["Int"]>;
-  workHours: Scalars["Int"];
-  totalCost?: Maybe<Scalars["Int"]>;
+  mileage?: Maybe<Scalars["Float"]>;
+  workHours: Scalars["Float"];
+  totalCost?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -860,7 +854,6 @@ export type ResolversTypes = ResolversObject<{
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
   MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
-  MaintenanceInterval: ResolverTypeWrapper<NavMaintenanceInterval>;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
   PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
@@ -980,7 +973,6 @@ export type ResolversParentTypes = ResolversObject<{
   FuelResult: FuelResult;
   Mutation: {};
   MaintenanceAsset: NavMaintenanceAsset;
-  MaintenanceInterval: NavMaintenanceInterval;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: MaintenanceResult;
   PigActivityDefaults: UserSettingsDocument;
@@ -1196,11 +1188,11 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
-  maintenanceIntervals?: Resolver<
-    Array<ResolversTypes["MaintenanceInterval"]>,
+  maintenanceAssetsByNo?: Resolver<
+    Array<ResolversTypes["MaintenanceAsset"]>,
     ParentType,
     ContextType,
-    RequireFields<QueryMaintenanceIntervalsArgs, "assetNo">
+    RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
   >;
   pigActivityDefaults?: Resolver<
     ResolversTypes["PigActivityDefaults"],
@@ -1461,18 +1453,10 @@ export type MaintenanceAssetResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type MaintenanceIntervalResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["MaintenanceInterval"] = ResolversParentTypes["MaintenanceInterval"]
-> = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  asset?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   interval?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   unitType?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  description?: Resolver<
+  maintenanceDesc?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
@@ -2007,7 +1991,6 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
-  MaintenanceInterval?: MaintenanceIntervalResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;
   PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
   PigWeanEvent?: PigWeanEventResolvers<ContextType>;

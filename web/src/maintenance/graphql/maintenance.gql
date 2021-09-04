@@ -3,11 +3,11 @@ query MaintenanceAsset($number: String!) {
         number
         description
     }
-    maintenanceIntervals(assetNo: $number) {
+    maintenanceAssetsByNo(assetNo: $number) {
       code
       interval
       unitType
-      description
+      maintenanceDesc
     }
     item(number: "LABOR") {
       number

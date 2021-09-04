@@ -58,7 +58,7 @@ type Query {
   locations: [Location!]!
   maintenanceAsset(number: String!): MaintenanceAsset
   maintenanceAssets: [MaintenanceAsset!]!
-  maintenanceIntervals(assetNo: String!): [MaintenanceInterval!]!
+  maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
   pigActivityDefaults: PigActivityDefaults!
   pigActivityJobs: [Job!]!
   pigAdjustment(job: String!): PigAdjustment!
@@ -94,7 +94,7 @@ input PostFuelInput {
   asset: String!
   postingDate: String
   gallons: Float!
-  mileage: Int!
+  mileage: Float!
   comments: String
 }
 
@@ -128,23 +128,19 @@ type MaintenanceAsset {
   number: String!
   description: String
   classCode: String
-}
-
-type MaintenanceInterval {
   code: String!
-  asset: String!
   interval: Int
   unitType: String
-  description: String
+  maintenanceDesc: String
 }
 
 input PostMaintenanceInput {
   asset: String!
   postingDate: String
   type: String!
-  mileage: Int
-  workHours: Int!
-  totalCost: Int
+  mileage: Float
+  workHours: Float!
+  totalCost: Float
   comments: String
 }
 

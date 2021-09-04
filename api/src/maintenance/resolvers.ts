@@ -2,32 +2,22 @@ import { parse } from "date-fns";
 import {
   InclusivityMode,
   MaintenanceAssetResolvers,
-  MaintenanceIntervalResolvers,
   MutationResolvers,
   QueryResolvers
 } from "../common/graphql";
 import UserSettingsModel from "../common/models/UserSettings";
-import {
-  NavJobJournalBatch,
-  NavJobJournalTemplate,
-  NavMaintenanceInterval
-} from "../common/nav";
+import { NavJobJournalBatch, NavJobJournalTemplate } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 
 export const MaintenanceAsset: MaintenanceAssetResolvers = {
   number: navMaintenanceAsset => navMaintenanceAsset.No,
-  description: navMaintenanceAsset => navMaintenanceAsset.Description,
-  classCode: navMaintenanceAsset => navMaintenanceAsset.FA_Class_Code
-};
-
-export const MaintenanceInterval: MaintenanceIntervalResolvers = {
-  code: navMaintenanceInterval => navMaintenanceInterval.Maintenance_Code,
-  asset: navMaintenanceInterval => navMaintenanceInterval.Fixed_Asset_No,
-  interval: navMaintenanceInterval =>
-    navMaintenanceInterval.MaintenanceInterval,
-  unitType: navMaintenanceInterval =>
-    navMaintenanceInterval.Unit_of_Measure_Code,
-  description: navMaintenanceInterval => navMaintenanceInterval.Description
+  description: navMaintenanceAsset => navMaintenanceAsset.FADescription,
+  classCode: navMaintenanceAsset => navMaintenanceAsset.FA_Class_Code,
+  code: navMaintenanceAsset => navMaintenanceAsset.Maintenance_Code,
+  interval: navMaintenanceAsset => navMaintenanceAsset.MaintenanceInterval,
+  unitType: navMaintenanceAsset => navMaintenanceAsset.Unit_of_Measure_Code,
+  maintenanceDesc: navMaintenanceAsset =>
+    navMaintenanceAsset.MaintenanceDescription
 };
 
 export const queries: QueryResolvers = {
@@ -43,18 +33,22 @@ export const queries: QueryResolvers = {
         var excludeLocations = settings.locations.list;
       }
     }
-    return await dataSources.navMaintenanceAsset.getAll({
+    const assetList = await dataSources.navMaintenanceAsset.getAll({
       includeLocations,
       excludeLocations
     });
+
+    //filtering assetList to remove duplicates
+    return assetList.filter(
+      (asset, index, array) =>
+        array.findIndex(asset2 => asset2.No === asset.No) === index
+    );
   },
   async maintenanceAsset(_, { number }, { dataSources }) {
     return await dataSources.navMaintenanceAsset.getByNo(number);
   },
-  async maintenanceIntervals(_, { assetNo }, { dataSources }) {
-    return await dataSources.navMaintenanceAsset.getMaintenanceIntervalByAsset(
-      assetNo
-    );
+  async maintenanceAssetsByNo(_, { assetNo }, { dataSources }) {
+    return await dataSources.navMaintenanceAsset.getAssetsByNo(assetNo);
   },
   item(_, { number }, { dataSources }) {
     return dataSources.navItemJournal.getItem(number);
@@ -102,6 +96,5 @@ export const mutations: MutationResolvers = {
 };
 
 export const types = {
-  MaintenanceAsset,
-  MaintenanceInterval
+  MaintenanceAsset
 };

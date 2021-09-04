@@ -76,7 +76,7 @@ export type Query = {
   locations: Array<Location>;
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
-  maintenanceIntervals: Array<MaintenanceInterval>;
+  maintenanceAssetsByNo: Array<MaintenanceAsset>;
   pigActivityDefaults: PigActivityDefaults;
   pigActivityJobs: Array<Job>;
   pigAdjustment: PigAdjustment;
@@ -120,7 +120,7 @@ export type QueryMaintenanceAssetArgs = {
   number: Scalars["String"];
 };
 
-export type QueryMaintenanceIntervalsArgs = {
+export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
@@ -177,7 +177,7 @@ export type PostFuelInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   gallons: Scalars["Float"];
-  mileage: Scalars["Int"];
+  mileage: Scalars["Float"];
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -286,24 +286,19 @@ export type MaintenanceAsset = {
   number: Scalars["String"];
   description?: Maybe<Scalars["String"]>;
   classCode?: Maybe<Scalars["String"]>;
-};
-
-export type MaintenanceInterval = {
-  __typename?: "MaintenanceInterval";
   code: Scalars["String"];
-  asset: Scalars["String"];
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
+  maintenanceDesc?: Maybe<Scalars["String"]>;
 };
 
 export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   type: Scalars["String"];
-  mileage?: Maybe<Scalars["Int"]>;
-  workHours: Scalars["Int"];
-  totalCost?: Maybe<Scalars["Int"]>;
+  mileage?: Maybe<Scalars["Float"]>;
+  workHours: Scalars["Float"];
+  totalCost?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
@@ -726,10 +721,10 @@ export type MaintenanceAssetQuery = { __typename?: "Query" } & {
       "number" | "description"
     >
   >;
-  maintenanceIntervals: Array<
-    { __typename?: "MaintenanceInterval" } & Pick<
-      MaintenanceInterval,
-      "code" | "interval" | "unitType" | "description"
+  maintenanceAssetsByNo: Array<
+    { __typename?: "MaintenanceAsset" } & Pick<
+      MaintenanceAsset,
+      "code" | "interval" | "unitType" | "maintenanceDesc"
     >
   >;
   item?: Maybe<{ __typename?: "Item" } & Pick<Item, "number" | "cost">>;
@@ -808,11 +803,11 @@ export const MaintenanceAssetDocument = gql`
       number
       description
     }
-    maintenanceIntervals(assetNo: $number) {
+    maintenanceAssetsByNo(assetNo: $number) {
       code
       interval
       unitType
-      description
+      maintenanceDesc
     }
     item(number: "LABOR") {
       number
