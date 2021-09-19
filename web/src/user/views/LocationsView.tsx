@@ -24,7 +24,7 @@ import ListBox from "../../common/components/input/ListBox";
 import { Location } from "../graphql";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { useFlash } from "../../common/contexts/flash";
-import { PigActivityJobsDocument } from "../../pig-activity/graphql";
+import { LivestockActivityJobsDocument } from "../../livestock-activity/graphql";
 
 interface FormData {
   mode: InclusivityMode;
@@ -49,7 +49,7 @@ const LocationsView: React.FC = () => {
   const [update] = useUpdateLocationsMutation({
     refetchQueries: [
       {
-        query: PigActivityJobsDocument
+        query: LivestockActivityJobsDocument
       }
     ]
   });

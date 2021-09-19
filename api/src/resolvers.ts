@@ -1,6 +1,6 @@
 import * as users from "./users/resolvers";
 import * as scorecard from "./scorecard/resolvers";
-import * as pigActivity from "./pig-activity/resolvers";
+import * as livestockActivity from "./livestock-activity/resolvers";
 import * as common from "./common/resolvers";
 import * as fuel from "./fuel/resolvers";
 import * as maintenance from "./maintenance/resolvers";
@@ -9,7 +9,7 @@ export default {
   Query: {
     ...users.queries,
     ...scorecard.queries,
-    ...pigActivity.queries,
+    ...livestockActivity.queries,
     ...common.queries,
     ...fuel.queries,
     ...maintenance.queries
@@ -17,13 +17,13 @@ export default {
   Mutation: {
     ...users.mutations,
     ...scorecard.mutations,
-    ...pigActivity.mutations,
+    ...livestockActivity.mutations,
     ...fuel.mutations,
     ...maintenance.mutations
   },
   ...users.types,
   ...scorecard.types,
-  ...pigActivity.types,
+  ...livestockActivity.types,
   ...common.types,
   ...fuel.types,
   ...maintenance.types

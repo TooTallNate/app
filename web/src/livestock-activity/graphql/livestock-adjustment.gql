@@ -1,0 +1,47 @@
+fragment LivestockAdjustmentFragment on LivestockAdjustment {
+ event {
+   code
+ }
+ job {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+  postingDate
+  quantity
+  totalWeight
+  comments
+}
+
+query LivestockAdjustment($job: String!) {
+  livestockAdjustmentEventTypes {
+    code
+    description
+  }
+  livestockAdjustment(job: $job) {
+    ...LivestockAdjustmentFragment
+  }
+}
+
+mutation SaveLivestockAdjustment($input: SaveLivestockAdjustmentInput!) {
+  saveLivestockAdjustment(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockAdjustment {
+      ...LivestockAdjustmentFragment
+    }
+  }
+}
+
+mutation PostLivestockAdjustment($input: PostLivestockAdjustmentInput!) {
+  postLivestockAdjustment(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockAdjustment {
+      ...LivestockAdjustmentFragment
+    }
+  }
+}

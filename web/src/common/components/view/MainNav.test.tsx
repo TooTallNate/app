@@ -12,7 +12,7 @@ const render = () =>
     }
   });
 
-test("Home button navigates to pigs", () => {
+test("Home button navigates to livestocks", () => {
   const { getByText } = render();
   fireEvent.click(getByText(/home/i));
   getByText(/home view/i);

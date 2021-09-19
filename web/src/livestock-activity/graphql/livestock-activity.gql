@@ -1,0 +1,30 @@
+fragment LivestockActivityDefaultsFragment on LivestockActivityDefaults {
+  job {
+    number
+  }
+  prices {
+    animal
+    price
+  }
+}
+
+query LivestockActivityJobs {
+  livestockActivityDefaults {
+    job {
+      number
+    }
+  }
+  itemJournalTemplates {
+    name
+    description
+    type
+    reasonCode
+    sourceCode
+  }
+  livestockActivityJobs {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+}

@@ -5,7 +5,7 @@ import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StaticValue from "../../common/components/input/StaticValue";
-import usePigJob from "./usePigJob";
+import useLivestockJob from "./useLivestockJob";
 
 export interface ScorecardMortalityProps {
   label: string;
@@ -16,7 +16,7 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   label,
   id
 }) => {
-  const { job: pigJob } = usePigJob();
+  const { job: livestockJob } = useLivestockJob();
   const { setValue, register, unregister, watch } = useFormContext();
   const name = `${id}.numericValue`;
 
@@ -26,12 +26,16 @@ const ScorecardMortality: React.FC<ScorecardMortalityProps> = ({
   }, [register, name, unregister]);
 
   useEffect(() => {
-    if (pigJob && pigJob.deadQuantity && pigJob.deadQuantity > 0) {
-      setValue(name, pigJob.deadQuantity);
+    if (
+      livestockJob &&
+      livestockJob.deadQuantity &&
+      livestockJob.deadQuantity > 0
+    ) {
+      setValue(name, livestockJob.deadQuantity);
     } else {
       setValue(name, null);
     }
-  }, [pigJob, setValue, name]);
+  }, [livestockJob, setValue, name]);
 
   let deadQuantity = watch(name);
 

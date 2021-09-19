@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import ActivityView from "./pig-activity/views/ActivityView";
+import ActivityView from "./livestock-activity/views/ActivityView";
 import HomeView from "./common/views/HomeView";
 import LoginView from "./user/views/LoginView";
 import MainNav from "./common/components/view/MainNav";
@@ -26,7 +26,7 @@ const AuthenticatedApp: React.FC = () => {
     <div className="max-w-3xl h-full mx-auto flex flex-col">
       <Switch>
         <Route exact path="/" component={HomeView} />
-        <Route path="/pig-activity" component={ActivityView} />
+        <Route path="/livestock-activity" component={ActivityView} />
         <Route path="/scorecard" component={ScorecardsRouterView} />
         <Route path="/fuel" component={FuelRouterView} />
         <Route path="/maintenance" component={MaintenanceRouterView} />

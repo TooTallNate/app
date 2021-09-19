@@ -14,7 +14,7 @@ import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import ViewTitle from "../../common/components/view/ViewTitle";
-import CommentsField from "../../pig-activity/components/CommentsField";
+import CommentsField from "../../livestock-activity/components/CommentsField";
 import {
   useMaintenanceAssetQuery,
   usePostMaintenanceMutation

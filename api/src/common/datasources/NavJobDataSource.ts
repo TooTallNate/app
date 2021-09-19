@@ -9,7 +9,7 @@ export interface JobFilter {
   includeLocations?: string[];
 }
 
-export default class PigJobNavDataSource extends NavDataSource {
+export default class LivestockJobNavDataSource extends NavDataSource {
   getPostingGroups(prefix?: string) {
     let odataFilter;
     if (prefix) {

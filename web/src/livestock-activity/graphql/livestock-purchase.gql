@@ -1,0 +1,48 @@
+fragment LivestockPurchaseFragment on LivestockPurchase {
+  event {
+    code
+  }
+  job {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+  postingDate
+  quantity
+  smallLivestockQuantity
+  totalWeight
+  comments
+}
+
+query LivestockPurchase($job: String!) {
+  livestockPurchaseEventTypes {
+    code
+    description
+  }
+  livestockPurchase(job: $job) {
+    ...LivestockPurchaseFragment
+  }
+}
+
+mutation SaveLivestockPurchase($input: SaveLivestockPurchaseInput!) {
+  saveLivestockPurchase(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockPurchase {
+      ...LivestockPurchaseFragment
+    }
+  }
+}
+
+mutation PostLivestockPurchase($input: PostLivestockPurchaseInput!) {
+  postLivestockPurchase(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockPurchase {
+      ...LivestockPurchaseFragment
+    }
+  }
+}

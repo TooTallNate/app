@@ -18,7 +18,7 @@ import ViewContent from "../../common/components/view/ViewContent";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import ViewTitle from "../../common/components/view/ViewTitle";
 import { useFlash } from "../../common/contexts/flash";
-import CommentsField from "../../pig-activity/components/CommentsField";
+import CommentsField from "../../livestock-activity/components/CommentsField";
 import { useFuelAssetQuery, usePostFuelMutation } from "../graphql";
 
 interface ViewParams {

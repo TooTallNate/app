@@ -1,0 +1,49 @@
+fragment LivestockGradeOffFragment on LivestockGradeOff {
+  event {
+    code
+  }
+  job {
+    number
+    description
+    inventory
+    deadQuantity
+  }  
+  quantities {
+    code
+    quantity
+  }
+  postingDate
+  livestockWeight
+  comments
+}
+
+query LivestockGradeOff($job: String!) {
+  livestockGradeOffEventTypes {
+    code
+    description
+    reasons {
+      code
+      description
+    }
+  }
+  livestockGradeOff(job: $job) {
+    ...LivestockGradeOffFragment
+  }
+}
+
+mutation SaveLivestockGradeOff($input: SaveLivestockGradeOffInput!) {
+  saveLivestockGradeOff(input: $input) {
+    livestockGradeOff {
+      ...LivestockGradeOffFragment
+    }
+  }
+}
+
+mutation PostLivestockGradeOff($input: PostLivestockGradeOffInput!) {
+  postLivestockGradeOff(input: $input) {
+    livestockGradeOff {
+      ...LivestockGradeOffFragment
+    }
+  }
+}
+

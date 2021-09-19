@@ -24,7 +24,7 @@ query ScorecardTargetTemp($code: String!) {
   }
 }
 
-query ScorecardPigJob($job: String!) {
+query ScorecardLivestockJob($job: String!) {
   job(number: $job) {
     number
     description
@@ -41,7 +41,7 @@ query ScorecardJobs($group: String!) {
   }
 }
 
-query ScorecardPigJobs($location: String!) {
+query ScorecardLivestockJobs($location: String!) {
   jobs(input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }) {
     number
     description

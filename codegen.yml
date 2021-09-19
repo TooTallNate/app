@@ -22,19 +22,19 @@ generates:
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
-        PigAdjustment: "../pig-activity/models/PigAdjustment#PigAdjustmentDocument"
-        PigGradeOff: "../pig-activity/models/PigGradeOff#PigGradeOffDocument"
-        PigMortality: "../pig-activity/models/PigMortality#PigMortalityDocument"
-        PigMove: "../pig-activity/models/PigMove#PigMoveDocument"
-        PigPurchase: "../pig-activity/models/PigPurchase#PigPurchaseDocument"
-        PigWean: "../pig-activity/models/PigWean#PigWeanDocument"
-        PigWeanEvent: "./nav#NavStandardItemJournal"
-        PigGradeOffEvent: "./nav#NavStandardItemJournal"
-        PigMoveEvent: "./nav#NavStandardItemJournal"
-        PigPurchaseEvent: "./nav#NavStandardItemJournal"
-        PigAdjustmentEvent: "./nav#NavStandardItemJournal"
-        PigMortalityEvent: "./nav#NavStandardItemJournal"
-        PigActivityDefaults: "./models/UserSettings#UserSettingsDocument"
+        LivestockAdjustment: "../livestock-activity/models/LivestockAdjustment#LivestockAdjustmentDocument"
+        LivestockGradeOff: "../livestock-activity/models/LivestockGradeOff#LivestockGradeOffDocument"
+        LivestockMortality: "../livestock-activity/models/LivestockMortality#LivestockMortalityDocument"
+        LivestockMove: "../livestock-activity/models/LivestockMove#LivestockMoveDocument"
+        LivestockPurchase: "../livestock-activity/models/LivestockPurchase#LivestockPurchaseDocument"
+        LivestockWean: "../livestock-activity/models/LivestockWean#LivestockWeanDocument"
+        LivestockWeanEvent: "./nav#NavStandardItemJournal"
+        LivestockGradeOffEvent: "./nav#NavStandardItemJournal"
+        LivestockMoveEvent: "./nav#NavStandardItemJournal"
+        LivestockPurchaseEvent: "./nav#NavStandardItemJournal"
+        LivestockAdjustmentEvent: "./nav#NavStandardItemJournal"
+        LivestockMortalityEvent: "./nav#NavStandardItemJournal"
+        LivestockActivityDefaults: "./models/UserSettings#UserSettingsDocument"
         ScorecardGroup: "./nav#NavJobPostingGroup"
         Scorecard: "../scorecard/Scorecard#ScorecardDocument"
         ScorecardConfig: "./nav#NavJob"
@@ -56,8 +56,8 @@ generates:
     hooks:
       afterOneFileWrite:
         - eslint --fix
-  web/src/pig-activity/graphql/index.tsx:
-    documents: "web/src/pig-activity/graphql/*.gql"
+  web/src/livestock-activity/graphql/index.tsx:
+    documents: "web/src/livestock-activity/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"

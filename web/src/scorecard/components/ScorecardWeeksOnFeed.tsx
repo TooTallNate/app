@@ -6,7 +6,7 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import StaticValue from "../../common/components/input/StaticValue";
 import { FormValue } from "../contexts/scorecard";
-import usePigJob from "./usePigJob";
+import useLivestockJob from "./useLivestockJob";
 
 export interface ScorecardWeeksOnFeedProps {
   label: string;
@@ -19,7 +19,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
   label,
   id
 }) => {
-  const { job: pigJob } = usePigJob();
+  const { job: livestockJob } = useLivestockJob();
   const { setValue, register, unregister, watch } = useFormContext();
   const name = `${id}.numericValue`;
   const weeksOnFeed = watch(name);
@@ -31,8 +31,8 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
 
   useEffect(() => {
     let weeksOnFeed: number | undefined;
-    if (pigJob && pigJob.groupStartDate) {
-      const groupStartDate = new Date(pigJob.groupStartDate).getTime();
+    if (livestockJob && livestockJob.groupStartDate) {
+      const groupStartDate = new Date(livestockJob.groupStartDate).getTime();
       const nowDate = new Date().getTime();
       const diff = (nowDate - groupStartDate) / MS_TO_DAYS_MULTIPLIER;
       const value = Math.floor(Number(diff) / 7);
@@ -43,7 +43,7 @@ const ScorecardWeeksOnFeed: React.FC<ScorecardWeeksOnFeedProps> = ({
       weeksOnFeed = 0.5;
     }
     setValue(name, weeksOnFeed);
-  }, [pigJob, setValue, name]);
+  }, [livestockJob, setValue, name]);
 
   const displayValue = (v: number | undefined): number =>
     typeof v === "number" && v >= 1 ? v : 0;

@@ -79,7 +79,7 @@ export const PostFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactor
   area: Factory.each(() => faker.random.alphaNumeric(8)),
   operator: Factory.each(() => faker.name.firstName().toUpperCase()),
   sows: Factory.each(() => ScorecardEntryInputFactory.build()),
-  piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
+  livestocklets: Factory.each(() => ScorecardEntryInputFactory.build()),
   feed: Factory.each(() => ScorecardEntryInputFactory.build()),
   water: Factory.each(() => ScorecardEntryInputFactory.build()),
   crate: Factory.each(() => ScorecardEntryInputFactory.build()),
@@ -92,14 +92,14 @@ export const SaveFarrowingBackendScorecardInputFactory = Factory.Sync.makeFactor
   area: Factory.each(() => faker.random.alphaNumeric(8)),
   operator: Factory.each(() => faker.name.firstName().toUpperCase()),
   sows: Factory.each(() => ScorecardEntryInputFactory.build()),
-  piglets: Factory.each(() => ScorecardEntryInputFactory.build()),
+  livestocklets: Factory.each(() => ScorecardEntryInputFactory.build()),
   feed: Factory.each(() => ScorecardEntryInputFactory.build()),
   water: Factory.each(() => ScorecardEntryInputFactory.build()),
   crate: Factory.each(() => ScorecardEntryInputFactory.build()),
   room: Factory.each(() => ScorecardEntryInputFactory.build())
 });
 
-export const PigAdjustmentFactory = Factory.Sync.makeFactory({
+export const LivestockAdjustmentFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
@@ -107,7 +107,7 @@ export const PigAdjustmentFactory = Factory.Sync.makeFactory({
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
-export const PigGradeOffFactory = Factory.Sync.makeFactory({
+export const LivestockGradeOffFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantities: Factory.each(() => [
@@ -124,11 +124,13 @@ export const PigGradeOffFactory = Factory.Sync.makeFactory({
       quantity: faker.random.number({ min: 1, max: 50 })
     }
   ]),
-  pigWeight: Factory.each(() => faker.random.number({ min: 50, max: 200 })),
+  livestockWeight: Factory.each(() =>
+    faker.random.number({ min: 50, max: 200 })
+  ),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
-export const PigMortalityFactory = Factory.Sync.makeFactory({
+export const LivestockMortalityFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantities: Factory.each(() => [
@@ -148,34 +150,34 @@ export const PigMortalityFactory = Factory.Sync.makeFactory({
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
-export const PigMoveFactory = Factory.Sync.makeFactory({
+export const LivestockMoveFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   fromJob: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   toJob: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 50, max: 1000 })),
-  smallPigQuantity: Factory.each(() =>
+  smallLivestockQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 50 })
   ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
-export const PigPurchaseFactory = Factory.Sync.makeFactory({
+export const LivestockPurchaseFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 1, max: 1000 })),
-  smallPigQuantity: Factory.each(() =>
+  smallLivestockQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 50 })
   ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
   comments: Factory.each(() => oneOf(undefined, faker.lorem.words(3)))
 });
 
-export const PigWeanFactory = Factory.Sync.makeFactory({
+export const LivestockWeanFactory = Factory.Sync.makeFactory({
   event: Factory.each(() => faker.random.word()),
   job: Factory.each(() => `job_faker.random.alphaNumeric(8)`),
   quantity: Factory.each(() => faker.random.number({ min: 50, max: 1000 })),
-  smallPigQuantity: Factory.each(() =>
+  smallLivestockQuantity: Factory.each(() =>
     faker.random.number({ min: 1, max: 50 })
   ),
   totalWeight: Factory.each(() => faker.random.number({ min: 50, max: 50000 })),
@@ -277,7 +279,7 @@ export const StandardJournalMortalityFactory = Factory.Sync.makeFactory({
 export const UserSettingsFactory = Factory.Sync.makeFactory({
   _id: Factory.each(() => new ObjectId()),
   username: Factory.each(() => faker.internet.userName()),
-  pigJob: Factory.each(() => faker.random.alphaNumeric(8)),
+  livestockJob: Factory.each(() => faker.random.alphaNumeric(8)),
   prices: Factory.each<{ animal: string; price: number }[]>(() => []),
   locations: Factory.each(() => ({
     mode: oneOf("INCLUDE", "EXCLUDE"),
@@ -299,7 +301,7 @@ export const FarrowingBackendScorecardFactory = Factory.Sync.makeFactory({
   area: Factory.each(() => `Room ${faker.random.number({ min: 1, max: 9 })}`),
   operator: Factory.each(() => faker.name.firstName().toUpperCase()),
   sows: generateScorecardEntry(0, 10),
-  piglets: generateScorecardEntry(0, 10),
+  livestocklets: generateScorecardEntry(0, 10),
   feed: generateScorecardEntry(0, 10),
   water: generateScorecardEntry(0, 10),
   crate: generateScorecardEntry(0, 10),
