@@ -8,6 +8,7 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import DateInput from "../../common/components/input/DateInput";
+import DecimalInput from "../../common/components/input/DecimalInput";
 import NumberInput from "../../common/components/input/NumberInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
@@ -93,7 +94,7 @@ const FuelView: React.FC = () => {
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField name="asset">
               <FormFieldLabel className="text-xl">
-                {fuelAsset.description}
+                {`${fuelAsset.number} - ${fuelAsset.description}`}
               </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
@@ -121,7 +122,7 @@ const FuelView: React.FC = () => {
                 @ ${fuelAsset.fuelCost.toFixed(2)}/gal
               </span>
               <FormFieldInput>
-                <NumberInput className="w-32" />
+                <DecimalInput decimalPlaces={2} step=".01" className="w-32" />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
@@ -138,7 +139,7 @@ const FuelView: React.FC = () => {
             >
               <FormFieldLabel>Current Miles/Hours</FormFieldLabel>
               <FormFieldInput>
-                <NumberInput className="w-32" />
+                <DecimalInput decimalPlaces={2} step=".01" className="w-32" />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
