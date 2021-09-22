@@ -21,7 +21,7 @@ export default class LivestockJobNavDataSource extends NavDataSource {
   }
 
   getByNo(no: string): Promise<NavJob | undefined> {
-    const resp = this.get(`/Jobs('${no}')`).catch(() => null);
+    const resp = this.get(`/JobsLivestock('${no}')`).catch(() => null);
 
     return resp;
   }
@@ -70,7 +70,7 @@ export default class LivestockJobNavDataSource extends NavDataSource {
   ): Promise<NavJob | undefined> {
     const job = (await this.getByNo(number)) as any;
     return this.patch(
-      `/Jobs('${number}')`,
+      `/JobsLivestock('${number}')`,
       { Person_Responsible: person },
       {
         headers: {
