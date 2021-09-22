@@ -46,8 +46,8 @@ export type Job = {
   number: Scalars["String"];
   description: Scalars["String"];
   personResponsible: Resource;
-  inventory?: Maybe<Scalars["Int"]>;
-  deadQuantity?: Maybe<Scalars["Int"]>;
+  inventory?: Maybe<Scalars["Float"]>;
+  deadQuantity?: Maybe<Scalars["Float"]>;
   startDate?: Maybe<Scalars["String"]>;
   groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
@@ -840,11 +840,11 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   InclusivityMode: InclusivityMode;
   Job: ResolverTypeWrapper<NavJob>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Item: ResolverTypeWrapper<NavItem>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Location: ResolverTypeWrapper<NavLocation>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -959,11 +959,11 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars["Boolean"];
   InclusivityMode: InclusivityMode;
   Job: NavJob;
-  Int: Scalars["Int"];
+  Float: Scalars["Float"];
   Item: NavItem;
+  Int: Scalars["Int"];
   Reason: NavReason;
   Resource: NavResource;
-  Float: Scalars["Float"];
   Location: NavLocation;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -1085,9 +1085,9 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
-  inventory?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  inventory?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   deadQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
+    Maybe<ResolversTypes["Float"]>,
     ParentType,
     ContextType
   >;

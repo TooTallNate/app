@@ -34,20 +34,20 @@ export default class LivestockJobNavDataSource extends NavDataSource {
   }: JobFilter = {}): Promise<NavJob[]> {
     let odataFilter = this.buildFilter(f => {
       const filters: BooleanFilterExpression[] = [];
-      if (typeof isOpen === "boolean") {
-        if (isOpen) {
-          filters.push(f.equals("Status", "Open"));
-        } else {
-          filters.push(f.notEquals("Status", "Open"));
-        }
-      }
-      if (postingGroups) {
-        filters.push(
-          f.or(
-            ...postingGroups.map(group => f.equals("Job_Posting_Group", group))
-          )
-        );
-      }
+      // if (typeof isOpen === "boolean") {
+      //   if (isOpen) {
+      //     filters.push(f.equals("Status", "Open"));
+      //   } else {
+      //     filters.push(f.notEquals("Status", "Open"));
+      //   }
+      // }
+      // if (postingGroups) {
+      //   filters.push(
+      //     f.or(
+      //       ...postingGroups.map(group => f.equals("Job_Posting_Group", group))
+      //     )
+      //   );
+      // }
       if (includeLocations && includeLocations.length > 0) {
         filters.push(
           f.or(...includeLocations.map(loc => f.equals("Site", loc)))
@@ -61,7 +61,7 @@ export default class LivestockJobNavDataSource extends NavDataSource {
     });
     const filterStr = odataFilter ? `$filter=${odataFilter}` : "";
 
-    return this.get(`/Jobs?${filterStr}`);
+    return this.get(`/JobsLivestock?${filterStr}`);
   }
 
   async updatePersonResponsible(

@@ -20,8 +20,8 @@ export type Job = {
   number: Scalars["String"];
   description: Scalars["String"];
   personResponsible: Resource;
-  inventory?: Maybe<Scalars["Int"]>;
-  deadQuantity?: Maybe<Scalars["Int"]>;
+  inventory?: Maybe<Scalars["Float"]>;
+  deadQuantity?: Maybe<Scalars["Float"]>;
   startDate?: Maybe<Scalars["String"]>;
   groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;

@@ -62,11 +62,13 @@ const Location: LocationResolvers = {
 
 export const queries: QueryResolvers = {
   jobs(_, { input }, { dataSources }) {
-    return dataSources.navJob.getAll({
-      isOpen: true,
-      ...(input.groups && { postingGroups: input.groups }),
+    const x = dataSources.navJob.getAll({
+      // isOpen: true,
+      // ...(input.groups && { postingGroups: input.groups }),
       ...(input.locations && { includeLocations: input.locations })
     });
+    console.log(x);
+    return x;
   },
   job(_, { number }, { dataSources }) {
     return dataSources.navJob.getByNo(number);

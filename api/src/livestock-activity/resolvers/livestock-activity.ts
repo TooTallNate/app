@@ -112,8 +112,8 @@ export const LivestockActivityQueries: QueryResolvers = {
       }
     }
     return dataSources.navJob.getAll({
-      isOpen: true,
-      postingGroups: ["MKT PIGS", "SOWS", "GDU"],
+      // isOpen: true,
+      // postingGroups: ["MKT PIGS", "SOWS", "GDU"],
       includeLocations,
       excludeLocations
     });
