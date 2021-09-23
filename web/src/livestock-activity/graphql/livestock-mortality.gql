@@ -1,0 +1,47 @@
+fragment LivestockMortalityFragment on LivestockMortality {
+  event {
+    code
+  }
+  job {
+    number
+    description
+    inventory
+    deadQuantity
+  }  
+  quantities {
+    code
+    quantity
+  }
+  postingDate
+  comments
+}
+
+query LivestockMortality($job: String!) {
+  livestockMortalityEventTypes {
+    code
+    description
+    reasons {
+      code
+      description
+    }
+  }
+  livestockMortality(job: $job) {
+    ...LivestockMortalityFragment
+  }
+}
+
+mutation SaveLivestockMortality($input: SaveLivestockMortalityInput!) {
+  saveLivestockMortality(input: $input) {
+    livestockMortality {
+      ...LivestockMortalityFragment
+    }
+  }
+}
+
+mutation PostLivestockMortality($input: PostLivestockMortalityInput!) {
+  postLivestockMortality(input: $input) {
+    livestockMortality {
+      ...LivestockMortalityFragment
+    }
+  }
+}

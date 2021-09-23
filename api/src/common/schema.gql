@@ -7,8 +7,8 @@ type Job {
   number: String!
   description: String!
   personResponsible: Resource!
-  inventory: Int
-  deadQuantity: Int
+  inventory: Float
+  deadQuantity: Float
   startDate: String
   groupStartDate: String
   location: Location!

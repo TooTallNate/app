@@ -12,12 +12,12 @@ import {
   NavFuelAsset,
   NavMaintenanceAsset
 } from "./nav";
-import { PigAdjustmentDocument } from "../pig-activity/models/PigAdjustment";
-import { PigGradeOffDocument } from "../pig-activity/models/PigGradeOff";
-import { PigMortalityDocument } from "../pig-activity/models/PigMortality";
-import { PigMoveDocument } from "../pig-activity/models/PigMove";
-import { PigPurchaseDocument } from "../pig-activity/models/PigPurchase";
-import { PigWeanDocument } from "../pig-activity/models/PigWean";
+import { LivestockAdjustmentDocument } from "../livestock-activity/models/LivestockAdjustment";
+import { LivestockGradeOffDocument } from "../livestock-activity/models/LivestockGradeOff";
+import { LivestockMortalityDocument } from "../livestock-activity/models/LivestockMortality";
+import { LivestockMoveDocument } from "../livestock-activity/models/LivestockMove";
+import { LivestockPurchaseDocument } from "../livestock-activity/models/LivestockPurchase";
+import { LivestockWeanDocument } from "../livestock-activity/models/LivestockWean";
 import { UserSettingsDocument } from "./models/UserSettings";
 import { ScorecardDocument } from "../scorecard/Scorecard";
 import { GraphqlContext } from "../context";
@@ -46,8 +46,8 @@ export type Job = {
   number: Scalars["String"];
   description: Scalars["String"];
   personResponsible: Resource;
-  inventory?: Maybe<Scalars["Int"]>;
-  deadQuantity?: Maybe<Scalars["Int"]>;
+  inventory?: Maybe<Scalars["Float"]>;
+  deadQuantity?: Maybe<Scalars["Float"]>;
   startDate?: Maybe<Scalars["String"]>;
   groupStartDate?: Maybe<Scalars["String"]>;
   location: Location;
@@ -99,24 +99,24 @@ export type Query = {
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
+  livestockActivityDefaults: LivestockActivityDefaults;
+  livestockActivityJobs: Array<Job>;
+  livestockAdjustment: LivestockAdjustment;
+  livestockAdjustmentEventTypes: Array<LivestockAdjustmentEvent>;
+  livestockGradeOff: LivestockGradeOff;
+  livestockGradeOffEventTypes: Array<LivestockGradeOffEvent>;
+  livestockMortality: LivestockMortality;
+  livestockMortalityEventTypes: Array<LivestockMortalityEvent>;
+  livestockMove: LivestockMove;
+  livestockMoveEventTypes: Array<LivestockMoveEvent>;
+  livestockPurchase: LivestockPurchase;
+  livestockPurchaseEventTypes: Array<LivestockPurchaseEvent>;
+  livestockWean: LivestockWean;
+  livestockWeanEventTypes: Array<LivestockWeanEvent>;
   locations: Array<Location>;
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
-  pigActivityDefaults: PigActivityDefaults;
-  pigActivityJobs: Array<Job>;
-  pigAdjustment: PigAdjustment;
-  pigAdjustmentEventTypes: Array<PigAdjustmentEvent>;
-  pigGradeOff: PigGradeOff;
-  pigGradeOffEventTypes: Array<PigGradeOffEvent>;
-  pigMortality: PigMortality;
-  pigMortalityEventTypes: Array<PigMortalityEvent>;
-  pigMove: PigMove;
-  pigMoveEventTypes: Array<PigMoveEvent>;
-  pigPurchase: PigPurchase;
-  pigPurchaseEventTypes: Array<PigPurchaseEvent>;
-  pigWean: PigWean;
-  pigWeanEventTypes: Array<PigWeanEvent>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -142,36 +142,36 @@ export type QueryJobsArgs = {
   input?: Maybe<JobFilter>;
 };
 
+export type QueryLivestockAdjustmentArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockGradeOffArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockMortalityArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockMoveArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockWeanArgs = {
+  job: Scalars["String"];
+};
+
 export type QueryMaintenanceAssetArgs = {
   number: Scalars["String"];
 };
 
 export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
-};
-
-export type QueryPigAdjustmentArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigGradeOffArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMortalityArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigMoveArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigPurchaseArgs = {
-  job: Scalars["String"];
-};
-
-export type QueryPigWeanArgs = {
-  job: Scalars["String"];
 };
 
 export type QueryResourceArgs = {
@@ -217,20 +217,20 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postLivestockAdjustment: LivestockAdjustmentResult;
+  postLivestockGradeOff: LivestockGradeOffResult;
+  postLivestockMortality: LivestockMortalityResult;
+  postLivestockMove: LivestockMoveResult;
+  postLivestockPurchase: LivestockPurchaseResult;
+  postLivestockWean: LivestockWeanResult;
   postMaintenance: MaintenanceResult;
-  postPigAdjustment: PigAdjustmentResult;
-  postPigGradeOff: PigGradeOffResult;
-  postPigMortality: PigMortalityResult;
-  postPigMove: PigMoveResult;
-  postPigPurchase: PigPurchaseResult;
-  postPigWean: PigWeanResult;
   postScorecard: ScorecardResult;
-  savePigAdjustment: PigAdjustmentResult;
-  savePigGradeOff: PigGradeOffResult;
-  savePigMortality: PigMortalityResult;
-  savePigMove: PigMoveResult;
-  savePigPurchase: PigPurchaseResult;
-  savePigWean: PigWeanResult;
+  saveLivestockAdjustment: LivestockAdjustmentResult;
+  saveLivestockGradeOff: LivestockGradeOffResult;
+  saveLivestockMortality: LivestockMortalityResult;
+  saveLivestockMove: LivestockMoveResult;
+  saveLivestockPurchase: LivestockPurchaseResult;
+  saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
 };
@@ -243,60 +243,60 @@ export type MutationPostFuelArgs = {
   input: PostFuelInput;
 };
 
+export type MutationPostLivestockAdjustmentArgs = {
+  input: PostLivestockAdjustmentInput;
+};
+
+export type MutationPostLivestockGradeOffArgs = {
+  input: PostLivestockGradeOffInput;
+};
+
+export type MutationPostLivestockMortalityArgs = {
+  input: PostLivestockMortalityInput;
+};
+
+export type MutationPostLivestockMoveArgs = {
+  input: PostLivestockMoveInput;
+};
+
+export type MutationPostLivestockPurchaseArgs = {
+  input: PostLivestockPurchaseInput;
+};
+
+export type MutationPostLivestockWeanArgs = {
+  input: PostLivestockWeanInput;
+};
+
 export type MutationPostMaintenanceArgs = {
   input: PostMaintenanceInput;
-};
-
-export type MutationPostPigAdjustmentArgs = {
-  input: PostPigAdjustmentInput;
-};
-
-export type MutationPostPigGradeOffArgs = {
-  input: PostPigGradeOffInput;
-};
-
-export type MutationPostPigMortalityArgs = {
-  input: PostPigMortalityInput;
-};
-
-export type MutationPostPigMoveArgs = {
-  input: PostPigMoveInput;
-};
-
-export type MutationPostPigPurchaseArgs = {
-  input: PostPigPurchaseInput;
-};
-
-export type MutationPostPigWeanArgs = {
-  input: PostPigWeanInput;
 };
 
 export type MutationPostScorecardArgs = {
   input: PostScorecardInput;
 };
 
-export type MutationSavePigAdjustmentArgs = {
-  input: SavePigAdjustmentInput;
+export type MutationSaveLivestockAdjustmentArgs = {
+  input: SaveLivestockAdjustmentInput;
 };
 
-export type MutationSavePigGradeOffArgs = {
-  input: SavePigGradeOffInput;
+export type MutationSaveLivestockGradeOffArgs = {
+  input: SaveLivestockGradeOffInput;
 };
 
-export type MutationSavePigMortalityArgs = {
-  input: SavePigMortalityInput;
+export type MutationSaveLivestockMortalityArgs = {
+  input: SaveLivestockMortalityInput;
 };
 
-export type MutationSavePigMoveArgs = {
-  input: SavePigMoveInput;
+export type MutationSaveLivestockMoveArgs = {
+  input: SaveLivestockMoveInput;
 };
 
-export type MutationSavePigPurchaseArgs = {
-  input: SavePigPurchaseInput;
+export type MutationSaveLivestockPurchaseArgs = {
+  input: SaveLivestockPurchaseInput;
 };
 
-export type MutationSavePigWeanArgs = {
-  input: SavePigWeanInput;
+export type MutationSaveLivestockWeanArgs = {
+  input: SaveLivestockWeanInput;
 };
 
 export type MutationSaveScorecardArgs = {
@@ -305,6 +305,300 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type LivestockActivityDefaults = {
+  __typename?: "LivestockActivityDefaults";
+  job?: Maybe<Job>;
+  prices: Array<PriceEntry>;
+};
+
+export type LivestockWeanEvent = {
+  __typename?: "LivestockWeanEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type LivestockGradeOffEvent = {
+  __typename?: "LivestockGradeOffEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
+};
+
+export type LivestockMoveEvent = {
+  __typename?: "LivestockMoveEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type LivestockPurchaseEvent = {
+  __typename?: "LivestockPurchaseEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type LivestockAdjustmentEvent = {
+  __typename?: "LivestockAdjustmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
+export type LivestockMortalityEvent = {
+  __typename?: "LivestockMortalityEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
+  reasons: Array<Reason>;
+};
+
+export type PriceEntry = {
+  __typename?: "PriceEntry";
+  animal: Scalars["String"];
+  price?: Maybe<Scalars["Float"]>;
+};
+
+export type LivestockQuantity = {
+  __typename?: "LivestockQuantity";
+  code: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+};
+
+export type LivestockQuantityInput = {
+  code: Scalars["String"];
+  quantity: Scalars["Int"];
+};
+
+export type LivestockOptionalQuantityInput = {
+  code: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+};
+
+export type LivestockAdjustment = {
+  __typename?: "LivestockAdjustment";
+  event?: Maybe<LivestockAdjustmentEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockAdjustmentInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockAdjustmentInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockAdjustmentResult = {
+  __typename?: "LivestockAdjustmentResult";
+  success: Scalars["Boolean"];
+  livestockAdjustment: LivestockAdjustment;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockGradeOff = {
+  __typename?: "LivestockGradeOff";
+  event?: Maybe<LivestockGradeOffEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantities: Array<LivestockQuantity>;
+  livestockWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockGradeOffInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantities: Array<LivestockQuantityInput>;
+  livestockWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockGradeOffInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantities?: Maybe<Array<LivestockOptionalQuantityInput>>;
+  livestockWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockGradeOffResult = {
+  __typename?: "LivestockGradeOffResult";
+  success: Scalars["Boolean"];
+  livestockGradeOff: LivestockGradeOff;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockMortality = {
+  __typename?: "LivestockMortality";
+  event?: Maybe<LivestockMortalityEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantities?: Maybe<Array<LivestockQuantity>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockMortalityInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantities?: Maybe<Array<LivestockQuantityInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockMortalityInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantities?: Maybe<Array<LivestockOptionalQuantityInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockMortalityResult = {
+  __typename?: "LivestockMortalityResult";
+  success: Scalars["Boolean"];
+  livestockMortality: LivestockMortality;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockMove = {
+  __typename?: "LivestockMove";
+  event?: Maybe<LivestockMoveEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  fromJob: Job;
+  toJob?: Maybe<Job>;
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockMoveInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  fromJob: Scalars["String"];
+  toJob: Scalars["String"];
+  quantity: Scalars["Int"];
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockMoveInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  fromJob: Scalars["String"];
+  toJob?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockMoveResult = {
+  __typename?: "LivestockMoveResult";
+  success: Scalars["Boolean"];
+  livestockMove: LivestockMove;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockPurchase = {
+  __typename?: "LivestockPurchase";
+  event?: Maybe<LivestockPurchaseEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockPurchaseInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockPurchaseInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockPurchaseResult = {
+  __typename?: "LivestockPurchaseResult";
+  success: Scalars["Boolean"];
+  livestockPurchase: LivestockPurchase;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockWean = {
+  __typename?: "LivestockWean";
+  event?: Maybe<LivestockWeanEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockWeanInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockWeanInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  smallLivestockQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockWeanResult = {
+  __typename?: "LivestockWeanResult";
+  success: Scalars["Boolean"];
+  livestockWean: LivestockWean;
+  defaults: LivestockActivityDefaults;
+};
+
+export type ItemJournalTemplate = {
+  __typename?: "ItemJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
 };
 
 export type MaintenanceAsset = {
@@ -331,300 +625,6 @@ export type PostMaintenanceInput = {
 export type MaintenanceResult = {
   __typename?: "MaintenanceResult";
   success: Scalars["Boolean"];
-};
-
-export type PigActivityDefaults = {
-  __typename?: "PigActivityDefaults";
-  job?: Maybe<Job>;
-  prices: Array<PriceEntry>;
-};
-
-export type PigWeanEvent = {
-  __typename?: "PigWeanEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-};
-
-export type PigGradeOffEvent = {
-  __typename?: "PigGradeOffEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-  reasons: Array<Reason>;
-};
-
-export type PigMoveEvent = {
-  __typename?: "PigMoveEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-};
-
-export type PigPurchaseEvent = {
-  __typename?: "PigPurchaseEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-};
-
-export type PigAdjustmentEvent = {
-  __typename?: "PigAdjustmentEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-};
-
-export type PigMortalityEvent = {
-  __typename?: "PigMortalityEvent";
-  code: Scalars["String"];
-  description: Scalars["String"];
-  reasons: Array<Reason>;
-};
-
-export type PriceEntry = {
-  __typename?: "PriceEntry";
-  animal: Scalars["String"];
-  price?: Maybe<Scalars["Float"]>;
-};
-
-export type PigQuantity = {
-  __typename?: "PigQuantity";
-  code: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
-};
-
-export type PigQuantityInput = {
-  code: Scalars["String"];
-  quantity: Scalars["Int"];
-};
-
-export type PigOptionalQuantityInput = {
-  code: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
-};
-
-export type PigAdjustment = {
-  __typename?: "PigAdjustment";
-  event?: Maybe<PigAdjustmentEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Job;
-  quantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigAdjustmentInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  totalWeight: Scalars["Float"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigAdjustmentInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigAdjustmentResult = {
-  __typename?: "PigAdjustmentResult";
-  success: Scalars["Boolean"];
-  pigAdjustment: PigAdjustment;
-  defaults: PigActivityDefaults;
-};
-
-export type PigGradeOff = {
-  __typename?: "PigGradeOff";
-  event?: Maybe<PigGradeOffEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Job;
-  quantities: Array<PigQuantity>;
-  pigWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigGradeOffInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantities: Array<PigQuantityInput>;
-  pigWeight: Scalars["Float"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigGradeOffInput = {
-  event?: Maybe<Scalars["String"]>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantities?: Maybe<Array<PigOptionalQuantityInput>>;
-  pigWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigGradeOffResult = {
-  __typename?: "PigGradeOffResult";
-  success: Scalars["Boolean"];
-  pigGradeOff: PigGradeOff;
-  defaults: PigActivityDefaults;
-};
-
-export type PigMortality = {
-  __typename?: "PigMortality";
-  event?: Maybe<PigMortalityEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Job;
-  quantities?: Maybe<Array<PigQuantity>>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigMortalityInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantities?: Maybe<Array<PigQuantityInput>>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigMortalityInput = {
-  event?: Maybe<Scalars["String"]>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantities?: Maybe<Array<PigOptionalQuantityInput>>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigMortalityResult = {
-  __typename?: "PigMortalityResult";
-  success: Scalars["Boolean"];
-  pigMortality: PigMortality;
-  defaults: PigActivityDefaults;
-};
-
-export type PigMove = {
-  __typename?: "PigMove";
-  event?: Maybe<PigMoveEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  fromJob: Job;
-  toJob?: Maybe<Job>;
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigMoveInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  fromJob: Scalars["String"];
-  toJob: Scalars["String"];
-  quantity: Scalars["Int"];
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigMoveInput = {
-  event?: Maybe<Scalars["String"]>;
-  postingDate?: Maybe<Scalars["String"]>;
-  fromJob: Scalars["String"];
-  toJob?: Maybe<Scalars["String"]>;
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigMoveResult = {
-  __typename?: "PigMoveResult";
-  success: Scalars["Boolean"];
-  pigMove: PigMove;
-  defaults: PigActivityDefaults;
-};
-
-export type PigPurchase = {
-  __typename?: "PigPurchase";
-  event?: Maybe<PigPurchaseEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Job;
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigPurchaseInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigPurchaseInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigPurchaseResult = {
-  __typename?: "PigPurchaseResult";
-  success: Scalars["Boolean"];
-  pigPurchase: PigPurchase;
-  defaults: PigActivityDefaults;
-};
-
-export type PigWean = {
-  __typename?: "PigWean";
-  event?: Maybe<PigWeanEvent>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Job;
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PostPigWeanInput = {
-  event: Scalars["String"];
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity: Scalars["Int"];
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type SavePigWeanInput = {
-  event?: Maybe<Scalars["String"]>;
-  postingDate?: Maybe<Scalars["String"]>;
-  job: Scalars["String"];
-  quantity?: Maybe<Scalars["Int"]>;
-  smallPigQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight?: Maybe<Scalars["Float"]>;
-  comments?: Maybe<Scalars["String"]>;
-};
-
-export type PigWeanResult = {
-  __typename?: "PigWeanResult";
-  success: Scalars["Boolean"];
-  pigWean: PigWean;
-  defaults: PigActivityDefaults;
-};
-
-export type ItemJournalTemplate = {
-  __typename?: "ItemJournalTemplate";
-  name: Scalars["String"];
-  description: Scalars["String"];
-  type: Scalars["String"];
-  sourceCode: Scalars["String"];
-  reasonCode: Scalars["String"];
 };
 
 export type ScorecardGroup = {
@@ -840,11 +840,11 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   InclusivityMode: InclusivityMode;
   Job: ResolverTypeWrapper<NavJob>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
+  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Item: ResolverTypeWrapper<NavItem>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
-  Float: ResolverTypeWrapper<Scalars["Float"]>;
   Location: ResolverTypeWrapper<NavLocation>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -853,75 +853,75 @@ export type ResolversTypes = ResolversObject<{
   PostFuelInput: PostFuelInput;
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
-  MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
-  PostMaintenanceInput: PostMaintenanceInput;
-  MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
-  PigActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
-  PigWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
-  PigGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
-  PigMoveEvent: ResolverTypeWrapper<NavStandardItemJournal>;
-  PigPurchaseEvent: ResolverTypeWrapper<NavStandardItemJournal>;
-  PigAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
-  PigMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
+  LivestockWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockMoveEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockPurchaseEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
-  PigQuantity: ResolverTypeWrapper<PigQuantity>;
-  PigQuantityInput: PigQuantityInput;
-  PigOptionalQuantityInput: PigOptionalQuantityInput;
-  PigAdjustment: ResolverTypeWrapper<PigAdjustmentDocument>;
-  PostPigAdjustmentInput: PostPigAdjustmentInput;
-  SavePigAdjustmentInput: SavePigAdjustmentInput;
-  PigAdjustmentResult: ResolverTypeWrapper<
-    Omit<PigAdjustmentResult, "pigAdjustment" | "defaults"> & {
-      pigAdjustment: ResolversTypes["PigAdjustment"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockQuantity: ResolverTypeWrapper<LivestockQuantity>;
+  LivestockQuantityInput: LivestockQuantityInput;
+  LivestockOptionalQuantityInput: LivestockOptionalQuantityInput;
+  LivestockAdjustment: ResolverTypeWrapper<LivestockAdjustmentDocument>;
+  PostLivestockAdjustmentInput: PostLivestockAdjustmentInput;
+  SaveLivestockAdjustmentInput: SaveLivestockAdjustmentInput;
+  LivestockAdjustmentResult: ResolverTypeWrapper<
+    Omit<LivestockAdjustmentResult, "livestockAdjustment" | "defaults"> & {
+      livestockAdjustment: ResolversTypes["LivestockAdjustment"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
-  PigGradeOff: ResolverTypeWrapper<PigGradeOffDocument>;
-  PostPigGradeOffInput: PostPigGradeOffInput;
-  SavePigGradeOffInput: SavePigGradeOffInput;
-  PigGradeOffResult: ResolverTypeWrapper<
-    Omit<PigGradeOffResult, "pigGradeOff" | "defaults"> & {
-      pigGradeOff: ResolversTypes["PigGradeOff"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockGradeOff: ResolverTypeWrapper<LivestockGradeOffDocument>;
+  PostLivestockGradeOffInput: PostLivestockGradeOffInput;
+  SaveLivestockGradeOffInput: SaveLivestockGradeOffInput;
+  LivestockGradeOffResult: ResolverTypeWrapper<
+    Omit<LivestockGradeOffResult, "livestockGradeOff" | "defaults"> & {
+      livestockGradeOff: ResolversTypes["LivestockGradeOff"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
-  PigMortality: ResolverTypeWrapper<PigMortalityDocument>;
-  PostPigMortalityInput: PostPigMortalityInput;
-  SavePigMortalityInput: SavePigMortalityInput;
-  PigMortalityResult: ResolverTypeWrapper<
-    Omit<PigMortalityResult, "pigMortality" | "defaults"> & {
-      pigMortality: ResolversTypes["PigMortality"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockMortality: ResolverTypeWrapper<LivestockMortalityDocument>;
+  PostLivestockMortalityInput: PostLivestockMortalityInput;
+  SaveLivestockMortalityInput: SaveLivestockMortalityInput;
+  LivestockMortalityResult: ResolverTypeWrapper<
+    Omit<LivestockMortalityResult, "livestockMortality" | "defaults"> & {
+      livestockMortality: ResolversTypes["LivestockMortality"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
-  PigMove: ResolverTypeWrapper<PigMoveDocument>;
-  PostPigMoveInput: PostPigMoveInput;
-  SavePigMoveInput: SavePigMoveInput;
-  PigMoveResult: ResolverTypeWrapper<
-    Omit<PigMoveResult, "pigMove" | "defaults"> & {
-      pigMove: ResolversTypes["PigMove"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockMove: ResolverTypeWrapper<LivestockMoveDocument>;
+  PostLivestockMoveInput: PostLivestockMoveInput;
+  SaveLivestockMoveInput: SaveLivestockMoveInput;
+  LivestockMoveResult: ResolverTypeWrapper<
+    Omit<LivestockMoveResult, "livestockMove" | "defaults"> & {
+      livestockMove: ResolversTypes["LivestockMove"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
-  PigPurchase: ResolverTypeWrapper<PigPurchaseDocument>;
-  PostPigPurchaseInput: PostPigPurchaseInput;
-  SavePigPurchaseInput: SavePigPurchaseInput;
-  PigPurchaseResult: ResolverTypeWrapper<
-    Omit<PigPurchaseResult, "pigPurchase" | "defaults"> & {
-      pigPurchase: ResolversTypes["PigPurchase"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockPurchase: ResolverTypeWrapper<LivestockPurchaseDocument>;
+  PostLivestockPurchaseInput: PostLivestockPurchaseInput;
+  SaveLivestockPurchaseInput: SaveLivestockPurchaseInput;
+  LivestockPurchaseResult: ResolverTypeWrapper<
+    Omit<LivestockPurchaseResult, "livestockPurchase" | "defaults"> & {
+      livestockPurchase: ResolversTypes["LivestockPurchase"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
-  PigWean: ResolverTypeWrapper<PigWeanDocument>;
-  PostPigWeanInput: PostPigWeanInput;
-  SavePigWeanInput: SavePigWeanInput;
-  PigWeanResult: ResolverTypeWrapper<
-    Omit<PigWeanResult, "pigWean" | "defaults"> & {
-      pigWean: ResolversTypes["PigWean"];
-      defaults: ResolversTypes["PigActivityDefaults"];
+  LivestockWean: ResolverTypeWrapper<LivestockWeanDocument>;
+  PostLivestockWeanInput: PostLivestockWeanInput;
+  SaveLivestockWeanInput: SaveLivestockWeanInput;
+  LivestockWeanResult: ResolverTypeWrapper<
+    Omit<LivestockWeanResult, "livestockWean" | "defaults"> & {
+      livestockWean: ResolversTypes["LivestockWean"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
   ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
+  MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
+  PostMaintenanceInput: PostMaintenanceInput;
+  MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
   ScorecardGroup: ResolverTypeWrapper<NavJobPostingGroup>;
   ScorecardElement: ResolverTypeWrapper<ScorecardElement>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
@@ -959,11 +959,11 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars["Boolean"];
   InclusivityMode: InclusivityMode;
   Job: NavJob;
-  Int: Scalars["Int"];
+  Float: Scalars["Float"];
   Item: NavItem;
+  Int: Scalars["Int"];
   Reason: NavReason;
   Resource: NavResource;
-  Float: Scalars["Float"];
   Location: NavLocation;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
@@ -972,66 +972,81 @@ export type ResolversParentTypes = ResolversObject<{
   PostFuelInput: PostFuelInput;
   FuelResult: FuelResult;
   Mutation: {};
+  LivestockActivityDefaults: UserSettingsDocument;
+  LivestockWeanEvent: NavStandardItemJournal;
+  LivestockGradeOffEvent: NavStandardItemJournal;
+  LivestockMoveEvent: NavStandardItemJournal;
+  LivestockPurchaseEvent: NavStandardItemJournal;
+  LivestockAdjustmentEvent: NavStandardItemJournal;
+  LivestockMortalityEvent: NavStandardItemJournal;
+  PriceEntry: PriceEntry;
+  LivestockQuantity: LivestockQuantity;
+  LivestockQuantityInput: LivestockQuantityInput;
+  LivestockOptionalQuantityInput: LivestockOptionalQuantityInput;
+  LivestockAdjustment: LivestockAdjustmentDocument;
+  PostLivestockAdjustmentInput: PostLivestockAdjustmentInput;
+  SaveLivestockAdjustmentInput: SaveLivestockAdjustmentInput;
+  LivestockAdjustmentResult: Omit<
+    LivestockAdjustmentResult,
+    "livestockAdjustment" | "defaults"
+  > & {
+    livestockAdjustment: ResolversParentTypes["LivestockAdjustment"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockGradeOff: LivestockGradeOffDocument;
+  PostLivestockGradeOffInput: PostLivestockGradeOffInput;
+  SaveLivestockGradeOffInput: SaveLivestockGradeOffInput;
+  LivestockGradeOffResult: Omit<
+    LivestockGradeOffResult,
+    "livestockGradeOff" | "defaults"
+  > & {
+    livestockGradeOff: ResolversParentTypes["LivestockGradeOff"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockMortality: LivestockMortalityDocument;
+  PostLivestockMortalityInput: PostLivestockMortalityInput;
+  SaveLivestockMortalityInput: SaveLivestockMortalityInput;
+  LivestockMortalityResult: Omit<
+    LivestockMortalityResult,
+    "livestockMortality" | "defaults"
+  > & {
+    livestockMortality: ResolversParentTypes["LivestockMortality"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockMove: LivestockMoveDocument;
+  PostLivestockMoveInput: PostLivestockMoveInput;
+  SaveLivestockMoveInput: SaveLivestockMoveInput;
+  LivestockMoveResult: Omit<
+    LivestockMoveResult,
+    "livestockMove" | "defaults"
+  > & {
+    livestockMove: ResolversParentTypes["LivestockMove"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockPurchase: LivestockPurchaseDocument;
+  PostLivestockPurchaseInput: PostLivestockPurchaseInput;
+  SaveLivestockPurchaseInput: SaveLivestockPurchaseInput;
+  LivestockPurchaseResult: Omit<
+    LivestockPurchaseResult,
+    "livestockPurchase" | "defaults"
+  > & {
+    livestockPurchase: ResolversParentTypes["LivestockPurchase"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockWean: LivestockWeanDocument;
+  PostLivestockWeanInput: PostLivestockWeanInput;
+  SaveLivestockWeanInput: SaveLivestockWeanInput;
+  LivestockWeanResult: Omit<
+    LivestockWeanResult,
+    "livestockWean" | "defaults"
+  > & {
+    livestockWean: ResolversParentTypes["LivestockWean"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  ItemJournalTemplate: ItemJournalTemplateObject;
   MaintenanceAsset: NavMaintenanceAsset;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: MaintenanceResult;
-  PigActivityDefaults: UserSettingsDocument;
-  PigWeanEvent: NavStandardItemJournal;
-  PigGradeOffEvent: NavStandardItemJournal;
-  PigMoveEvent: NavStandardItemJournal;
-  PigPurchaseEvent: NavStandardItemJournal;
-  PigAdjustmentEvent: NavStandardItemJournal;
-  PigMortalityEvent: NavStandardItemJournal;
-  PriceEntry: PriceEntry;
-  PigQuantity: PigQuantity;
-  PigQuantityInput: PigQuantityInput;
-  PigOptionalQuantityInput: PigOptionalQuantityInput;
-  PigAdjustment: PigAdjustmentDocument;
-  PostPigAdjustmentInput: PostPigAdjustmentInput;
-  SavePigAdjustmentInput: SavePigAdjustmentInput;
-  PigAdjustmentResult: Omit<
-    PigAdjustmentResult,
-    "pigAdjustment" | "defaults"
-  > & {
-    pigAdjustment: ResolversParentTypes["PigAdjustment"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  PigGradeOff: PigGradeOffDocument;
-  PostPigGradeOffInput: PostPigGradeOffInput;
-  SavePigGradeOffInput: SavePigGradeOffInput;
-  PigGradeOffResult: Omit<PigGradeOffResult, "pigGradeOff" | "defaults"> & {
-    pigGradeOff: ResolversParentTypes["PigGradeOff"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  PigMortality: PigMortalityDocument;
-  PostPigMortalityInput: PostPigMortalityInput;
-  SavePigMortalityInput: SavePigMortalityInput;
-  PigMortalityResult: Omit<PigMortalityResult, "pigMortality" | "defaults"> & {
-    pigMortality: ResolversParentTypes["PigMortality"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  PigMove: PigMoveDocument;
-  PostPigMoveInput: PostPigMoveInput;
-  SavePigMoveInput: SavePigMoveInput;
-  PigMoveResult: Omit<PigMoveResult, "pigMove" | "defaults"> & {
-    pigMove: ResolversParentTypes["PigMove"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  PigPurchase: PigPurchaseDocument;
-  PostPigPurchaseInput: PostPigPurchaseInput;
-  SavePigPurchaseInput: SavePigPurchaseInput;
-  PigPurchaseResult: Omit<PigPurchaseResult, "pigPurchase" | "defaults"> & {
-    pigPurchase: ResolversParentTypes["PigPurchase"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  PigWean: PigWeanDocument;
-  PostPigWeanInput: PostPigWeanInput;
-  SavePigWeanInput: SavePigWeanInput;
-  PigWeanResult: Omit<PigWeanResult, "pigWean" | "defaults"> & {
-    pigWean: ResolversParentTypes["PigWean"];
-    defaults: ResolversParentTypes["PigActivityDefaults"];
-  };
-  ItemJournalTemplate: ItemJournalTemplateObject;
   ScorecardGroup: NavJobPostingGroup;
   ScorecardElement: ScorecardElement;
   ID: Scalars["ID"];
@@ -1070,9 +1085,9 @@ export type JobResolvers<
     ParentType,
     ContextType
   >;
-  inventory?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  inventory?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   deadQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
+    Maybe<ResolversTypes["Float"]>,
     ParentType,
     ContextType
   >;
@@ -1172,6 +1187,82 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryJobsArgs, never>
   >;
+  livestockActivityDefaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  livestockActivityJobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockAdjustment?: Resolver<
+    ResolversTypes["LivestockAdjustment"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockAdjustmentArgs, "job">
+  >;
+  livestockAdjustmentEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockAdjustmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockGradeOff?: Resolver<
+    ResolversTypes["LivestockGradeOff"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockGradeOffArgs, "job">
+  >;
+  livestockGradeOffEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockMortality?: Resolver<
+    ResolversTypes["LivestockMortality"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockMortalityArgs, "job">
+  >;
+  livestockMortalityEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockMortalityEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockMove?: Resolver<
+    ResolversTypes["LivestockMove"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockMoveArgs, "job">
+  >;
+  livestockMoveEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockMoveEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockPurchase?: Resolver<
+    ResolversTypes["LivestockPurchase"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockPurchaseArgs, "job">
+  >;
+  livestockPurchaseEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockPurchaseEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockWean?: Resolver<
+    ResolversTypes["LivestockWean"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockWeanArgs, "job">
+  >;
+  livestockWeanEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockWeanEvent"]>,
+    ParentType,
+    ContextType
+  >;
   locations?: Resolver<
     Array<ResolversTypes["Location"]>,
     ParentType,
@@ -1193,82 +1284,6 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
-  >;
-  pigActivityDefaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  pigActivityJobs?: Resolver<
-    Array<ResolversTypes["Job"]>,
-    ParentType,
-    ContextType
-  >;
-  pigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustment"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigAdjustmentArgs, "job">
-  >;
-  pigAdjustmentEventTypes?: Resolver<
-    Array<ResolversTypes["PigAdjustmentEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOff"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigGradeOffArgs, "job">
-  >;
-  pigGradeOffEventTypes?: Resolver<
-    Array<ResolversTypes["PigGradeOffEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigMortality?: Resolver<
-    ResolversTypes["PigMortality"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigMortalityArgs, "job">
-  >;
-  pigMortalityEventTypes?: Resolver<
-    Array<ResolversTypes["PigMortalityEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigMove?: Resolver<
-    ResolversTypes["PigMove"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigMoveArgs, "job">
-  >;
-  pigMoveEventTypes?: Resolver<
-    Array<ResolversTypes["PigMoveEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigPurchase?: Resolver<
-    ResolversTypes["PigPurchase"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigPurchaseArgs, "job">
-  >;
-  pigPurchaseEventTypes?: Resolver<
-    Array<ResolversTypes["PigPurchaseEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  pigWean?: Resolver<
-    ResolversTypes["PigWean"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryPigWeanArgs, "job">
-  >;
-  pigWeanEventTypes?: Resolver<
-    Array<ResolversTypes["PigWeanEvent"]>,
-    ParentType,
-    ContextType
   >;
   resource?: Resolver<
     Maybe<ResolversTypes["Resource"]>,
@@ -1340,47 +1355,47 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFuelArgs, "input">
   >;
+  postLivestockAdjustment?: Resolver<
+    ResolversTypes["LivestockAdjustmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockAdjustmentArgs, "input">
+  >;
+  postLivestockGradeOff?: Resolver<
+    ResolversTypes["LivestockGradeOffResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockGradeOffArgs, "input">
+  >;
+  postLivestockMortality?: Resolver<
+    ResolversTypes["LivestockMortalityResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockMortalityArgs, "input">
+  >;
+  postLivestockMove?: Resolver<
+    ResolversTypes["LivestockMoveResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockMoveArgs, "input">
+  >;
+  postLivestockPurchase?: Resolver<
+    ResolversTypes["LivestockPurchaseResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockPurchaseArgs, "input">
+  >;
+  postLivestockWean?: Resolver<
+    ResolversTypes["LivestockWeanResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockWeanArgs, "input">
+  >;
   postMaintenance?: Resolver<
     ResolversTypes["MaintenanceResult"],
     ParentType,
     ContextType,
     RequireFields<MutationPostMaintenanceArgs, "input">
-  >;
-  postPigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustmentResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigAdjustmentArgs, "input">
-  >;
-  postPigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOffResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigGradeOffArgs, "input">
-  >;
-  postPigMortality?: Resolver<
-    ResolversTypes["PigMortalityResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigMortalityArgs, "input">
-  >;
-  postPigMove?: Resolver<
-    ResolversTypes["PigMoveResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigMoveArgs, "input">
-  >;
-  postPigPurchase?: Resolver<
-    ResolversTypes["PigPurchaseResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigPurchaseArgs, "input">
-  >;
-  postPigWean?: Resolver<
-    ResolversTypes["PigWeanResult"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationPostPigWeanArgs, "input">
   >;
   postScorecard?: Resolver<
     ResolversTypes["ScorecardResult"],
@@ -1388,41 +1403,41 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostScorecardArgs, "input">
   >;
-  savePigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustmentResult"],
+  saveLivestockAdjustment?: Resolver<
+    ResolversTypes["LivestockAdjustmentResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigAdjustmentArgs, "input">
+    RequireFields<MutationSaveLivestockAdjustmentArgs, "input">
   >;
-  savePigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOffResult"],
+  saveLivestockGradeOff?: Resolver<
+    ResolversTypes["LivestockGradeOffResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigGradeOffArgs, "input">
+    RequireFields<MutationSaveLivestockGradeOffArgs, "input">
   >;
-  savePigMortality?: Resolver<
-    ResolversTypes["PigMortalityResult"],
+  saveLivestockMortality?: Resolver<
+    ResolversTypes["LivestockMortalityResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigMortalityArgs, "input">
+    RequireFields<MutationSaveLivestockMortalityArgs, "input">
   >;
-  savePigMove?: Resolver<
-    ResolversTypes["PigMoveResult"],
+  saveLivestockMove?: Resolver<
+    ResolversTypes["LivestockMoveResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigMoveArgs, "input">
+    RequireFields<MutationSaveLivestockMoveArgs, "input">
   >;
-  savePigPurchase?: Resolver<
-    ResolversTypes["PigPurchaseResult"],
+  saveLivestockPurchase?: Resolver<
+    ResolversTypes["LivestockPurchaseResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigPurchaseArgs, "input">
+    RequireFields<MutationSaveLivestockPurchaseArgs, "input">
   >;
-  savePigWean?: Resolver<
-    ResolversTypes["PigWeanResult"],
+  saveLivestockWean?: Resolver<
+    ResolversTypes["LivestockWeanResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationSavePigWeanArgs, "input">
+    RequireFields<MutationSaveLivestockWeanArgs, "input">
   >;
   saveScorecard?: Resolver<
     ResolversTypes["ScorecardResult"],
@@ -1436,6 +1451,382 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateUserLocationsArgs, "input">
   >;
+}>;
+
+export type LivestockActivityDefaultsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockActivityDefaults"] = ResolversParentTypes["LivestockActivityDefaults"]
+> = ResolversObject<{
+  job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  prices?: Resolver<
+    Array<ResolversTypes["PriceEntry"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockWeanEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockWeanEvent"] = ResolversParentTypes["LivestockWeanEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockGradeOffEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockGradeOffEvent"] = ResolversParentTypes["LivestockGradeOffEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMoveEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMoveEvent"] = ResolversParentTypes["LivestockMoveEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockPurchaseEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockPurchaseEvent"] = ResolversParentTypes["LivestockPurchaseEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockAdjustmentEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockAdjustmentEvent"] = ResolversParentTypes["LivestockAdjustmentEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMortalityEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMortalityEvent"] = ResolversParentTypes["LivestockMortalityEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type PriceEntryResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["PriceEntry"] = ResolversParentTypes["PriceEntry"]
+> = ResolversObject<{
+  animal?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockQuantityResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockQuantity"] = ResolversParentTypes["LivestockQuantity"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockAdjustmentResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockAdjustment"] = ResolversParentTypes["LivestockAdjustment"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockAdjustmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  totalWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockAdjustmentResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockAdjustmentResult"] = ResolversParentTypes["LivestockAdjustmentResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockAdjustment?: Resolver<
+    ResolversTypes["LivestockAdjustment"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockGradeOffResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockGradeOff"] = ResolversParentTypes["LivestockGradeOff"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockGradeOffEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantities?: Resolver<
+    Array<ResolversTypes["LivestockQuantity"]>,
+    ParentType,
+    ContextType
+  >;
+  livestockWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockGradeOffResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockGradeOffResult"] = ResolversParentTypes["LivestockGradeOffResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockGradeOff?: Resolver<
+    ResolversTypes["LivestockGradeOff"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMortalityResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMortality"] = ResolversParentTypes["LivestockMortality"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockMortalityEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantities?: Resolver<
+    Maybe<Array<ResolversTypes["LivestockQuantity"]>>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMortalityResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMortalityResult"] = ResolversParentTypes["LivestockMortalityResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockMortality?: Resolver<
+    ResolversTypes["LivestockMortality"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMoveResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMove"] = ResolversParentTypes["LivestockMove"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockMoveEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  fromJob?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  toJob?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  smallLivestockQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  totalWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockMoveResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockMoveResult"] = ResolversParentTypes["LivestockMoveResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockMove?: Resolver<
+    ResolversTypes["LivestockMove"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockPurchaseResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockPurchase"] = ResolversParentTypes["LivestockPurchase"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockPurchaseEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  smallLivestockQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  totalWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockPurchaseResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockPurchaseResult"] = ResolversParentTypes["LivestockPurchaseResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockPurchase?: Resolver<
+    ResolversTypes["LivestockPurchase"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockWeanResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockWean"] = ResolversParentTypes["LivestockWean"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockWeanEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  smallLivestockQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  totalWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockWeanResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockWeanResult"] = ResolversParentTypes["LivestockWeanResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockWean?: Resolver<
+    ResolversTypes["LivestockWean"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ItemJournalTemplateResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ItemJournalTemplate"] = ResolversParentTypes["ItemJournalTemplate"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  sourceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type MaintenanceAssetResolvers<
@@ -1469,370 +1860,6 @@ export type MaintenanceResultResolvers<
   ParentType extends ResolversParentTypes["MaintenanceResult"] = ResolversParentTypes["MaintenanceResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigActivityDefaultsResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigActivityDefaults"] = ResolversParentTypes["PigActivityDefaults"]
-> = ResolversObject<{
-  job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
-  prices?: Resolver<
-    Array<ResolversTypes["PriceEntry"]>,
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigWeanEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigWeanEvent"] = ResolversParentTypes["PigWeanEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigGradeOffEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigGradeOffEvent"] = ResolversParentTypes["PigGradeOffEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMoveEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMoveEvent"] = ResolversParentTypes["PigMoveEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigPurchaseEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigPurchaseEvent"] = ResolversParentTypes["PigPurchaseEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigAdjustmentEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigAdjustmentEvent"] = ResolversParentTypes["PigAdjustmentEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMortalityEventResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMortalityEvent"] = ResolversParentTypes["PigMortalityEvent"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PriceEntryResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PriceEntry"] = ResolversParentTypes["PriceEntry"]
-> = ResolversObject<{
-  animal?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigQuantityResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigQuantity"] = ResolversParentTypes["PigQuantity"]
-> = ResolversObject<{
-  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigAdjustmentResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigAdjustment"] = ResolversParentTypes["PigAdjustment"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigAdjustmentEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  totalWeight?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
-    ParentType,
-    ContextType
-  >;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigAdjustmentResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigAdjustmentResult"] = ResolversParentTypes["PigAdjustmentResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigAdjustment?: Resolver<
-    ResolversTypes["PigAdjustment"],
-    ParentType,
-    ContextType
-  >;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigGradeOffResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigGradeOff"] = ResolversParentTypes["PigGradeOff"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigGradeOffEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  quantities?: Resolver<
-    Array<ResolversTypes["PigQuantity"]>,
-    ParentType,
-    ContextType
-  >;
-  pigWeight?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigGradeOffResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigGradeOffResult"] = ResolversParentTypes["PigGradeOffResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigGradeOff?: Resolver<
-    ResolversTypes["PigGradeOff"],
-    ParentType,
-    ContextType
-  >;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMortalityResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMortality"] = ResolversParentTypes["PigMortality"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigMortalityEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  quantities?: Resolver<
-    Maybe<Array<ResolversTypes["PigQuantity"]>>,
-    ParentType,
-    ContextType
-  >;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMortalityResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMortalityResult"] = ResolversParentTypes["PigMortalityResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigMortality?: Resolver<
-    ResolversTypes["PigMortality"],
-    ParentType,
-    ContextType
-  >;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMoveResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMove"] = ResolversParentTypes["PigMove"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigMoveEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  fromJob?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  toJob?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
-  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  smallPigQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
-    ParentType,
-    ContextType
-  >;
-  totalWeight?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
-    ParentType,
-    ContextType
-  >;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigMoveResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigMoveResult"] = ResolversParentTypes["PigMoveResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigMove?: Resolver<ResolversTypes["PigMove"], ParentType, ContextType>;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigPurchaseResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigPurchase"] = ResolversParentTypes["PigPurchase"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigPurchaseEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  smallPigQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
-    ParentType,
-    ContextType
-  >;
-  totalWeight?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
-    ParentType,
-    ContextType
-  >;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigPurchaseResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigPurchaseResult"] = ResolversParentTypes["PigPurchaseResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigPurchase?: Resolver<
-    ResolversTypes["PigPurchase"],
-    ParentType,
-    ContextType
-  >;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigWeanResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigWean"] = ResolversParentTypes["PigWean"]
-> = ResolversObject<{
-  event?: Resolver<
-    Maybe<ResolversTypes["PigWeanEvent"]>,
-    ParentType,
-    ContextType
-  >;
-  postingDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
-  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  smallPigQuantity?: Resolver<
-    Maybe<ResolversTypes["Int"]>,
-    ParentType,
-    ContextType
-  >;
-  totalWeight?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
-    ParentType,
-    ContextType
-  >;
-  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type PigWeanResultResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["PigWeanResult"] = ResolversParentTypes["PigWeanResult"]
-> = ResolversObject<{
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  pigWean?: Resolver<ResolversTypes["PigWean"], ParentType, ContextType>;
-  defaults?: Resolver<
-    ResolversTypes["PigActivityDefaults"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type ItemJournalTemplateResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["ItemJournalTemplate"] = ResolversParentTypes["ItemJournalTemplate"]
-> = ResolversObject<{
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  sourceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1990,30 +2017,30 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FuelAsset?: FuelAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  LivestockActivityDefaults?: LivestockActivityDefaultsResolvers<ContextType>;
+  LivestockWeanEvent?: LivestockWeanEventResolvers<ContextType>;
+  LivestockGradeOffEvent?: LivestockGradeOffEventResolvers<ContextType>;
+  LivestockMoveEvent?: LivestockMoveEventResolvers<ContextType>;
+  LivestockPurchaseEvent?: LivestockPurchaseEventResolvers<ContextType>;
+  LivestockAdjustmentEvent?: LivestockAdjustmentEventResolvers<ContextType>;
+  LivestockMortalityEvent?: LivestockMortalityEventResolvers<ContextType>;
+  PriceEntry?: PriceEntryResolvers<ContextType>;
+  LivestockQuantity?: LivestockQuantityResolvers<ContextType>;
+  LivestockAdjustment?: LivestockAdjustmentResolvers<ContextType>;
+  LivestockAdjustmentResult?: LivestockAdjustmentResultResolvers<ContextType>;
+  LivestockGradeOff?: LivestockGradeOffResolvers<ContextType>;
+  LivestockGradeOffResult?: LivestockGradeOffResultResolvers<ContextType>;
+  LivestockMortality?: LivestockMortalityResolvers<ContextType>;
+  LivestockMortalityResult?: LivestockMortalityResultResolvers<ContextType>;
+  LivestockMove?: LivestockMoveResolvers<ContextType>;
+  LivestockMoveResult?: LivestockMoveResultResolvers<ContextType>;
+  LivestockPurchase?: LivestockPurchaseResolvers<ContextType>;
+  LivestockPurchaseResult?: LivestockPurchaseResultResolvers<ContextType>;
+  LivestockWean?: LivestockWeanResolvers<ContextType>;
+  LivestockWeanResult?: LivestockWeanResultResolvers<ContextType>;
+  ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;
-  PigActivityDefaults?: PigActivityDefaultsResolvers<ContextType>;
-  PigWeanEvent?: PigWeanEventResolvers<ContextType>;
-  PigGradeOffEvent?: PigGradeOffEventResolvers<ContextType>;
-  PigMoveEvent?: PigMoveEventResolvers<ContextType>;
-  PigPurchaseEvent?: PigPurchaseEventResolvers<ContextType>;
-  PigAdjustmentEvent?: PigAdjustmentEventResolvers<ContextType>;
-  PigMortalityEvent?: PigMortalityEventResolvers<ContextType>;
-  PriceEntry?: PriceEntryResolvers<ContextType>;
-  PigQuantity?: PigQuantityResolvers<ContextType>;
-  PigAdjustment?: PigAdjustmentResolvers<ContextType>;
-  PigAdjustmentResult?: PigAdjustmentResultResolvers<ContextType>;
-  PigGradeOff?: PigGradeOffResolvers<ContextType>;
-  PigGradeOffResult?: PigGradeOffResultResolvers<ContextType>;
-  PigMortality?: PigMortalityResolvers<ContextType>;
-  PigMortalityResult?: PigMortalityResultResolvers<ContextType>;
-  PigMove?: PigMoveResolvers<ContextType>;
-  PigMoveResult?: PigMoveResultResolvers<ContextType>;
-  PigPurchase?: PigPurchaseResolvers<ContextType>;
-  PigPurchaseResult?: PigPurchaseResultResolvers<ContextType>;
-  PigWean?: PigWeanResolvers<ContextType>;
-  PigWeanResult?: PigWeanResultResolvers<ContextType>;
-  ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
   ScorecardElement?: ScorecardElementResolvers<ContextType>;
   ScorecardPage?: ScorecardPageResolvers<ContextType>;

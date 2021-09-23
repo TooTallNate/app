@@ -8,7 +8,7 @@ import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import { useScorecardTargetTempLazyQuery } from "../graphql/index";
 import { useFormContext } from "react-hook-form";
 import StaticValue from "../../common/components/input/StaticValue";
-import usePigJob from "./usePigJob";
+import useLivestockJob from "./useLivestockJob";
 import { FormValue } from "../contexts/scorecard";
 
 export interface ScorecardTargetTempProps {
@@ -20,15 +20,15 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
   label,
   id
 }) => {
-  const { job: pigJob } = usePigJob();
+  const { job: livestockJob } = useLivestockJob();
   const { setValue, register, unregister, watch } = useFormContext();
   const [loadResource, { data }] = useScorecardTargetTempLazyQuery();
   const name = `${id}.numericValue`;
   const targetTemp = watch(name);
 
   useEffect(() => {
-    if (pigJob && pigJob.groupStartDate) {
-      const groupStartDate = new Date(pigJob.groupStartDate);
+    if (livestockJob && livestockJob.groupStartDate) {
+      const groupStartDate = new Date(livestockJob.groupStartDate);
       const diff = formatDistanceToNowStrict(groupStartDate, {
         unit: "day"
       }).split(" ")[0];
@@ -36,7 +36,7 @@ const ScorecardTargetTemp: React.FC<ScorecardTargetTempProps> = ({
       const resourceNo = `${tempWeeks}TARGETTEMP`;
       loadResource({ variables: { code: resourceNo } });
     }
-  }, [pigJob, loadResource]);
+  }, [livestockJob, loadResource]);
 
   useEffect(() => {
     if (data && data.resource && data.resource.unitPrice) {

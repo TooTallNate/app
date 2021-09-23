@@ -55,7 +55,7 @@ const EventSelectionView: React.FC = () => {
                 <TypeaheadInput
                   items={data.fuelAssets.map(asset => ({
                     value: asset.number || "",
-                    title: asset.description || ""
+                    title: `${asset.number} - ${asset.description}` || ""
                   }))}
                 />
               </FormFieldInput>

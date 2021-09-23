@@ -2,9 +2,9 @@ import React from "react";
 import ScorecardYesNo, {
   isComplete as isYesNoComplete
 } from "./ScorecardYesNo";
-import ScorecardPigJob, {
-  isComplete as isPigJobComplete
-} from "./ScorecardPigJob";
+import ScorecardLivestockJob, {
+  isComplete as isLivestockJobComplete
+} from "./ScorecardLivestockJob";
 import ScorecardCaretaker, {
   isComplete as isCaretakerComplete
 } from "./ScorecardCaretaker";
@@ -51,7 +51,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
     case "YN":
       return <ScorecardYesNo {...props} />;
     case "JOB":
-      return <ScorecardPigJob {...props} />;
+      return <ScorecardLivestockJob {...props} />;
     case "CARETAKER":
       return <ScorecardCaretaker {...props} />;
     case "SUPERVISOR":
@@ -82,7 +82,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
 const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   //TODO Anytihng not here but in the switch up there needs to be added
   YN: isYesNoComplete,
-  JOB: isPigJobComplete,
+  JOB: isLivestockJobComplete,
   CARETAKER: isCaretakerComplete,
   SUPERVISOR: isSupervisorComplete,
   SCORE5: isScoresComplete,

@@ -1,0 +1,67 @@
+fragment LivestockMoveFragment on LivestockMove {
+  event {
+    code
+  }
+  fromJob {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+  toJob {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+  postingDate
+  quantity
+  smallLivestockQuantity
+  totalWeight
+  comments
+}
+
+query LivestockMove($job: String!) {
+  livestockMoveEventTypes {
+    code
+    description
+  }
+  livestockActivityJobs {
+    number
+    description
+  }
+  livestockMove(job: $job) {
+    ...LivestockMoveFragment
+  }
+}
+
+query LivestockJob($job: String!) {
+  job(number: $job) {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+}
+
+mutation SaveLivestockMove($input: SaveLivestockMoveInput!) {
+  saveLivestockMove(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockMove {
+      ...LivestockMoveFragment
+    }
+  }
+}
+
+mutation PostLivestockMove($input: PostLivestockMoveInput!) {
+  postLivestockMove(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockMove {
+      ...LivestockMoveFragment
+    }
+  }
+}

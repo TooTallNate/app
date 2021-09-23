@@ -7,8 +7,8 @@ type Job {
   number: String!
   description: String!
   personResponsible: Resource!
-  inventory: Int
-  deadQuantity: Int
+  inventory: Float
+  deadQuantity: Float
   startDate: String
   groupStartDate: String
   location: Location!
@@ -55,24 +55,24 @@ type Query {
   itemJournalTemplates: [ItemJournalTemplate!]
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
+  livestockActivityDefaults: LivestockActivityDefaults!
+  livestockActivityJobs: [Job!]!
+  livestockAdjustment(job: String!): LivestockAdjustment!
+  livestockAdjustmentEventTypes: [LivestockAdjustmentEvent!]!
+  livestockGradeOff(job: String!): LivestockGradeOff!
+  livestockGradeOffEventTypes: [LivestockGradeOffEvent!]!
+  livestockMortality(job: String!): LivestockMortality!
+  livestockMortalityEventTypes: [LivestockMortalityEvent!]!
+  livestockMove(job: String!): LivestockMove!
+  livestockMoveEventTypes: [LivestockMoveEvent!]!
+  livestockPurchase(job: String!): LivestockPurchase!
+  livestockPurchaseEventTypes: [LivestockPurchaseEvent!]!
+  livestockWean(job: String!): LivestockWean!
+  livestockWeanEventTypes: [LivestockWeanEvent!]!
   locations: [Location!]!
   maintenanceAsset(number: String!): MaintenanceAsset
   maintenanceAssets: [MaintenanceAsset!]!
   maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
-  pigActivityDefaults: PigActivityDefaults!
-  pigActivityJobs: [Job!]!
-  pigAdjustment(job: String!): PigAdjustment!
-  pigAdjustmentEventTypes: [PigAdjustmentEvent!]!
-  pigGradeOff(job: String!): PigGradeOff!
-  pigGradeOffEventTypes: [PigGradeOffEvent!]!
-  pigMortality(job: String!): PigMortality!
-  pigMortalityEventTypes: [PigMortalityEvent!]!
-  pigMove(job: String!): PigMove!
-  pigMoveEventTypes: [PigMoveEvent!]!
-  pigPurchase(job: String!): PigPurchase!
-  pigPurchaseEventTypes: [PigPurchaseEvent!]!
-  pigWean(job: String!): PigWean!
-  pigWeanEventTypes: [PigWeanEvent!]!
   resource(code: String!): Resource
   resources(input: ResourceFilter): [Resource!]!
   scorecard(job: String!): Scorecard
@@ -106,22 +106,294 @@ type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFuel(input: PostFuelInput!): FuelResult!
+  postLivestockAdjustment(input: PostLivestockAdjustmentInput!): LivestockAdjustmentResult!
+  postLivestockGradeOff(input: PostLivestockGradeOffInput!): LivestockGradeOffResult!
+  postLivestockMortality(input: PostLivestockMortalityInput!): LivestockMortalityResult!
+  postLivestockMove(input: PostLivestockMoveInput!): LivestockMoveResult!
+  postLivestockPurchase(input: PostLivestockPurchaseInput!): LivestockPurchaseResult!
+  postLivestockWean(input: PostLivestockWeanInput!): LivestockWeanResult!
   postMaintenance(input: PostMaintenanceInput!): MaintenanceResult!
-  postPigAdjustment(input: PostPigAdjustmentInput!): PigAdjustmentResult!
-  postPigGradeOff(input: PostPigGradeOffInput!): PigGradeOffResult!
-  postPigMortality(input: PostPigMortalityInput!): PigMortalityResult!
-  postPigMove(input: PostPigMoveInput!): PigMoveResult!
-  postPigPurchase(input: PostPigPurchaseInput!): PigPurchaseResult!
-  postPigWean(input: PostPigWeanInput!): PigWeanResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
-  savePigAdjustment(input: SavePigAdjustmentInput!): PigAdjustmentResult!
-  savePigGradeOff(input: SavePigGradeOffInput!): PigGradeOffResult!
-  savePigMortality(input: SavePigMortalityInput!): PigMortalityResult!
-  savePigMove(input: SavePigMoveInput!): PigMoveResult!
-  savePigPurchase(input: SavePigPurchaseInput!): PigPurchaseResult!
-  savePigWean(input: SavePigWeanInput!): PigWeanResult!
+  saveLivestockAdjustment(input: SaveLivestockAdjustmentInput!): LivestockAdjustmentResult!
+  saveLivestockGradeOff(input: SaveLivestockGradeOffInput!): LivestockGradeOffResult!
+  saveLivestockMortality(input: SaveLivestockMortalityInput!): LivestockMortalityResult!
+  saveLivestockMove(input: SaveLivestockMoveInput!): LivestockMoveResult!
+  saveLivestockPurchase(input: SaveLivestockPurchaseInput!): LivestockPurchaseResult!
+  saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
+}
+
+type LivestockActivityDefaults {
+  job: Job
+  prices: [PriceEntry!]!
+}
+
+type LivestockWeanEvent {
+  code: String!
+  description: String!
+}
+
+type LivestockGradeOffEvent {
+  code: String!
+  description: String!
+  reasons: [Reason!]!
+}
+
+type LivestockMoveEvent {
+  code: String!
+  description: String!
+}
+
+type LivestockPurchaseEvent {
+  code: String!
+  description: String!
+}
+
+type LivestockAdjustmentEvent {
+  code: String!
+  description: String!
+}
+
+type LivestockMortalityEvent {
+  code: String!
+  description: String!
+  reasons: [Reason!]!
+}
+
+type PriceEntry {
+  animal: String!
+  price: Float
+}
+
+type LivestockQuantity {
+  code: String!
+  quantity: Int
+}
+
+input LivestockQuantityInput {
+  code: String!
+  quantity: Int!
+}
+
+input LivestockOptionalQuantityInput {
+  code: String!
+  quantity: Int
+}
+
+type LivestockAdjustment {
+  event: LivestockAdjustmentEvent
+  postingDate: String
+  job: Job!
+  quantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockAdjustmentInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int!
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockAdjustmentInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockAdjustmentResult {
+  success: Boolean!
+  livestockAdjustment: LivestockAdjustment!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockGradeOff {
+  event: LivestockGradeOffEvent
+  postingDate: String
+  job: Job!
+  quantities: [LivestockQuantity!]!
+  livestockWeight: Float
+  comments: String
+}
+
+input PostLivestockGradeOffInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantities: [LivestockQuantityInput!]!
+  livestockWeight: Float!
+  comments: String
+}
+
+input SaveLivestockGradeOffInput {
+  event: String
+  postingDate: String
+  job: String!
+  quantities: [LivestockOptionalQuantityInput!]
+  livestockWeight: Float
+  comments: String
+}
+
+type LivestockGradeOffResult {
+  success: Boolean!
+  livestockGradeOff: LivestockGradeOff!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockMortality {
+  event: LivestockMortalityEvent
+  postingDate: String
+  job: Job!
+  quantities: [LivestockQuantity!]
+  comments: String
+}
+
+input PostLivestockMortalityInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantities: [LivestockQuantityInput!]
+  comments: String
+}
+
+input SaveLivestockMortalityInput {
+  event: String
+  postingDate: String
+  job: String!
+  quantities: [LivestockOptionalQuantityInput!]
+  comments: String
+}
+
+type LivestockMortalityResult {
+  success: Boolean!
+  livestockMortality: LivestockMortality!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockMove {
+  event: LivestockMoveEvent
+  postingDate: String
+  fromJob: Job!
+  toJob: Job
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockMoveInput {
+  event: String!
+  postingDate: String
+  fromJob: String!
+  toJob: String!
+  quantity: Int!
+  smallLivestockQuantity: Int
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockMoveInput {
+  event: String
+  postingDate: String
+  fromJob: String!
+  toJob: String
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockMoveResult {
+  success: Boolean!
+  livestockMove: LivestockMove!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockPurchase {
+  event: LivestockPurchaseEvent
+  postingDate: String
+  job: Job!
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockPurchaseInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int!
+  smallLivestockQuantity: Int
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockPurchaseInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockPurchaseResult {
+  success: Boolean!
+  livestockPurchase: LivestockPurchase!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockWean {
+  event: LivestockWeanEvent
+  postingDate: String
+  job: Job!
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockWeanInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int!
+  smallLivestockQuantity: Int
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockWeanInput {
+  event: String
+  postingDate: String
+  job: String!
+  quantity: Int
+  smallLivestockQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockWeanResult {
+  success: Boolean!
+  livestockWean: LivestockWean!
+  defaults: LivestockActivityDefaults!
+}
+
+type ItemJournalTemplate {
+  name: String!
+  description: String!
+  type: String!
+  sourceCode: String!
+  reasonCode: String!
 }
 
 type MaintenanceAsset {
@@ -146,278 +418,6 @@ input PostMaintenanceInput {
 
 type MaintenanceResult {
   success: Boolean!
-}
-
-type PigActivityDefaults {
-  job: Job
-  prices: [PriceEntry!]!
-}
-
-type PigWeanEvent {
-  code: String!
-  description: String!
-}
-
-type PigGradeOffEvent {
-  code: String!
-  description: String!
-  reasons: [Reason!]!
-}
-
-type PigMoveEvent {
-  code: String!
-  description: String!
-}
-
-type PigPurchaseEvent {
-  code: String!
-  description: String!
-}
-
-type PigAdjustmentEvent {
-  code: String!
-  description: String!
-}
-
-type PigMortalityEvent {
-  code: String!
-  description: String!
-  reasons: [Reason!]!
-}
-
-type PriceEntry {
-  animal: String!
-  price: Float
-}
-
-type PigQuantity {
-  code: String!
-  quantity: Int
-}
-
-input PigQuantityInput {
-  code: String!
-  quantity: Int!
-}
-
-input PigOptionalQuantityInput {
-  code: String!
-  quantity: Int
-}
-
-type PigAdjustment {
-  event: PigAdjustmentEvent
-  postingDate: String
-  job: Job!
-  quantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-input PostPigAdjustmentInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantity: Int!
-  totalWeight: Float!
-  comments: String
-}
-
-input SavePigAdjustmentInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-type PigAdjustmentResult {
-  success: Boolean!
-  pigAdjustment: PigAdjustment!
-  defaults: PigActivityDefaults!
-}
-
-type PigGradeOff {
-  event: PigGradeOffEvent
-  postingDate: String
-  job: Job!
-  quantities: [PigQuantity!]!
-  pigWeight: Float
-  comments: String
-}
-
-input PostPigGradeOffInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantities: [PigQuantityInput!]!
-  pigWeight: Float!
-  comments: String
-}
-
-input SavePigGradeOffInput {
-  event: String
-  postingDate: String
-  job: String!
-  quantities: [PigOptionalQuantityInput!]
-  pigWeight: Float
-  comments: String
-}
-
-type PigGradeOffResult {
-  success: Boolean!
-  pigGradeOff: PigGradeOff!
-  defaults: PigActivityDefaults!
-}
-
-type PigMortality {
-  event: PigMortalityEvent
-  postingDate: String
-  job: Job!
-  quantities: [PigQuantity!]
-  comments: String
-}
-
-input PostPigMortalityInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantities: [PigQuantityInput!]
-  comments: String
-}
-
-input SavePigMortalityInput {
-  event: String
-  postingDate: String
-  job: String!
-  quantities: [PigOptionalQuantityInput!]
-  comments: String
-}
-
-type PigMortalityResult {
-  success: Boolean!
-  pigMortality: PigMortality!
-  defaults: PigActivityDefaults!
-}
-
-type PigMove {
-  event: PigMoveEvent
-  postingDate: String
-  fromJob: Job!
-  toJob: Job
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-input PostPigMoveInput {
-  event: String!
-  postingDate: String
-  fromJob: String!
-  toJob: String!
-  quantity: Int!
-  smallPigQuantity: Int
-  totalWeight: Float!
-  comments: String
-}
-
-input SavePigMoveInput {
-  event: String
-  postingDate: String
-  fromJob: String!
-  toJob: String
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-type PigMoveResult {
-  success: Boolean!
-  pigMove: PigMove!
-  defaults: PigActivityDefaults!
-}
-
-type PigPurchase {
-  event: PigPurchaseEvent
-  postingDate: String
-  job: Job!
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-input PostPigPurchaseInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantity: Int!
-  smallPigQuantity: Int
-  totalWeight: Float!
-  comments: String
-}
-
-input SavePigPurchaseInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-type PigPurchaseResult {
-  success: Boolean!
-  pigPurchase: PigPurchase!
-  defaults: PigActivityDefaults!
-}
-
-type PigWean {
-  event: PigWeanEvent
-  postingDate: String
-  job: Job!
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-input PostPigWeanInput {
-  event: String!
-  postingDate: String
-  job: String!
-  quantity: Int!
-  smallPigQuantity: Int
-  totalWeight: Float!
-  comments: String
-}
-
-input SavePigWeanInput {
-  event: String
-  postingDate: String
-  job: String!
-  quantity: Int
-  smallPigQuantity: Int
-  totalWeight: Float
-  comments: String
-}
-
-type PigWeanResult {
-  success: Boolean!
-  pigWean: PigWean!
-  defaults: PigActivityDefaults!
-}
-
-type ItemJournalTemplate {
-  name: String!
-  description: String!
-  type: String!
-  sourceCode: String!
-  reasonCode: String!
 }
 
 type ScorecardGroup {

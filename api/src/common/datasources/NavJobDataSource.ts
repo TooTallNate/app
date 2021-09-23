@@ -9,7 +9,7 @@ export interface JobFilter {
   includeLocations?: string[];
 }
 
-export default class PigJobNavDataSource extends NavDataSource {
+export default class LivestockJobNavDataSource extends NavDataSource {
   getPostingGroups(prefix?: string) {
     let odataFilter;
     if (prefix) {
@@ -21,7 +21,7 @@ export default class PigJobNavDataSource extends NavDataSource {
   }
 
   getByNo(no: string): Promise<NavJob | undefined> {
-    const resp = this.get(`/Jobs('${no}')`).catch(() => null);
+    const resp = this.get(`/JobsLivestock('${no}')`).catch(() => null);
 
     return resp;
   }
@@ -34,20 +34,20 @@ export default class PigJobNavDataSource extends NavDataSource {
   }: JobFilter = {}): Promise<NavJob[]> {
     let odataFilter = this.buildFilter(f => {
       const filters: BooleanFilterExpression[] = [];
-      if (typeof isOpen === "boolean") {
-        if (isOpen) {
-          filters.push(f.equals("Status", "Open"));
-        } else {
-          filters.push(f.notEquals("Status", "Open"));
-        }
-      }
-      if (postingGroups) {
-        filters.push(
-          f.or(
-            ...postingGroups.map(group => f.equals("Job_Posting_Group", group))
-          )
-        );
-      }
+      // if (typeof isOpen === "boolean") {
+      //   if (isOpen) {
+      //     filters.push(f.equals("Status", "Open"));
+      //   } else {
+      //     filters.push(f.notEquals("Status", "Open"));
+      //   }
+      // }
+      // if (postingGroups) {
+      //   filters.push(
+      //     f.or(
+      //       ...postingGroups.map(group => f.equals("Job_Posting_Group", group))
+      //     )
+      //   );
+      // }
       if (includeLocations && includeLocations.length > 0) {
         filters.push(
           f.or(...includeLocations.map(loc => f.equals("Site", loc)))
@@ -61,7 +61,7 @@ export default class PigJobNavDataSource extends NavDataSource {
     });
     const filterStr = odataFilter ? `$filter=${odataFilter}` : "";
 
-    return this.get(`/Jobs?${filterStr}`);
+    return this.get(`/JobsLivestock?${filterStr}`);
   }
 
   async updatePersonResponsible(
@@ -70,7 +70,7 @@ export default class PigJobNavDataSource extends NavDataSource {
   ): Promise<NavJob | undefined> {
     const job = (await this.getByNo(number)) as any;
     return this.patch(
-      `/Jobs('${number}')`,
+      `/JobsLivestock('${number}')`,
       { Person_Responsible: person },
       {
         headers: {

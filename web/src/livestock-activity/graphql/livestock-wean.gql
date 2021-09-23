@@ -1,0 +1,48 @@
+fragment LivestockWeanFragment on LivestockWean {
+  event {
+    code
+  }
+  job {
+    number
+    description
+    inventory
+    deadQuantity
+  }
+  postingDate
+  quantity
+  smallLivestockQuantity
+  totalWeight
+  comments
+}
+
+query LivestockWean($job: String!) {
+  livestockWeanEventTypes {
+    code
+    description
+  }
+  livestockWean(job: $job) {
+    ...LivestockWeanFragment
+  }
+}
+
+mutation SaveLivestockWean($input: SaveLivestockWeanInput!) {
+  saveLivestockWean(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockWean {
+      ...LivestockWeanFragment
+    }
+  }
+}
+
+mutation PostLivestockWean($input: PostLivestockWeanInput!) {
+  postLivestockWean(input: $input) {
+    defaults {
+      ...LivestockActivityDefaultsFragment
+    }
+    livestockWean {
+      ...LivestockWeanFragment
+    }
+  }
+}

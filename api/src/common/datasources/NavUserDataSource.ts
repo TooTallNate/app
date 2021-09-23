@@ -22,9 +22,9 @@ export default class NavUserDataSource extends NavDataSource {
   }
 
   async getByUsername(username: string): Promise<NavUser | undefined> {
-    const filter = this.buildFilter(f => f.equals("User_Name", username))
+    const filter = this.buildFilter(f => f.equals("User_Name", username));
     const [user] = await this.get(`/Users?$filter=${filter}`);
-    return user
+    return user;
   }
 
   getAll(): Promise<NavUser[]> {
