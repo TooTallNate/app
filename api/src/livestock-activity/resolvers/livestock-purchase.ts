@@ -12,7 +12,7 @@ import { postItemJournal, updateUserSettings } from "./livestock-activity";
 
 export const LivestockPurchase: LivestockPurchaseResolvers = {
   job(livestockPurchase, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockPurchase.job);
+    return dataSources.navJob.getJobLivestockByNo(livestockPurchase.job);
   },
   event(livestockPurchase, _, { dataSources }) {
     if (livestockPurchase.event) {
@@ -75,7 +75,7 @@ export const LivestockPurchaseMutations: MutationResolvers = {
       throw Error(`Event ${input.event} not found`);
     }
 
-    const job = await dataSources.navJob.getByNo(input.job);
+    const job = await dataSources.navJob.getJobLivestockByNo(input.job);
 
     await postItemJournal(
       {

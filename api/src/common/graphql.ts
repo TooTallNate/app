@@ -105,6 +105,8 @@ export type Query = {
   livestockAdjustmentEventTypes: Array<LivestockAdjustmentEvent>;
   livestockGradeOff: LivestockGradeOff;
   livestockGradeOffEventTypes: Array<LivestockGradeOffEvent>;
+  livestockJob?: Maybe<Job>;
+  livestockJobs: Array<Job>;
   livestockMortality: LivestockMortality;
   livestockMortalityEventTypes: Array<LivestockMortalityEvent>;
   livestockMove: LivestockMove;
@@ -148,6 +150,14 @@ export type QueryLivestockAdjustmentArgs = {
 
 export type QueryLivestockGradeOffArgs = {
   job: Scalars["String"];
+};
+
+export type QueryLivestockJobArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryLivestockJobsArgs = {
+  input?: Maybe<JobFilter>;
 };
 
 export type QueryLivestockMortalityArgs = {
@@ -1218,6 +1228,18 @@ export type QueryResolvers<
     Array<ResolversTypes["LivestockGradeOffEvent"]>,
     ParentType,
     ContextType
+  >;
+  livestockJob?: Resolver<
+    Maybe<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockJobArgs, "number">
+  >;
+  livestockJobs?: Resolver<
+    Array<ResolversTypes["Job"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockJobsArgs, never>
   >;
   livestockMortality?: Resolver<
     ResolversTypes["LivestockMortality"],

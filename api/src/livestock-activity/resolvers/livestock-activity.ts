@@ -82,7 +82,7 @@ export async function updateUserSettings({
 export const LivestockActivityDefaults: LivestockActivityDefaultsResolvers = {
   job(userSettings, _, { dataSources }) {
     if (userSettings && userSettings.livestockJob) {
-      return dataSources.navJob.getByNo(userSettings.livestockJob);
+      return dataSources.navJob.getJobLivestockByNo(userSettings.livestockJob);
     } else {
       return null;
     }
@@ -111,9 +111,7 @@ export const LivestockActivityQueries: QueryResolvers = {
         var excludeLocations = settings.locations.list;
       }
     }
-    return dataSources.navJob.getAll({
-      // isOpen: true,
-      // postingGroups: ["MKT PIGS", "SOWS", "GDU"],
+    return dataSources.navJob.getAllJobLivestock({
       includeLocations,
       excludeLocations
     });

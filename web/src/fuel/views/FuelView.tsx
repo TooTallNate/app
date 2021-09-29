@@ -9,7 +9,6 @@ import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import DateInput from "../../common/components/input/DateInput";
 import DecimalInput from "../../common/components/input/DecimalInput";
-import NumberInput from "../../common/components/input/NumberInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import BackButton from "../../common/components/view/BackButton";

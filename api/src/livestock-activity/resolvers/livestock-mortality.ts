@@ -13,7 +13,7 @@ import { postItemJournal, updateUserSettings } from "./livestock-activity";
 
 export const LivestockMortality: LivestockMortalityResolvers = {
   job(livestockMortality, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockMortality.job);
+    return dataSources.navJob.getJobLivestockByNo(livestockMortality.job);
   },
   quantities: livestockMortality => livestockMortality.quantities || [],
   event(livestockMortality, _, { dataSources }) {
@@ -83,7 +83,7 @@ export const LivestockMortalityMutations: MutationResolvers = {
       throw Error(`Event ${input.event} not found.`);
     }
 
-    const job = await dataSources.navJob.getByNo(input.job);
+    const job = await dataSources.navJob.getJobLivestockByNo(input.job);
 
     let tempWeeks;
 

@@ -79,6 +79,8 @@ export type Query = {
   livestockAdjustmentEventTypes: Array<LivestockAdjustmentEvent>;
   livestockGradeOff: LivestockGradeOff;
   livestockGradeOffEventTypes: Array<LivestockGradeOffEvent>;
+  livestockJob?: Maybe<Job>;
+  livestockJobs: Array<Job>;
   livestockMortality: LivestockMortality;
   livestockMortalityEventTypes: Array<LivestockMortalityEvent>;
   livestockMove: LivestockMove;
@@ -122,6 +124,14 @@ export type QueryLivestockAdjustmentArgs = {
 
 export type QueryLivestockGradeOffArgs = {
   job: Scalars["String"];
+};
+
+export type QueryLivestockJobArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryLivestockJobsArgs = {
+  input?: Maybe<JobFilter>;
 };
 
 export type QueryLivestockMortalityArgs = {
@@ -1082,9 +1092,7 @@ export type ScorecardJobsQueryResult = Apollo.QueryResult<
 >;
 export const ScorecardLivestockJobsDocument = gql`
   query ScorecardLivestockJobs($location: String!) {
-    jobs(
-      input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }
-    ) {
+    jobs(input: { locations: [$location] }) {
       number
       description
     }

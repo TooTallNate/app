@@ -52,6 +52,8 @@ type Query {
   resource(code: String!): Resource
   jobs(input: JobFilter): [Job!]!
   job(number: String!): Job
+  livestockJobs(input: JobFilter): [Job!]!
+  livestockJob(number: String!): Job
   item(number: String!): Item
 }
 

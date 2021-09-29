@@ -61,6 +61,8 @@ type Query {
   livestockAdjustmentEventTypes: [LivestockAdjustmentEvent!]!
   livestockGradeOff(job: String!): LivestockGradeOff!
   livestockGradeOffEventTypes: [LivestockGradeOffEvent!]!
+  livestockJob(number: String!): Job
+  livestockJobs(input: JobFilter): [Job!]!
   livestockMortality(job: String!): LivestockMortality!
   livestockMortalityEventTypes: [LivestockMortalityEvent!]!
   livestockMove(job: String!): LivestockMove!
