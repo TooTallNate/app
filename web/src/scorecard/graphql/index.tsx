@@ -1092,7 +1092,7 @@ export type ScorecardJobsQueryResult = Apollo.QueryResult<
 >;
 export const ScorecardLivestockJobsDocument = gql`
   query ScorecardLivestockJobs($location: String!) {
-    jobs(input: { locations: [$location] }) {
+    jobs(input: { groups: ["MKT PIGS"], locations: [$location] }) {
       number
       description
     }
