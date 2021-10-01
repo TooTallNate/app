@@ -11,7 +11,7 @@ import { postItemJournal, updateUserSettings } from "./livestock-activity";
 
 export const LivestockGradeOff: LivestockGradeOffResolvers = {
   job(livestockGradeOff, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockGradeOff.job);
+    return dataSources.navJob.getJobLivestockByNo(livestockGradeOff.job);
   },
   quantities: livestockGradeOff => livestockGradeOff.quantities || [],
   event(livestockGradeOff, _, { dataSources }) {
@@ -80,7 +80,7 @@ export const LivestockGradeOffMutations: MutationResolvers = {
       throw Error(`Event ${input.event} not found.`);
     }
 
-    const job = await dataSources.navJob.getByNo(input.job);
+    const job = await dataSources.navJob.getJobLivestockByNo(input.job);
 
     for (const entry of input.quantities) {
       const line = standardJournalLines.find(

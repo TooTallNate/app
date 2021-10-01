@@ -63,15 +63,25 @@ const Location: LocationResolvers = {
 export const queries: QueryResolvers = {
   jobs(_, { input }, { dataSources }) {
     const x = dataSources.navJob.getAll({
-      // isOpen: true,
-      // ...(input.groups && { postingGroups: input.groups }),
+      isOpen: true,
+      ...(input.groups && { postingGroups: input.groups }),
       ...(input.locations && { includeLocations: input.locations })
     });
     console.log(x);
     return x;
   },
   job(_, { number }, { dataSources }) {
-    return dataSources.navJob.getByNo(number);
+    const x = dataSources.navJob.getByNo(number);
+    console.log(x);
+    return x;
+  },
+  livestockJobs(_, { input }, { dataSources }) {
+    return dataSources.navJob.getAllJobLivestock({
+      ...(input.locations && { includeLocations: input.locations })
+    });
+  },
+  livestockJob(_, { number }, { dataSources }) {
+    return dataSources.navJob.getJobLivestockByNo(number);
   },
   resources(_, { input }, { dataSources }) {
     return dataSources.navResource.getAll({
@@ -81,7 +91,6 @@ export const queries: QueryResolvers = {
   },
   async resource(_, { code }, { dataSources }) {
     const result = await dataSources.navResource.getByCode(code);
-    console.log(result);
     return result;
   }
 };

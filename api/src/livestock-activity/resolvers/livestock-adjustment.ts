@@ -15,7 +15,7 @@ import { postItemJournal, updateUserSettings } from "./livestock-activity";
 
 export const LivestockAdjustment: LivestockAdjustmentResolvers = {
   job(livestockAdjustment, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockAdjustment.job);
+    return dataSources.navJob.getJobLivestockByNo(livestockAdjustment.job);
   },
   event(livestockAdjustment, _, { dataSources }) {
     if (livestockAdjustment.event) {
@@ -72,7 +72,7 @@ export const LivestockAdjustmentMutations: MutationResolvers = {
     { input },
     { user, dataSources, navConfig }
   ) {
-    const job = await dataSources.navJob.getByNo(input.job);
+    const job = await dataSources.navJob.getJobLivestockByNo(input.job);
 
     const [
       standardJournal

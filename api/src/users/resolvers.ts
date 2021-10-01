@@ -19,7 +19,7 @@ export const queries: QueryResolvers = {
   },
   async users(_, __, { dataSources }) {
     const users = await dataSources.navUser.getAll();
-    console.log(users);
+    //console.log(users);
     return users;
     //return dataSources.navUser.getAll();
   },

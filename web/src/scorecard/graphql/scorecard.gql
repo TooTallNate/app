@@ -42,7 +42,7 @@ query ScorecardJobs($group: String!) {
 }
 
 query ScorecardLivestockJobs($location: String!) {
-  jobs(input: { groups: ["SOWS", "GDU", "MKT PIGS"], locations: [$location] }) {
+  jobs(input: { groups: ["MKT PIGS"], locations: [$location] }) {
     number
     description
   }

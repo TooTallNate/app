@@ -12,7 +12,7 @@ import { postItemJournal } from "./livestock-activity";
 
 export const LivestockWean: LivestockWeanResolvers = {
   job(livestockWean, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockWean.job);
+    return dataSources.navJob.getJobLivestockByNo(livestockWean.job);
   },
   event(livestockWean, _, { dataSources }) {
     if (livestockWean.event) {
@@ -75,7 +75,7 @@ export const LivestockWeanMutations: MutationResolvers = {
       throw Error(`Event ${input.event} not found.`);
     }
 
-    const job = await dataSources.navJob.getByNo(input.job);
+    const job = await dataSources.navJob.getJobLivestockByNo(input.job);
     await postItemJournal(
       {
         ...standardJournal,

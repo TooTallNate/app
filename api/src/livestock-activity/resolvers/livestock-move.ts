@@ -15,11 +15,11 @@ import { postItemJournal, updateUserSettings } from "./livestock-activity";
 
 export const LivestockMove: LivestockMoveResolvers = {
   fromJob(livestockMove, _, { dataSources }) {
-    return dataSources.navJob.getByNo(livestockMove.fromJob);
+    return dataSources.navJob.getJobLivestockByNo(livestockMove.fromJob);
   },
   toJob(livestockMove, _, { dataSources }) {
     if (livestockMove.toJob) {
-      return dataSources.navJob.getByNo(livestockMove.toJob);
+      return dataSources.navJob.getJobLivestockByNo(livestockMove.toJob);
     }
   },
   event(livestockMove, _, { dataSources }) {
@@ -89,8 +89,8 @@ export const LivestockMoveMutations: MutationResolvers = {
     }
 
     const docNo = getDocumentNumber("MOVE", user.name);
-    const fromJob = await dataSources.navJob.getByNo(input.fromJob);
-    const toJob = await dataSources.navJob.getByNo(input.toJob);
+    const fromJob = await dataSources.navJob.getJobLivestockByNo(input.fromJob);
+    const toJob = await dataSources.navJob.getJobLivestockByNo(input.toJob);
 
     await postItemJournal(
       {
