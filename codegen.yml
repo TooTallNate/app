@@ -22,6 +22,7 @@ generates:
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
+        MenuOption: "./nav#ItemJournalTemplateObject"
         LivestockAdjustment: "../livestock-activity/models/LivestockAdjustment#LivestockAdjustmentDocument"
         LivestockGradeOff: "../livestock-activity/models/LivestockGradeOff#LivestockGradeOffDocument"
         LivestockMortality: "../livestock-activity/models/LivestockMortality#LivestockMortalityDocument"

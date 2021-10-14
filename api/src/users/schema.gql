@@ -3,11 +3,17 @@ type UserLocations {
   list: [Location!]!
 }
 
+type UserMenuOptions {
+  mode: InclusivityMode!
+  list: [MenuOption!]!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
   locations: UserLocations!
+  menuOptions: UserMenuOptions!
 }
 
 input LoginInput {
@@ -30,9 +36,20 @@ input UpdateUserLocationsInput {
   mode: InclusivityMode
 }
 
+input UpdateUserMenuOptionsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
 type UpdateUserLocationsResult {
   success: Boolean!
   locations: UserLocations!
+}
+
+type UpdateUserMenuOptionsResult {
+  success: Boolean!
+  menuOptions: UserMenuOptions!
 }
 
 type Query {
@@ -44,6 +61,6 @@ type Query {
 type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
-
+  updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
 }

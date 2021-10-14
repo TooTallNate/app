@@ -37,6 +37,11 @@ type Location {
   name: String!
 }
 
+type MenuOption {
+  name: String!
+  description: String!
+}
+
 input JobFilter {
   groups: [String!]
   locations: [String!]
@@ -124,6 +129,7 @@ type Mutation {
   saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
+  updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
 }
 
 type LivestockActivityDefaults {
@@ -476,11 +482,17 @@ type UserLocations {
   list: [Location!]!
 }
 
+type UserMenuOptions {
+  mode: InclusivityMode!
+  list: [MenuOption!]!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
   locations: UserLocations!
+  menuOptions: UserMenuOptions!
 }
 
 input LoginInput {
@@ -503,7 +515,18 @@ input UpdateUserLocationsInput {
   mode: InclusivityMode
 }
 
+input UpdateUserMenuOptionsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
 type UpdateUserLocationsResult {
   success: Boolean!
   locations: UserLocations!
+}
+
+type UpdateUserMenuOptionsResult {
+  success: Boolean!
+  menuOptions: UserMenuOptions!
 }

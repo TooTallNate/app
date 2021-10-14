@@ -1,0 +1,28 @@
+fragment UserMenuOptionsFields on UserMenuOptions {
+  mode
+  list {
+    name
+    description
+  }
+}
+
+query MenuOptions {
+  itemJournalTemplates {
+    name
+    description
+  }
+  user {
+    username
+    menuOptions {
+      ...UserMenuOptionsFields
+    }
+  }
+}
+
+mutation UpdateMenuOptions($input: UpdateUserMenuOptionsInput!) {
+  updateUserMenuOptions(input: $input) {
+    menuOptions {
+      ...UserMenuOptionsFields
+    }
+  }
+}

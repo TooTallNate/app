@@ -54,6 +54,12 @@ export type Location = {
   name: Scalars["String"];
 };
 
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type JobFilter = {
   groups?: Maybe<Array<Scalars["String"]>>;
   locations?: Maybe<Array<Scalars["String"]>>;
@@ -217,6 +223,7 @@ export type Mutation = {
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
+  updateUserMenuOptions: UpdateUserMenuOptionsResult;
 };
 
 export type MutationLoginArgs = {
@@ -289,6 +296,10 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type MutationUpdateUserMenuOptionsArgs = {
+  input: UpdateUserMenuOptionsInput;
 };
 
 export type LivestockActivityDefaults = {
@@ -673,12 +684,19 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type UserMenuOptions = {
+  __typename?: "UserMenuOptions";
+  mode: InclusivityMode;
+  list: Array<MenuOption>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
   locations: UserLocations;
+  menuOptions: UserMenuOptions;
 };
 
 export type LoginInput = {
@@ -703,10 +721,22 @@ export type UpdateUserLocationsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserMenuOptionsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
   locations: UserLocations;
+};
+
+export type UpdateUserMenuOptionsResult = {
+  __typename?: "UpdateUserMenuOptionsResult";
+  success: Scalars["Boolean"];
+  menuOptions: UserMenuOptions;
 };
 
 export type FuelAssetsQueryVariables = {};

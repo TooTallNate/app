@@ -80,6 +80,12 @@ export type Location = {
   name: Scalars["String"];
 };
 
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type JobFilter = {
   groups?: Maybe<Array<Scalars["String"]>>;
   locations?: Maybe<Array<Scalars["String"]>>;
@@ -243,6 +249,7 @@ export type Mutation = {
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
+  updateUserMenuOptions: UpdateUserMenuOptionsResult;
 };
 
 export type MutationLoginArgs = {
@@ -315,6 +322,10 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type MutationUpdateUserMenuOptionsArgs = {
+  input: UpdateUserMenuOptionsInput;
 };
 
 export type LivestockActivityDefaults = {
@@ -699,12 +710,19 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type UserMenuOptions = {
+  __typename?: "UserMenuOptions";
+  mode: InclusivityMode;
+  list: Array<MenuOption>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
   locations: UserLocations;
+  menuOptions: UserMenuOptions;
 };
 
 export type LoginInput = {
@@ -729,10 +747,22 @@ export type UpdateUserLocationsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserMenuOptionsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
   locations: UserLocations;
+};
+
+export type UpdateUserMenuOptionsResult = {
+  __typename?: "UpdateUserMenuOptionsResult";
+  success: Scalars["Boolean"];
+  menuOptions: UserMenuOptions;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -856,6 +886,7 @@ export type ResolversTypes = ResolversObject<{
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
+  MenuOption: ResolverTypeWrapper<ItemJournalTemplateObject>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: ResolverTypeWrapper<{}>;
@@ -949,6 +980,11 @@ export type ResolversTypes = ResolversObject<{
   UserLocations: ResolverTypeWrapper<
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
+  UserMenuOptions: ResolverTypeWrapper<
+    Omit<UserMenuOptions, "list"> & {
+      list: Array<ResolversTypes["MenuOption"]>;
+    }
+  >;
   User: ResolverTypeWrapper<NavUser>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -956,9 +992,15 @@ export type ResolversTypes = ResolversObject<{
   >;
   LogoutResult: ResolverTypeWrapper<LogoutResult>;
   UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserMenuOptionsInput: UpdateUserMenuOptionsInput;
   UpdateUserLocationsResult: ResolverTypeWrapper<
     Omit<UpdateUserLocationsResult, "locations"> & {
       locations: ResolversTypes["UserLocations"];
+    }
+  >;
+  UpdateUserMenuOptionsResult: ResolverTypeWrapper<
+    Omit<UpdateUserMenuOptionsResult, "menuOptions"> & {
+      menuOptions: ResolversTypes["UserMenuOptions"];
     }
   >;
 }>;
@@ -975,6 +1017,7 @@ export type ResolversParentTypes = ResolversObject<{
   Reason: NavReason;
   Resource: NavResource;
   Location: NavLocation;
+  MenuOption: ItemJournalTemplateObject;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: {};
@@ -1072,6 +1115,9 @@ export type ResolversParentTypes = ResolversObject<{
   UserLocations: Omit<UserLocations, "list"> & {
     list: Array<ResolversParentTypes["Location"]>;
   };
+  UserMenuOptions: Omit<UserMenuOptions, "list"> & {
+    list: Array<ResolversParentTypes["MenuOption"]>;
+  };
   User: NavUser;
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -1079,9 +1125,14 @@ export type ResolversParentTypes = ResolversObject<{
   };
   LogoutResult: LogoutResult;
   UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserMenuOptionsInput: UpdateUserMenuOptionsInput;
   UpdateUserLocationsResult: Omit<UpdateUserLocationsResult, "locations"> & {
     locations: ResolversParentTypes["UserLocations"];
   };
+  UpdateUserMenuOptionsResult: Omit<
+    UpdateUserMenuOptionsResult,
+    "menuOptions"
+  > & { menuOptions: ResolversParentTypes["UserMenuOptions"] };
 }>;
 
 export type JobResolvers<
@@ -1155,6 +1206,15 @@ export type LocationResolvers<
 > = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type MenuOptionResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MenuOption"] = ResolversParentTypes["MenuOption"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1472,6 +1532,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateUserLocationsArgs, "input">
+  >;
+  updateUserMenuOptions?: Resolver<
+    ResolversTypes["UpdateUserMenuOptionsResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserMenuOptionsArgs, "input">
   >;
 }>;
 
@@ -1984,6 +2050,15 @@ export type UserLocationsResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type UserMenuOptionsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UserMenuOptions"] = ResolversParentTypes["UserMenuOptions"]
+> = ResolversObject<{
+  mode?: Resolver<ResolversTypes["InclusivityMode"], ParentType, ContextType>;
+  list?: Resolver<Array<ResolversTypes["MenuOption"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
@@ -1993,6 +2068,11 @@ export type UserResolvers<
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   locations?: Resolver<
     ResolversTypes["UserLocations"],
+    ParentType,
+    ContextType
+  >;
+  menuOptions?: Resolver<
+    ResolversTypes["UserMenuOptions"],
     ParentType,
     ContextType
   >;
@@ -2029,12 +2109,26 @@ export type UpdateUserLocationsResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type UpdateUserMenuOptionsResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UpdateUserMenuOptionsResult"] = ResolversParentTypes["UpdateUserMenuOptionsResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  menuOptions?: Resolver<
+    ResolversTypes["UserMenuOptions"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Job?: JobResolvers<ContextType>;
   Item?: ItemResolvers<ContextType>;
   Reason?: ReasonResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
+  MenuOption?: MenuOptionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   FuelAsset?: FuelAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
@@ -2071,10 +2165,14 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   ScorecardElementResponse?: ScorecardElementResponseResolvers<ContextType>;
   Scorecard?: ScorecardResolvers<ContextType>;
   UserLocations?: UserLocationsResolvers<ContextType>;
+  UserMenuOptions?: UserMenuOptionsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;
   LogoutResult?: LogoutResultResolvers<ContextType>;
   UpdateUserLocationsResult?: UpdateUserLocationsResultResolvers<ContextType>;
+  UpdateUserMenuOptionsResult?: UpdateUserMenuOptionsResultResolvers<
+    ContextType
+  >;
 }>;
 
 /**

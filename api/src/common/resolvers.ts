@@ -5,6 +5,7 @@ import {
   ItemResolvers,
   JobResolvers,
   LocationResolvers,
+  MenuOptionResolvers,
   QueryResolvers,
   ReasonResolvers,
   ResourceResolvers
@@ -60,6 +61,11 @@ const Location: LocationResolvers = {
   name: location => location.Name
 };
 
+const MenuOption: MenuOptionResolvers = {
+  name: menuOption => menuOption.Name,
+  description: menuOption => menuOption.Description
+};
+
 export const queries: QueryResolvers = {
   jobs(_, { input }, { dataSources }) {
     const x = dataSources.navJob.getAll({
@@ -100,5 +106,6 @@ export const types = {
   Item,
   Resource,
   Reason,
-  Location
+  Location,
+  MenuOption
 };

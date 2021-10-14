@@ -35,3 +35,10 @@ export enum ErrorCode {
   NoAvailableLicense = "NO_AVAILABLE_LICENSE",
   Unknown = "UNKNOWN_ERROR"
 }
+
+export enum HomeOptions {
+  Livestock = "Livestock Activity",
+  Scorecard = "Scorecards",
+  Fuel = "Fuel",
+  Maintenance = "Maintenance"
+}
