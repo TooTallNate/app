@@ -25,6 +25,7 @@ import {
   useMenuOptionsQuery,
   useUpdateMenuOptionsMutation
 } from "../graphql";
+import { MenuOptions } from "../../common/utils";
 
 interface FormData {
   mode: InclusivityMode;
@@ -35,6 +36,7 @@ interface FormData {
 const MenuView: React.FC = () => {
   const formContext = useForm<FormData>();
   const { setValue, getValues, watch } = formContext;
+  const test = Object.values(MenuOptions);
 
   const { data, loading } = useMenuOptionsQuery({
     onCompleted(data) {
@@ -44,6 +46,7 @@ const MenuView: React.FC = () => {
           { menuOptions: data.user.menuOptions.list }
         ]);
       }
+      console.log(test);
     }
   });
   // ?????????
@@ -57,7 +60,7 @@ const MenuView: React.FC = () => {
   const { addMessage } = useFlash();
 
   const userMenuOptions = watch("menuOptions", []);
-  const menuOptions = data ? data.itemJournalTemplates : [];
+  const menuOptions = Object.values(MenuOptions);
   const optionSelected = !!watch("selectedMenuOption");
 
   return (
@@ -116,12 +119,11 @@ const MenuView: React.FC = () => {
                   className="flex-grow"
                   items={menuOptions!
                     .filter(
-                      option =>
-                        !userMenuOptions.some(opt => opt.name === option.name)
+                      option => !userMenuOptions.some(opt => opt === option)
                     )
                     .map(option => ({
                       value: option,
-                      title: option.description
+                      title: option
                     }))}
                 />
               </FormFieldInput>

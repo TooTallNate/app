@@ -27,3 +27,10 @@ export function UrlParseFromQR(url: string): string {
   }
   return relativeUrl;
 }
+
+export enum MenuOptions {
+  Livestock = "Livestock Activity",
+  Scorecards = "Scorecards",
+  Fuel = "Fuel",
+  Maintenance = "Maintenance"
+}
