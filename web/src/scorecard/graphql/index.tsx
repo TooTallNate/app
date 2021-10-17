@@ -54,12 +54,6 @@ export type Location = {
   name: Scalars["String"];
 };
 
-export type MenuOption = {
-  __typename?: "MenuOption";
-  name: Scalars["String"];
-  description: Scalars["String"];
-};
-
 export type JobFilter = {
   groups?: Maybe<Array<Scalars["String"]>>;
   locations?: Maybe<Array<Scalars["String"]>>;
@@ -99,6 +93,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  menuOptions?: Maybe<Array<MenuOption>>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -682,6 +677,12 @@ export type UserLocations = {
   __typename?: "UserLocations";
   mode: InclusivityMode;
   list: Array<Location>;
+};
+
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  route: Scalars["String"];
 };
 
 export type UserMenuOptions = {

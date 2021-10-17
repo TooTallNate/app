@@ -63,7 +63,7 @@ const Location: LocationResolvers = {
 
 const MenuOption: MenuOptionResolvers = {
   name: menuOption => menuOption.Name,
-  description: menuOption => menuOption.Description
+  route: menuOption => menuOption.Route
 };
 
 export const queries: QueryResolvers = {

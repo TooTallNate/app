@@ -25,7 +25,6 @@ import {
   useMenuOptionsQuery,
   useUpdateMenuOptionsMutation
 } from "../graphql";
-import { MenuOptions } from "../../common/utils";
 
 interface FormData {
   mode: InclusivityMode;
@@ -36,7 +35,6 @@ interface FormData {
 const MenuView: React.FC = () => {
   const formContext = useForm<FormData>();
   const { setValue, getValues, watch } = formContext;
-  const test = Object.values(MenuOptions);
 
   const { data, loading } = useMenuOptionsQuery({
     onCompleted(data) {
@@ -46,10 +44,8 @@ const MenuView: React.FC = () => {
           { menuOptions: data.user.menuOptions.list }
         ]);
       }
-      console.log(test);
     }
   });
-  // ?????????
   const [update] = useUpdateMenuOptionsMutation({
     refetchQueries: [
       {
@@ -60,7 +56,7 @@ const MenuView: React.FC = () => {
   const { addMessage } = useFlash();
 
   const userMenuOptions = watch("menuOptions", []);
-  const menuOptions = Object.values(MenuOptions);
+  const menuOptions = data ? data.menuOptions : [];
   const optionSelected = !!watch("selectedMenuOption");
 
   return (
@@ -119,11 +115,12 @@ const MenuView: React.FC = () => {
                   className="flex-grow"
                   items={menuOptions!
                     .filter(
-                      option => !userMenuOptions.some(opt => opt === option)
+                      option =>
+                        !userMenuOptions.some(opt => opt.name === option.name)
                     )
                     .map(option => ({
                       value: option,
-                      title: option
+                      title: option.name
                     }))}
                 />
               </FormFieldInput>
@@ -134,7 +131,16 @@ const MenuView: React.FC = () => {
                   const { menuOptions = [], selectedMenuOption } = getValues({
                     nest: true
                   });
-                  if (selectedMenuOption) {
+                  if (
+                    userMenuOptions.find(
+                      item => item.name === selectedMenuOption.name
+                    )
+                  ) {
+                    addMessage({
+                      message: "Menu Options is already in the list",
+                      level: "error"
+                    });
+                  } else if (selectedMenuOption) {
                     setValue([
                       { menuOptions: [...menuOptions, selectedMenuOption] }
                     ]);
@@ -150,7 +156,7 @@ const MenuView: React.FC = () => {
             <FormFieldInput>
               <ListBox
                 className="h-64"
-                displayValue={(item: MenuOption) => item.description}
+                displayValue={(item: MenuOption) => item.name}
                 elementKey={item => item.name}
               />
             </FormFieldInput>

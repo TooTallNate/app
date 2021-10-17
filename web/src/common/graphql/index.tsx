@@ -740,482 +740,76 @@ export type UpdateUserMenuOptionsResult = {
   menuOptions: UserMenuOptions;
 };
 
-export type UserLocationsFieldsFragment = {
-  __typename?: "UserLocations";
-} & Pick<UserLocations, "mode"> & {
-    list: Array<{ __typename?: "Location" } & Pick<Location, "code" | "name">>;
-  };
+export type HomeViewQueryVariables = {};
 
-export type LocationsQueryVariables = {};
-
-export type LocationsQuery = { __typename?: "Query" } & {
-  locations: Array<
-    { __typename?: "Location" } & Pick<Location, "code" | "name">
-  >;
+export type HomeViewQuery = { __typename?: "Query" } & {
   user?: Maybe<
-    { __typename?: "User" } & Pick<User, "username"> & {
-        locations: {
-          __typename?: "UserLocations";
-        } & UserLocationsFieldsFragment;
-      }
+    { __typename?: "User" } & {
+      menuOptions: { __typename?: "UserMenuOptions" } & Pick<
+        UserMenuOptions,
+        "mode"
+      > & {
+          list: Array<
+            { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
+          >;
+        };
+    }
   >;
 };
 
-export type UpdateLocationsMutationVariables = {
-  input: UpdateUserLocationsInput;
-};
-
-export type UpdateLocationsMutation = { __typename?: "Mutation" } & {
-  updateUserLocations: { __typename?: "UpdateUserLocationsResult" } & {
-    locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
-  };
-};
-
-export type UserMenuOptionsFieldsFragment = {
-  __typename?: "UserMenuOptions";
-} & Pick<UserMenuOptions, "mode"> & {
-    list: Array<
-      { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
-    >;
-  };
-
-export type MenuOptionsQueryVariables = {};
-
-export type MenuOptionsQuery = { __typename?: "Query" } & {
-  menuOptions?: Maybe<
-    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
-  >;
-  user?: Maybe<
-    { __typename?: "User" } & Pick<User, "username"> & {
-        menuOptions: {
-          __typename?: "UserMenuOptions";
-        } & UserMenuOptionsFieldsFragment;
-      }
-  >;
-};
-
-export type UpdateMenuOptionsMutationVariables = {
-  input: UpdateUserMenuOptionsInput;
-};
-
-export type UpdateMenuOptionsMutation = { __typename?: "Mutation" } & {
-  updateUserMenuOptions: { __typename?: "UpdateUserMenuOptionsResult" } & {
-    menuOptions: {
-      __typename?: "UserMenuOptions";
-    } & UserMenuOptionsFieldsFragment;
-  };
-};
-
-export type UserPartsFragment = { __typename?: "User" } & Pick<
-  User,
-  "username" | "name"
->;
-
-export type LoginMutationVariables = {
-  input: LoginInput;
-};
-
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "LoginResult" } & {
-    user: { __typename?: "User" } & UserPartsFragment;
-  };
-};
-
-export type UserQueryVariables = {};
-
-export type UserQuery = { __typename?: "Query" } & {
-  user?: Maybe<{ __typename?: "User" } & UserPartsFragment>;
-};
-
-export type LogoutMutationVariables = {};
-
-export type LogoutMutation = { __typename?: "Mutation" } & {
-  logout: { __typename?: "LogoutResult" } & Pick<LogoutResult, "success">;
-};
-
-export const UserLocationsFieldsFragmentDoc = gql`
-  fragment UserLocationsFields on UserLocations {
-    mode
-    list {
-      code
-      name
-    }
-  }
-`;
-export const UserMenuOptionsFieldsFragmentDoc = gql`
-  fragment UserMenuOptionsFields on UserMenuOptions {
-    mode
-    list {
-      name
-      route
-    }
-  }
-`;
-export const UserPartsFragmentDoc = gql`
-  fragment UserParts on User {
-    username
-    name
-  }
-`;
-export const LocationsDocument = gql`
-  query Locations {
-    locations {
-      code
-      name
-    }
+export const HomeViewDocument = gql`
+  query HomeView {
     user {
-      username
-      locations {
-        ...UserLocationsFields
-      }
-    }
-  }
-  ${UserLocationsFieldsFragmentDoc}
-`;
-
-/**
- * __useLocationsQuery__
- *
- * To run a query within a React component, call `useLocationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useLocationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLocationsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLocationsQuery(
-  baseOptions?: Apollo.QueryHookOptions<LocationsQuery, LocationsQueryVariables>
-) {
-  return Apollo.useQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
-    baseOptions
-  );
-}
-export function useLocationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    LocationsQuery,
-    LocationsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<LocationsQuery, LocationsQueryVariables>(
-    LocationsDocument,
-    baseOptions
-  );
-}
-export type LocationsQueryHookResult = ReturnType<typeof useLocationsQuery>;
-export type LocationsLazyQueryHookResult = ReturnType<
-  typeof useLocationsLazyQuery
->;
-export type LocationsQueryResult = Apollo.QueryResult<
-  LocationsQuery,
-  LocationsQueryVariables
->;
-export const UpdateLocationsDocument = gql`
-  mutation UpdateLocations($input: UpdateUserLocationsInput!) {
-    updateUserLocations(input: $input) {
-      locations {
-        ...UserLocationsFields
-      }
-    }
-  }
-  ${UserLocationsFieldsFragmentDoc}
-`;
-export type UpdateLocationsMutationFn = Apollo.MutationFunction<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-
-/**
- * __useUpdateLocationsMutation__
- *
- * To run a mutation, you first call `useUpdateLocationsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateLocationsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateLocationsMutation, { data, loading, error }] = useUpdateLocationsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateLocationsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    UpdateLocationsMutation,
-    UpdateLocationsMutationVariables
-  >(UpdateLocationsDocument, baseOptions);
-}
-export type UpdateLocationsMutationHookResult = ReturnType<
-  typeof useUpdateLocationsMutation
->;
-export type UpdateLocationsMutationResult = Apollo.MutationResult<
-  UpdateLocationsMutation
->;
-export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateLocationsMutation,
-  UpdateLocationsMutationVariables
->;
-export const MenuOptionsDocument = gql`
-  query MenuOptions {
-    menuOptions {
-      name
-      route
-    }
-    user {
-      username
       menuOptions {
-        ...UserMenuOptionsFields
+        mode
+        list {
+          name
+          route
+        }
       }
     }
   }
-  ${UserMenuOptionsFieldsFragmentDoc}
 `;
 
 /**
- * __useMenuOptionsQuery__
+ * __useHomeViewQuery__
  *
- * To run a query within a React component, call `useMenuOptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMenuOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeViewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeViewQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMenuOptionsQuery({
+ * const { data, loading, error } = useHomeViewQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMenuOptionsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    MenuOptionsQuery,
-    MenuOptionsQueryVariables
-  >
+export function useHomeViewQuery(
+  baseOptions?: Apollo.QueryHookOptions<HomeViewQuery, HomeViewQueryVariables>
 ) {
-  return Apollo.useQuery<MenuOptionsQuery, MenuOptionsQueryVariables>(
-    MenuOptionsDocument,
+  return Apollo.useQuery<HomeViewQuery, HomeViewQueryVariables>(
+    HomeViewDocument,
     baseOptions
   );
 }
-export function useMenuOptionsLazyQuery(
+export function useHomeViewLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    MenuOptionsQuery,
-    MenuOptionsQueryVariables
+    HomeViewQuery,
+    HomeViewQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<MenuOptionsQuery, MenuOptionsQueryVariables>(
-    MenuOptionsDocument,
+  return Apollo.useLazyQuery<HomeViewQuery, HomeViewQueryVariables>(
+    HomeViewDocument,
     baseOptions
   );
 }
-export type MenuOptionsQueryHookResult = ReturnType<typeof useMenuOptionsQuery>;
-export type MenuOptionsLazyQueryHookResult = ReturnType<
-  typeof useMenuOptionsLazyQuery
+export type HomeViewQueryHookResult = ReturnType<typeof useHomeViewQuery>;
+export type HomeViewLazyQueryHookResult = ReturnType<
+  typeof useHomeViewLazyQuery
 >;
-export type MenuOptionsQueryResult = Apollo.QueryResult<
-  MenuOptionsQuery,
-  MenuOptionsQueryVariables
->;
-export const UpdateMenuOptionsDocument = gql`
-  mutation UpdateMenuOptions($input: UpdateUserMenuOptionsInput!) {
-    updateUserMenuOptions(input: $input) {
-      menuOptions {
-        ...UserMenuOptionsFields
-      }
-    }
-  }
-  ${UserMenuOptionsFieldsFragmentDoc}
-`;
-export type UpdateMenuOptionsMutationFn = Apollo.MutationFunction<
-  UpdateMenuOptionsMutation,
-  UpdateMenuOptionsMutationVariables
->;
-
-/**
- * __useUpdateMenuOptionsMutation__
- *
- * To run a mutation, you first call `useUpdateMenuOptionsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateMenuOptionsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateMenuOptionsMutation, { data, loading, error }] = useUpdateMenuOptionsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateMenuOptionsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateMenuOptionsMutation,
-    UpdateMenuOptionsMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    UpdateMenuOptionsMutation,
-    UpdateMenuOptionsMutationVariables
-  >(UpdateMenuOptionsDocument, baseOptions);
-}
-export type UpdateMenuOptionsMutationHookResult = ReturnType<
-  typeof useUpdateMenuOptionsMutation
->;
-export type UpdateMenuOptionsMutationResult = Apollo.MutationResult<
-  UpdateMenuOptionsMutation
->;
-export type UpdateMenuOptionsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateMenuOptionsMutation,
-  UpdateMenuOptionsMutationVariables
->;
-export const LoginDocument = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      user {
-        ...UserParts
-      }
-    }
-  }
-  ${UserPartsFragmentDoc}
-`;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
-
-/**
- * __useLoginMutation__
- *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  );
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
-export const UserDocument = gql`
-  query User {
-    user {
-      ...UserParts
-    }
-  }
-  ${UserPartsFragmentDoc}
-`;
-
-/**
- * __useUserQuery__
- *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUserQuery(
-  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
-) {
-  return Apollo.useQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
-    baseOptions
-  );
-}
-export function useUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
-) {
-  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
-    UserDocument,
-    baseOptions
-  );
-}
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const LogoutDocument = gql`
-  mutation Logout {
-    logout {
-      success
-    }
-  }
-`;
-export type LogoutMutationFn = Apollo.MutationFunction<
-  LogoutMutation,
-  LogoutMutationVariables
->;
-
-/**
- * __useLogoutMutation__
- *
- * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
- *   variables: {
- *   },
- * });
- */
-export function useLogoutMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LogoutMutation,
-    LogoutMutationVariables
-  >
-) {
-  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
-    LogoutDocument,
-    baseOptions
-  );
-}
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<
-  LogoutMutation,
-  LogoutMutationVariables
+export type HomeViewQueryResult = Apollo.QueryResult<
+  HomeViewQuery,
+  HomeViewQueryVariables
 >;

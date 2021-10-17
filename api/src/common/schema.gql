@@ -37,11 +37,6 @@ type Location {
   name: String!
 }
 
-type MenuOption {
-  name: String!
-  description: String!
-}
-
 input JobFilter {
   groups: [String!]
   locations: [String!]

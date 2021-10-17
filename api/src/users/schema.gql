@@ -3,6 +3,11 @@ type UserLocations {
   list: [Location!]!
 }
 
+type MenuOption {
+  name: String!
+  route: String!
+}
+
 type UserMenuOptions {
   mode: InclusivityMode!
   list: [MenuOption!]!
@@ -56,6 +61,7 @@ type Query {
   user: User
   users: [User!]!
   locations: [Location!]!
+  menuOptions: [MenuOption!]
 }
 
 type Mutation {

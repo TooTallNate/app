@@ -1,0 +1,11 @@
+query HomeView {
+  user {
+    menuOptions {
+        mode
+        list {
+            name
+            route
+        }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import {
   NavResource,
   NavReason,
   NavLocation,
+  NavMenuOption,
   NavStandardItemJournal,
   NavJobPostingGroup,
   NavFuelAsset,
@@ -80,12 +81,6 @@ export type Location = {
   name: Scalars["String"];
 };
 
-export type MenuOption = {
-  __typename?: "MenuOption";
-  name: Scalars["String"];
-  description: Scalars["String"];
-};
-
 export type JobFilter = {
   groups?: Maybe<Array<Scalars["String"]>>;
   locations?: Maybe<Array<Scalars["String"]>>;
@@ -125,6 +120,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  menuOptions?: Maybe<Array<MenuOption>>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -710,6 +706,12 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  route: Scalars["String"];
+};
+
 export type UserMenuOptions = {
   __typename?: "UserMenuOptions";
   mode: InclusivityMode;
@@ -886,7 +888,6 @@ export type ResolversTypes = ResolversObject<{
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
-  MenuOption: ResolverTypeWrapper<ItemJournalTemplateObject>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: ResolverTypeWrapper<{}>;
@@ -980,6 +981,7 @@ export type ResolversTypes = ResolversObject<{
   UserLocations: ResolverTypeWrapper<
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
+  MenuOption: ResolverTypeWrapper<NavMenuOption>;
   UserMenuOptions: ResolverTypeWrapper<
     Omit<UserMenuOptions, "list"> & {
       list: Array<ResolversTypes["MenuOption"]>;
@@ -1017,7 +1019,6 @@ export type ResolversParentTypes = ResolversObject<{
   Reason: NavReason;
   Resource: NavResource;
   Location: NavLocation;
-  MenuOption: ItemJournalTemplateObject;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
   Query: {};
@@ -1115,6 +1116,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserLocations: Omit<UserLocations, "list"> & {
     list: Array<ResolversParentTypes["Location"]>;
   };
+  MenuOption: NavMenuOption;
   UserMenuOptions: Omit<UserMenuOptions, "list"> & {
     list: Array<ResolversParentTypes["MenuOption"]>;
   };
@@ -1206,15 +1208,6 @@ export type LocationResolvers<
 > = ResolversObject<{
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
-}>;
-
-export type MenuOptionResolvers<
-  ContextType = GraphqlContext,
-  ParentType extends ResolversParentTypes["MenuOption"] = ResolversParentTypes["MenuOption"]
-> = ResolversObject<{
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1366,6 +1359,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
+  >;
+  menuOptions?: Resolver<
+    Maybe<Array<ResolversTypes["MenuOption"]>>,
+    ParentType,
+    ContextType
   >;
   resource?: Resolver<
     Maybe<ResolversTypes["Resource"]>,
@@ -2050,6 +2048,15 @@ export type UserLocationsResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type MenuOptionResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MenuOption"] = ResolversParentTypes["MenuOption"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  route?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type UserMenuOptionsResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["UserMenuOptions"] = ResolversParentTypes["UserMenuOptions"]
@@ -2128,7 +2135,6 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Reason?: ReasonResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
-  MenuOption?: MenuOptionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   FuelAsset?: FuelAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
@@ -2165,6 +2171,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   ScorecardElementResponse?: ScorecardElementResponseResolvers<ContextType>;
   Scorecard?: ScorecardResolvers<ContextType>;
   UserLocations?: UserLocationsResolvers<ContextType>;
+  MenuOption?: MenuOptionResolvers<ContextType>;
   UserMenuOptions?: UserMenuOptionsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;

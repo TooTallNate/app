@@ -4,11 +4,7 @@ import {
   QueryResolvers,
   InclusivityMode
 } from "../common/graphql";
-import {
-  ItemJournalTemplateObject,
-  NavItemJournalTemplate,
-  NavLocation
-} from "../common/nav";
+import { NavMenuOption, NavLocation } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
@@ -27,6 +23,9 @@ export const queries: QueryResolvers = {
   },
   locations(_, __, { dataSources }) {
     return dataSources.navLocation.getAll();
+  },
+  menuOptions(_, __, { dataSources }) {
+    return dataSources.navUser.getAllMenuOptions();
   }
 };
 
@@ -102,6 +101,7 @@ export const mutations: MutationResolvers = {
         username: user.username,
         subdomain: navConfig.subdomain
       });
+
     if (input.add) {
       settings.menuOptions.list.push(...input.add);
     }
@@ -115,9 +115,9 @@ export const mutations: MutationResolvers = {
     }
     await settings.save();
 
-    let list: ItemJournalTemplateObject[] = [];
+    let list: NavMenuOption[] = [];
     if (settings.menuOptions.list.length > 0) {
-      list = await dataSources.navItemJournal.getAllByName(
+      list = await dataSources.navUser.getMenuOptions(
         settings.menuOptions.list
       );
     }
@@ -166,9 +166,9 @@ export const User: UserResolvers = {
       subdomain: navConfig.subdomain
     }).lean<UserSettingsDocument>();
     if (settings && settings.menuOptions) {
-      let list: ItemJournalTemplateObject[] = [];
+      let list: NavMenuOption[] = [];
       if (settings.menuOptions.list.length > 0) {
-        list = await dataSources.navItemJournal.getAllByName(
+        list = await dataSources.navUser.getMenuOptions(
           settings.menuOptions.list
         );
       }

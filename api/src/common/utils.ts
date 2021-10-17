@@ -36,9 +36,9 @@ export enum ErrorCode {
   Unknown = "UNKNOWN_ERROR"
 }
 
-export enum HomeOptions {
-  Livestock = "Livestock Activity",
-  Scorecard = "Scorecards",
-  Fuel = "Fuel",
-  Maintenance = "Maintenance"
-}
+export const MenuOptions = [
+  { Name: "Livestock Activity", Route: "/livestock-activity" },
+  { Name: "Scorecards", Route: "/scorecard" },
+  { Name: "Fuel", Route: "/fuel" },
+  { Name: "Maintenance", Route: "/maintenance" }
+];

@@ -1,5 +1,6 @@
-import { NavUser } from "../nav";
+import { NavMenuOption, NavUser } from "../nav";
 import NavDataSource from "./NavDataSource";
+import { MenuOptions } from "../utils";
 
 export default class NavUserDataSource extends NavDataSource {
   async login(username: string, password: string): Promise<NavUser> {
@@ -29,5 +30,13 @@ export default class NavUserDataSource extends NavDataSource {
 
   getAll(): Promise<NavUser[]> {
     return this.get(`/Users`);
+  }
+
+  async getAllMenuOptions(): Promise<NavMenuOption[]> {
+    return MenuOptions;
+  }
+
+  async getMenuOptions(names: string[]): Promise<NavMenuOption[]> {
+    return MenuOptions.filter(item => names.includes(item.Name));
   }
 }

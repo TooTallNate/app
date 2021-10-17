@@ -2,14 +2,14 @@ fragment UserMenuOptionsFields on UserMenuOptions {
   mode
   list {
     name
-    description
+    route
   }
 }
 
 query MenuOptions {
-  itemJournalTemplates {
+  menuOptions {
     name
-    description
+    route
   }
   user {
     username
