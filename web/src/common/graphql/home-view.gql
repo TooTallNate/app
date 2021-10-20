@@ -1,5 +1,6 @@
 query HomeView {
   user {
+    username
     menuOptions {
         mode
         list {
@@ -7,5 +8,9 @@ query HomeView {
             route
         }
     }
+  }
+  menuOptions {
+    name
+    route
   }
 }

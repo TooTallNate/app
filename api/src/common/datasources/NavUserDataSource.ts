@@ -2,6 +2,11 @@ import { NavMenuOption, NavUser } from "../nav";
 import NavDataSource from "./NavDataSource";
 import { MenuOptions } from "../utils";
 
+export interface MenuFilter {
+  excludeLocations?: string[];
+  includeLocations?: string[];
+}
+
 export default class NavUserDataSource extends NavDataSource {
   async login(username: string, password: string): Promise<NavUser> {
     const data = await this.get(
@@ -32,7 +37,19 @@ export default class NavUserDataSource extends NavDataSource {
     return this.get(`/Users`);
   }
 
-  async getAllMenuOptions(): Promise<NavMenuOption[]> {
+  async getAllMenuOptions({
+    includeLocations,
+    excludeLocations
+  }: MenuFilter = {}): Promise<NavMenuOption[]> {
+    if (includeLocations && includeLocations.length > 0) {
+      return MenuOptions.filter(option =>
+        includeLocations.includes(option.Name)
+      );
+    } else if (excludeLocations && excludeLocations.length > 0) {
+      return MenuOptions.filter(
+        option => !excludeLocations.includes(option.Name)
+      );
+    }
     return MenuOptions;
   }
 

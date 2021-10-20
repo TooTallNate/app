@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StackedNav from "../../common/components/nav/StackedNav";
 import StackedNavLink from "../../common/components/nav/StackedNavLink";
 import Title from "../components/view/ViewTitle";
@@ -8,11 +8,16 @@ import ViewContent from "../components/view/ViewContent";
 import QRCodeReader from "../components/input/QRCodeReader";
 import Divider from "../components/layout/Divider";
 import { useHomeViewQuery } from "../graphql";
+import { MenuOption } from "../../livestock-activity/graphql";
 
 const HomeView: React.FC = () => {
-  const { data, loading } = useHomeViewQuery({
+  const [menu, setMenu] = useState(Array<MenuOption>());
+  const { loading } = useHomeViewQuery({
+    fetchPolicy: "no-cache",
     onCompleted(data) {
-      console.log(data);
+      if (data.menuOptions) {
+        setMenu(data.menuOptions);
+      }
     }
   });
 
@@ -23,20 +28,15 @@ const HomeView: React.FC = () => {
       </ViewHeader>
       <ViewContent loading={loading}>
         <StackedNav>
-          {/* {menu.list.map(item => {
-                return (
-                  <>
-                    <StackedNavLink to={item.route}>{item.name}</StackedNavLink>
-                  </>
-                )
-              }),
-            } */}
-          <StackedNavLink to="/livestock-activity">
-            Livestock Activity
-          </StackedNavLink>
-          <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
-          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
-          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
+          {menu.map(item => {
+            return (
+              <>
+                <StackedNavLink key={item.name} to={item.route}>
+                  {item.name}
+                </StackedNavLink>
+              </>
+            );
+          })}
         </StackedNav>
         <Divider className="py-3" centerText="or" />
         <QRCodeReader />
@@ -44,14 +44,5 @@ const HomeView: React.FC = () => {
     </View>
   );
 };
-
-/*
-          <StackedNavLink to="/livestock-activity">
-            Livestock Activity
-          </StackedNavLink>
-          <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
-          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
-          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
-*/
 
 export default HomeView;

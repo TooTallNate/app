@@ -24,8 +24,22 @@ export const queries: QueryResolvers = {
   locations(_, __, { dataSources }) {
     return dataSources.navLocation.getAll();
   },
-  menuOptions(_, __, { dataSources }) {
-    return dataSources.navUser.getAllMenuOptions();
+  async menuOptions(_, __, { user, navConfig, dataSources }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    });
+    if (settings && settings.menuOptions.list.length > 0) {
+      if (settings.menuOptions.mode === InclusivityMode.Include) {
+        var includeLocations = settings.menuOptions.list;
+      } else {
+        var excludeLocations = settings.menuOptions.list;
+      }
+    }
+    return dataSources.navUser.getAllMenuOptions({
+      includeLocations,
+      excludeLocations
+    });
   }
 };
 

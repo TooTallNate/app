@@ -744,22 +744,26 @@ export type HomeViewQueryVariables = {};
 
 export type HomeViewQuery = { __typename?: "Query" } & {
   user?: Maybe<
-    { __typename?: "User" } & {
-      menuOptions: { __typename?: "UserMenuOptions" } & Pick<
-        UserMenuOptions,
-        "mode"
-      > & {
-          list: Array<
-            { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
-          >;
-        };
-    }
+    { __typename?: "User" } & Pick<User, "username"> & {
+        menuOptions: { __typename?: "UserMenuOptions" } & Pick<
+          UserMenuOptions,
+          "mode"
+        > & {
+            list: Array<
+              { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
+            >;
+          };
+      }
+  >;
+  menuOptions?: Maybe<
+    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
   >;
 };
 
 export const HomeViewDocument = gql`
   query HomeView {
     user {
+      username
       menuOptions {
         mode
         list {
@@ -767,6 +771,10 @@ export const HomeViewDocument = gql`
           route
         }
       }
+    }
+    menuOptions {
+      name
+      route
     }
   }
 `;
