@@ -7,6 +7,7 @@ import {
   NavResource,
   NavReason,
   NavLocation,
+  NavMenuOption,
   NavStandardItemJournal,
   NavJobPostingGroup,
   NavFuelAsset,
@@ -119,6 +120,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  menuOptions?: Maybe<Array<MenuOption>>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -243,6 +245,7 @@ export type Mutation = {
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
+  updateUserMenuOptions: UpdateUserMenuOptionsResult;
 };
 
 export type MutationLoginArgs = {
@@ -315,6 +318,10 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type MutationUpdateUserMenuOptionsArgs = {
+  input: UpdateUserMenuOptionsInput;
 };
 
 export type LivestockActivityDefaults = {
@@ -699,12 +706,25 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  route: Scalars["String"];
+};
+
+export type UserMenuOptions = {
+  __typename?: "UserMenuOptions";
+  mode: InclusivityMode;
+  list: Array<MenuOption>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
   locations: UserLocations;
+  menuOptions: UserMenuOptions;
 };
 
 export type LoginInput = {
@@ -729,10 +749,22 @@ export type UpdateUserLocationsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserMenuOptionsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
   locations: UserLocations;
+};
+
+export type UpdateUserMenuOptionsResult = {
+  __typename?: "UpdateUserMenuOptionsResult";
+  success: Scalars["Boolean"];
+  menuOptions: UserMenuOptions;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -949,6 +981,12 @@ export type ResolversTypes = ResolversObject<{
   UserLocations: ResolverTypeWrapper<
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
+  MenuOption: ResolverTypeWrapper<NavMenuOption>;
+  UserMenuOptions: ResolverTypeWrapper<
+    Omit<UserMenuOptions, "list"> & {
+      list: Array<ResolversTypes["MenuOption"]>;
+    }
+  >;
   User: ResolverTypeWrapper<NavUser>;
   LoginInput: LoginInput;
   LoginResult: ResolverTypeWrapper<
@@ -956,9 +994,15 @@ export type ResolversTypes = ResolversObject<{
   >;
   LogoutResult: ResolverTypeWrapper<LogoutResult>;
   UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserMenuOptionsInput: UpdateUserMenuOptionsInput;
   UpdateUserLocationsResult: ResolverTypeWrapper<
     Omit<UpdateUserLocationsResult, "locations"> & {
       locations: ResolversTypes["UserLocations"];
+    }
+  >;
+  UpdateUserMenuOptionsResult: ResolverTypeWrapper<
+    Omit<UpdateUserMenuOptionsResult, "menuOptions"> & {
+      menuOptions: ResolversTypes["UserMenuOptions"];
     }
   >;
 }>;
@@ -1072,6 +1116,10 @@ export type ResolversParentTypes = ResolversObject<{
   UserLocations: Omit<UserLocations, "list"> & {
     list: Array<ResolversParentTypes["Location"]>;
   };
+  MenuOption: NavMenuOption;
+  UserMenuOptions: Omit<UserMenuOptions, "list"> & {
+    list: Array<ResolversParentTypes["MenuOption"]>;
+  };
   User: NavUser;
   LoginInput: LoginInput;
   LoginResult: Omit<LoginResult, "user"> & {
@@ -1079,9 +1127,14 @@ export type ResolversParentTypes = ResolversObject<{
   };
   LogoutResult: LogoutResult;
   UpdateUserLocationsInput: UpdateUserLocationsInput;
+  UpdateUserMenuOptionsInput: UpdateUserMenuOptionsInput;
   UpdateUserLocationsResult: Omit<UpdateUserLocationsResult, "locations"> & {
     locations: ResolversParentTypes["UserLocations"];
   };
+  UpdateUserMenuOptionsResult: Omit<
+    UpdateUserMenuOptionsResult,
+    "menuOptions"
+  > & { menuOptions: ResolversParentTypes["UserMenuOptions"] };
 }>;
 
 export type JobResolvers<
@@ -1307,6 +1360,11 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
   >;
+  menuOptions?: Resolver<
+    Maybe<Array<ResolversTypes["MenuOption"]>>,
+    ParentType,
+    ContextType
+  >;
   resource?: Resolver<
     Maybe<ResolversTypes["Resource"]>,
     ParentType,
@@ -1472,6 +1530,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateUserLocationsArgs, "input">
+  >;
+  updateUserMenuOptions?: Resolver<
+    ResolversTypes["UpdateUserMenuOptionsResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserMenuOptionsArgs, "input">
   >;
 }>;
 
@@ -1984,6 +2048,24 @@ export type UserLocationsResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type MenuOptionResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MenuOption"] = ResolversParentTypes["MenuOption"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  route?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type UserMenuOptionsResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UserMenuOptions"] = ResolversParentTypes["UserMenuOptions"]
+> = ResolversObject<{
+  mode?: Resolver<ResolversTypes["InclusivityMode"], ParentType, ContextType>;
+  list?: Resolver<Array<ResolversTypes["MenuOption"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type UserResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
@@ -1993,6 +2075,11 @@ export type UserResolvers<
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   locations?: Resolver<
     ResolversTypes["UserLocations"],
+    ParentType,
+    ContextType
+  >;
+  menuOptions?: Resolver<
+    ResolversTypes["UserMenuOptions"],
     ParentType,
     ContextType
   >;
@@ -2023,6 +2110,19 @@ export type UpdateUserLocationsResultResolvers<
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   locations?: Resolver<
     ResolversTypes["UserLocations"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type UpdateUserMenuOptionsResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["UpdateUserMenuOptionsResult"] = ResolversParentTypes["UpdateUserMenuOptionsResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  menuOptions?: Resolver<
+    ResolversTypes["UserMenuOptions"],
     ParentType,
     ContextType
   >;
@@ -2071,10 +2171,15 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   ScorecardElementResponse?: ScorecardElementResponseResolvers<ContextType>;
   Scorecard?: ScorecardResolvers<ContextType>;
   UserLocations?: UserLocationsResolvers<ContextType>;
+  MenuOption?: MenuOptionResolvers<ContextType>;
+  UserMenuOptions?: UserMenuOptionsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;
   LogoutResult?: LogoutResultResolvers<ContextType>;
   UpdateUserLocationsResult?: UpdateUserLocationsResultResolvers<ContextType>;
+  UpdateUserMenuOptionsResult?: UpdateUserMenuOptionsResultResolvers<
+    ContextType
+  >;
 }>;
 
 /**

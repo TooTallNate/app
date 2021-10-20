@@ -175,3 +175,8 @@ export interface NavMaintenanceAsset {
   Location_Code: string;
   AuxiliaryIndex1: string;
 }
+
+export interface NavMenuOption {
+  Name: string;
+  Route: string;
+}

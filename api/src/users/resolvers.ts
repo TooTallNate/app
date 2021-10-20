@@ -4,7 +4,7 @@ import {
   QueryResolvers,
   InclusivityMode
 } from "../common/graphql";
-import { NavLocation } from "../common/nav";
+import { NavMenuOption, NavLocation } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
@@ -19,12 +19,27 @@ export const queries: QueryResolvers = {
   },
   async users(_, __, { dataSources }) {
     const users = await dataSources.navUser.getAll();
-    //console.log(users);
     return users;
-    //return dataSources.navUser.getAll();
   },
   locations(_, __, { dataSources }) {
     return dataSources.navLocation.getAll();
+  },
+  async menuOptions(_, __, { user, navConfig, dataSources }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    });
+    if (settings && settings.menuOptions.list.length > 0) {
+      if (settings.menuOptions.mode === InclusivityMode.Include) {
+        var includeLocations = settings.menuOptions.list;
+      } else {
+        var excludeLocations = settings.menuOptions.list;
+      }
+    }
+    return dataSources.navUser.getAllMenuOptions({
+      includeLocations,
+      excludeLocations
+    });
   }
 };
 
@@ -45,7 +60,7 @@ export const mutations: MutationResolvers = {
     };
   },
   async logout(_, __, context) {
-    await new Promise((res, rej) =>
+    await new Promise<void>((res, rej) =>
       context.session.destroy(err => {
         if (err) rej(err);
         else res();
@@ -89,6 +104,44 @@ export const mutations: MutationResolvers = {
         list: list
       }
     };
+  },
+  async updateUserMenuOptions(_, { input }, { user, dataSources, navConfig }) {
+    const settings =
+      (await UserSettingsModel.findOne({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      })) ||
+      new UserSettingsModel({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      });
+
+    if (input.add) {
+      settings.menuOptions.list.push(...input.add);
+    }
+    if (input.remove) {
+      settings.menuOptions.list = settings.menuOptions.list.filter(
+        name => !input.remove.includes(name)
+      );
+    }
+    if (input.mode) {
+      settings.menuOptions.mode = input.mode;
+    }
+    await settings.save();
+
+    let list: NavMenuOption[] = [];
+    if (settings.menuOptions.list.length > 0) {
+      list = await dataSources.navUser.getMenuOptions(
+        settings.menuOptions.list
+      );
+    }
+    return {
+      success: true,
+      menuOptions: {
+        mode: settings.menuOptions.mode || InclusivityMode.Include,
+        list: list
+      }
+    };
   }
 };
 
@@ -111,6 +164,31 @@ export const User: UserResolvers = {
       return {
         mode:
           (settings.locations.mode as InclusivityMode) ||
+          InclusivityMode.Include,
+        list
+      };
+    } else {
+      return {
+        mode: InclusivityMode.Include,
+        list: []
+      };
+    }
+  },
+  async menuOptions(_, __, { dataSources, user, navConfig }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    }).lean<UserSettingsDocument>();
+    if (settings && settings.menuOptions) {
+      let list: NavMenuOption[] = [];
+      if (settings.menuOptions.list.length > 0) {
+        list = await dataSources.navUser.getMenuOptions(
+          settings.menuOptions.list
+        );
+      }
+      return {
+        mode:
+          (settings.menuOptions.mode as InclusivityMode) ||
           InclusivityMode.Include,
         list
       };

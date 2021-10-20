@@ -35,3 +35,10 @@ export enum ErrorCode {
   NoAvailableLicense = "NO_AVAILABLE_LICENSE",
   Unknown = "UNKNOWN_ERROR"
 }
+
+export const MenuOptions = [
+  { Name: "Livestock Activity", Route: "/livestock-activity" },
+  { Name: "Scorecards", Route: "/scorecard" },
+  { Name: "Fuel", Route: "/fuel" },
+  { Name: "Maintenance", Route: "/maintenance" }
+];
