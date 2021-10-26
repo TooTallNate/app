@@ -200,3 +200,8 @@ export interface NavMaintenanceHistoryAsset {
   Description: string;
   Meta: number;
 }
+
+export interface NavMenuOption {
+  Name: string;
+  Route: string;
+}

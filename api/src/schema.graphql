@@ -77,6 +77,7 @@ type Query {
   maintenanceAssets: [MaintenanceAsset!]!
   maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
   maintenanceHistoryAsset(number: String!): [MaintenanceHistoryAsset!]!
+  menuOptions: [MenuOption!]
   resource(code: String!): Resource
   resources(input: ResourceFilter): [Resource!]!
   scorecard(job: String!): Scorecard
@@ -139,6 +140,7 @@ type Mutation {
   saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
+  updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
 }
 
 type LivestockActivityDefaults {
@@ -503,11 +505,22 @@ type UserLocations {
   list: [Location!]!
 }
 
+type MenuOption {
+  name: String!
+  route: String!
+}
+
+type UserMenuOptions {
+  mode: InclusivityMode!
+  list: [MenuOption!]!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
   locations: UserLocations!
+  menuOptions: UserMenuOptions!
 }
 
 input LoginInput {
@@ -530,7 +543,18 @@ input UpdateUserLocationsInput {
   mode: InclusivityMode
 }
 
+input UpdateUserMenuOptionsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
 type UpdateUserLocationsResult {
   success: Boolean!
   locations: UserLocations!
+}
+
+type UpdateUserMenuOptionsResult {
+  success: Boolean!
+  menuOptions: UserMenuOptions!
 }

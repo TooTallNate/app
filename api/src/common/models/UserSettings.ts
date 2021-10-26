@@ -16,6 +16,13 @@ export interface UserSettingsDocument extends Document {
       }
     | null
     | undefined;
+  menuOptions:
+    | {
+        mode: InclusivityMode;
+        list: string[];
+      }
+    | null
+    | undefined;
 }
 
 const UserSettingsSchema = new Schema(
@@ -37,6 +44,13 @@ const UserSettingsSchema = new Schema(
       }
     ],
     locations: {
+      _id: false,
+      mode: String,
+      list: {
+        type: [String]
+      }
+    },
+    menuOptions: {
       _id: false,
       mode: String,
       list: {

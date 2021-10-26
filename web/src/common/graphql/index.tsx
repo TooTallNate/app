@@ -777,303 +777,84 @@ export type UpdateUserMenuOptionsResult = {
   menuOptions: UserMenuOptions;
 };
 
-export type MaintenanceAssetsQueryVariables = {};
+export type HomeViewQueryVariables = {};
 
-export type MaintenanceAssetsQuery = { __typename?: "Query" } & {
-  maintenanceAssets: Array<
-    { __typename?: "MaintenanceAsset" } & Pick<
-      MaintenanceAsset,
-      "number" | "description"
-    >
+export type HomeViewQuery = { __typename?: "Query" } & {
+  user?: Maybe<
+    { __typename?: "User" } & Pick<User, "username"> & {
+        menuOptions: { __typename?: "UserMenuOptions" } & Pick<
+          UserMenuOptions,
+          "mode"
+        > & {
+            list: Array<
+              { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
+            >;
+          };
+      }
+  >;
+  menuOptions?: Maybe<
+    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
   >;
 };
 
-export type MaintenanceAssetQueryVariables = {
-  number: Scalars["String"];
-};
-
-export type MaintenanceAssetQuery = { __typename?: "Query" } & {
-  maintenanceAsset?: Maybe<
-    { __typename?: "MaintenanceAsset" } & Pick<
-      MaintenanceAsset,
-      "number" | "description"
-    >
-  >;
-  maintenanceAssetsByNo: Array<
-    { __typename?: "MaintenanceAsset" } & Pick<
-      MaintenanceAsset,
-      "code" | "interval" | "unitType" | "maintenanceDesc"
-    >
-  >;
-  item?: Maybe<{ __typename?: "Item" } & Pick<Item, "number" | "cost">>;
-};
-
-export type MaintenanceHistoryAssetQueryVariables = {
-  number: Scalars["String"];
-};
-
-export type MaintenanceHistoryAssetQuery = { __typename?: "Query" } & {
-  maintenanceHistoryAsset: Array<
-    { __typename?: "MaintenanceHistoryAsset" } & Pick<
-      MaintenanceHistoryAsset,
-      | "entry"
-      | "number"
-      | "amount"
-      | "maintenanceCode"
-      | "reasonCode"
-      | "postingDate"
-      | "quantity"
-      | "meta"
-      | "description"
-    >
-  >;
-};
-
-export type PostMaintenanceMutationVariables = {
-  input: PostMaintenanceInput;
-};
-
-export type PostMaintenanceMutation = { __typename?: "Mutation" } & {
-  postMaintenance: { __typename?: "MaintenanceResult" } & Pick<
-    MaintenanceResult,
-    "success"
-  >;
-};
-
-export const MaintenanceAssetsDocument = gql`
-  query MaintenanceAssets {
-    maintenanceAssets {
-      number
-      description
+export const HomeViewDocument = gql`
+  query HomeView {
+    user {
+      username
+      menuOptions {
+        mode
+        list {
+          name
+          route
+        }
+      }
+    }
+    menuOptions {
+      name
+      route
     }
   }
 `;
 
 /**
- * __useMaintenanceAssetsQuery__
+ * __useHomeViewQuery__
  *
- * To run a query within a React component, call `useMaintenanceAssetsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMaintenanceAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeViewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeViewQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMaintenanceAssetsQuery({
+ * const { data, loading, error } = useHomeViewQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMaintenanceAssetsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    MaintenanceAssetsQuery,
-    MaintenanceAssetsQueryVariables
-  >
+export function useHomeViewQuery(
+  baseOptions?: Apollo.QueryHookOptions<HomeViewQuery, HomeViewQueryVariables>
 ) {
-  return Apollo.useQuery<
-    MaintenanceAssetsQuery,
-    MaintenanceAssetsQueryVariables
-  >(MaintenanceAssetsDocument, baseOptions);
-}
-export function useMaintenanceAssetsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    MaintenanceAssetsQuery,
-    MaintenanceAssetsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    MaintenanceAssetsQuery,
-    MaintenanceAssetsQueryVariables
-  >(MaintenanceAssetsDocument, baseOptions);
-}
-export type MaintenanceAssetsQueryHookResult = ReturnType<
-  typeof useMaintenanceAssetsQuery
->;
-export type MaintenanceAssetsLazyQueryHookResult = ReturnType<
-  typeof useMaintenanceAssetsLazyQuery
->;
-export type MaintenanceAssetsQueryResult = Apollo.QueryResult<
-  MaintenanceAssetsQuery,
-  MaintenanceAssetsQueryVariables
->;
-export const MaintenanceAssetDocument = gql`
-  query MaintenanceAsset($number: String!) {
-    maintenanceAsset(number: $number) {
-      number
-      description
-    }
-    maintenanceAssetsByNo(assetNo: $number) {
-      code
-      interval
-      unitType
-      maintenanceDesc
-    }
-    item(number: "LABOR") {
-      number
-      cost
-    }
-  }
-`;
-
-/**
- * __useMaintenanceAssetQuery__
- *
- * To run a query within a React component, call `useMaintenanceAssetQuery` and pass it any options that fit your needs.
- * When your component renders, `useMaintenanceAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMaintenanceAssetQuery({
- *   variables: {
- *      number: // value for 'number'
- *   },
- * });
- */
-export function useMaintenanceAssetQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    MaintenanceAssetQuery,
-    MaintenanceAssetQueryVariables
-  >
-) {
-  return Apollo.useQuery<MaintenanceAssetQuery, MaintenanceAssetQueryVariables>(
-    MaintenanceAssetDocument,
+  return Apollo.useQuery<HomeViewQuery, HomeViewQueryVariables>(
+    HomeViewDocument,
     baseOptions
   );
 }
-export function useMaintenanceAssetLazyQuery(
+export function useHomeViewLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    MaintenanceAssetQuery,
-    MaintenanceAssetQueryVariables
+    HomeViewQuery,
+    HomeViewQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<
-    MaintenanceAssetQuery,
-    MaintenanceAssetQueryVariables
-  >(MaintenanceAssetDocument, baseOptions);
+  return Apollo.useLazyQuery<HomeViewQuery, HomeViewQueryVariables>(
+    HomeViewDocument,
+    baseOptions
+  );
 }
-export type MaintenanceAssetQueryHookResult = ReturnType<
-  typeof useMaintenanceAssetQuery
+export type HomeViewQueryHookResult = ReturnType<typeof useHomeViewQuery>;
+export type HomeViewLazyQueryHookResult = ReturnType<
+  typeof useHomeViewLazyQuery
 >;
-export type MaintenanceAssetLazyQueryHookResult = ReturnType<
-  typeof useMaintenanceAssetLazyQuery
->;
-export type MaintenanceAssetQueryResult = Apollo.QueryResult<
-  MaintenanceAssetQuery,
-  MaintenanceAssetQueryVariables
->;
-export const MaintenanceHistoryAssetDocument = gql`
-  query MaintenanceHistoryAsset($number: String!) {
-    maintenanceHistoryAsset(number: $number) {
-      entry
-      number
-      amount
-      maintenanceCode
-      reasonCode
-      postingDate
-      quantity
-      meta
-      description
-    }
-  }
-`;
-
-/**
- * __useMaintenanceHistoryAssetQuery__
- *
- * To run a query within a React component, call `useMaintenanceHistoryAssetQuery` and pass it any options that fit your needs.
- * When your component renders, `useMaintenanceHistoryAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMaintenanceHistoryAssetQuery({
- *   variables: {
- *      number: // value for 'number'
- *   },
- * });
- */
-export function useMaintenanceHistoryAssetQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    MaintenanceHistoryAssetQuery,
-    MaintenanceHistoryAssetQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    MaintenanceHistoryAssetQuery,
-    MaintenanceHistoryAssetQueryVariables
-  >(MaintenanceHistoryAssetDocument, baseOptions);
-}
-export function useMaintenanceHistoryAssetLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    MaintenanceHistoryAssetQuery,
-    MaintenanceHistoryAssetQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    MaintenanceHistoryAssetQuery,
-    MaintenanceHistoryAssetQueryVariables
-  >(MaintenanceHistoryAssetDocument, baseOptions);
-}
-export type MaintenanceHistoryAssetQueryHookResult = ReturnType<
-  typeof useMaintenanceHistoryAssetQuery
->;
-export type MaintenanceHistoryAssetLazyQueryHookResult = ReturnType<
-  typeof useMaintenanceHistoryAssetLazyQuery
->;
-export type MaintenanceHistoryAssetQueryResult = Apollo.QueryResult<
-  MaintenanceHistoryAssetQuery,
-  MaintenanceHistoryAssetQueryVariables
->;
-export const PostMaintenanceDocument = gql`
-  mutation PostMaintenance($input: PostMaintenanceInput!) {
-    postMaintenance(input: $input) {
-      success
-    }
-  }
-`;
-export type PostMaintenanceMutationFn = Apollo.MutationFunction<
-  PostMaintenanceMutation,
-  PostMaintenanceMutationVariables
->;
-
-/**
- * __usePostMaintenanceMutation__
- *
- * To run a mutation, you first call `usePostMaintenanceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostMaintenanceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [postMaintenanceMutation, { data, loading, error }] = usePostMaintenanceMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function usePostMaintenanceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    PostMaintenanceMutation,
-    PostMaintenanceMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    PostMaintenanceMutation,
-    PostMaintenanceMutationVariables
-  >(PostMaintenanceDocument, baseOptions);
-}
-export type PostMaintenanceMutationHookResult = ReturnType<
-  typeof usePostMaintenanceMutation
->;
-export type PostMaintenanceMutationResult = Apollo.MutationResult<
-  PostMaintenanceMutation
->;
-export type PostMaintenanceMutationOptions = Apollo.BaseMutationOptions<
-  PostMaintenanceMutation,
-  PostMaintenanceMutationVariables
+export type HomeViewQueryResult = Apollo.QueryResult<
+  HomeViewQuery,
+  HomeViewQueryVariables
 >;

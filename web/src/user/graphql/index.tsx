@@ -95,6 +95,7 @@ export type Query = {
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
   maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
+  menuOptions?: Maybe<Array<MenuOption>>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -241,6 +242,7 @@ export type Mutation = {
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
+  updateUserMenuOptions: UpdateUserMenuOptionsResult;
 };
 
 export type MutationLoginArgs = {
@@ -313,6 +315,10 @@ export type MutationSaveScorecardArgs = {
 
 export type MutationUpdateUserLocationsArgs = {
   input: UpdateUserLocationsInput;
+};
+
+export type MutationUpdateUserMenuOptionsArgs = {
+  input: UpdateUserMenuOptionsInput;
 };
 
 export type LivestockActivityDefaults = {
@@ -710,12 +716,25 @@ export type UserLocations = {
   list: Array<Location>;
 };
 
+export type MenuOption = {
+  __typename?: "MenuOption";
+  name: Scalars["String"];
+  route: Scalars["String"];
+};
+
+export type UserMenuOptions = {
+  __typename?: "UserMenuOptions";
+  mode: InclusivityMode;
+  list: Array<MenuOption>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
   license: Scalars["String"];
   name: Scalars["String"];
   locations: UserLocations;
+  menuOptions: UserMenuOptions;
 };
 
 export type LoginInput = {
@@ -740,10 +759,22 @@ export type UpdateUserLocationsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserMenuOptionsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
   locations: UserLocations;
+};
+
+export type UpdateUserMenuOptionsResult = {
+  __typename?: "UpdateUserMenuOptionsResult";
+  success: Scalars["Boolean"];
+  menuOptions: UserMenuOptions;
 };
 
 export type UserLocationsFieldsFragment = {
@@ -774,6 +805,41 @@ export type UpdateLocationsMutationVariables = {
 export type UpdateLocationsMutation = { __typename?: "Mutation" } & {
   updateUserLocations: { __typename?: "UpdateUserLocationsResult" } & {
     locations: { __typename?: "UserLocations" } & UserLocationsFieldsFragment;
+  };
+};
+
+export type UserMenuOptionsFieldsFragment = {
+  __typename?: "UserMenuOptions";
+} & Pick<UserMenuOptions, "mode"> & {
+    list: Array<
+      { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
+    >;
+  };
+
+export type MenuOptionsQueryVariables = {};
+
+export type MenuOptionsQuery = { __typename?: "Query" } & {
+  menuOptions?: Maybe<
+    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
+  >;
+  user?: Maybe<
+    { __typename?: "User" } & Pick<User, "username"> & {
+        menuOptions: {
+          __typename?: "UserMenuOptions";
+        } & UserMenuOptionsFieldsFragment;
+      }
+  >;
+};
+
+export type UpdateMenuOptionsMutationVariables = {
+  input: UpdateUserMenuOptionsInput;
+};
+
+export type UpdateMenuOptionsMutation = { __typename?: "Mutation" } & {
+  updateUserMenuOptions: { __typename?: "UpdateUserMenuOptionsResult" } & {
+    menuOptions: {
+      __typename?: "UserMenuOptions";
+    } & UserMenuOptionsFieldsFragment;
   };
 };
 
@@ -810,6 +876,15 @@ export const UserLocationsFieldsFragmentDoc = gql`
     list {
       code
       name
+    }
+  }
+`;
+export const UserMenuOptionsFieldsFragmentDoc = gql`
+  fragment UserMenuOptionsFields on UserMenuOptions {
+    mode
+    list {
+      name
+      route
     }
   }
 `;
@@ -929,6 +1004,120 @@ export type UpdateLocationsMutationResult = Apollo.MutationResult<
 export type UpdateLocationsMutationOptions = Apollo.BaseMutationOptions<
   UpdateLocationsMutation,
   UpdateLocationsMutationVariables
+>;
+export const MenuOptionsDocument = gql`
+  query MenuOptions {
+    menuOptions {
+      name
+      route
+    }
+    user {
+      username
+      menuOptions {
+        ...UserMenuOptionsFields
+      }
+    }
+  }
+  ${UserMenuOptionsFieldsFragmentDoc}
+`;
+
+/**
+ * __useMenuOptionsQuery__
+ *
+ * To run a query within a React component, call `useMenuOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMenuOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMenuOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMenuOptionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    MenuOptionsQuery,
+    MenuOptionsQueryVariables
+  >
+) {
+  return Apollo.useQuery<MenuOptionsQuery, MenuOptionsQueryVariables>(
+    MenuOptionsDocument,
+    baseOptions
+  );
+}
+export function useMenuOptionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MenuOptionsQuery,
+    MenuOptionsQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<MenuOptionsQuery, MenuOptionsQueryVariables>(
+    MenuOptionsDocument,
+    baseOptions
+  );
+}
+export type MenuOptionsQueryHookResult = ReturnType<typeof useMenuOptionsQuery>;
+export type MenuOptionsLazyQueryHookResult = ReturnType<
+  typeof useMenuOptionsLazyQuery
+>;
+export type MenuOptionsQueryResult = Apollo.QueryResult<
+  MenuOptionsQuery,
+  MenuOptionsQueryVariables
+>;
+export const UpdateMenuOptionsDocument = gql`
+  mutation UpdateMenuOptions($input: UpdateUserMenuOptionsInput!) {
+    updateUserMenuOptions(input: $input) {
+      menuOptions {
+        ...UserMenuOptionsFields
+      }
+    }
+  }
+  ${UserMenuOptionsFieldsFragmentDoc}
+`;
+export type UpdateMenuOptionsMutationFn = Apollo.MutationFunction<
+  UpdateMenuOptionsMutation,
+  UpdateMenuOptionsMutationVariables
+>;
+
+/**
+ * __useUpdateMenuOptionsMutation__
+ *
+ * To run a mutation, you first call `useUpdateMenuOptionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMenuOptionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMenuOptionsMutation, { data, loading, error }] = useUpdateMenuOptionsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMenuOptionsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateMenuOptionsMutation,
+    UpdateMenuOptionsMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    UpdateMenuOptionsMutation,
+    UpdateMenuOptionsMutationVariables
+  >(UpdateMenuOptionsDocument, baseOptions);
+}
+export type UpdateMenuOptionsMutationHookResult = ReturnType<
+  typeof useUpdateMenuOptionsMutation
+>;
+export type UpdateMenuOptionsMutationResult = Apollo.MutationResult<
+  UpdateMenuOptionsMutation
+>;
+export type UpdateMenuOptionsMutationOptions = Apollo.BaseMutationOptions<
+  UpdateMenuOptionsMutation,
+  UpdateMenuOptionsMutationVariables
 >;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

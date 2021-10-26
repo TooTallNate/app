@@ -22,6 +22,7 @@ generates:
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
+        MenuOption: "./nav#NavMenuOption"
         LivestockAdjustment: "../livestock-activity/models/LivestockAdjustment#LivestockAdjustmentDocument"
         LivestockGradeOff: "../livestock-activity/models/LivestockGradeOff#LivestockGradeOffDocument"
         LivestockMortality: "../livestock-activity/models/LivestockMortality#LivestockMortalityDocument"
@@ -47,6 +48,19 @@ generates:
         - eslint --fix
   web/src/user/graphql/index.tsx:
     documents: "web/src/user/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix
+  web/src/common/graphql/index.tsx:
+    documents: "web/src/common/graphql/*.gql"
     plugins:
       - "typescript"
       - "typescript-operations"

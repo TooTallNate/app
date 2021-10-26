@@ -47,6 +47,14 @@ export default class NavItemJournalDataSource extends NavDataSource {
     return this.get(`/ItemJournalTemplate`);
   }
 
+  getAllByName(names: string[]): Promise<ItemJournalTemplateObject[]> {
+    return this.get(
+      `/ItemJournalTemplate?$filter=${this.buildFilter(f =>
+        f.or(...names.map(name => f.equals("Name", name)))
+      )}`
+    );
+  }
+
   getStandardJournals(template: string): Promise<NavStandardItemJournal[]> {
     let filter = this.buildFilter(f =>
       f.equals("Journal_Template_Name", template)
