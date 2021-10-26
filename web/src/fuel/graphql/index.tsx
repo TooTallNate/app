@@ -69,6 +69,7 @@ export type Query = {
   animals: Array<Item>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
+  fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
@@ -93,6 +94,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -103,6 +105,10 @@ export type Query = {
 };
 
 export type QueryFuelAssetArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFuelHistoryAssetArgs = {
   number: Scalars["String"];
 };
 
@@ -158,6 +164,10 @@ export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
+export type QueryMaintenanceHistoryAssetArgs = {
+  number: Scalars["String"];
+};
+
 export type QueryResourceArgs = {
   code: Scalars["String"];
 };
@@ -181,6 +191,20 @@ export type FuelAsset = {
   description: Scalars["String"];
   fuelType: Scalars["String"];
   fuelCost: Scalars["Float"];
+  unitOfMeasureCode: Scalars["String"];
+};
+
+export type FuelHistoryAsset = {
+  __typename?: "FuelHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
 };
 
 export type PostFuelInput = {
@@ -596,6 +620,19 @@ export type MaintenanceAsset = {
   maintenanceDesc?: Maybe<Scalars["String"]>;
 };
 
+export type MaintenanceHistoryAsset = {
+  __typename?: "MaintenanceHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
+};
+
 export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
@@ -728,7 +765,33 @@ export type FuelAssetQuery = { __typename?: "Query" } & {
   fuelAsset?: Maybe<
     { __typename?: "FuelAsset" } & Pick<
       FuelAsset,
-      "number" | "code" | "description" | "fuelType" | "fuelCost"
+      | "number"
+      | "code"
+      | "description"
+      | "fuelType"
+      | "fuelCost"
+      | "unitOfMeasureCode"
+    >
+  >;
+};
+
+export type FuelHistoryAssetQueryVariables = {
+  number: Scalars["String"];
+};
+
+export type FuelHistoryAssetQuery = { __typename?: "Query" } & {
+  fuelHistoryAsset: Array<
+    { __typename?: "FuelHistoryAsset" } & Pick<
+      FuelHistoryAsset,
+      | "entry"
+      | "number"
+      | "amount"
+      | "maintenanceCode"
+      | "reasonCode"
+      | "postingDate"
+      | "quantity"
+      | "meta"
+      | "description"
     >
   >;
 };
@@ -805,6 +868,7 @@ export const FuelAssetDocument = gql`
       description
       fuelType
       fuelCost
+      unitOfMeasureCode
     }
   }
 `;
@@ -851,6 +915,70 @@ export type FuelAssetLazyQueryHookResult = ReturnType<
 export type FuelAssetQueryResult = Apollo.QueryResult<
   FuelAssetQuery,
   FuelAssetQueryVariables
+>;
+export const FuelHistoryAssetDocument = gql`
+  query FuelHistoryAsset($number: String!) {
+    fuelHistoryAsset(number: $number) {
+      entry
+      number
+      amount
+      maintenanceCode
+      reasonCode
+      postingDate
+      quantity
+      meta
+      description
+    }
+  }
+`;
+
+/**
+ * __useFuelHistoryAssetQuery__
+ *
+ * To run a query within a React component, call `useFuelHistoryAssetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFuelHistoryAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFuelHistoryAssetQuery({
+ *   variables: {
+ *      number: // value for 'number'
+ *   },
+ * });
+ */
+export function useFuelHistoryAssetQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FuelHistoryAssetQuery,
+    FuelHistoryAssetQueryVariables
+  >
+) {
+  return Apollo.useQuery<FuelHistoryAssetQuery, FuelHistoryAssetQueryVariables>(
+    FuelHistoryAssetDocument,
+    baseOptions
+  );
+}
+export function useFuelHistoryAssetLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FuelHistoryAssetQuery,
+    FuelHistoryAssetQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    FuelHistoryAssetQuery,
+    FuelHistoryAssetQueryVariables
+  >(FuelHistoryAssetDocument, baseOptions);
+}
+export type FuelHistoryAssetQueryHookResult = ReturnType<
+  typeof useFuelHistoryAssetQuery
+>;
+export type FuelHistoryAssetLazyQueryHookResult = ReturnType<
+  typeof useFuelHistoryAssetLazyQuery
+>;
+export type FuelHistoryAssetQueryResult = Apollo.QueryResult<
+  FuelHistoryAssetQuery,
+  FuelHistoryAssetQueryVariables
 >;
 export const PostFuelDocument = gql`
   mutation PostFuel($input: PostFuelInput!) {

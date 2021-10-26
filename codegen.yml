@@ -39,7 +39,9 @@ generates:
         Scorecard: "../scorecard/Scorecard#ScorecardDocument"
         ScorecardConfig: "./nav#NavJob"
         FuelAsset: "./nav#NavFuelAsset"
+        FuelHistoryAsset: "./nav#NavFuelHistoryAsset"
         MaintenanceAsset: "./nav#NavMaintenanceAsset"
+        MaintenanceHistoryAsset: "./nav#NavMaintenanceHistoryAsset"
     hooks:
       afterOneFileWrite:
         - eslint --fix

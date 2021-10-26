@@ -69,6 +69,7 @@ export type Query = {
   animals: Array<Item>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
+  fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
@@ -93,6 +94,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -103,6 +105,10 @@ export type Query = {
 };
 
 export type QueryFuelAssetArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFuelHistoryAssetArgs = {
   number: Scalars["String"];
 };
 
@@ -158,6 +164,10 @@ export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
+export type QueryMaintenanceHistoryAssetArgs = {
+  number: Scalars["String"];
+};
+
 export type QueryResourceArgs = {
   code: Scalars["String"];
 };
@@ -181,6 +191,20 @@ export type FuelAsset = {
   description: Scalars["String"];
   fuelType: Scalars["String"];
   fuelCost: Scalars["Float"];
+  unitOfMeasureCode: Scalars["String"];
+};
+
+export type FuelHistoryAsset = {
+  __typename?: "FuelHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
 };
 
 export type PostFuelInput = {
@@ -594,6 +618,19 @@ export type MaintenanceAsset = {
   interval?: Maybe<Scalars["Int"]>;
   unitType?: Maybe<Scalars["String"]>;
   maintenanceDesc?: Maybe<Scalars["String"]>;
+};
+
+export type MaintenanceHistoryAsset = {
+  __typename?: "MaintenanceHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
 };
 
 export type PostMaintenanceInput = {

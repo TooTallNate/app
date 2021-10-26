@@ -1,11 +1,26 @@
 query FuelAsset($number: String!) {
-    fuelAsset(number: $number) {
-        number
-        code
-        description
-        fuelType
-        fuelCost
-    }
+  fuelAsset(number: $number) {
+    number
+    code
+    description
+    fuelType
+    fuelCost
+    unitOfMeasureCode
+  }
+}
+
+query FuelHistoryAsset($number: String!) {
+  fuelHistoryAsset(number: $number) {
+    entry
+    number
+    amount
+    maintenanceCode
+    reasonCode
+    postingDate
+    quantity
+    meta
+    description
+  }
 }
 
 mutation PostFuel($input: PostFuelInput!) {

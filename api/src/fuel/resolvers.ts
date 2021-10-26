@@ -1,6 +1,7 @@
 import { parse } from "date-fns";
 import {
   FuelAssetResolvers,
+  FuelHistoryAssetResolvers,
   InclusivityMode,
   MutationResolvers,
   QueryResolvers
@@ -14,7 +15,20 @@ export const FuelAsset: FuelAssetResolvers = {
   code: navFuelAsset => navFuelAsset.Dimension_Code,
   description: navFuelAsset => navFuelAsset.FA_Description,
   fuelType: navFuelAsset => navFuelAsset.Item_Description,
-  fuelCost: navFuelAsset => navFuelAsset.Last_Direct_Cost
+  fuelCost: navFuelAsset => navFuelAsset.Last_Direct_Cost,
+  unitOfMeasureCode: navFuelAsset => navFuelAsset.Unit_of_Measure_Code
+};
+
+export const FuelHistoryAsset: FuelHistoryAssetResolvers = {
+  entry: navFuelHistoryAsset => navFuelHistoryAsset.Entry_No,
+  number: navFuelHistoryAsset => navFuelHistoryAsset.FA_No,
+  amount: navFuelHistoryAsset => navFuelHistoryAsset.Amount,
+  maintenanceCode: navFuelHistoryAsset => navFuelHistoryAsset.Maintenance_Code,
+  reasonCode: navFuelHistoryAsset => navFuelHistoryAsset.Reason_Code,
+  postingDate: navFuelHistoryAsset => navFuelHistoryAsset.Posting_Date,
+  quantity: navFuelHistoryAsset => navFuelHistoryAsset.Quantity,
+  description: navFuelHistoryAsset => navFuelHistoryAsset.Description,
+  meta: navFuelHistoryAsset => navFuelHistoryAsset.Meta
 };
 
 export const queries: QueryResolvers = {
@@ -34,6 +48,9 @@ export const queries: QueryResolvers = {
       includeLocations,
       excludeLocations
     });
+  },
+  async fuelHistoryAsset(_, { number }, { dataSources }) {
+    return await dataSources.navFuelAsset.getHistory(number);
   },
   async fuelAsset(_, { number }, { dataSources }) {
     return await dataSources.navFuelAsset.getByNo(number);
@@ -77,5 +94,6 @@ export const mutations: MutationResolvers = {
 };
 
 export const types = {
-  FuelAsset
+  FuelAsset,
+  FuelHistoryAsset
 };

@@ -69,6 +69,7 @@ export type Query = {
   animals: Array<Item>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
+  fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
@@ -93,6 +94,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -103,6 +105,10 @@ export type Query = {
 };
 
 export type QueryFuelAssetArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFuelHistoryAssetArgs = {
   number: Scalars["String"];
 };
 
@@ -158,6 +164,10 @@ export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
+export type QueryMaintenanceHistoryAssetArgs = {
+  number: Scalars["String"];
+};
+
 export type QueryResourceArgs = {
   code: Scalars["String"];
 };
@@ -181,6 +191,20 @@ export type FuelAsset = {
   description: Scalars["String"];
   fuelType: Scalars["String"];
   fuelCost: Scalars["Float"];
+  unitOfMeasureCode: Scalars["String"];
+};
+
+export type FuelHistoryAsset = {
+  __typename?: "FuelHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
 };
 
 export type PostFuelInput = {
@@ -596,6 +620,19 @@ export type MaintenanceAsset = {
   maintenanceDesc?: Maybe<Scalars["String"]>;
 };
 
+export type MaintenanceHistoryAsset = {
+  __typename?: "MaintenanceHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
+};
+
 export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
@@ -740,6 +777,27 @@ export type MaintenanceAssetQuery = { __typename?: "Query" } & {
   item?: Maybe<{ __typename?: "Item" } & Pick<Item, "number" | "cost">>;
 };
 
+export type MaintenanceHistoryAssetQueryVariables = {
+  number: Scalars["String"];
+};
+
+export type MaintenanceHistoryAssetQuery = { __typename?: "Query" } & {
+  maintenanceHistoryAsset: Array<
+    { __typename?: "MaintenanceHistoryAsset" } & Pick<
+      MaintenanceHistoryAsset,
+      | "entry"
+      | "number"
+      | "amount"
+      | "maintenanceCode"
+      | "reasonCode"
+      | "postingDate"
+      | "quantity"
+      | "meta"
+      | "description"
+    >
+  >;
+};
+
 export type PostMaintenanceMutationVariables = {
   input: PostMaintenanceInput;
 };
@@ -873,6 +931,70 @@ export type MaintenanceAssetLazyQueryHookResult = ReturnType<
 export type MaintenanceAssetQueryResult = Apollo.QueryResult<
   MaintenanceAssetQuery,
   MaintenanceAssetQueryVariables
+>;
+export const MaintenanceHistoryAssetDocument = gql`
+  query MaintenanceHistoryAsset($number: String!) {
+    maintenanceHistoryAsset(number: $number) {
+      entry
+      number
+      amount
+      maintenanceCode
+      reasonCode
+      postingDate
+      quantity
+      meta
+      description
+    }
+  }
+`;
+
+/**
+ * __useMaintenanceHistoryAssetQuery__
+ *
+ * To run a query within a React component, call `useMaintenanceHistoryAssetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMaintenanceHistoryAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMaintenanceHistoryAssetQuery({
+ *   variables: {
+ *      number: // value for 'number'
+ *   },
+ * });
+ */
+export function useMaintenanceHistoryAssetQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    MaintenanceHistoryAssetQuery,
+    MaintenanceHistoryAssetQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    MaintenanceHistoryAssetQuery,
+    MaintenanceHistoryAssetQueryVariables
+  >(MaintenanceHistoryAssetDocument, baseOptions);
+}
+export function useMaintenanceHistoryAssetLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MaintenanceHistoryAssetQuery,
+    MaintenanceHistoryAssetQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    MaintenanceHistoryAssetQuery,
+    MaintenanceHistoryAssetQueryVariables
+  >(MaintenanceHistoryAssetDocument, baseOptions);
+}
+export type MaintenanceHistoryAssetQueryHookResult = ReturnType<
+  typeof useMaintenanceHistoryAssetQuery
+>;
+export type MaintenanceHistoryAssetLazyQueryHookResult = ReturnType<
+  typeof useMaintenanceHistoryAssetLazyQuery
+>;
+export type MaintenanceHistoryAssetQueryResult = Apollo.QueryResult<
+  MaintenanceHistoryAssetQuery,
+  MaintenanceHistoryAssetQueryVariables
 >;
 export const PostMaintenanceDocument = gql`
   mutation PostMaintenance($input: PostMaintenanceInput!) {

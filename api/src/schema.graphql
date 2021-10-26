@@ -51,6 +51,7 @@ type Query {
   animals: [Item!]!
   fuelAsset(number: String!): FuelAsset
   fuelAssets: [FuelAsset!]!
+  fuelHistoryAsset(number: String!): [FuelHistoryAsset!]!
   item(number: String!): Item
   itemJournalTemplates: [ItemJournalTemplate!]
   job(number: String!): Job
@@ -75,6 +76,7 @@ type Query {
   maintenanceAsset(number: String!): MaintenanceAsset
   maintenanceAssets: [MaintenanceAsset!]!
   maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
+  maintenanceHistoryAsset(number: String!): [MaintenanceHistoryAsset!]!
   resource(code: String!): Resource
   resources(input: ResourceFilter): [Resource!]!
   scorecard(job: String!): Scorecard
@@ -90,6 +92,19 @@ type FuelAsset {
   description: String!
   fuelType: String!
   fuelCost: Float!
+  unitOfMeasureCode: String!
+}
+
+type FuelHistoryAsset {
+  entry: Int!
+  number: String!
+  amount: Float!
+  maintenanceCode: String!
+  reasonCode: String!
+  postingDate: String!
+  quantity: Int!
+  description: String!
+  meta: Int!
 }
 
 input PostFuelInput {
@@ -406,6 +421,18 @@ type MaintenanceAsset {
   interval: Int
   unitType: String
   maintenanceDesc: String
+}
+
+type MaintenanceHistoryAsset {
+  entry: Int!
+  number: String!
+  amount: Float!
+  maintenanceCode: String!
+  reasonCode: String!
+  postingDate: String!
+  quantity: Int!
+  description: String!
+  meta: Int!
 }
 
 input PostMaintenanceInput {

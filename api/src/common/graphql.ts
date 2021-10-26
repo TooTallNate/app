@@ -10,7 +10,9 @@ import {
   NavStandardItemJournal,
   NavJobPostingGroup,
   NavFuelAsset,
-  NavMaintenanceAsset
+  NavFuelHistoryAsset,
+  NavMaintenanceAsset,
+  NavMaintenanceHistoryAsset
 } from "./nav";
 import { LivestockAdjustmentDocument } from "../livestock-activity/models/LivestockAdjustment";
 import { LivestockGradeOffDocument } from "../livestock-activity/models/LivestockGradeOff";
@@ -95,6 +97,7 @@ export type Query = {
   animals: Array<Item>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
+  fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   job?: Maybe<Job>;
@@ -119,6 +122,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
+  maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -129,6 +133,10 @@ export type Query = {
 };
 
 export type QueryFuelAssetArgs = {
+  number: Scalars["String"];
+};
+
+export type QueryFuelHistoryAssetArgs = {
   number: Scalars["String"];
 };
 
@@ -184,6 +192,10 @@ export type QueryMaintenanceAssetsByNoArgs = {
   assetNo: Scalars["String"];
 };
 
+export type QueryMaintenanceHistoryAssetArgs = {
+  number: Scalars["String"];
+};
+
 export type QueryResourceArgs = {
   code: Scalars["String"];
 };
@@ -207,6 +219,20 @@ export type FuelAsset = {
   description: Scalars["String"];
   fuelType: Scalars["String"];
   fuelCost: Scalars["Float"];
+  unitOfMeasureCode: Scalars["String"];
+};
+
+export type FuelHistoryAsset = {
+  __typename?: "FuelHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
 };
 
 export type PostFuelInput = {
@@ -622,6 +648,19 @@ export type MaintenanceAsset = {
   maintenanceDesc?: Maybe<Scalars["String"]>;
 };
 
+export type MaintenanceHistoryAsset = {
+  __typename?: "MaintenanceHistoryAsset";
+  entry: Scalars["Int"];
+  number: Scalars["String"];
+  amount: Scalars["Float"];
+  maintenanceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+  postingDate: Scalars["String"];
+  quantity: Scalars["Int"];
+  description: Scalars["String"];
+  meta: Scalars["Int"];
+};
+
 export type PostMaintenanceInput = {
   asset: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
@@ -860,6 +899,7 @@ export type ResolversTypes = ResolversObject<{
   ResourceFilter: ResourceFilter;
   Query: ResolverTypeWrapper<{}>;
   FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
+  FuelHistoryAsset: ResolverTypeWrapper<NavFuelHistoryAsset>;
   PostFuelInput: PostFuelInput;
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -930,6 +970,7 @@ export type ResolversTypes = ResolversObject<{
   >;
   ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
   MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
+  MaintenanceHistoryAsset: ResolverTypeWrapper<NavMaintenanceHistoryAsset>;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
   ScorecardGroup: ResolverTypeWrapper<NavJobPostingGroup>;
@@ -979,6 +1020,7 @@ export type ResolversParentTypes = ResolversObject<{
   ResourceFilter: ResourceFilter;
   Query: {};
   FuelAsset: NavFuelAsset;
+  FuelHistoryAsset: NavFuelHistoryAsset;
   PostFuelInput: PostFuelInput;
   FuelResult: FuelResult;
   Mutation: {};
@@ -1055,6 +1097,7 @@ export type ResolversParentTypes = ResolversObject<{
   };
   ItemJournalTemplate: ItemJournalTemplateObject;
   MaintenanceAsset: NavMaintenanceAsset;
+  MaintenanceHistoryAsset: NavMaintenanceHistoryAsset;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: MaintenanceResult;
   ScorecardGroup: NavJobPostingGroup;
@@ -1173,6 +1216,12 @@ export type QueryResolvers<
     Array<ResolversTypes["FuelAsset"]>,
     ParentType,
     ContextType
+  >;
+  fuelHistoryAsset?: Resolver<
+    Array<ResolversTypes["FuelHistoryAsset"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFuelHistoryAssetArgs, "number">
   >;
   item?: Resolver<
     Maybe<ResolversTypes["Item"]>,
@@ -1307,6 +1356,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
   >;
+  maintenanceHistoryAsset?: Resolver<
+    Array<ResolversTypes["MaintenanceHistoryAsset"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryMaintenanceHistoryAssetArgs, "number">
+  >;
   resource?: Resolver<
     Maybe<ResolversTypes["Resource"]>,
     ParentType,
@@ -1349,6 +1404,27 @@ export type FuelAssetResolvers<
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   fuelType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   fuelCost?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  unitOfMeasureCode?: Resolver<
+    ResolversTypes["String"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type FuelHistoryAssetResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["FuelHistoryAsset"] = ResolversParentTypes["FuelHistoryAsset"]
+> = ResolversObject<{
+  entry?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  maintenanceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  postingDate?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  meta?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1877,6 +1953,22 @@ export type MaintenanceAssetResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type MaintenanceHistoryAssetResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["MaintenanceHistoryAsset"] = ResolversParentTypes["MaintenanceHistoryAsset"]
+> = ResolversObject<{
+  entry?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  maintenanceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  postingDate?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  meta?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type MaintenanceResultResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["MaintenanceResult"] = ResolversParentTypes["MaintenanceResult"]
@@ -2037,6 +2129,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Location?: LocationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   FuelAsset?: FuelAssetResolvers<ContextType>;
+  FuelHistoryAsset?: FuelHistoryAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   LivestockActivityDefaults?: LivestockActivityDefaultsResolvers<ContextType>;
@@ -2062,6 +2155,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LivestockWeanResult?: LivestockWeanResultResolvers<ContextType>;
   ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
+  MaintenanceHistoryAsset?: MaintenanceHistoryAssetResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;
   ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
   ScorecardElement?: ScorecardElementResolvers<ContextType>;
