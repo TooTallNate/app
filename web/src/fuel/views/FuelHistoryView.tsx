@@ -37,8 +37,8 @@ const FuelHistoryView = React.forwardRef<HTMLElement, FuelHistoryProps>(
     }
 
     return (
-      <div className="overflow-x-scroll pb-3">
-        <table className="divide-y divide-gray-200 box-shadow">
+      <div className="overflow-x-auto pb-3">
+        <table className="divide-y divide-gray-200 box-shadow min-w-full">
           <thead>
             <tr>
               <TableHeader children="Date" />
@@ -59,8 +59,11 @@ const FuelHistoryView = React.forwardRef<HTMLElement, FuelHistoryProps>(
                 <TableData children={calcRate(asset, index)} />
                 <TableData children={`${asset.meta}`} />
                 <TableData
-                  children={`${sortedList[index + 1] &&
-                    asset.meta - sortedList[index + 1].meta}`}
+                  children={`${
+                    sortedList[index + 1]
+                      ? asset.meta - sortedList[index + 1].meta
+                      : "---"
+                  }`}
                 />
                 <TableData children={`${asset.description}`} />
               </tr>

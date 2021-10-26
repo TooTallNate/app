@@ -19,8 +19,8 @@ const MainentanceHistoryView = React.forwardRef<
   const sortedList = orderBy(maintenanceHistoryAsset, ["entry"], ["desc"]);
 
   return (
-    <div className="overflow-x-scroll">
-      <table className="divide-y divide-gray-200">
+    <div className="overflow-x-auto">
+      <table className="divide-y divide-gray-200 min-w-full">
         <thead>
           <tr>
             <TableHeader children="Date" />

@@ -73,7 +73,7 @@ const FullPageSlideover = React.forwardRef<HTMLElement, FullPageSlideoverProps>(
                 className="bg-blue mt-3 py-3 px-6 relative flex-1 overflow-y-scroll"
                 children={loading ? <FullPageSpinner /> : children}
               />
-              <div className="w-full max-w-xl bg-transparent shadow-xl p-4 flex justify-center">
+              <div className="w-full bg-transparent shadow-xl p-4 flex justify-center">
                 <CloseButton />
               </div>
             </div>
