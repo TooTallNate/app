@@ -69,6 +69,8 @@ type Query {
   livestockMoveEventTypes: [LivestockMoveEvent!]!
   livestockPurchase(job: String!): LivestockPurchase!
   livestockPurchaseEventTypes: [LivestockPurchaseEvent!]!
+  livestockShipment(job: String!): LivestockShipment!
+  livestockShipmentEventTypes: [LivestockShipmentEvent!]!
   livestockWean(job: String!): LivestockWean!
   livestockWeanEventTypes: [LivestockWeanEvent!]!
   locations: [Location!]!
@@ -113,6 +115,7 @@ type Mutation {
   postLivestockMortality(input: PostLivestockMortalityInput!): LivestockMortalityResult!
   postLivestockMove(input: PostLivestockMoveInput!): LivestockMoveResult!
   postLivestockPurchase(input: PostLivestockPurchaseInput!): LivestockPurchaseResult!
+  postLivestockShipment(input: PostLivestockShipmentInput!): LivestockShipmentResult!
   postLivestockWean(input: PostLivestockWeanInput!): LivestockWeanResult!
   postMaintenance(input: PostMaintenanceInput!): MaintenanceResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
@@ -121,6 +124,7 @@ type Mutation {
   saveLivestockMortality(input: SaveLivestockMortalityInput!): LivestockMortalityResult!
   saveLivestockMove(input: SaveLivestockMoveInput!): LivestockMoveResult!
   saveLivestockPurchase(input: SaveLivestockPurchaseInput!): LivestockPurchaseResult!
+  saveLivestockShipment(input: SaveLivestockShipmentInput!): LivestockShipmentResult!
   saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
@@ -161,6 +165,11 @@ type LivestockMortalityEvent {
   code: String!
   description: String!
   reasons: [Reason!]!
+}
+
+type LivestockShipmentEvent {
+  code: String!
+  description: String!
 }
 
 type PriceEntry {
@@ -387,6 +396,42 @@ input SaveLivestockWeanInput {
 type LivestockWeanResult {
   success: Boolean!
   livestockWean: LivestockWean!
+  defaults: LivestockActivityDefaults!
+}
+
+type LivestockShipment {
+  event: LivestockShipmentEvent
+  postingDate: String
+  job: Job!
+  quantity: Int
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockShipmentInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int!
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockShipmentInput {
+  event: String
+  postingDate: String
+  job: String!
+  quantity: Int
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockShipmentResult {
+  success: Boolean!
+  livestockShipment: LivestockShipment!
   defaults: LivestockActivityDefaults!
 }
 

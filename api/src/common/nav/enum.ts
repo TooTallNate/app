@@ -4,7 +4,8 @@ export enum NavItemJournalTemplate {
   GradeOff = "GRADEOFF",
   Move = "MOVE",
   Wean = "WEAN",
-  Purchase = "PURCHASE"
+  Purchase = "PURCHASE",
+  Shipment = "SHIPMENT"
 }
 
 export enum NavItemJournalBatch {

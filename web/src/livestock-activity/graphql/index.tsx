@@ -87,6 +87,8 @@ export type Query = {
   livestockMoveEventTypes: Array<LivestockMoveEvent>;
   livestockPurchase: LivestockPurchase;
   livestockPurchaseEventTypes: Array<LivestockPurchaseEvent>;
+  livestockShipment: LivestockShipment;
+  livestockShipmentEventTypes: Array<LivestockShipmentEvent>;
   livestockWean: LivestockWean;
   livestockWeanEventTypes: Array<LivestockWeanEvent>;
   locations: Array<Location>;
@@ -143,6 +145,10 @@ export type QueryLivestockMoveArgs = {
 };
 
 export type QueryLivestockPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockShipmentArgs = {
   job: Scalars["String"];
 };
 
@@ -206,6 +212,7 @@ export type Mutation = {
   postLivestockMortality: LivestockMortalityResult;
   postLivestockMove: LivestockMoveResult;
   postLivestockPurchase: LivestockPurchaseResult;
+  postLivestockShipment: LivestockShipmentResult;
   postLivestockWean: LivestockWeanResult;
   postMaintenance: MaintenanceResult;
   postScorecard: ScorecardResult;
@@ -214,6 +221,7 @@ export type Mutation = {
   saveLivestockMortality: LivestockMortalityResult;
   saveLivestockMove: LivestockMoveResult;
   saveLivestockPurchase: LivestockPurchaseResult;
+  saveLivestockShipment: LivestockShipmentResult;
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
@@ -247,6 +255,10 @@ export type MutationPostLivestockPurchaseArgs = {
   input: PostLivestockPurchaseInput;
 };
 
+export type MutationPostLivestockShipmentArgs = {
+  input: PostLivestockShipmentInput;
+};
+
 export type MutationPostLivestockWeanArgs = {
   input: PostLivestockWeanInput;
 };
@@ -277,6 +289,10 @@ export type MutationSaveLivestockMoveArgs = {
 
 export type MutationSaveLivestockPurchaseArgs = {
   input: SaveLivestockPurchaseInput;
+};
+
+export type MutationSaveLivestockShipmentArgs = {
+  input: SaveLivestockShipmentInput;
 };
 
 export type MutationSaveLivestockWeanArgs = {
@@ -333,6 +349,12 @@ export type LivestockMortalityEvent = {
   code: Scalars["String"];
   description: Scalars["String"];
   reasons: Array<Reason>;
+};
+
+export type LivestockShipmentEvent = {
+  __typename?: "LivestockShipmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type PriceEntry = {
@@ -573,6 +595,44 @@ export type LivestockWeanResult = {
   __typename?: "LivestockWeanResult";
   success: Scalars["Boolean"];
   livestockWean: LivestockWean;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockShipment = {
+  __typename?: "LivestockShipment";
+  event?: Maybe<LivestockShipmentEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockShipmentInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockShipmentInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockShipmentResult = {
+  __typename?: "LivestockShipmentResult";
+  success: Scalars["Boolean"];
+  livestockShipment: LivestockShipment;
   defaults: LivestockActivityDefaults;
 };
 
@@ -1091,6 +1151,74 @@ export type PostLivestockPurchaseMutation = { __typename?: "Mutation" } & {
   };
 };
 
+export type LivestockShipmentFragmentFragment = {
+  __typename?: "LivestockShipment";
+} & Pick<
+  LivestockShipment,
+  | "postingDate"
+  | "quantity"
+  | "deadsOnArrivalQuantity"
+  | "totalWeight"
+  | "comments"
+> & {
+    event?: Maybe<
+      { __typename?: "LivestockShipmentEvent" } & Pick<
+        LivestockShipmentEvent,
+        "code"
+      >
+    >;
+    job: { __typename?: "Job" } & Pick<
+      Job,
+      "number" | "description" | "inventory" | "deadQuantity"
+    >;
+  };
+
+export type LivestockShipmentQueryVariables = {
+  job: Scalars["String"];
+};
+
+export type LivestockShipmentQuery = { __typename?: "Query" } & {
+  livestockShipmentEventTypes: Array<
+    { __typename?: "LivestockShipmentEvent" } & Pick<
+      LivestockShipmentEvent,
+      "code" | "description"
+    >
+  >;
+  livestockShipment: {
+    __typename?: "LivestockShipment";
+  } & LivestockShipmentFragmentFragment;
+};
+
+export type SaveLivestockShipmentMutationVariables = {
+  input: SaveLivestockShipmentInput;
+};
+
+export type SaveLivestockShipmentMutation = { __typename?: "Mutation" } & {
+  saveLivestockShipment: { __typename?: "LivestockShipmentResult" } & {
+    defaults: {
+      __typename?: "LivestockActivityDefaults";
+    } & LivestockActivityDefaultsFragmentFragment;
+    livestockShipment: {
+      __typename?: "LivestockShipment";
+    } & LivestockShipmentFragmentFragment;
+  };
+};
+
+export type PostLivestockShipmentMutationVariables = {
+  input: PostLivestockShipmentInput;
+};
+
+export type PostLivestockShipmentMutation = { __typename?: "Mutation" } & {
+  postLivestockShipment: { __typename?: "LivestockShipmentResult" } & {
+    defaults: {
+      __typename?: "LivestockActivityDefaults";
+    } & LivestockActivityDefaultsFragmentFragment;
+    livestockShipment: {
+      __typename?: "LivestockShipment";
+    } & LivestockShipmentFragmentFragment;
+  };
+};
+
 export type LivestockWeanFragmentFragment = {
   __typename?: "LivestockWean";
 } & Pick<
@@ -1261,6 +1389,24 @@ export const LivestockPurchaseFragmentFragmentDoc = gql`
     postingDate
     quantity
     smallLivestockQuantity
+    totalWeight
+    comments
+  }
+`;
+export const LivestockShipmentFragmentFragmentDoc = gql`
+  fragment LivestockShipmentFragment on LivestockShipment {
+    event {
+      code
+    }
+    job {
+      number
+      description
+      inventory
+      deadQuantity
+    }
+    postingDate
+    quantity
+    deadsOnArrivalQuantity
     totalWeight
     comments
   }
@@ -2282,6 +2428,181 @@ export type PostLivestockPurchaseMutationResult = Apollo.MutationResult<
 export type PostLivestockPurchaseMutationOptions = Apollo.BaseMutationOptions<
   PostLivestockPurchaseMutation,
   PostLivestockPurchaseMutationVariables
+>;
+export const LivestockShipmentDocument = gql`
+  query LivestockShipment($job: String!) {
+    livestockShipmentEventTypes {
+      code
+      description
+    }
+    livestockShipment(job: $job) {
+      ...LivestockShipmentFragment
+    }
+  }
+  ${LivestockShipmentFragmentFragmentDoc}
+`;
+
+/**
+ * __useLivestockShipmentQuery__
+ *
+ * To run a query within a React component, call `useLivestockShipmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLivestockShipmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLivestockShipmentQuery({
+ *   variables: {
+ *      job: // value for 'job'
+ *   },
+ * });
+ */
+export function useLivestockShipmentQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    LivestockShipmentQuery,
+    LivestockShipmentQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    LivestockShipmentQuery,
+    LivestockShipmentQueryVariables
+  >(LivestockShipmentDocument, baseOptions);
+}
+export function useLivestockShipmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    LivestockShipmentQuery,
+    LivestockShipmentQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    LivestockShipmentQuery,
+    LivestockShipmentQueryVariables
+  >(LivestockShipmentDocument, baseOptions);
+}
+export type LivestockShipmentQueryHookResult = ReturnType<
+  typeof useLivestockShipmentQuery
+>;
+export type LivestockShipmentLazyQueryHookResult = ReturnType<
+  typeof useLivestockShipmentLazyQuery
+>;
+export type LivestockShipmentQueryResult = Apollo.QueryResult<
+  LivestockShipmentQuery,
+  LivestockShipmentQueryVariables
+>;
+export const SaveLivestockShipmentDocument = gql`
+  mutation SaveLivestockShipment($input: SaveLivestockShipmentInput!) {
+    saveLivestockShipment(input: $input) {
+      defaults {
+        ...LivestockActivityDefaultsFragment
+      }
+      livestockShipment {
+        ...LivestockShipmentFragment
+      }
+    }
+  }
+  ${LivestockActivityDefaultsFragmentFragmentDoc}
+  ${LivestockShipmentFragmentFragmentDoc}
+`;
+export type SaveLivestockShipmentMutationFn = Apollo.MutationFunction<
+  SaveLivestockShipmentMutation,
+  SaveLivestockShipmentMutationVariables
+>;
+
+/**
+ * __useSaveLivestockShipmentMutation__
+ *
+ * To run a mutation, you first call `useSaveLivestockShipmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveLivestockShipmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveLivestockShipmentMutation, { data, loading, error }] = useSaveLivestockShipmentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSaveLivestockShipmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SaveLivestockShipmentMutation,
+    SaveLivestockShipmentMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    SaveLivestockShipmentMutation,
+    SaveLivestockShipmentMutationVariables
+  >(SaveLivestockShipmentDocument, baseOptions);
+}
+export type SaveLivestockShipmentMutationHookResult = ReturnType<
+  typeof useSaveLivestockShipmentMutation
+>;
+export type SaveLivestockShipmentMutationResult = Apollo.MutationResult<
+  SaveLivestockShipmentMutation
+>;
+export type SaveLivestockShipmentMutationOptions = Apollo.BaseMutationOptions<
+  SaveLivestockShipmentMutation,
+  SaveLivestockShipmentMutationVariables
+>;
+export const PostLivestockShipmentDocument = gql`
+  mutation PostLivestockShipment($input: PostLivestockShipmentInput!) {
+    postLivestockShipment(input: $input) {
+      defaults {
+        ...LivestockActivityDefaultsFragment
+      }
+      livestockShipment {
+        ...LivestockShipmentFragment
+      }
+    }
+  }
+  ${LivestockActivityDefaultsFragmentFragmentDoc}
+  ${LivestockShipmentFragmentFragmentDoc}
+`;
+export type PostLivestockShipmentMutationFn = Apollo.MutationFunction<
+  PostLivestockShipmentMutation,
+  PostLivestockShipmentMutationVariables
+>;
+
+/**
+ * __usePostLivestockShipmentMutation__
+ *
+ * To run a mutation, you first call `usePostLivestockShipmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostLivestockShipmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postLivestockShipmentMutation, { data, loading, error }] = usePostLivestockShipmentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostLivestockShipmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PostLivestockShipmentMutation,
+    PostLivestockShipmentMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    PostLivestockShipmentMutation,
+    PostLivestockShipmentMutationVariables
+  >(PostLivestockShipmentDocument, baseOptions);
+}
+export type PostLivestockShipmentMutationHookResult = ReturnType<
+  typeof usePostLivestockShipmentMutation
+>;
+export type PostLivestockShipmentMutationResult = Apollo.MutationResult<
+  PostLivestockShipmentMutation
+>;
+export type PostLivestockShipmentMutationOptions = Apollo.BaseMutationOptions<
+  PostLivestockShipmentMutation,
+  PostLivestockShipmentMutationVariables
 >;
 export const LivestockWeanDocument = gql`
   query LivestockWean($job: String!) {
