@@ -9,6 +9,7 @@ import ActivityAdjustmentView from "./ActivityAdjustmentView";
 import ActivityJobView from "./ActivityJobView";
 import ActivitySelectionView from "./ActivitySelectionView";
 import ActivityMoveJobView from "./ActivityMoveJobView";
+import ActivityShipment from "./ActivityShipment";
 
 const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
   match
@@ -18,7 +19,7 @@ const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
       <Route exact path={`${match.url}`} component={ActivitySelectionView} />
       <Route
         exact
-        path={`${match.url}/:activity(purchase|wean|mortality|grade-off|adjustment)`}
+        path={`${match.url}/:activity(purchase|wean|mortality|grade-off|adjustment|shipment)`}
         component={ActivityJobView}
       />
       <Route
@@ -47,6 +48,7 @@ const ActivityView: React.FC<RouteComponentProps<{ barnType: string }>> = ({
         path={`${match.url}/adjustment/:job`}
         component={ActivityAdjustmentView}
       />
+      <Route path={`${match.url}/shipment/:job`} component={ActivityShipment} />
       <Redirect to={match.url} />
     </Switch>
   );

@@ -29,6 +29,8 @@ generates:
         LivestockMove: "../livestock-activity/models/LivestockMove#LivestockMoveDocument"
         LivestockPurchase: "../livestock-activity/models/LivestockPurchase#LivestockPurchaseDocument"
         LivestockWean: "../livestock-activity/models/LivestockWean#LivestockWeanDocument"
+        LivestockShipment: "../livestock-activity/models/LivestockShipment#LivestockShipmentDocument"
+        LivestockShipmentEvent: "./nav#NavStandardItemJournal"
         LivestockWeanEvent: "./nav#NavStandardItemJournal"
         LivestockGradeOffEvent: "./nav#NavStandardItemJournal"
         LivestockMoveEvent: "./nav#NavStandardItemJournal"

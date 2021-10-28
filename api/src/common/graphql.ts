@@ -19,6 +19,7 @@ import { LivestockMortalityDocument } from "../livestock-activity/models/Livesto
 import { LivestockMoveDocument } from "../livestock-activity/models/LivestockMove";
 import { LivestockPurchaseDocument } from "../livestock-activity/models/LivestockPurchase";
 import { LivestockWeanDocument } from "../livestock-activity/models/LivestockWean";
+import { LivestockShipmentDocument } from "../livestock-activity/models/LivestockShipment";
 import { UserSettingsDocument } from "./models/UserSettings";
 import { ScorecardDocument } from "../scorecard/Scorecard";
 import { GraphqlContext } from "../context";
@@ -114,6 +115,8 @@ export type Query = {
   livestockMoveEventTypes: Array<LivestockMoveEvent>;
   livestockPurchase: LivestockPurchase;
   livestockPurchaseEventTypes: Array<LivestockPurchaseEvent>;
+  livestockShipment: LivestockShipment;
+  livestockShipmentEventTypes: Array<LivestockShipmentEvent>;
   livestockWean: LivestockWean;
   livestockWeanEventTypes: Array<LivestockWeanEvent>;
   locations: Array<Location>;
@@ -171,6 +174,10 @@ export type QueryLivestockMoveArgs = {
 };
 
 export type QueryLivestockPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockShipmentArgs = {
   job: Scalars["String"];
 };
 
@@ -234,6 +241,7 @@ export type Mutation = {
   postLivestockMortality: LivestockMortalityResult;
   postLivestockMove: LivestockMoveResult;
   postLivestockPurchase: LivestockPurchaseResult;
+  postLivestockShipment: LivestockShipmentResult;
   postLivestockWean: LivestockWeanResult;
   postMaintenance: MaintenanceResult;
   postScorecard: ScorecardResult;
@@ -242,6 +250,7 @@ export type Mutation = {
   saveLivestockMortality: LivestockMortalityResult;
   saveLivestockMove: LivestockMoveResult;
   saveLivestockPurchase: LivestockPurchaseResult;
+  saveLivestockShipment: LivestockShipmentResult;
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
@@ -276,6 +285,10 @@ export type MutationPostLivestockPurchaseArgs = {
   input: PostLivestockPurchaseInput;
 };
 
+export type MutationPostLivestockShipmentArgs = {
+  input: PostLivestockShipmentInput;
+};
+
 export type MutationPostLivestockWeanArgs = {
   input: PostLivestockWeanInput;
 };
@@ -306,6 +319,10 @@ export type MutationSaveLivestockMoveArgs = {
 
 export type MutationSaveLivestockPurchaseArgs = {
   input: SaveLivestockPurchaseInput;
+};
+
+export type MutationSaveLivestockShipmentArgs = {
+  input: SaveLivestockShipmentInput;
 };
 
 export type MutationSaveLivestockWeanArgs = {
@@ -366,6 +383,12 @@ export type LivestockMortalityEvent = {
   code: Scalars["String"];
   description: Scalars["String"];
   reasons: Array<Reason>;
+};
+
+export type LivestockShipmentEvent = {
+  __typename?: "LivestockShipmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type PriceEntry = {
@@ -606,6 +629,44 @@ export type LivestockWeanResult = {
   __typename?: "LivestockWeanResult";
   success: Scalars["Boolean"];
   livestockWean: LivestockWean;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockShipment = {
+  __typename?: "LivestockShipment";
+  event?: Maybe<LivestockShipmentEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockShipmentInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockShipmentInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockShipmentResult = {
+  __typename?: "LivestockShipmentResult";
+  success: Scalars["Boolean"];
+  livestockShipment: LivestockShipment;
   defaults: LivestockActivityDefaults;
 };
 
@@ -902,6 +963,7 @@ export type ResolversTypes = ResolversObject<{
   LivestockPurchaseEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   LivestockAdjustmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   LivestockMortalityEvent: ResolverTypeWrapper<NavStandardItemJournal>;
+  LivestockShipmentEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   PriceEntry: ResolverTypeWrapper<PriceEntry>;
   LivestockQuantity: ResolverTypeWrapper<LivestockQuantity>;
   LivestockQuantityInput: LivestockQuantityInput;
@@ -957,6 +1019,15 @@ export type ResolversTypes = ResolversObject<{
   LivestockWeanResult: ResolverTypeWrapper<
     Omit<LivestockWeanResult, "livestockWean" | "defaults"> & {
       livestockWean: ResolversTypes["LivestockWean"];
+      defaults: ResolversTypes["LivestockActivityDefaults"];
+    }
+  >;
+  LivestockShipment: ResolverTypeWrapper<LivestockShipmentDocument>;
+  PostLivestockShipmentInput: PostLivestockShipmentInput;
+  SaveLivestockShipmentInput: SaveLivestockShipmentInput;
+  LivestockShipmentResult: ResolverTypeWrapper<
+    Omit<LivestockShipmentResult, "livestockShipment" | "defaults"> & {
+      livestockShipment: ResolversTypes["LivestockShipment"];
       defaults: ResolversTypes["LivestockActivityDefaults"];
     }
   >;
@@ -1033,6 +1104,7 @@ export type ResolversParentTypes = ResolversObject<{
   LivestockPurchaseEvent: NavStandardItemJournal;
   LivestockAdjustmentEvent: NavStandardItemJournal;
   LivestockMortalityEvent: NavStandardItemJournal;
+  LivestockShipmentEvent: NavStandardItemJournal;
   PriceEntry: PriceEntry;
   LivestockQuantity: LivestockQuantity;
   LivestockQuantityInput: LivestockQuantityInput;
@@ -1095,6 +1167,16 @@ export type ResolversParentTypes = ResolversObject<{
     "livestockWean" | "defaults"
   > & {
     livestockWean: ResolversParentTypes["LivestockWean"];
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
+  LivestockShipment: LivestockShipmentDocument;
+  PostLivestockShipmentInput: PostLivestockShipmentInput;
+  SaveLivestockShipmentInput: SaveLivestockShipmentInput;
+  LivestockShipmentResult: Omit<
+    LivestockShipmentResult,
+    "livestockShipment" | "defaults"
+  > & {
+    livestockShipment: ResolversParentTypes["LivestockShipment"];
     defaults: ResolversParentTypes["LivestockActivityDefaults"];
   };
   ItemJournalTemplate: ItemJournalTemplateObject;
@@ -1327,6 +1409,17 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  livestockShipment?: Resolver<
+    ResolversTypes["LivestockShipment"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryLivestockShipmentArgs, "job">
+  >;
+  livestockShipmentEventTypes?: Resolver<
+    Array<ResolversTypes["LivestockShipmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
   livestockWean?: Resolver<
     ResolversTypes["LivestockWean"],
     ParentType,
@@ -1465,6 +1558,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostLivestockPurchaseArgs, "input">
   >;
+  postLivestockShipment?: Resolver<
+    ResolversTypes["LivestockShipmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostLivestockShipmentArgs, "input">
+  >;
   postLivestockWean?: Resolver<
     ResolversTypes["LivestockWeanResult"],
     ParentType,
@@ -1512,6 +1611,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationSaveLivestockPurchaseArgs, "input">
+  >;
+  saveLivestockShipment?: Resolver<
+    ResolversTypes["LivestockShipmentResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSaveLivestockShipmentArgs, "input">
   >;
   saveLivestockWean?: Resolver<
     ResolversTypes["LivestockWeanResult"],
@@ -1605,6 +1710,15 @@ export type LivestockMortalityEventResolvers<
   code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   reasons?: Resolver<Array<ResolversTypes["Reason"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockShipmentEventResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockShipmentEvent"] = ResolversParentTypes["LivestockShipmentEvent"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1903,6 +2017,54 @@ export type LivestockWeanResultResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type LivestockShipmentResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockShipment"] = ResolversParentTypes["LivestockShipment"]
+> = ResolversObject<{
+  event?: Resolver<
+    Maybe<ResolversTypes["LivestockShipmentEvent"]>,
+    ParentType,
+    ContextType
+  >;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  job?: Resolver<ResolversTypes["Job"], ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  deadsOnArrivalQuantity?: Resolver<
+    Maybe<ResolversTypes["Int"]>,
+    ParentType,
+    ContextType
+  >;
+  totalWeight?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type LivestockShipmentResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["LivestockShipmentResult"] = ResolversParentTypes["LivestockShipmentResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  livestockShipment?: Resolver<
+    ResolversTypes["LivestockShipment"],
+    ParentType,
+    ContextType
+  >;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type ItemJournalTemplateResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["ItemJournalTemplate"] = ResolversParentTypes["ItemJournalTemplate"]
@@ -2146,6 +2308,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LivestockPurchaseEvent?: LivestockPurchaseEventResolvers<ContextType>;
   LivestockAdjustmentEvent?: LivestockAdjustmentEventResolvers<ContextType>;
   LivestockMortalityEvent?: LivestockMortalityEventResolvers<ContextType>;
+  LivestockShipmentEvent?: LivestockShipmentEventResolvers<ContextType>;
   PriceEntry?: PriceEntryResolvers<ContextType>;
   LivestockQuantity?: LivestockQuantityResolvers<ContextType>;
   LivestockAdjustment?: LivestockAdjustmentResolvers<ContextType>;
@@ -2160,6 +2323,8 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LivestockPurchaseResult?: LivestockPurchaseResultResolvers<ContextType>;
   LivestockWean?: LivestockWeanResolvers<ContextType>;
   LivestockWeanResult?: LivestockWeanResultResolvers<ContextType>;
+  LivestockShipment?: LivestockShipmentResolvers<ContextType>;
+  LivestockShipmentResult?: LivestockShipmentResultResolvers<ContextType>;
   ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;

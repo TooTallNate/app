@@ -4,79 +4,75 @@ import View from "../../common/components/view/View";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import { useParams, useHistory } from "react-router";
 import {
-  useLivestockMoveQuery,
-  useSaveLivestockMoveMutation,
-  usePostLivestockMoveMutation,
-  useLivestockJobLazyQuery
+  useLivestockShipmentQuery,
+  useSaveLivestockShipmentMutation,
+  usePostLivestockShipmentMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
-import FormField from "../../common/components/form/FormField";
-import FormFieldLabel from "../../common/components/form/FormFieldLabel";
-import FormFieldErrors from "../../common/components/form/FormFieldErrors";
-import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { OnSubmit, useForm } from "react-hook-form";
 import Button from "../../common/components/input/Button";
-import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
-import StaticValue from "../../common/components/input/StaticValue";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
 import TotalWeightField from "../components/TotalWeightField";
+import JobField from "../components/JobField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
+import FormFieldLabel from "../../common/components/form/FormFieldLabel";
+import FormField from "../../common/components/form/FormField";
+import FormFieldInput from "../../common/components/form/FormFieldInput";
+import FormFieldErrors from "../../common/components/form/FormFieldErrors";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import DateInput from "../../common/components/input/DateInput";
+import { loggers } from "winston";
 
 interface FormData {
   event: string;
   postingDate: string;
-  toJob: string;
   quantity: number;
-  smallLivestockQuantity?: number;
+  deadsOnArrivalQuantity?: number;
   totalWeight: number;
   comments?: string;
 }
 
 interface ViewParams {
-  fromJob: string;
-  toJob: string;
-  barnType: string;
+  job: string;
 }
 
-const ActivityMoveView: React.FC = () => {
+const ActivityShipmentView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
+
   const formContext = useForm<FormData>();
-  const [loadJobs, { data: toJobData }] = useLivestockJobLazyQuery();
-  const { loading, data } = useLivestockMoveQuery({
+  const { loading, data } = useLivestockShipmentQuery({
     variables: {
-      job: params.fromJob
+      job: params.job
     },
-    onCompleted({ livestockMove, livestockMoveEventTypes }) {
+    onCompleted({ livestockShipment, livestockShipmentEventTypes }) {
       const { setValue } = formContext;
-      if (livestockMoveEventTypes.length === 1) {
-        setValue("event", livestockMoveEventTypes[0].code);
-      } else if (livestockMove.event)
-        setValue("event", livestockMove.event.code);
-      if (livestockMove.quantity) setValue("quantity", livestockMove.quantity);
-      if (livestockMove.smallLivestockQuantity)
-        setValue(
-          "smallLivestockQuantity",
-          livestockMove.smallLivestockQuantity
-        );
-      if (livestockMove.postingDate)
-        setValue("postingDate", livestockMove.postingDate);
-      if (livestockMove.totalWeight)
-        setValue("totalWeight", livestockMove.totalWeight);
-      if (livestockMove.comments) setValue("comments", livestockMove.comments);
+      if (livestockShipmentEventTypes.length === 1) {
+        setValue("event", livestockShipmentEventTypes[0].code);
+      } else if (livestockShipment.event)
+        setValue("event", livestockShipment.event.code);
+      if (livestockShipment.quantity)
+        setValue("quantity", livestockShipment.quantity);
+      if (livestockShipment.totalWeight)
+        setValue("totalWeight", livestockShipment.totalWeight);
+      if (livestockShipment.postingDate)
+        setValue("postingDate", livestockShipment.postingDate);
+      if (livestockShipment.comments)
+        setValue("comments", livestockShipment.comments);
     }
   });
-  const [post] = usePostLivestockMoveMutation();
-  const [save] = useSaveLivestockMoveMutation();
+  const [post] = usePostLivestockShipmentMutation();
+  const [save] = useSaveLivestockShipmentMutation();
   const { setMessage } = useFlash();
   const { getValues, watch, triggerValidation, formState } = formContext;
+
+  const quantity = watch("quantity") || 0;
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -84,8 +80,7 @@ const ActivityMoveView: React.FC = () => {
         variables: {
           input: {
             ...data,
-            fromJob: params.fromJob,
-            toJob: params.toJob
+            job: params.job
           }
         }
       });
@@ -109,8 +104,7 @@ const ActivityMoveView: React.FC = () => {
         variables: {
           input: {
             ...getValues(),
-            fromJob: params.fromJob,
-            toJob: params.toJob
+            job: params.job
           }
         }
       });
@@ -128,72 +122,29 @@ const ActivityMoveView: React.FC = () => {
     }
   };
 
-  const quantity = watch("quantity") || 0;
-
   // Validate small livestock quantity if total quantity changes.
   useEffect(() => {
     if (formState.isSubmitted) {
-      triggerValidation("smallLivestockQuantity");
+      triggerValidation("deadsOnArrivalQuantity");
     }
   }, [triggerValidation, quantity, formState.isSubmitted]);
-
-  useEffect(() => {
-    if (params.toJob) {
-      loadJobs({ variables: { job: params.toJob } });
-    }
-    // if (toJobData && toJobData.job) {
-    //   console.log(toJobData.job);
-    // }
-  }, [loadJobs, params.toJob, toJobData]);
 
   return (
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Move</Title>
+        <Title>Shipment</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
-            <FormField name="fromJob">
-              <FormFieldLabel>From Group</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={`${data.livestockMove.fromJob.number} ${data.livestockMove.fromJob.description}`}
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
-            <InventoryField
-              className="w-full mr-4"
-              inventory={data.livestockMove.fromJob.inventory || 0}
-              deadQuantity={data.livestockMove.fromJob.deadQuantity || 0}
+            <JobField
+              number={data.livestockShipment.job.number}
+              description={data.livestockShipment.job.description}
             />
-            <FormField name="toJob">
-              <FormFieldLabel>To Group</FormFieldLabel>
-              <FormFieldInput noRegister>
-                <StaticValue
-                  value={
-                    toJobData && toJobData.job
-                      ? `${toJobData.job.number} ${toJobData.job.description}`
-                      : ""
-                  }
-                />
-              </FormFieldInput>
-              <FormFieldErrors />
-            </FormField>
             <InventoryField
-              className="w-full mr-4"
-              inventory={
-                toJobData && toJobData.job && toJobData.job.inventory
-                  ? toJobData.job.inventory
-                  : 0
-              }
-              deadQuantity={
-                toJobData && toJobData.job && toJobData.job.deadQuantity
-                  ? toJobData.job.deadQuantity
-                  : 0
-              }
+              inventory={data.livestockShipment.job.inventory || 0}
+              deadQuantity={data.livestockShipment.job.deadQuantity || 0}
             />
             <FormField
               name="event"
@@ -204,7 +155,7 @@ const ActivityMoveView: React.FC = () => {
               <FormFieldLabel>Event</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
-                  items={data.livestockMoveEventTypes.map(event => ({
+                  items={data.livestockShipmentEventTypes.map(event => ({
                     value: event.code,
                     title: event.description
                   }))}
@@ -220,8 +171,8 @@ const ActivityMoveView: React.FC = () => {
               <FormFieldErrors />
             </FormField>
             <QuantityAndSmallsField
-              name="smallLivestockQuantity"
-              label="Smalls"
+              name="deadsOnArrivalQuantity"
+              label="Deads on Arrival"
             />
             <TotalWeightField />
             <CommentsField />
@@ -239,4 +190,4 @@ const ActivityMoveView: React.FC = () => {
   );
 };
 
-export default ActivityMoveView;
+export default ActivityShipmentView;

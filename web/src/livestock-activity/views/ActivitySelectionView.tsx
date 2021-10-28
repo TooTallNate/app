@@ -86,5 +86,6 @@ const T: TypeMap = {
   MOVE: { sort: 3, route: "/move", defaultLabel: "Move" },
   GRADEOFF: { sort: 4, route: "/grade-off", defaultLabel: "Grade Off" },
   QTYADJ: { sort: 5, route: "/adjustment", defaultLabel: "Adjustment" },
-  PURCHASE: { sort: 6, route: "/purchase", defaultLabel: "Purchase" }
+  PURCHASE: { sort: 6, route: "/purchase", defaultLabel: "Purchase" },
+  SHIPMENT: { sort: 7, route: "/shipment", defaultLabel: "Shipment" }
 };

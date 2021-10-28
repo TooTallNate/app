@@ -39,6 +39,12 @@ import {
   LivestockWeanQueries,
   LivestockWeanMutations
 } from "./livestock-wean";
+import {
+  LivestockShipment,
+  LivestockShipmentEvent,
+  LivestockShipmentQueries,
+  LivestockShipmentMutations
+} from "./livestock-shipment";
 
 export const queries = {
   ...LivestockActivityQueries,
@@ -47,7 +53,8 @@ export const queries = {
   ...LivestockMortalityQueries,
   ...LivestockMoveQueries,
   ...LivestockPurchaseQueries,
-  ...LivestockWeanQueries
+  ...LivestockWeanQueries,
+  ...LivestockShipmentQueries
 };
 
 export const mutations = {
@@ -56,7 +63,8 @@ export const mutations = {
   ...LivestockMortalityMutations,
   ...LivestockMoveMutations,
   ...LivestockPurchaseMutations,
-  ...LivestockWeanMutations
+  ...LivestockWeanMutations,
+  ...LivestockShipmentMutations
 };
 
 export const types = {
@@ -68,10 +76,12 @@ export const types = {
   LivestockMove,
   LivestockPurchase,
   LivestockWean,
+  LivestockShipment,
   LivestockWeanEvent,
   LivestockGradeOffEvent,
   LivestockMoveEvent,
   LivestockPurchaseEvent,
   LivestockAdjustmentEvent,
-  LivestockMortalityEvent
+  LivestockMortalityEvent,
+  LivestockShipmentEvent
 };
