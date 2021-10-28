@@ -219,7 +219,10 @@ const ActivityMoveView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
-            <QuantityAndSmallsField />
+            <QuantityAndSmallsField
+              name="smallLivestockQuantity"
+              label="Smalls"
+            />
             <TotalWeightField />
             <CommentsField />
             <div className="flex">
