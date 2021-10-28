@@ -18,9 +18,10 @@ const FuelHistoryView = React.forwardRef<HTMLElement, FuelHistoryProps>(
     const calcRate = (asset: FuelHistoryAsset, index: number): string => {
       if (index === sortedList.length - 1) return "---";
 
-      const calc = Math.round(
-        (asset.meta - sortedList[index + 1].meta) / asset.quantity
-      );
+      const calc = (
+        (asset.meta - sortedList[index + 1].meta) /
+        asset.quantity
+      ).toFixed(1);
 
       switch (unitOfMeasureCode.toLowerCase()) {
         case "miles":
