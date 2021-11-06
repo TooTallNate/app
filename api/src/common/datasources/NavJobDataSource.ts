@@ -110,12 +110,8 @@ export default class LivestockJobNavDataSource extends NavDataSource {
       if (isShipment) {
         filters.push(f.notEquals("Barn_Type", "Finisher"));
         filters.push(f.notEquals("Barn_Type", ""));
-        filters.push(f.notEquals("Barn_Type", null));
         filters.push(f.notEquals("Barn_Type", " "));
         filters.push(f.greaterThan("Inventory_Left", 0));
-        filters.push(f.notEquals("Inventory_Left", ""));
-        filters.push(f.notEquals("Inventory_Left", null));
-        filters.push(f.notEquals("Inventory_Left", " "));
       }
       return f.and(...filters);
     });
