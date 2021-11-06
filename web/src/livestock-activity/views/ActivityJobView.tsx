@@ -29,13 +29,18 @@ const ActivityJobView: React.FC = () => {
   const match = useRouteMatch();
   const params = useParams<ViewParams>();
   const formContext = useForm<FormData>();
+  const isShipment: boolean = params.activity === "shipment";
   const { data, loading } = useLivestockActivityJobsQuery({
+    variables: {
+      isShipment: true
+    },
     onCompleted({ livestockActivityDefaults: defaults }) {
       if (defaults.job) {
         formContext.setValue("job", defaults.job.number);
       }
     }
   });
+  console.log(isShipment);
 
   const onSubmit: OnSubmit<FormData> = data => {
     history.push(`${match.url}/${data.job}`);

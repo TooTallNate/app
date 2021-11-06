@@ -56,7 +56,7 @@ type Query {
   job(number: String!): Job
   jobs(input: JobFilter): [Job!]!
   livestockActivityDefaults: LivestockActivityDefaults!
-  livestockActivityJobs: [Job!]!
+  livestockActivityJobs(isShipment: Boolean): [Job!]!
   livestockAdjustment(job: String!): LivestockAdjustment!
   livestockAdjustmentEventTypes: [LivestockAdjustmentEvent!]!
   livestockGradeOff(job: String!): LivestockGradeOff!

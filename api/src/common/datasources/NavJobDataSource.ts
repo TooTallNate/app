@@ -1,12 +1,14 @@
 import { NavJob, NavJobTask } from "../nav";
 import NavDataSource from "./NavDataSource";
 import { BooleanFilterExpression } from "../nav/filter";
+import { filterExtensionDefinitions } from "@graphql-tools/schema";
 
 export interface JobFilter {
   isOpen?: boolean;
   postingGroups?: string[];
   excludeLocations?: string[];
   includeLocations?: string[];
+  isShipment?: boolean;
 }
 
 export default class LivestockJobNavDataSource extends NavDataSource {
@@ -91,7 +93,8 @@ export default class LivestockJobNavDataSource extends NavDataSource {
 
   getAllJobLivestock({
     excludeLocations,
-    includeLocations
+    includeLocations,
+    isShipment
   }: JobFilter = {}): Promise<NavJob[]> {
     let odataFilter = this.buildFilter(f => {
       const filters: BooleanFilterExpression[] = [];
@@ -103,6 +106,16 @@ export default class LivestockJobNavDataSource extends NavDataSource {
         filters.push(
           f.and(...excludeLocations.map(loc => f.notEquals("Site", loc)))
         );
+      }
+      if (isShipment) {
+        filters.push(f.notEquals("Barn_Type", "Finisher"));
+        filters.push(f.notEquals("Barn_Type", ""));
+        filters.push(f.notEquals("Barn_Type", null));
+        filters.push(f.notEquals("Barn_Type", " "));
+        filters.push(f.greaterThan("Inventory_Left", 0));
+        filters.push(f.notEquals("Inventory_Left", ""));
+        filters.push(f.notEquals("Inventory_Left", null));
+        filters.push(f.notEquals("Inventory_Left", " "));
       }
       return f.and(...filters);
     });
