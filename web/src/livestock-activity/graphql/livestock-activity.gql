@@ -8,7 +8,7 @@ fragment LivestockActivityDefaultsFragment on LivestockActivityDefaults {
   }
 }
 
-query LivestockActivityJobs {
+query LivestockActivityJobs($isShipment: Boolean) {
   livestockActivityDefaults {
     job {
       number
@@ -21,7 +21,7 @@ query LivestockActivityJobs {
     reasonCode
     sourceCode
   }
-  livestockActivityJobs {
+  livestockActivityJobs(isShipment: $isShipment) {
     number
     description
     inventory

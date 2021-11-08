@@ -99,7 +99,11 @@ export const LivestockActivityQueries: QueryResolvers = {
       postingGroups: ["SOWS", "MARKET HOGS", "CATTLE"]
     });
   },
-  async livestockActivityJobs(_, __, { user, navConfig, dataSources }) {
+  async livestockActivityJobs(
+    _,
+    { isShipment },
+    { user, navConfig, dataSources }
+  ) {
     const settings = await UserSettingsModel.findOne({
       username: user.username,
       subdomain: navConfig.subdomain
@@ -113,7 +117,8 @@ export const LivestockActivityQueries: QueryResolvers = {
     }
     return dataSources.navJob.getAllJobLivestock({
       includeLocations,
-      excludeLocations
+      excludeLocations,
+      isShipment
     });
   },
   async livestockActivityDefaults(_, __, { user, navConfig }) {

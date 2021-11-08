@@ -313,7 +313,7 @@ type ItemJournalTemplate {
 
 type Query {
   animals: [Item!]!
-  livestockActivityJobs: [Job!]!
+  livestockActivityJobs(isShipment: Boolean): [Job!]!
   livestockActivityDefaults: LivestockActivityDefaults!
   livestockAdjustment(job: String!): LivestockAdjustment!
   livestockGradeOff(job: String!): LivestockGradeOff!

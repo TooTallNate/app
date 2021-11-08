@@ -121,6 +121,10 @@ export type QueryJobsArgs = {
   input?: Maybe<JobFilter>;
 };
 
+export type QueryLivestockActivityJobsArgs = {
+  isShipment?: Maybe<Scalars["Boolean"]>;
+};
+
 export type QueryLivestockAdjustmentArgs = {
   job: Scalars["String"];
 };

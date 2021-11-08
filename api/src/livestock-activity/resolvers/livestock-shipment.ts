@@ -35,7 +35,6 @@ export const LivestockShipmentQueries: QueryResolvers = {
     const x = await dataSources.navItemJournal.getStandardJournals(
       NavItemJournalTemplate.Shipment
     );
-    console.log(x);
     return x;
   }
 };

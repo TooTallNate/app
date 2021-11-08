@@ -121,6 +121,10 @@ export type QueryJobsArgs = {
   input?: Maybe<JobFilter>;
 };
 
+export type QueryLivestockActivityJobsArgs = {
+  isShipment?: Maybe<Scalars["Boolean"]>;
+};
+
 export type QueryLivestockAdjustmentArgs = {
   job: Scalars["String"];
 };
@@ -809,7 +813,9 @@ export type LivestockActivityDefaultsFragmentFragment = {
   >;
 };
 
-export type LivestockActivityJobsQueryVariables = {};
+export type LivestockActivityJobsQueryVariables = {
+  isShipment?: Maybe<Scalars["Boolean"]>;
+};
 
 export type LivestockActivityJobsQuery = { __typename?: "Query" } & {
   livestockActivityDefaults: { __typename?: "LivestockActivityDefaults" } & {
@@ -1461,7 +1467,7 @@ export const LivestockWeanFragmentFragmentDoc = gql`
   }
 `;
 export const LivestockActivityJobsDocument = gql`
-  query LivestockActivityJobs {
+  query LivestockActivityJobs($isShipment: Boolean) {
     livestockActivityDefaults {
       job {
         number
@@ -1474,7 +1480,7 @@ export const LivestockActivityJobsDocument = gql`
       reasonCode
       sourceCode
     }
-    livestockActivityJobs {
+    livestockActivityJobs(isShipment: $isShipment) {
       number
       description
       inventory
@@ -1495,6 +1501,7 @@ export const LivestockActivityJobsDocument = gql`
  * @example
  * const { data, loading, error } = useLivestockActivityJobsQuery({
  *   variables: {
+ *      isShipment: // value for 'isShipment'
  *   },
  * });
  */
