@@ -6,6 +6,7 @@ import { Schema } from "mongoose";
 export interface LivestockShipmentDocument extends LivestockActivityDocument {
   job: string;
   event: string;
+  dimensionPacker: string;
   quantity: number;
   deadsOnArrivalkQuantity: number;
   totalWeight: number;
@@ -20,6 +21,7 @@ const LivestockShipmentSchema = new Schema({
   },
   postingDate: String,
   event: String,
+  dimensionPacker: String,
   quantity: Number,
   deadsOnArrivalkQuantity: Number,
   totalWeight: Number,

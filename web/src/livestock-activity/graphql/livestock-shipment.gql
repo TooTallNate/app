@@ -8,6 +8,7 @@ fragment LivestockShipmentFragment on LivestockShipment {
     inventory
     deadQuantity
   }
+  dimensionPacker
   postingDate
   quantity
   deadsOnArrivalQuantity
@@ -22,6 +23,11 @@ query LivestockShipment($job: String!) {
   }
   livestockShipment(job: $job) {
     ...LivestockShipmentFragment
+  }
+  dimensionPackers {
+    code,
+    dimensionCode,
+    dimensionName
   }
 }
 

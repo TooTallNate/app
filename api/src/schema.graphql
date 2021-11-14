@@ -49,6 +49,7 @@ input ResourceFilter {
 
 type Query {
   animals: [Item!]!
+  dimensionPackers: [DimensionPacker!]!
   fuelAsset(number: String!): FuelAsset
   fuelAssets: [FuelAsset!]!
   item(number: String!): Item
@@ -403,6 +404,7 @@ type LivestockWeanResult {
 
 type LivestockShipment {
   event: LivestockShipmentEvent
+  dimensionPacker: String
   postingDate: String
   job: Job!
   quantity: Int
@@ -413,16 +415,18 @@ type LivestockShipment {
 
 input PostLivestockShipmentInput {
   event: String!
+  dimensionPacker: String!
   postingDate: String
   job: String!
   quantity: Int!
   deadsOnArrivalQuantity: Int
-  totalWeight: Float!
+  totalWeight: Float
   comments: String
 }
 
 input SaveLivestockShipmentInput {
   event: String
+  dimensionPacker: String
   postingDate: String
   job: String!
   quantity: Int
@@ -443,6 +447,12 @@ type ItemJournalTemplate {
   type: String!
   sourceCode: String!
   reasonCode: String!
+}
+
+type DimensionPacker {
+  code: String!
+  dimensionCode: String!
+  dimensionName: String!
 }
 
 type MaintenanceAsset {

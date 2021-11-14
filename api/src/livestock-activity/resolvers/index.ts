@@ -42,6 +42,7 @@ import {
 import {
   LivestockShipment,
   LivestockShipmentEvent,
+  DimensionPacker,
   LivestockShipmentQueries,
   LivestockShipmentMutations
 } from "./livestock-shipment";
@@ -83,5 +84,6 @@ export const types = {
   LivestockPurchaseEvent,
   LivestockAdjustmentEvent,
   LivestockMortalityEvent,
-  LivestockShipmentEvent
+  LivestockShipmentEvent,
+  DimensionPacker
 };

@@ -43,6 +43,7 @@ generates:
         ScorecardConfig: "./nav#NavJob"
         FuelAsset: "./nav#NavFuelAsset"
         MaintenanceAsset: "./nav#NavMaintenanceAsset"
+        DimensionPacker: "./nav#NavDimensionPacker"
     hooks:
       afterOneFileWrite:
         - eslint --fix
