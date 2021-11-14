@@ -28,7 +28,7 @@ const HomeView: React.FC = () => {
       </ViewHeader>
       <ViewContent loading={loading}>
         <StackedNav>
-          {menu.map(item => {
+          {/* {menu.map(item => {
             return (
               <>
                 <StackedNavLink key={item.name} to={item.route}>
@@ -36,7 +36,13 @@ const HomeView: React.FC = () => {
                 </StackedNavLink>
               </>
             );
-          })}
+          })} */}
+          <StackedNavLink to="/livestock-activity">
+            Livestock Activity
+          </StackedNavLink>
+          <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
+          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
+          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
         </StackedNav>
         <Divider className="py-3" centerText="or" />
         <QRCodeReader />
