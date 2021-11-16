@@ -12,12 +12,17 @@ import FormGroupLabel from "../../common/components/form/FormGroupLabel";
 
 // TODO: move percent below field
 
+interface CustomProps {
+  name: string;
+  label: string;
+}
+
 interface FormData {
   quantity: number;
   smallLivestockQuantity?: number;
 }
 
-const QuantityAndSmallsField: React.FC = () => {
+const QuantityAndSmallsField: React.FC<CustomProps> = props => {
   const { getValues } = useFormContext<FormData>();
 
   return (
@@ -39,14 +44,16 @@ const QuantityAndSmallsField: React.FC = () => {
           </FormField>
           <HorizontalSpacer />
           <FormField
-            name="smallLivestockQuantity"
+            name={props.name ? props.name : "smallLivestockQuantity"}
             rules={{
               validate: (value: number = 0) =>
                 value <= (getValues("quantity") || 0) ||
                 "The small livestock quantity field must not be more than the total quantity."
             }}
           >
-            <FormFieldLabel>Smalls</FormFieldLabel>
+            <FormFieldLabel>
+              {props.label ? props.label : "Smalls"}
+            </FormFieldLabel>
             <FormFieldInput>
               <NumberInput className="w-32" />
             </FormFieldInput>

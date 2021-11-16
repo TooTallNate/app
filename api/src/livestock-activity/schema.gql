@@ -35,6 +35,11 @@ type LivestockMortalityEvent {
   reasons: [Reason!]!
 }
 
+type LivestockShipmentEvent {
+  code: String!
+  description: String!
+}
+
 type PriceEntry {
   animal: String!
   price: Float
@@ -262,6 +267,42 @@ type LivestockWeanResult {
   defaults: LivestockActivityDefaults!
 }
 
+type LivestockShipment {
+  event: LivestockShipmentEvent
+  postingDate: String
+  job: Job!
+  quantity: Int
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+input PostLivestockShipmentInput {
+  event: String!
+  postingDate: String
+  job: String!
+  quantity: Int!
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float!
+  comments: String
+}
+
+input SaveLivestockShipmentInput {
+  event: String
+  postingDate: String
+  job: String!
+  quantity: Int
+  deadsOnArrivalQuantity: Int
+  totalWeight: Float
+  comments: String
+}
+
+type LivestockShipmentResult {
+  success: Boolean!
+  livestockShipment: LivestockShipment!
+  defaults: LivestockActivityDefaults!
+}
+
 type ItemJournalTemplate {
   name: String!
   description: String!
@@ -272,7 +313,7 @@ type ItemJournalTemplate {
 
 type Query {
   animals: [Item!]!
-  livestockActivityJobs: [Job!]!
+  livestockActivityJobs(isShipment: Boolean): [Job!]!
   livestockActivityDefaults: LivestockActivityDefaults!
   livestockAdjustment(job: String!): LivestockAdjustment!
   livestockGradeOff(job: String!): LivestockGradeOff!
@@ -283,6 +324,8 @@ type Query {
   livestockPurchase(job: String!): LivestockPurchase!
   livestockWean(job: String!): LivestockWean!
   livestockWeanEventTypes: [LivestockWeanEvent!]!
+  livestockShipment(job: String!): LivestockShipment!
+  livestockShipmentEventTypes: [LivestockShipmentEvent!]!
   livestockPurchaseEventTypes: [LivestockPurchaseEvent!]!
   livestockAdjustmentEventTypes: [LivestockAdjustmentEvent!]!
   livestockMortalityEventTypes: [LivestockMortalityEvent!]!
@@ -302,4 +345,6 @@ type Mutation {
   saveLivestockPurchase(input: SaveLivestockPurchaseInput!): LivestockPurchaseResult!
   postLivestockWean(input: PostLivestockWeanInput!): LivestockWeanResult!
   saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
+  postLivestockShipment(input: PostLivestockShipmentInput!): LivestockShipmentResult!
+  saveLivestockShipment(input: SaveLivestockShipmentInput!): LivestockShipmentResult!
 }

@@ -88,6 +88,8 @@ export type Query = {
   livestockMoveEventTypes: Array<LivestockMoveEvent>;
   livestockPurchase: LivestockPurchase;
   livestockPurchaseEventTypes: Array<LivestockPurchaseEvent>;
+  livestockShipment: LivestockShipment;
+  livestockShipmentEventTypes: Array<LivestockShipmentEvent>;
   livestockWean: LivestockWean;
   livestockWeanEventTypes: Array<LivestockWeanEvent>;
   locations: Array<Location>;
@@ -125,6 +127,10 @@ export type QueryJobsArgs = {
   input?: Maybe<JobFilter>;
 };
 
+export type QueryLivestockActivityJobsArgs = {
+  isShipment?: Maybe<Scalars["Boolean"]>;
+};
+
 export type QueryLivestockAdjustmentArgs = {
   job: Scalars["String"];
 };
@@ -150,6 +156,10 @@ export type QueryLivestockMoveArgs = {
 };
 
 export type QueryLivestockPurchaseArgs = {
+  job: Scalars["String"];
+};
+
+export type QueryLivestockShipmentArgs = {
   job: Scalars["String"];
 };
 
@@ -231,6 +241,7 @@ export type Mutation = {
   postLivestockMortality: LivestockMortalityResult;
   postLivestockMove: LivestockMoveResult;
   postLivestockPurchase: LivestockPurchaseResult;
+  postLivestockShipment: LivestockShipmentResult;
   postLivestockWean: LivestockWeanResult;
   postMaintenance: MaintenanceResult;
   postScorecard: ScorecardResult;
@@ -239,6 +250,7 @@ export type Mutation = {
   saveLivestockMortality: LivestockMortalityResult;
   saveLivestockMove: LivestockMoveResult;
   saveLivestockPurchase: LivestockPurchaseResult;
+  saveLivestockShipment: LivestockShipmentResult;
   saveLivestockWean: LivestockWeanResult;
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
@@ -273,6 +285,10 @@ export type MutationPostLivestockPurchaseArgs = {
   input: PostLivestockPurchaseInput;
 };
 
+export type MutationPostLivestockShipmentArgs = {
+  input: PostLivestockShipmentInput;
+};
+
 export type MutationPostLivestockWeanArgs = {
   input: PostLivestockWeanInput;
 };
@@ -303,6 +319,10 @@ export type MutationSaveLivestockMoveArgs = {
 
 export type MutationSaveLivestockPurchaseArgs = {
   input: SaveLivestockPurchaseInput;
+};
+
+export type MutationSaveLivestockShipmentArgs = {
+  input: SaveLivestockShipmentInput;
 };
 
 export type MutationSaveLivestockWeanArgs = {
@@ -363,6 +383,12 @@ export type LivestockMortalityEvent = {
   code: Scalars["String"];
   description: Scalars["String"];
   reasons: Array<Reason>;
+};
+
+export type LivestockShipmentEvent = {
+  __typename?: "LivestockShipmentEvent";
+  code: Scalars["String"];
+  description: Scalars["String"];
 };
 
 export type PriceEntry = {
@@ -603,6 +629,44 @@ export type LivestockWeanResult = {
   __typename?: "LivestockWeanResult";
   success: Scalars["Boolean"];
   livestockWean: LivestockWean;
+  defaults: LivestockActivityDefaults;
+};
+
+export type LivestockShipment = {
+  __typename?: "LivestockShipment";
+  event?: Maybe<LivestockShipmentEvent>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Job;
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type PostLivestockShipmentInput = {
+  event: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity: Scalars["Int"];
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight: Scalars["Float"];
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type SaveLivestockShipmentInput = {
+  event?: Maybe<Scalars["String"]>;
+  postingDate?: Maybe<Scalars["String"]>;
+  job: Scalars["String"];
+  quantity?: Maybe<Scalars["Int"]>;
+  deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
+  totalWeight?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type LivestockShipmentResult = {
+  __typename?: "LivestockShipmentResult";
+  success: Scalars["Boolean"];
+  livestockShipment: LivestockShipment;
   defaults: LivestockActivityDefaults;
 };
 

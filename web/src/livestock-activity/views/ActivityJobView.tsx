@@ -29,7 +29,11 @@ const ActivityJobView: React.FC = () => {
   const match = useRouteMatch();
   const params = useParams<ViewParams>();
   const formContext = useForm<FormData>();
+  const isShipment = params.activity === "shipment";
   const { data, loading } = useLivestockActivityJobsQuery({
+    variables: {
+      isShipment: isShipment
+    },
     onCompleted({ livestockActivityDefaults: defaults }) {
       if (defaults.job) {
         formContext.setValue("job", defaults.job.number);
@@ -66,7 +70,7 @@ const ActivityJobView: React.FC = () => {
               ) : null}
               <FormFieldInput>
                 <TypeaheadInput
-                  sort="desc"
+                  sort={isShipment ? "asc" : "desc"}
                   items={data.livestockActivityJobs.map(job => ({
                     value: job.number,
                     title: `${job.number} ${job.description}`
