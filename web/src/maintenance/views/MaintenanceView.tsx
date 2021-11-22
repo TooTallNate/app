@@ -78,7 +78,6 @@ const MaintenanceView: React.FC = () => {
           }
         }
       });
-      console.log(JSON.stringify(data, null, 2));
       setMessage({
         message: "Entry recorded successfully.",
         level: "success",

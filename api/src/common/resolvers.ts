@@ -73,12 +73,10 @@ export const queries: QueryResolvers = {
       ...(input.groups && { postingGroups: input.groups }),
       ...(input.locations && { includeLocations: input.locations })
     });
-    console.log(x);
     return x;
   },
   job(_, { number }, { dataSources }) {
     const x = dataSources.navJob.getByNo(number);
-    console.log(x);
     return x;
   },
   livestockJobs(_, { input }, { dataSources }) {

@@ -33,21 +33,6 @@ export const Dropdown: React.FC<DropdownOptions> = ({
                 aria-hidden="true"
               />
             </Listbox.Button>
-            {/* <Listbox.Button
-              className={`flex py-1 relative bg-white border border-gray-300 
-              focus:outline-none focus:ring-1 focus:border-gray-900
-              ${open ? "rounded-t-lg" : "rounded-lg"}`}
-            >
-              <span className="ml-3 block truncate mr-10">
-                Filter: {value && value.title}
-              </span>
-              <span className="right-0 top-0 bottom-0 absolute justify-items-center p-2 align-items-center pointer-events-none rounded-r-lg bg-gray-900">
-                <SelectorIcon
-                  className="h-5 w-5 text-white"
-                  aria-hidden="true"
-                />
-              </span>
-            </Listbox.Button> */}
             <Transition
               show={open}
               as={Fragment}

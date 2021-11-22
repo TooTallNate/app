@@ -99,7 +99,6 @@ export const LivestockMortalityMutations: MutationResolvers = {
       tempWeeks = Math.min(24, Math.floor(Math.ceil(Number(diff)) / 7));
     } catch {
       tempWeeks = 24;
-      console.log("Date unable to be parsed");
     }
     const resourceNo = `${tempWeeks}MORTALITY`;
     const resource = await dataSources.navResource.getByCode(resourceNo);
