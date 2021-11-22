@@ -1,6 +1,7 @@
 import { NavMenuOption, NavUser } from "../nav";
 import NavDataSource from "./NavDataSource";
 import { MenuOptions } from "../utils";
+import { MenuOption } from "../graphql";
 
 export interface MenuFilter {
   excludeLocations?: string[];
@@ -37,7 +38,7 @@ export default class NavUserDataSource extends NavDataSource {
     return this.get(`/Users`);
   }
 
-  async getAllMenuOptions({
+  async getUserMenuOptions({
     includeLocations,
     excludeLocations
   }: MenuFilter = {}): Promise<NavMenuOption[]> {

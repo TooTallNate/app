@@ -123,7 +123,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
-  menuOptions?: Maybe<Array<MenuOption>>;
+  menuOptions: Array<MenuOption>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -1459,7 +1459,7 @@ export type QueryResolvers<
     RequireFields<QueryMaintenanceAssetsByNoArgs, "assetNo">
   >;
   menuOptions?: Resolver<
-    Maybe<Array<ResolversTypes["MenuOption"]>>,
+    Array<ResolversTypes["MenuOption"]>,
     ParentType,
     ContextType
   >;

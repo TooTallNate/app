@@ -15,7 +15,10 @@ const HomeView: React.FC = () => {
   const { loading } = useHomeViewQuery({
     fetchPolicy: "no-cache",
     onCompleted(data) {
-      if (data.menuOptions) {
+      console.log(data);
+      if (data && data.user && data.user.menuOptions.list.length > 0) {
+        setMenu(data.user.menuOptions.list);
+      } else {
         setMenu(data.menuOptions);
       }
     }
