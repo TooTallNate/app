@@ -701,6 +701,9 @@ export type MaintenanceHistoryAsset = {
   quantity: Scalars["Int"];
   description: Scalars["String"];
   meta: Scalars["Int"];
+  codeDescription: Scalars["String"];
+  payToName: Scalars["String"];
+  documentNo: Scalars["String"];
 };
 
 export type PostMaintenanceInput = {
@@ -889,6 +892,9 @@ export type MaintenanceHistoryAssetQuery = { __typename?: "Query" } & {
       | "quantity"
       | "meta"
       | "description"
+      | "codeDescription"
+      | "payToName"
+      | "documentNo"
     >
   >;
 };
@@ -1039,6 +1045,9 @@ export const MaintenanceHistoryAssetDocument = gql`
       quantity
       meta
       description
+      codeDescription
+      payToName
+      documentNo
     }
   }
 `;

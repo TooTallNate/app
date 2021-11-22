@@ -701,6 +701,9 @@ export type MaintenanceHistoryAsset = {
   quantity: Scalars["Int"];
   description: Scalars["String"];
   meta: Scalars["Int"];
+  codeDescription: Scalars["String"];
+  payToName: Scalars["String"];
+  documentNo: Scalars["String"];
 };
 
 export type PostMaintenanceInput = {

@@ -1,3 +1,4 @@
+import { map, uniqBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { OnSubmit, useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router-dom";
@@ -108,6 +109,14 @@ const MaintenanceView: React.FC = () => {
     }
   }, [workHours, data]);
 
+  const maintenanceTypes = uniqBy(
+    map(maintenanceHistoryAsset || [], a => ({
+      value: a.maintenanceCode || "",
+      title: a.codeDescription || ""
+    })),
+    "value"
+  );
+
   return (
     <View>
       <ViewHeader>
@@ -147,14 +156,7 @@ const MaintenanceView: React.FC = () => {
               <FormFieldLabel>Maintenance Type</FormFieldLabel>
               <FormField name="AssetHistory"></FormField>
               <FormFieldInput>
-                <TypeaheadInput
-                  items={((data && data.maintenanceAssetsByNo) || []).map(
-                    interval => ({
-                      value: interval.code || "",
-                      title: interval.maintenanceDesc || ""
-                    })
-                  )}
-                />
+                <TypeaheadInput items={maintenanceTypes} />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
@@ -197,6 +199,7 @@ const MaintenanceView: React.FC = () => {
       >
         <MainentanceHistoryView
           maintenanceHistoryAsset={maintenanceHistoryAsset}
+          maintenanceTypes={maintenanceTypes}
         />
       </FullPageSlideover>
     </View>

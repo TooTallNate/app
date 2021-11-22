@@ -124,6 +124,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             tabIndex={-1}
             onClick={() => {
               onChange(undefined);
+              setInputValue("");
             }}
           >
             <FontAwesomeIcon icon="times" />
@@ -141,7 +142,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
           <ul
             {...getMenuProps()}
             className={`
-          absolute bg-white z-10 overflow-x-auto
+          absolute bg-white z-100 overflow-x-auto
           max-h-44 left-0 right-0 mr-12 mt-px
           border border-gray-500 rounded-b-lg
           shadow

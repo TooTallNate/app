@@ -34,7 +34,13 @@ export const MaintenanceHistoryAsset: MaintenanceHistoryAssetResolvers = {
   quantity: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Quantity,
   description: navMaintenanceHistoryAsset =>
     navMaintenanceHistoryAsset.Description,
-  meta: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Meta
+  meta: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Meta,
+  codeDescription: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.CodeDescription,
+  payToName: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Pay_to_Name,
+  documentNo: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.AuxiliaryIndex2
 };
 
 export const queries: QueryResolvers = {

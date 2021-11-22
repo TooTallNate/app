@@ -18,6 +18,9 @@ type MaintenanceHistoryAsset {
   quantity: Int!
   description: String!
   meta: Int!
+  codeDescription: String!
+  payToName: String!
+  documentNo: String!
 }
 
 input PostMaintenanceInput {

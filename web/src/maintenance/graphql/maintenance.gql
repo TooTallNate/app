@@ -26,6 +26,9 @@ query MaintenanceHistoryAsset($number: String!) {
     quantity
     meta
     description
+    codeDescription
+    payToName
+    documentNo
   }
 }
 

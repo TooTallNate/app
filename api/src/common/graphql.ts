@@ -731,6 +731,9 @@ export type MaintenanceHistoryAsset = {
   quantity: Scalars["Int"];
   description: Scalars["String"];
   meta: Scalars["Int"];
+  codeDescription: Scalars["String"];
+  payToName: Scalars["String"];
+  documentNo: Scalars["String"];
 };
 
 export type PostMaintenanceInput = {
@@ -2197,6 +2200,9 @@ export type MaintenanceHistoryAssetResolvers<
   quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   meta?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  codeDescription?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  payToName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  documentNo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

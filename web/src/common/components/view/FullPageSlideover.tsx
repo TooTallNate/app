@@ -70,7 +70,7 @@ const FullPageSlideover = React.forwardRef<HTMLElement, FullPageSlideoverProps>(
             <div className="h-full flex flex-col pt-6 divide-y divide-gray-500">
               <SlideoverHeader />
               <div
-                className="bg-blue mt-3 py-3 px-6 relative flex-1 overflow-y-scroll"
+                className="pb-3 relative flex-1 overflow-y-scroll"
                 children={loading ? <FullPageSpinner /> : children}
               />
               <div className="w-full bg-transparent shadow-xl p-4 flex justify-center">

@@ -6,9 +6,11 @@ export function remToPx(n: number): number {
   );
 }
 
-export function formInputDate(d: string): string {
+export function formInputDate(d: string, short = false): string {
   const [yyyy, mm, dd] = d.split("-");
-  if (d && mm && dd && yyyy) return `${mm}/${dd}/${yyyy}`;
+
+  if (d && mm && dd && yyyy)
+    return short ? `${mm}/${dd}/${yyyy.slice(2)}` : `${mm}/${dd}/${yyyy}`;
   else return "";
 }
 
