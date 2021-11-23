@@ -37,6 +37,7 @@ const MenuView: React.FC = () => {
   const { setValue, getValues, watch } = formContext;
 
   const { data, loading } = useMenuOptionsQuery({
+    fetchPolicy: "no-cache",
     onCompleted(data) {
       if (data.user) {
         setValue([
@@ -59,6 +60,7 @@ const MenuView: React.FC = () => {
   const menuOptions = data ? data.menuOptions : [];
   const optionSelected = !!watch("selectedMenuOption");
 
+  console.log(data);
   return (
     <View>
       <ViewHeader>
@@ -113,7 +115,7 @@ const MenuView: React.FC = () => {
               <FormFieldInput>
                 <TypeaheadInput
                   className="flex-grow"
-                  items={menuOptions!
+                  items={menuOptions
                     .filter(
                       option =>
                         !userMenuOptions.some(opt => opt.name === option.name)

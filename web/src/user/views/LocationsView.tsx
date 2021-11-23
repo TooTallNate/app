@@ -59,6 +59,8 @@ const LocationsView: React.FC = () => {
   const locations = data ? data.locations : [];
   const locationSelected = !!watch("selectedLocation");
 
+  console.log(data);
+
   return (
     <View>
       <ViewHeader>

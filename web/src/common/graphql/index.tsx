@@ -96,7 +96,7 @@ export type Query = {
   maintenanceAsset?: Maybe<MaintenanceAsset>;
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
-  menuOptions?: Maybe<Array<MenuOption>>;
+  menuOptions: Array<MenuOption>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -830,8 +830,8 @@ export type HomeViewQuery = { __typename?: "Query" } & {
           };
       }
   >;
-  menuOptions?: Maybe<
-    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
+  menuOptions: Array<
+    { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
   >;
 };
 

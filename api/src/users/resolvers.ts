@@ -8,6 +8,7 @@ import { NavMenuOption, NavLocation } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
+import { MenuOptions } from "../common/utils";
 
 export const queries: QueryResolvers = {
   user(_, __, { user, dataSources }) {
@@ -25,21 +26,7 @@ export const queries: QueryResolvers = {
     return dataSources.navLocation.getAll();
   },
   async menuOptions(_, __, { user, navConfig, dataSources }) {
-    const settings = await UserSettingsModel.findOne({
-      username: user.username,
-      subdomain: navConfig.subdomain
-    });
-    if (settings && settings.menuOptions.list.length > 0) {
-      if (settings.menuOptions.mode === InclusivityMode.Include) {
-        var includeLocations = settings.menuOptions.list;
-      } else {
-        var excludeLocations = settings.menuOptions.list;
-      }
-    }
-    return dataSources.navUser.getAllMenuOptions({
-      includeLocations,
-      excludeLocations
-    });
+    return MenuOptions;
   }
 };
 
