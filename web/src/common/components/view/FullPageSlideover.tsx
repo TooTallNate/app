@@ -42,7 +42,7 @@ const FullPageSlideover = React.forwardRef<HTMLElement, FullPageSlideoverProps>(
     const CloseButton = () => (
       <Button
         type="button"
-        className="w-10/12 shadow-sm"
+        className="w-10/12 shadow-sm focus:outline-none focus:ring-white focus:border-none"
         onClick={() => toggle(false)}
       >
         Close
@@ -73,7 +73,7 @@ const FullPageSlideover = React.forwardRef<HTMLElement, FullPageSlideoverProps>(
                 className="pb-3 relative flex-1 overflow-y-scroll"
                 children={loading ? <FullPageSpinner /> : children}
               />
-              <div className="w-full bg-transparent shadow-xl p-4 flex justify-center">
+              <div className="w-full bg-transparent shadow-xl p-4 flex justify-center focus:outline-none focus:ring-none">
                 <CloseButton />
               </div>
             </div>

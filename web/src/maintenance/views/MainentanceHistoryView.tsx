@@ -51,10 +51,12 @@ const MainentanceHistoryView = React.forwardRef<
       3
     );
 
+    const cols = `grid-cols-${sums.length}`;
+
     return (
-      <div className={`grid grid-cols-${sums.length} w-full text-center`}>
+      <div className={`grid ${cols} w-full text-center`}>
         {reverse(sums).map(t => (
-          <div>
+          <div className="col-span-1">
             <span className="block text-sm text-gray-500">{t.key}</span>
             <span className="text-gray-900">{t.sum}</span>
           </div>
