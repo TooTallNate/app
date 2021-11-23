@@ -171,7 +171,7 @@ const ActivityShipmentView: React.FC = () => {
                 required: "The event field is required."
               }}
             >
-              <FormFieldLabel>Dimension Packer</FormFieldLabel>
+              <FormFieldLabel>Packer</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   items={data.dimensionPackers.map(dimPacker => ({
