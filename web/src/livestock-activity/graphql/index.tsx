@@ -67,6 +67,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  dimensionPackers: Array<DimensionPacker>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
   item?: Maybe<Item>;
@@ -611,6 +612,7 @@ export type LivestockWeanResult = {
 export type LivestockShipment = {
   __typename?: "LivestockShipment";
   event?: Maybe<LivestockShipmentEvent>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
@@ -621,16 +623,18 @@ export type LivestockShipment = {
 
 export type PostLivestockShipmentInput = {
   event: Scalars["String"];
+  dimensionPacker: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
+  totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SaveLivestockShipmentInput = {
   event?: Maybe<Scalars["String"]>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
@@ -653,6 +657,13 @@ export type ItemJournalTemplate = {
   type: Scalars["String"];
   sourceCode: Scalars["String"];
   reasonCode: Scalars["String"];
+};
+
+export type DimensionPacker = {
+  __typename?: "DimensionPacker";
+  code: Scalars["String"];
+  dimensionCode: Scalars["String"];
+  dimensionName: Scalars["String"];
 };
 
 export type MaintenanceAsset = {
@@ -1192,6 +1203,7 @@ export type LivestockShipmentFragmentFragment = {
   __typename?: "LivestockShipment";
 } & Pick<
   LivestockShipment,
+  | "dimensionPacker"
   | "postingDate"
   | "quantity"
   | "deadsOnArrivalQuantity"
@@ -1224,6 +1236,12 @@ export type LivestockShipmentQuery = { __typename?: "Query" } & {
   livestockShipment: {
     __typename?: "LivestockShipment";
   } & LivestockShipmentFragmentFragment;
+  dimensionPackers: Array<
+    { __typename?: "DimensionPacker" } & Pick<
+      DimensionPacker,
+      "code" | "dimensionCode" | "dimensionName"
+    >
+  >;
 };
 
 export type SaveLivestockShipmentMutationVariables = {
@@ -1441,6 +1459,7 @@ export const LivestockShipmentFragmentFragmentDoc = gql`
       inventory
       deadQuantity
     }
+    dimensionPacker
     postingDate
     quantity
     deadsOnArrivalQuantity
@@ -2475,6 +2494,11 @@ export const LivestockShipmentDocument = gql`
     }
     livestockShipment(job: $job) {
       ...LivestockShipmentFragment
+    }
+    dimensionPackers {
+      code
+      dimensionCode
+      dimensionName
     }
   }
   ${LivestockShipmentFragmentFragmentDoc}

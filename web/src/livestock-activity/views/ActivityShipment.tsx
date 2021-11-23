@@ -17,7 +17,6 @@ import BackButton from "../../common/components/view/BackButton";
 import ViewContent from "../../common/components/view/ViewContent";
 import CommentsField from "../components/CommentsField";
 import InventoryField from "../components/InventoryField";
-import TotalWeightField from "../components/TotalWeightField";
 import JobField from "../components/JobField";
 import QuantityAndSmallsField from "../components/QuantityAndSmallsField";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
@@ -27,14 +26,15 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import DateInput from "../../common/components/input/DateInput";
-import { loggers } from "winston";
+import NumberInput from "../../common/components/input/NumberInput";
 
 interface FormData {
   event: string;
+  dimensionPacker: string;
   postingDate: string;
   quantity: number;
   deadsOnArrivalQuantity?: number;
-  totalWeight: number;
+  totalWeight?: number;
   comments?: string;
 }
 
@@ -57,6 +57,8 @@ const ActivityShipmentView: React.FC = () => {
         setValue("event", livestockShipmentEventTypes[0].code);
       } else if (livestockShipment.event)
         setValue("event", livestockShipment.event.code);
+      if (livestockShipment.dimensionPacker)
+        setValue("dimensionPacker", livestockShipment.dimensionPacker);
       if (livestockShipment.quantity)
         setValue("quantity", livestockShipment.quantity);
       if (livestockShipment.totalWeight)
@@ -163,6 +165,23 @@ const ActivityShipmentView: React.FC = () => {
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
+            <FormField
+              name="dimensionPacker"
+              rules={{
+                required: "The event field is required."
+              }}
+            >
+              <FormFieldLabel>Packer</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.dimensionPackers.map(dimPacker => ({
+                    value: dimPacker.code,
+                    title: dimPacker.dimensionName
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <FormField name="postingDate">
               <FormFieldLabel>Activity Date</FormFieldLabel>
               <FormFieldInput>
@@ -174,7 +193,13 @@ const ActivityShipmentView: React.FC = () => {
               name="deadsOnArrivalQuantity"
               label="Deads on Arrival"
             />
-            <TotalWeightField />
+            <FormField name="totalWeight">
+              <FormFieldLabel>Total Weight</FormFieldLabel>
+              <FormFieldInput>
+                <NumberInput className="w-32" />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
             <CommentsField />
             <div className="flex">
               <Button className="w-full" type="button" onClick={onSave}>

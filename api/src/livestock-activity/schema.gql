@@ -269,6 +269,7 @@ type LivestockWeanResult {
 
 type LivestockShipment {
   event: LivestockShipmentEvent
+  dimensionPacker: String
   postingDate: String
   job: Job!
   quantity: Int
@@ -279,16 +280,18 @@ type LivestockShipment {
 
 input PostLivestockShipmentInput {
   event: String!
+  dimensionPacker: String!
   postingDate: String
   job: String!
   quantity: Int!
   deadsOnArrivalQuantity: Int
-  totalWeight: Float!
+  totalWeight: Float
   comments: String
 }
 
 input SaveLivestockShipmentInput {
   event: String
+  dimensionPacker: String
   postingDate: String
   job: String!
   quantity: Int
@@ -311,8 +314,15 @@ type ItemJournalTemplate {
   reasonCode: String!
 }
 
+type DimensionPacker {
+  code: String!
+  dimensionCode: String!
+  dimensionName: String!
+}
+
 type Query {
   animals: [Item!]!
+  dimensionPackers: [DimensionPacker!]!
   livestockActivityJobs(isShipment: Boolean): [Job!]!
   livestockActivityDefaults: LivestockActivityDefaults!
   livestockAdjustment(job: String!): LivestockAdjustment!

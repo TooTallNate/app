@@ -11,7 +11,8 @@ import {
   NavStandardItemJournal,
   NavJobPostingGroup,
   NavFuelAsset,
-  NavMaintenanceAsset
+  NavMaintenanceAsset,
+  NavDimensionPacker
 } from "./nav";
 import { LivestockAdjustmentDocument } from "../livestock-activity/models/LivestockAdjustment";
 import { LivestockGradeOffDocument } from "../livestock-activity/models/LivestockGradeOff";
@@ -95,6 +96,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  dimensionPackers: Array<DimensionPacker>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
   item?: Maybe<Item>;
@@ -639,6 +641,7 @@ export type LivestockWeanResult = {
 export type LivestockShipment = {
   __typename?: "LivestockShipment";
   event?: Maybe<LivestockShipmentEvent>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
@@ -649,16 +652,18 @@ export type LivestockShipment = {
 
 export type PostLivestockShipmentInput = {
   event: Scalars["String"];
+  dimensionPacker: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
+  totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SaveLivestockShipmentInput = {
   event?: Maybe<Scalars["String"]>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
@@ -681,6 +686,13 @@ export type ItemJournalTemplate = {
   type: Scalars["String"];
   sourceCode: Scalars["String"];
   reasonCode: Scalars["String"];
+};
+
+export type DimensionPacker = {
+  __typename?: "DimensionPacker";
+  code: Scalars["String"];
+  dimensionCode: Scalars["String"];
+  dimensionName: Scalars["String"];
 };
 
 export type MaintenanceAsset = {
@@ -1036,6 +1048,7 @@ export type ResolversTypes = ResolversObject<{
     }
   >;
   ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
+  DimensionPacker: ResolverTypeWrapper<NavDimensionPacker>;
   MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: ResolverTypeWrapper<MaintenanceResult>;
@@ -1184,6 +1197,7 @@ export type ResolversParentTypes = ResolversObject<{
     defaults: ResolversParentTypes["LivestockActivityDefaults"];
   };
   ItemJournalTemplate: ItemJournalTemplateObject;
+  DimensionPacker: NavDimensionPacker;
   MaintenanceAsset: NavMaintenanceAsset;
   PostMaintenanceInput: PostMaintenanceInput;
   MaintenanceResult: MaintenanceResult;
@@ -1302,6 +1316,11 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   animals?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  dimensionPackers?: Resolver<
+    Array<ResolversTypes["DimensionPacker"]>,
+    ParentType,
+    ContextType
+  >;
   fuelAsset?: Resolver<
     Maybe<ResolversTypes["FuelAsset"]>,
     ParentType,
@@ -2031,6 +2050,11 @@ export type LivestockShipmentResolvers<
     ParentType,
     ContextType
   >;
+  dimensionPacker?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   postingDate?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -2079,6 +2103,16 @@ export type ItemJournalTemplateResolvers<
   type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   sourceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type DimensionPackerResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["DimensionPacker"] = ResolversParentTypes["DimensionPacker"]
+> = ResolversObject<{
+  code?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  dimensionCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  dimensionName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -2331,6 +2365,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LivestockShipment?: LivestockShipmentResolvers<ContextType>;
   LivestockShipmentResult?: LivestockShipmentResultResolvers<ContextType>;
   ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
+  DimensionPacker?: DimensionPackerResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;
   ScorecardGroup?: ScorecardGroupResolvers<ContextType>;
