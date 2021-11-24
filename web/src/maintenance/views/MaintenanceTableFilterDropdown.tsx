@@ -18,29 +18,29 @@ export const Dropdown: React.FC<DropdownOptions> = ({
   <div className="relative flex justify-end">
     <Listbox value={value} onChange={setValue}>
       {({ open }) => (
-        <>
-          <div className="relative">
-            <Listbox.Button
-              className={`relative inline-flex items-center p-2 border border-gray-300 focus:outline-none focus:ring-none focus:border-gray-900 ${
-                open ? "rounded-t-lg" : "rounded-lg"
-              }`}
-            >
-              <span className="ml-3 block truncate mr-10">
-                Filter: {value && value.title}
-              </span>
-              <SelectorIcon
-                className="h-6 w-6 text-gray-900"
-                aria-hidden="true"
-              />
-            </Listbox.Button>
-            <Transition
-              show={open}
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="w-full absolute z-10 bg-white border border-gray-300 rounded-b-lg focus:outline-none">
+        <div>
+          <Listbox.Button
+            className={`relative max-w-xs inline-flex items-center p-2 border border-gray-300 focus:outline-none focus:ring-none focus:border-gray-900 ${
+              open ? "rounded-t-lg" : "rounded-lg"
+            }`}
+          >
+            <span className="ml-3 block truncate mr-10">
+              Filter: {value && value.title}
+            </span>
+            <SelectorIcon
+              className="h-6 w-6 text-gray-900"
+              aria-hidden="true"
+            />
+          </Listbox.Button>
+          <Transition
+            show={open}
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="relative">
+              <Listbox.Options className="w-full max-w-xs absolute z-10 bg-white border border-gray-300 rounded-b-lg focus:outline-none">
                 {options.map((type, i) => (
                   <>
                     {i > 0 && <Divider />}
@@ -54,9 +54,9 @@ export const Dropdown: React.FC<DropdownOptions> = ({
                   </>
                 ))}
               </Listbox.Options>
-            </Transition>
-          </div>
-        </>
+            </div>
+          </Transition>
+        </div>
       )}
     </Listbox>
   </div>
