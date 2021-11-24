@@ -67,6 +67,7 @@ export type ResourceFilter = {
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
+  dimensionPackers: Array<DimensionPacker>;
   fuelAsset?: Maybe<FuelAsset>;
   fuelAssets: Array<FuelAsset>;
   fuelHistoryAsset: Array<FuelHistoryAsset>;
@@ -97,7 +98,7 @@ export type Query = {
   maintenanceAssets: Array<MaintenanceAsset>;
   maintenanceAssetsByNo: Array<MaintenanceAsset>;
   maintenanceHistoryAsset: Array<MaintenanceHistoryAsset>;
-  menuOptions?: Maybe<Array<MenuOption>>;
+  menuOptions: Array<MenuOption>;
   resource?: Maybe<Resource>;
   resources: Array<Resource>;
   scorecard?: Maybe<Scorecard>;
@@ -635,6 +636,7 @@ export type LivestockWeanResult = {
 export type LivestockShipment = {
   __typename?: "LivestockShipment";
   event?: Maybe<LivestockShipmentEvent>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Job;
   quantity?: Maybe<Scalars["Int"]>;
@@ -645,16 +647,18 @@ export type LivestockShipment = {
 
 export type PostLivestockShipmentInput = {
   event: Scalars["String"];
+  dimensionPacker: Scalars["String"];
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity: Scalars["Int"];
   deadsOnArrivalQuantity?: Maybe<Scalars["Int"]>;
-  totalWeight: Scalars["Float"];
+  totalWeight?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
 };
 
 export type SaveLivestockShipmentInput = {
   event?: Maybe<Scalars["String"]>;
+  dimensionPacker?: Maybe<Scalars["String"]>;
   postingDate?: Maybe<Scalars["String"]>;
   job: Scalars["String"];
   quantity?: Maybe<Scalars["Int"]>;
@@ -677,6 +681,13 @@ export type ItemJournalTemplate = {
   type: Scalars["String"];
   sourceCode: Scalars["String"];
   reasonCode: Scalars["String"];
+};
+
+export type DimensionPacker = {
+  __typename?: "DimensionPacker";
+  code: Scalars["String"];
+  dimensionCode: Scalars["String"];
+  dimensionName: Scalars["String"];
 };
 
 export type MaintenanceAsset = {
@@ -886,8 +897,8 @@ export type UserMenuOptionsFieldsFragment = {
 export type MenuOptionsQueryVariables = {};
 
 export type MenuOptionsQuery = { __typename?: "Query" } & {
-  menuOptions?: Maybe<
-    Array<{ __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">>
+  menuOptions: Array<
+    { __typename?: "MenuOption" } & Pick<MenuOption, "name" | "route">
   >;
   user?: Maybe<
     { __typename?: "User" } & Pick<User, "username"> & {

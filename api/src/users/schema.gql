@@ -61,7 +61,7 @@ type Query {
   user: User
   users: [User!]!
   locations: [Location!]!
-  menuOptions: [MenuOption!]
+  menuOptions: [MenuOption!]!
 }
 
 type Mutation {

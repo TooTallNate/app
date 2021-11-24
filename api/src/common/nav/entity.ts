@@ -67,6 +67,7 @@ export interface NavItemJournalLine {
   Description: string;
   Shortcut_Dimension_1_Code: string;
   Shortcut_Dimension_2_Code: string;
+  ShortcutDimCode_x005B_5_x005D_: string;
   Location_Code: string;
   Gen_Prod_Posting_Group: string;
   Quantity: number;
@@ -209,4 +210,10 @@ export interface NavMaintenanceHistoryAsset {
 export interface NavMenuOption {
   Name: string;
   Route: string;
+}
+
+export interface NavDimensionPacker {
+  Code: string;
+  DimensionCode: string;
+  DimensionName: string;
 }

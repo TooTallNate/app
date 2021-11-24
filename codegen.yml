@@ -45,6 +45,7 @@ generates:
         FuelHistoryAsset: "./nav#NavFuelHistoryAsset"
         MaintenanceAsset: "./nav#NavMaintenanceAsset"
         MaintenanceHistoryAsset: "./nav#NavMaintenanceHistoryAsset"
+        DimensionPacker: "./nav#NavDimensionPacker"
     hooks:
       afterOneFileWrite:
         - eslint --fix

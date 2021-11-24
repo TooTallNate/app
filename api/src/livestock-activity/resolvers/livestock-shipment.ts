@@ -2,7 +2,8 @@ import {
   MutationResolvers,
   QueryResolvers,
   LivestockShipmentResolvers,
-  LivestockShipmentEventResolvers
+  LivestockShipmentEventResolvers,
+  DimensionPackerResolvers
 } from "../../common/graphql";
 import { NavItemJournalBatch, NavItemJournalTemplate } from "../../common/nav";
 import { getDocumentNumber } from "../../common/utils";
@@ -24,6 +25,12 @@ export const LivestockShipment: LivestockShipmentResolvers = {
   }
 };
 
+export const DimensionPacker: DimensionPackerResolvers = {
+  code: dp => dp.Code,
+  dimensionCode: dp => dp.DimensionCode,
+  dimensionName: dp => dp.DimensionName
+};
+
 export const LivestockShipmentQueries: QueryResolvers = {
   async livestockShipment(_, { job }) {
     return (
@@ -32,9 +39,13 @@ export const LivestockShipmentQueries: QueryResolvers = {
     );
   },
   async livestockShipmentEventTypes(_, __, { dataSources }) {
-    const x = await dataSources.navItemJournal.getStandardJournals(
+    return await dataSources.navItemJournal.getStandardJournals(
       NavItemJournalTemplate.Shipment
     );
+  },
+  async dimensionPackers(_, __, { dataSources }) {
+    const x = await dataSources.navMisc.getAllDimensionPackers();
+    console.log(x);
     return x;
   }
 };
@@ -83,6 +94,7 @@ export const LivestockShipmentMutations: MutationResolvers = {
         Journal_Batch_Name: NavItemJournalBatch.FarmApp,
         Document_No: getDocumentNumber("SHIPMENT", user.name),
         Description: input.comments,
+        ShortcutDimCode_x005B_5_x005D_: input.dimensionPacker,
         Location_Code: standardJournal.Location_Code
           ? standardJournal.Location_Code
           : job.Site,

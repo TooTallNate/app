@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StackedNav from "../../common/components/nav/StackedNav";
 import StackedNavLink from "../../common/components/nav/StackedNavLink";
 import Title from "../components/view/ViewTitle";
@@ -7,16 +7,42 @@ import ViewHeader from "../components/view/ViewHeader";
 import ViewContent from "../components/view/ViewContent";
 import QRCodeReader from "../components/input/QRCodeReader";
 import Divider from "../components/layout/Divider";
+import { useHomeViewQuery } from "../graphql";
+import { MenuOption } from "../../livestock-activity/graphql";
 
 const HomeView: React.FC = () => {
+  const [menu, setMenu] = useState(Array<MenuOption>());
+  const { loading } = useHomeViewQuery({
+    fetchPolicy: "no-cache",
+    onCompleted(data) {
+      console.log(data);
+      if (data && data.user && data.user.menuOptions.list.length > 0) {
+        setMenu(data.user.menuOptions.list);
+      } else {
+        setMenu(data.menuOptions);
+      }
+    }
+  });
+
   return (
     <View>
       <ViewHeader>
         <Title>Home</Title>
       </ViewHeader>
-      <ViewContent>
+      <ViewContent loading={loading}>
         <StackedNav>
-          <StackedNavLink to="/pig-activity">Pig Activity</StackedNavLink>
+          {/* {menu.map(item => {
+            return (
+              <>
+                <StackedNavLink key={item.name} to={item.route}>
+                  {item.name}
+                </StackedNavLink>
+              </>
+            );
+          })} */}
+          <StackedNavLink to="/livestock-activity">
+            Livestock Activity
+          </StackedNavLink>
           <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
           <StackedNavLink to="/fuel">Fuel</StackedNavLink>
           <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
