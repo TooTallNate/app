@@ -42,7 +42,7 @@ interface FormData {
 }
 
 const MaintenanceView: React.FC = () => {
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState(true);
   const [totalCostState, setTotalCostState] = useState("  ");
   const history = useHistory();
   const params = useParams<ViewParams>();

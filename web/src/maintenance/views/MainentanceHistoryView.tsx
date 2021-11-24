@@ -4,7 +4,7 @@ import { TypeaheadItem } from "../../common/components/input/TypeaheadInput";
 import Divider from "../../common/components/layout/Divider";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
-import { formInputDate } from "../../common/utils";
+import { formInputDate, numberWithCommas } from "../../common/utils";
 import { MaintenanceHistoryAsset } from "../graphql";
 import { Dropdown } from "./MaintenanceTableFilterDropdown";
 
@@ -46,17 +46,15 @@ const MainentanceHistoryView = React.forwardRef<
     const sums = takeRight(
       map(arr, (v, k) => ({
         key: k,
-        sum: `$${sumBy(v, "amount").toFixed(2)}`
+        sum: `$${numberWithCommas(sumBy(v, "amount").toFixed())}`
       })),
       3
     );
 
-    const cols = `grid-cols-${sums.length}`;
-
     return (
-      <div className={`grid ${cols} w-full text-center`}>
+      <div className="flex">
         {reverse(sums).map(t => (
-          <div className="col-span-1">
+          <div className="text-center w-full">
             <span className="block text-sm text-gray-500">{t.key}</span>
             <span className="text-gray-900">{t.sum}</span>
           </div>
@@ -67,15 +65,18 @@ const MainentanceHistoryView = React.forwardRef<
 
   return (
     <div className="h-full">
-      <div className="w-full p-3 bg-white sticky border-b border-gray-400 shadow-md top-0 absolute">
+      <div className="w-full px-3 pt-3 bg-white">
         <Dropdown
           options={maintenanceTypes}
           value={filter}
           setValue={setFilter}
         />
+      </div>
+      <div className="sticky top-0 w-full p-3 bg-white border-b border-gray-400">
         <TotalsRow />
       </div>
-      <div className="overflow-auto pb-3 mx-6">
+      {/* </div> */}
+      <div className="overflow-auto py-3 mx-6">
         <table className="divide-y divide-gray-200 min-w-full">
           <thead>
             <tr>
@@ -93,7 +94,7 @@ const MainentanceHistoryView = React.forwardRef<
                 <TableData
                   children={
                     <span className="flex justify-end">
-                      {`$${asset.amount.toFixed(2)}`}
+                      {`$${asset.amount.toFixed()}`}
                     </span>
                   }
                 />

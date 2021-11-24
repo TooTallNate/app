@@ -6,6 +6,10 @@ export function remToPx(n: number): number {
   );
 }
 
+export function numberWithCommas(x: string) {
+  return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export function formInputDate(d: string, short = false): string {
   const [yyyy, mm, dd] = d.split("-");
 

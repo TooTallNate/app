@@ -15,7 +15,7 @@ export const Dropdown: React.FC<DropdownOptions> = ({
   value,
   setValue
 }) => (
-  <div className="flex justify-end mb-6">
+  <div className="relative flex justify-end">
     <Listbox value={value} onChange={setValue}>
       {({ open }) => (
         <>
