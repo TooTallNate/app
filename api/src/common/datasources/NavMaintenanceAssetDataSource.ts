@@ -1,8 +1,8 @@
 import {
-  NavMaintenanceExpense,
-  NavFuelAsset,
+  NavItem,
   NavMaintenanceAsset,
-  NavItem
+  NavMaintenanceExpense,
+  NavMaintenanceHistoryAsset
 } from "../nav";
 import { BooleanFilterExpression } from "../nav/filter";
 import NavDataSource from "./NavDataSource";
@@ -35,6 +35,12 @@ export default class NavMaintenanceAssetDataSource extends NavDataSource {
     let filter = this.buildFilter(f => f.equals("No", number));
     const [asset] = await this.get(`/MaintenanceFixedAssets?$filter=${filter}`);
     return asset;
+  }
+
+  async getHistory(
+    fa_number: string
+  ): Promise<[NavMaintenanceHistoryAsset] | undefined> {
+    return await this.get(`/MaintenanceLedger?$filter=FA_No eq '${fa_number}'`);
   }
 
   getAllExpenseCodes(): Promise<NavMaintenanceExpense[]> {

@@ -42,7 +42,9 @@ generates:
         Scorecard: "../scorecard/Scorecard#ScorecardDocument"
         ScorecardConfig: "./nav#NavJob"
         FuelAsset: "./nav#NavFuelAsset"
+        FuelHistoryAsset: "./nav#NavFuelHistoryAsset"
         MaintenanceAsset: "./nav#NavMaintenanceAsset"
+        MaintenanceHistoryAsset: "./nav#NavMaintenanceHistoryAsset"
         DimensionPacker: "./nav#NavDimensionPacker"
     hooks:
       afterOneFileWrite:

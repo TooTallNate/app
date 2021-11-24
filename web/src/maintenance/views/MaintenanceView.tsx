@@ -1,6 +1,7 @@
+import { map, uniqBy } from "lodash";
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import { OnSubmit, useForm } from "react-hook-form";
+import { useHistory, useParams } from "react-router-dom";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
@@ -8,21 +9,24 @@ import FormFieldInput from "../../common/components/form/FormFieldInput";
 import FormFieldLabel from "../../common/components/form/FormFieldLabel";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import DateInput from "../../common/components/input/DateInput";
+import DecimalInput from "../../common/components/input/DecimalInput";
+import StaticValue from "../../common/components/input/StaticValue";
+import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import BackButton from "../../common/components/view/BackButton";
+import FullPageSlideover from "../../common/components/view/FullPageSlideover";
 import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import ViewTitle from "../../common/components/view/ViewTitle";
+import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../../livestock-activity/components/CommentsField";
 import {
   useMaintenanceAssetQuery,
+  useMaintenanceHistoryAssetQuery,
   usePostMaintenanceMutation
 } from "../graphql";
-import { useFlash } from "../../common/contexts/flash";
-import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import StaticValue from "../../common/components/input/StaticValue";
-import DecimalInput from "../../common/components/input/DecimalInput";
+import MainentanceHistoryView from "./MainentanceHistoryView";
 
 interface ViewParams {
   asset: string;
@@ -38,6 +42,7 @@ interface FormData {
 }
 
 const MaintenanceView: React.FC = () => {
+  const [showHistory, setShowHistory] = useState(false);
   const [totalCostState, setTotalCostState] = useState("  ");
   const history = useHistory();
   const params = useParams<ViewParams>();
@@ -48,6 +53,16 @@ const MaintenanceView: React.FC = () => {
       number: params.asset
     }
   });
+
+  const {
+    loading: historyLoading,
+    error: historyError,
+    data: historyData
+  } = useMaintenanceHistoryAssetQuery({
+    variables: { number: params.asset }
+  });
+
+  const { maintenanceHistoryAsset } = historyData || {};
 
   const { setMessage } = useFlash();
   const { watch } = formContext;
@@ -63,7 +78,6 @@ const MaintenanceView: React.FC = () => {
           }
         }
       });
-      console.log(JSON.stringify(data, null, 2));
       setMessage({
         message: "Entry recorded successfully.",
         level: "success",
@@ -94,6 +108,14 @@ const MaintenanceView: React.FC = () => {
     }
   }, [workHours, data]);
 
+  const maintenanceTypes = uniqBy(
+    map(maintenanceHistoryAsset || [], a => ({
+      value: a.maintenanceCode || "",
+      title: a.codeDescription || ""
+    })),
+    "value"
+  );
+
   return (
     <View>
       <ViewHeader>
@@ -109,6 +131,14 @@ const MaintenanceView: React.FC = () => {
               </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
+            <FormFieldLabel className="p-0">
+              <a
+                className="font-medium underline text-yellow-700 hover:text-yellow-600"
+                onClick={() => setShowHistory(true)}
+              >
+                View Asset History
+              </a>
+            </FormFieldLabel>
             <FormField name="postingDate">
               <FormFieldLabel>Activity Date</FormFieldLabel>
               <FormFieldInput>
@@ -123,15 +153,9 @@ const MaintenanceView: React.FC = () => {
               }}
             >
               <FormFieldLabel>Maintenance Type</FormFieldLabel>
+              <FormField name="AssetHistory"></FormField>
               <FormFieldInput>
-                <TypeaheadInput
-                  items={((data && data.maintenanceAssetsByNo) || []).map(
-                    interval => ({
-                      value: interval.code || "",
-                      title: interval.maintenanceDesc || ""
-                    })
-                  )}
-                />
+                <TypeaheadInput items={maintenanceTypes} />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>
@@ -166,6 +190,17 @@ const MaintenanceView: React.FC = () => {
           </Form>
         )}
       </ViewContent>
+      <FullPageSlideover
+        toggle={setShowHistory}
+        open={showHistory}
+        title="Maintenance History"
+        loading={historyLoading}
+      >
+        <MainentanceHistoryView
+          maintenanceHistoryAsset={maintenanceHistoryAsset}
+          maintenanceTypes={maintenanceTypes}
+        />
+      </FullPageSlideover>
     </View>
   );
 };

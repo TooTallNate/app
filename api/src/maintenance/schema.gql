@@ -8,6 +8,21 @@ type MaintenanceAsset {
   maintenanceDesc: String
 }
 
+type MaintenanceHistoryAsset {
+  entry: Int!
+  number: String!
+  amount: Float!
+  maintenanceCode: String!
+  reasonCode: String!
+  postingDate: String!
+  quantity: Int!
+  description: String!
+  meta: Int!
+  codeDescription: String!
+  payToName: String!
+  documentNo: String!
+}
+
 input PostMaintenanceInput {
   asset: String!
   postingDate: String
@@ -24,6 +39,7 @@ type MaintenanceResult {
 
 type Query {
   maintenanceAsset(number: String!): MaintenanceAsset
+  maintenanceHistoryAsset(number: String!): [MaintenanceHistoryAsset!]!
   maintenanceAssets: [MaintenanceAsset!]!
   maintenanceAssetsByNo(assetNo: String!): [MaintenanceAsset!]!
 }

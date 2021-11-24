@@ -1,18 +1,35 @@
 query MaintenanceAsset($number: String!) {
-    maintenanceAsset(number: $number) {
-        number
-        description
-    }
-    maintenanceAssetsByNo(assetNo: $number) {
-      code
-      interval
-      unitType
-      maintenanceDesc
-    }
-    item(number: "LABOR") {
-      number
-      cost
-    }
+  maintenanceAsset(number: $number) {
+    number
+    description
+  }
+  maintenanceAssetsByNo(assetNo: $number) {
+    code
+    interval
+    unitType
+    maintenanceDesc
+  }
+  item(number: "LABOR") {
+    number
+    cost
+  }
+}
+
+query MaintenanceHistoryAsset($number: String!) {
+  maintenanceHistoryAsset(number: $number) {
+    entry
+    number
+    amount
+    maintenanceCode
+    reasonCode
+    postingDate
+    quantity
+    meta
+    description
+    codeDescription
+    payToName
+    documentNo
+  }
 }
 
 mutation PostMaintenance($input: PostMaintenanceInput!) {

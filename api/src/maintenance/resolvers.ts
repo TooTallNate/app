@@ -2,6 +2,7 @@ import { parse } from "date-fns";
 import {
   InclusivityMode,
   MaintenanceAssetResolvers,
+  MaintenanceHistoryAssetResolvers,
   MutationResolvers,
   QueryResolvers
 } from "../common/graphql";
@@ -18,6 +19,28 @@ export const MaintenanceAsset: MaintenanceAssetResolvers = {
   unitType: navMaintenanceAsset => navMaintenanceAsset.Unit_of_Measure_Code,
   maintenanceDesc: navMaintenanceAsset =>
     navMaintenanceAsset.MaintenanceDescription
+};
+
+export const MaintenanceHistoryAsset: MaintenanceHistoryAssetResolvers = {
+  entry: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Entry_No,
+  number: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.FA_No,
+  amount: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Amount,
+  maintenanceCode: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Maintenance_Code,
+  reasonCode: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Reason_Code,
+  postingDate: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Posting_Date,
+  quantity: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Quantity,
+  description: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Description,
+  meta: navMaintenanceHistoryAsset => navMaintenanceHistoryAsset.Meta,
+  codeDescription: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.CodeDescription,
+  payToName: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.Pay_to_Name,
+  documentNo: navMaintenanceHistoryAsset =>
+    navMaintenanceHistoryAsset.AuxiliaryIndex2
 };
 
 export const queries: QueryResolvers = {
@@ -43,6 +66,9 @@ export const queries: QueryResolvers = {
       (asset, index, array) =>
         array.findIndex(asset2 => asset2.No === asset.No) === index
     );
+  },
+  async maintenanceHistoryAsset(_, { number }, { dataSources }) {
+    return await dataSources.navMaintenanceAsset.getHistory(number);
   },
   async maintenanceAsset(_, { number }, { dataSources }) {
     return await dataSources.navMaintenanceAsset.getByNo(number);
@@ -96,5 +122,6 @@ export const mutations: MutationResolvers = {
 };
 
 export const types = {
-  MaintenanceAsset
+  MaintenanceAsset,
+  MaintenanceHistoryAsset
 };

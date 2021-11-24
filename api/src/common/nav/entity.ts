@@ -132,8 +132,21 @@ export interface NavFuelAsset {
   Global_Dimension_2_Code: string;
   Location_Code: string;
   Image: string;
+  Unit_of_Measure_Code: string;
   AuxiliaryIndex1: number;
   AuxiliaryIndex2: string;
+}
+
+export interface NavFuelHistoryAsset {
+  Entry_No: number;
+  FA_No: string;
+  Amount: number;
+  Maintenance_Code: string;
+  Reason_Code: string;
+  Posting_Date: string;
+  Quantity: number;
+  Description: string;
+  Meta: number;
 }
 
 export interface NavFuelMaintenanceJournalLine {
@@ -175,6 +188,23 @@ export interface NavMaintenanceAsset {
   Global_Dimension_2_Code: string;
   Location_Code: string;
   AuxiliaryIndex1: string;
+  AuxiliaryIndex2: string;
+}
+
+export interface NavMaintenanceHistoryAsset {
+  Entry_No: number;
+  FA_No: string;
+  Amount: number;
+  Pay_to_Name: string;
+  Maintenance_Code: string;
+  Reason_Code: string;
+  Posting_Date: string;
+  Quantity: number;
+  Description: string;
+  Meta: number;
+  CodeDescription: string;
+  AuxiliaryIndex1: string;
+  AuxiliaryIndex2: string;
 }
 
 export interface NavMenuOption {
