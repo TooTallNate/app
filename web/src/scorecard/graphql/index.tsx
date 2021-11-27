@@ -214,9 +214,9 @@ export type FuelHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
 };
 
 export type PostFuelInput = {
@@ -709,9 +709,9 @@ export type MaintenanceHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
   codeDescription: Scalars["String"];
   payToName: Scalars["String"];
   documentNo: Scalars["String"];
