@@ -245,9 +245,9 @@ export type FuelHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
 };
 
 export type PostFuelInput = {
@@ -740,9 +740,9 @@ export type MaintenanceHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
   codeDescription: Scalars["String"];
   payToName: Scalars["String"];
   documentNo: Scalars["String"];
@@ -1600,9 +1600,9 @@ export type FuelHistoryAssetResolvers<
   maintenanceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   postingDate?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  meta?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  meta?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -2231,9 +2231,9 @@ export type MaintenanceHistoryAssetResolvers<
   maintenanceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   postingDate?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  quantity?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  meta?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  meta?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   codeDescription?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   payToName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   documentNo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
