@@ -1,19 +1,11 @@
-import { map, max, min, orderBy, reverse, slice } from "lodash";
+import "chartjs-plugin-zoom";
+import { orderBy } from "lodash";
 import React from "react";
-import { Line } from "react-chartjs-3";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
 import { FuelHistoryAsset } from "../../livestock-activity/graphql";
 import { FuelAsset } from "../graphql";
-import "chartjs-plugin-zoom";
-import { ChartOptions } from "chart.js";
-
-interface OptionsProps extends ChartOptions {
-  wheel: any;
-  pinch: any;
-  pan: any;
-  zoom: any;
-}
+import FuelHistoryChart from "./FuelHistoryChart";
 
 interface FuelHistoryProps {
   fuelAsset: FuelAsset;
@@ -23,21 +15,27 @@ interface FuelHistoryProps {
 const FuelHistoryView = React.forwardRef<HTMLElement, FuelHistoryProps>(
   function FuelHistoryView({ fuelHistoryAsset, fuelAsset }, ref) {
     const { unitOfMeasureCode } = fuelAsset;
+
     const sortedList = orderBy(fuelHistoryAsset, ["entry"], ["desc"]);
-    const chartList = slice(sortedList, 0, -1);
 
     const calcRate = (asset: FuelHistoryAsset, i: number): number => {
       const { meta: m, quantity: q } = asset;
       if (!m || !q || i === sortedList.length - 1) return 0;
-      return parseFloat(((m - sortedList[i + 1].meta) / q).toFixed(1));
+      if (unitOfMeasureCode === "HOUR") {
+        return parseFloat((q / (m - sortedList[i + 1].meta)).toFixed(1));
+      } else {
+        return parseFloat(((m - sortedList[i + 1].meta) / q).toFixed(1));
+      }
     };
 
     const getUoM = (calc: number) => {
-      switch (unitOfMeasureCode.toLowerCase()) {
-        case "miles":
+      switch (unitOfMeasureCode.toUpperCase()) {
+        case "MILES":
+        case "MILE":
           return `${calc} mpg`;
-        case "hours":
-          return `${calc} fph`;
+        case "HOURS":
+        case "HOUR":
+          return `${calc} gph`;
         default:
           return "---";
       }
@@ -46,44 +44,14 @@ const FuelHistoryView = React.forwardRef<HTMLElement, FuelHistoryProps>(
     if (!fuelAsset || !fuelHistoryAsset || !fuelHistoryAsset[0]) {
       return <h1>No data found.</h1>;
     }
-    const options: OptionsProps = {
-      wheel: {
-        speed: 1,
-        enabled: true
-      },
-      pinch: {
-        enabled: true
-      },
-      pan: {
-        scale: 2,
-        enabled: true,
-        mode: "x"
-      },
-      zoom: {
-        limits: {
-          y: { min: min(chartList), max: max(chartList) }
-        },
-        enabled: true,
-        mode: "x"
-      }
-    };
 
     return (
       <div className="pt-3 overflow-y-auto">
         <div className="overflow-x-scroll overflow-y-hidden pb-3">
-          <Line
-            options={options}
-            legend={{ display: false }}
-            data={{
-              labels: reverse(map(chartList, x => x.postingDate)),
-              datasets: [
-                {
-                  data: reverse(map(chartList, (x, i) => calcRate(x, i))),
-                  fill: false,
-                  borderColor: "black"
-                }
-              ]
-            }}
+          <FuelHistoryChart
+            unitOfMeasureCode={fuelAsset.unitOfMeasureCode}
+            fuelHistoryAsset={fuelHistoryAsset}
+            calcRate={calcRate}
           />
         </div>
         <div className="overflow-x-auto pb-3">

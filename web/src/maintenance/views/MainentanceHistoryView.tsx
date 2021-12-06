@@ -1,7 +1,6 @@
 import { groupBy, map, orderBy, reverse, sumBy, takeRight } from "lodash";
 import React, { useEffect, useState } from "react";
 import { TypeaheadItem } from "../../common/components/input/TypeaheadInput";
-import Divider from "../../common/components/layout/Divider";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
 import { formInputDate, numberWithCommas } from "../../common/utils";
