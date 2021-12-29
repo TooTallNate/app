@@ -63,7 +63,8 @@ export type Item = {
   __typename?: "Item";
   number: Scalars["String"];
   description: Scalars["String"];
-  cost?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]>;
+  cost?: Maybe<Scalars["Float"]>;
 };
 
 export type Reason = {
@@ -104,6 +105,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
+  items: Array<Item>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
@@ -268,6 +270,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postInventory: FuelResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -294,6 +297,10 @@ export type MutationLoginArgs = {
 };
 
 export type MutationPostFuelArgs = {
+  input: PostFuelInput;
+};
+
+export type MutationPostInventoryArgs = {
   input: PostFuelInput;
 };
 
@@ -1003,7 +1010,6 @@ export type ResolversTypes = ResolversObject<{
   Job: ResolverTypeWrapper<NavJob>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   Item: ResolverTypeWrapper<NavItem>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
@@ -1012,6 +1018,7 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
   FuelHistoryAsset: ResolverTypeWrapper<NavFuelHistoryAsset>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   PostFuelInput: PostFuelInput;
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -1147,7 +1154,6 @@ export type ResolversParentTypes = ResolversObject<{
   Job: NavJob;
   Float: Scalars["Float"];
   Item: NavItem;
-  Int: Scalars["Int"];
   Reason: NavReason;
   Resource: NavResource;
   Location: NavLocation;
@@ -1156,6 +1162,7 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   FuelAsset: NavFuelAsset;
   FuelHistoryAsset: NavFuelHistoryAsset;
+  Int: Scalars["Int"];
   PostFuelInput: PostFuelInput;
   FuelResult: FuelResult;
   Mutation: {};
@@ -1325,7 +1332,8 @@ export type ItemResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  cost?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  cost?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1395,6 +1403,7 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  items?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
   job?: Resolver<
     Maybe<ResolversTypes["Job"]>,
     ParentType,
@@ -1630,6 +1639,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationPostFuelArgs, "input">
+  >;
+  postInventory?: Resolver<
+    ResolversTypes["FuelResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostInventoryArgs, "input">
   >;
   postLivestockAdjustment?: Resolver<
     ResolversTypes["LivestockAdjustmentResult"],

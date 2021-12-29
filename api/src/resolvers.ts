@@ -4,6 +4,7 @@ import * as livestockActivity from "./livestock-activity/resolvers";
 import * as common from "./common/resolvers";
 import * as fuel from "./fuel/resolvers";
 import * as maintenance from "./maintenance/resolvers";
+import * as inventory from "./inventory/resolvers";
 
 export default {
   Query: {
@@ -12,7 +13,8 @@ export default {
     ...livestockActivity.queries,
     ...common.queries,
     ...fuel.queries,
-    ...maintenance.queries
+    ...maintenance.queries,
+    ...inventory.queries
   },
   Mutation: {
     ...users.mutations,

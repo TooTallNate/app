@@ -15,7 +15,6 @@ const HomeView: React.FC = () => {
   const { loading } = useHomeViewQuery({
     fetchPolicy: "no-cache",
     onCompleted(data) {
-      console.log(data);
       if (data && data.user && data.user.menuOptions.list.length > 0) {
         setMenu(data.user.menuOptions.list);
       } else {
@@ -31,7 +30,7 @@ const HomeView: React.FC = () => {
       </ViewHeader>
       <ViewContent loading={loading}>
         <StackedNav>
-          {/* {menu.map(item => {
+          {menu.map(item => {
             return (
               <>
                 <StackedNavLink key={item.name} to={item.route}>
@@ -39,13 +38,7 @@ const HomeView: React.FC = () => {
                 </StackedNavLink>
               </>
             );
-          })} */}
-          <StackedNavLink to="/livestock-activity">
-            Livestock Activity
-          </StackedNavLink>
-          <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
-          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
-          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
+          })}
         </StackedNav>
         <Divider className="py-3" centerText="or" />
         <QRCodeReader />
@@ -53,5 +46,13 @@ const HomeView: React.FC = () => {
     </View>
   );
 };
+
+/*
+  potential update -- replace map with below list if error loading the menu
+          <StackedNavLink to="/livestock-activity">Livestock Activity</StackedNavLink>
+          <StackedNavLink to="/scorecard">Scorecards</StackedNavLink>
+          <StackedNavLink to="/fuel">Fuel</StackedNavLink>
+          <StackedNavLink to="/maintenance">Maintenance</StackedNavLink>
+*/
 
 export default HomeView;

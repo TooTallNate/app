@@ -9,6 +9,7 @@ import AccountRouterView from "./user/views/AccountRouterView";
 import ScorecardsRouterView from "./scorecard/views/ScorecardsRouterView";
 import FuelRouterView from "./fuel/views/FuelRouterView";
 import MaintenanceRouterView from "./maintenance/views/MaintenanceRouterView";
+import InventoryRouterView from "./inventory/views/InventoryRouterView";
 
 const UnauthenticatedApp: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const AuthenticatedApp: React.FC = () => {
         <Route path="/scorecard" component={ScorecardsRouterView} />
         <Route path="/fuel" component={FuelRouterView} />
         <Route path="/maintenance" component={MaintenanceRouterView} />
+        <Route path="/inventory" component={InventoryRouterView} />
         <Route path="/account" component={AccountRouterView} />
         <Redirect to="/" />
       </Switch>

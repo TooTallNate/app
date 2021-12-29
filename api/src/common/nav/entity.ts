@@ -42,6 +42,7 @@ export interface NavReason {
 export interface NavItem {
   No: string;
   Description: string;
+  Gen_Prod_Posting_Group: string;
   Last_Direct_Cost: number;
 }
 

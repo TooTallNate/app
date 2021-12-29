@@ -1,0 +1,8 @@
+query InventoryItem {
+    items {
+        number
+        description
+        type
+        cost
+    }
+}

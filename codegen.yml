@@ -127,3 +127,16 @@ generates:
     hooks:
       afterOneFileWrite:
         - eslint --fix
+  web/src/inventory/graphql/index.tsx:
+      documents: "web/src/inventory/graphql/*.gql"
+      plugins:
+        - "typescript"
+        - "typescript-operations"
+        - "typescript-react-apollo"
+      config:
+        withHOC: false
+        withHooks: true
+        withComponent: false
+      hooks:
+        afterOneFileWrite:
+          - eslint --fix

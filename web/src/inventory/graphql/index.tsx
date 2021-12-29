@@ -862,283 +862,72 @@ export type UpdateUserMenuOptionsResult = {
   menuOptions: UserMenuOptions;
 };
 
-export type FuelAssetsQueryVariables = {};
+export type InventoryItemQueryVariables = {};
 
-export type FuelAssetsQuery = { __typename?: "Query" } & {
-  fuelAssets: Array<
-    { __typename?: "FuelAsset" } & Pick<
-      FuelAsset,
-      "number" | "code" | "description" | "fuelType"
+export type InventoryItemQuery = { __typename?: "Query" } & {
+  items: Array<
+    { __typename?: "Item" } & Pick<
+      Item,
+      "number" | "description" | "type" | "cost"
     >
   >;
 };
 
-export type FuelAssetQueryVariables = {
-  number: Scalars["String"];
-};
-
-export type FuelAssetQuery = { __typename?: "Query" } & {
-  fuelAsset?: Maybe<
-    { __typename?: "FuelAsset" } & Pick<
-      FuelAsset,
-      | "number"
-      | "code"
-      | "description"
-      | "fuelType"
-      | "fuelCost"
-      | "unitOfMeasureCode"
-    >
-  >;
-};
-
-export type FuelHistoryAssetQueryVariables = {
-  number: Scalars["String"];
-};
-
-export type FuelHistoryAssetQuery = { __typename?: "Query" } & {
-  fuelHistoryAsset: Array<
-    { __typename?: "FuelHistoryAsset" } & Pick<
-      FuelHistoryAsset,
-      | "entry"
-      | "number"
-      | "amount"
-      | "maintenanceCode"
-      | "reasonCode"
-      | "postingDate"
-      | "quantity"
-      | "meta"
-      | "description"
-    >
-  >;
-};
-
-export type PostFuelMutationVariables = {
-  input: PostFuelInput;
-};
-
-export type PostFuelMutation = { __typename?: "Mutation" } & {
-  postFuel: { __typename?: "FuelResult" } & Pick<FuelResult, "success">;
-};
-
-export const FuelAssetsDocument = gql`
-  query FuelAssets {
-    fuelAssets {
+export const InventoryItemDocument = gql`
+  query InventoryItem {
+    items {
       number
-      code
       description
-      fuelType
+      type
+      cost
     }
   }
 `;
 
 /**
- * __useFuelAssetsQuery__
+ * __useInventoryItemQuery__
  *
- * To run a query within a React component, call `useFuelAssetsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFuelAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useInventoryItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventoryItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFuelAssetsQuery({
+ * const { data, loading, error } = useInventoryItemQuery({
  *   variables: {
  *   },
  * });
  */
-export function useFuelAssetsQuery(
+export function useInventoryItemQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    FuelAssetsQuery,
-    FuelAssetsQueryVariables
+    InventoryItemQuery,
+    InventoryItemQueryVariables
   >
 ) {
-  return Apollo.useQuery<FuelAssetsQuery, FuelAssetsQueryVariables>(
-    FuelAssetsDocument,
+  return Apollo.useQuery<InventoryItemQuery, InventoryItemQueryVariables>(
+    InventoryItemDocument,
     baseOptions
   );
 }
-export function useFuelAssetsLazyQuery(
+export function useInventoryItemLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    FuelAssetsQuery,
-    FuelAssetsQueryVariables
+    InventoryItemQuery,
+    InventoryItemQueryVariables
   >
 ) {
-  return Apollo.useLazyQuery<FuelAssetsQuery, FuelAssetsQueryVariables>(
-    FuelAssetsDocument,
+  return Apollo.useLazyQuery<InventoryItemQuery, InventoryItemQueryVariables>(
+    InventoryItemDocument,
     baseOptions
   );
 }
-export type FuelAssetsQueryHookResult = ReturnType<typeof useFuelAssetsQuery>;
-export type FuelAssetsLazyQueryHookResult = ReturnType<
-  typeof useFuelAssetsLazyQuery
+export type InventoryItemQueryHookResult = ReturnType<
+  typeof useInventoryItemQuery
 >;
-export type FuelAssetsQueryResult = Apollo.QueryResult<
-  FuelAssetsQuery,
-  FuelAssetsQueryVariables
+export type InventoryItemLazyQueryHookResult = ReturnType<
+  typeof useInventoryItemLazyQuery
 >;
-export const FuelAssetDocument = gql`
-  query FuelAsset($number: String!) {
-    fuelAsset(number: $number) {
-      number
-      code
-      description
-      fuelType
-      fuelCost
-      unitOfMeasureCode
-    }
-  }
-`;
-
-/**
- * __useFuelAssetQuery__
- *
- * To run a query within a React component, call `useFuelAssetQuery` and pass it any options that fit your needs.
- * When your component renders, `useFuelAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFuelAssetQuery({
- *   variables: {
- *      number: // value for 'number'
- *   },
- * });
- */
-export function useFuelAssetQuery(
-  baseOptions: Apollo.QueryHookOptions<FuelAssetQuery, FuelAssetQueryVariables>
-) {
-  return Apollo.useQuery<FuelAssetQuery, FuelAssetQueryVariables>(
-    FuelAssetDocument,
-    baseOptions
-  );
-}
-export function useFuelAssetLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FuelAssetQuery,
-    FuelAssetQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<FuelAssetQuery, FuelAssetQueryVariables>(
-    FuelAssetDocument,
-    baseOptions
-  );
-}
-export type FuelAssetQueryHookResult = ReturnType<typeof useFuelAssetQuery>;
-export type FuelAssetLazyQueryHookResult = ReturnType<
-  typeof useFuelAssetLazyQuery
->;
-export type FuelAssetQueryResult = Apollo.QueryResult<
-  FuelAssetQuery,
-  FuelAssetQueryVariables
->;
-export const FuelHistoryAssetDocument = gql`
-  query FuelHistoryAsset($number: String!) {
-    fuelHistoryAsset(number: $number) {
-      entry
-      number
-      amount
-      maintenanceCode
-      reasonCode
-      postingDate
-      quantity
-      meta
-      description
-    }
-  }
-`;
-
-/**
- * __useFuelHistoryAssetQuery__
- *
- * To run a query within a React component, call `useFuelHistoryAssetQuery` and pass it any options that fit your needs.
- * When your component renders, `useFuelHistoryAssetQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFuelHistoryAssetQuery({
- *   variables: {
- *      number: // value for 'number'
- *   },
- * });
- */
-export function useFuelHistoryAssetQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FuelHistoryAssetQuery,
-    FuelHistoryAssetQueryVariables
-  >
-) {
-  return Apollo.useQuery<FuelHistoryAssetQuery, FuelHistoryAssetQueryVariables>(
-    FuelHistoryAssetDocument,
-    baseOptions
-  );
-}
-export function useFuelHistoryAssetLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FuelHistoryAssetQuery,
-    FuelHistoryAssetQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    FuelHistoryAssetQuery,
-    FuelHistoryAssetQueryVariables
-  >(FuelHistoryAssetDocument, baseOptions);
-}
-export type FuelHistoryAssetQueryHookResult = ReturnType<
-  typeof useFuelHistoryAssetQuery
->;
-export type FuelHistoryAssetLazyQueryHookResult = ReturnType<
-  typeof useFuelHistoryAssetLazyQuery
->;
-export type FuelHistoryAssetQueryResult = Apollo.QueryResult<
-  FuelHistoryAssetQuery,
-  FuelHistoryAssetQueryVariables
->;
-export const PostFuelDocument = gql`
-  mutation PostFuel($input: PostFuelInput!) {
-    postFuel(input: $input) {
-      success
-    }
-  }
-`;
-export type PostFuelMutationFn = Apollo.MutationFunction<
-  PostFuelMutation,
-  PostFuelMutationVariables
->;
-
-/**
- * __usePostFuelMutation__
- *
- * To run a mutation, you first call `usePostFuelMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePostFuelMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [postFuelMutation, { data, loading, error }] = usePostFuelMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function usePostFuelMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    PostFuelMutation,
-    PostFuelMutationVariables
-  >
-) {
-  return Apollo.useMutation<PostFuelMutation, PostFuelMutationVariables>(
-    PostFuelDocument,
-    baseOptions
-  );
-}
-export type PostFuelMutationHookResult = ReturnType<typeof usePostFuelMutation>;
-export type PostFuelMutationResult = Apollo.MutationResult<PostFuelMutation>;
-export type PostFuelMutationOptions = Apollo.BaseMutationOptions<
-  PostFuelMutation,
-  PostFuelMutationVariables
+export type InventoryItemQueryResult = Apollo.QueryResult<
+  InventoryItemQuery,
+  InventoryItemQueryVariables
 >;

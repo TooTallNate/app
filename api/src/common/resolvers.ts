@@ -48,6 +48,7 @@ const Job: JobResolvers = {
 const Item: ItemResolvers = {
   number: animal => animal.No,
   description: animal => animal.Description,
+  type: animal => animal.Gen_Prod_Posting_Group,
   cost: animal => animal.Last_Direct_Cost
 };
 

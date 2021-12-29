@@ -1,0 +1,16 @@
+# type InventoryItem {
+#   number: String!
+#   code: String!
+#   description: String!
+#   fuelType: String!
+#   fuelCost: Float!
+#   unitOfMeasureCode: String!
+# }
+
+type Query {
+  items: [Item!]!
+}
+
+type Mutation {
+  postInventory(input: PostFuelInput!): FuelResult!
+}

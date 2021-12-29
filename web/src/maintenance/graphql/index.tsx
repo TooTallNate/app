@@ -32,7 +32,8 @@ export type Item = {
   __typename?: "Item";
   number: Scalars["String"];
   description: Scalars["String"];
-  cost?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]>;
+  cost?: Maybe<Scalars["Float"]>;
 };
 
 export type Reason = {
@@ -73,6 +74,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
+  items: Array<Item>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
@@ -237,6 +239,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postInventory: FuelResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -263,6 +266,10 @@ export type MutationLoginArgs = {
 };
 
 export type MutationPostFuelArgs = {
+  input: PostFuelInput;
+};
+
+export type MutationPostInventoryArgs = {
   input: PostFuelInput;
 };
 
