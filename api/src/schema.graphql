@@ -106,9 +106,9 @@ type FuelHistoryAsset {
   maintenanceCode: String!
   reasonCode: String!
   postingDate: String!
-  quantity: Int!
+  quantity: Float!
   description: String!
-  meta: Int!
+  meta: Float!
 }
 
 input PostFuelInput {
@@ -487,9 +487,9 @@ type MaintenanceHistoryAsset {
   maintenanceCode: String!
   reasonCode: String!
   postingDate: String!
-  quantity: Int!
+  quantity: Float!
   description: String!
-  meta: Int!
+  meta: Float!
   codeDescription: String!
   payToName: String!
   documentNo: String!

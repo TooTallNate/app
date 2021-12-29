@@ -52,7 +52,6 @@ const FuelView: React.FC = () => {
 
   const {
     loading: historyLoading,
-    error: historyError,
     data: historyData
   } = useFuelHistoryAssetQuery({
     variables: {
@@ -129,12 +128,13 @@ const FuelView: React.FC = () => {
               </FormField>
               <FormField name="AssetHistory">
                 <FormFieldLabel className="p-0">
-                  <a
+                  <button
+                    type="button"
                     className="font-medium underline text-yellow-700 hover:text-yellow-600"
                     onClick={() => setShowHistory(true)}
                   >
                     View Asset History
-                  </a>
+                  </button>
                 </FormFieldLabel>
               </FormField>
               <FormField name="postingDate">
