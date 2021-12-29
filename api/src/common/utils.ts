@@ -7,7 +7,7 @@ export function getDocumentNumber(form: string, username: string) {
 }
 
 export function navDate(date: Date) {
-  return format(date, "yyyy-MM-dd");
+  return format(date, "YYY-MM-dd");
 }
 
 export function parseNavDate(dateStr: string) {
@@ -40,6 +40,5 @@ export const MenuOptions = [
   { Name: "Livestock Activity", Route: "/livestock-activity" },
   { Name: "Scorecards", Route: "/scorecard" },
   { Name: "Fuel", Route: "/fuel" },
-  { Name: "Maintenance", Route: "/maintenance" },
-  { Name: "Inventory  Use", Route: "/inventory" }
+  { Name: "Maintenance", Route: "/maintenance" }
 ];
