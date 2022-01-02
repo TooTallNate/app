@@ -1,27 +1,31 @@
-import React, { useEffect, useState } from "react";
-import FullPageSlideover from "../components/view/FullPageSlideover";
+import React, { useState } from "react";
 import Button from "../components/input/Button";
-import QRCodeReaderInput from "../components/input/QRCodeReaderInput";
+import QRCodeReaderInput from "../components/qr-scanner/QRCodeReaderInput";
+import FullPageSlideover from "../components/view/FullPageSlideover";
 
-type QRCodeReaderProps = {};
+const QRCodeReader = React.forwardRef<HTMLElement>(function QRCodeReader(
+  {},
+  ref
+) {
+  const [showQrReader, setShowQrReader] = useState(false);
 
-const QRCodeReader = React.forwardRef<HTMLElement, QRCodeReaderProps>(
-  function QRCodeReader({}, ref) {
-    const [showQrReader, setShowQrReader] = useState(false);
-
-    return (
-      <div>
-        <Button onClick={() => setShowQrReader(true)} className="w-full">
-          Scan QR Code
-        </Button>
-        <FullPageSlideover open={showQrReader} toggle={setShowQrReader}>
-          <QRCodeReaderInput
-            scan={showQrReader}
-            children={<div id="videoDiv" />}
-          />
-        </FullPageSlideover>
-      </div>
-    );
-  }
-);
+  return (
+    <div>
+      <Button onClick={() => setShowQrReader(true)} className="w-full">
+        Scan QR Code
+      </Button>
+      <FullPageSlideover
+        open={showQrReader}
+        toggle={setShowQrReader}
+        title={"Scan QR Code"}
+      >
+        <div className="h-full flex flex-col justify-center align-center p-3">
+          <div className="max-h-3/4">
+            <QRCodeReaderInput scan={showQrReader} />
+          </div>
+        </div>
+      </FullPageSlideover>
+    </div>
+  );
+});
 export default QRCodeReader;
