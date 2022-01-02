@@ -48,8 +48,10 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   };
 
   const resetScanner = useCallback(() => {
-    scanner && scanner.stop();
-    scanner && scanner.destroy();
+    if (scanner) {
+      scanner.stop();
+      scanner.destroy();
+    }
   });
 
   useEffect(() => {
