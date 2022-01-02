@@ -79,13 +79,15 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
 
   useEffect(() => {
     if (scan && scanner) {
-      scanner.start().then(() => {
-        console.log("Scanner started.");
-        scanner.hasFlash().then(hasTorch => {
-          console.log(`hasTorch::: ${hasTorch}`);
-          if (hasTorch) setTorch(true);
-        });
-      });
+      scanner.start();
+      console.log("SCANNER STARTED");
+      // .then(() => {
+      //   console.log("Scanner started.");
+      //   scanner.hasFlash().then(hasTorch => {
+      //     console.log(`hasTorch::: ${hasTorch}`);
+      //     if (hasTorch) setTorch(true);
+      //   });
+      // });
     }
     if (!scan && scanner) resetScanner();
   }, [resetScanner, scan, scanner]);
