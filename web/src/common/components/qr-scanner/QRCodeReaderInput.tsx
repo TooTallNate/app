@@ -47,6 +47,11 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
     }
   };
 
+  const reset = useCallback(() => {
+    scanner && scanner.stop();
+    scanner && scanner.destroy();
+  });
+
   useEffect(() => {
     if (!loading && scan && !scanner && videoElem) {
       setScanner(
@@ -65,11 +70,6 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
     }
     if (!scan && scanner) reset();
   }, [reset, scan, scanner]);
-
-  const reset = useCallback(() => {
-    scanner && scanner.stop();
-    scanner && scanner.destroy();
-  });
 
   useEffect(() => {
     if (scanner && torch === true) scanner.turnFlashOn();
