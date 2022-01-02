@@ -27,6 +27,13 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   const [videoElem, setVideoElem] = useState<HTMLVideoElement>();
   const [scanner, setScanner] = useState<QrScanner>();
 
+  const resetScanner = useCallback(() => {
+    if (scanner) {
+      scanner.stop();
+      scanner.destroy();
+    }
+  });
+
   const handleUrl = (url: string) => {
     resetScanner();
     history.push(url);
@@ -46,13 +53,6 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
         break;
     }
   };
-
-  const resetScanner = useCallback(() => {
-    if (scanner) {
-      scanner.stop();
-      scanner.destroy();
-    }
-  });
 
   useEffect(() => {
     if (!loading && scan && !scanner && videoElem) {
