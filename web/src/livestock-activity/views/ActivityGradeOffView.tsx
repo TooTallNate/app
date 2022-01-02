@@ -241,7 +241,7 @@ const ActivityGradeOffView: React.FC = () => {
                 required: "The weight field is required."
               }}
             >
-              <FormFieldLabel>Avg. Weigh / Head</FormFieldLabel>
+              <FormFieldLabel>Avg. Weight / Head</FormFieldLabel>
               <FormFieldInput>
                 <NumberInput />
               </FormFieldInput>
