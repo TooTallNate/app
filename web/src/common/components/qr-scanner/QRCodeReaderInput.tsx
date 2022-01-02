@@ -75,16 +75,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
         )
       );
     }
-  }, [
-    handleError,
-    handleUrl,
-    history,
-    loading,
-    resetScanner,
-    scan,
-    scanner,
-    videoElem
-  ]);
+  }, [handleError, history, loading, resetScanner, scan, scanner, videoElem]);
 
   useEffect(() => {
     if (scan && scanner) {
