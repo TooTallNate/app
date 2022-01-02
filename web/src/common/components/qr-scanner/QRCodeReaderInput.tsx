@@ -35,6 +35,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   }
 
   const handleUrl = (url: string) => {
+    alert(`URL: ${url}`);
     resetScanner();
     history.push(url);
   };
@@ -42,6 +43,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   const handleError = (e: string) => {
     switch (e.toLowerCase()) {
       case "no qr code found":
+      case "scanner error: timeout":
         break;
       default:
         setMessage({
