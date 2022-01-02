@@ -20,9 +20,7 @@ const QRCodeReader = React.forwardRef<HTMLElement>(function QRCodeReader(
         title={"Scan QR Code"}
       >
         <div className="h-full flex flex-col justify-center align-center p-3">
-          <div className="max-h-3/4">
-            <QRCodeReaderInput scan={showQrReader} />
-          </div>
+          <QRCodeReaderInput scan={showQrReader} />
         </div>
       </FullPageSlideover>
     </div>

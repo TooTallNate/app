@@ -17,11 +17,10 @@ type QRCodeReaderInputProps = {
   scan: boolean;
 };
 
-const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan: ds }) => {
+const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   const history = useHistory();
   const { setMessage } = useFlash();
 
-  const [scan, setScan] = useState(ds);
   const [loading, setLoading] = useState(true);
   const [torch, setTorch] = useState<Boolean | undefined>(undefined);
   const [error, setError] = useState("");
@@ -29,7 +28,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan: ds }) => {
   const [scanner, setScanner] = useState<QrScanner>();
 
   const handleUrl = (url: string) => {
-    setScan(false);
+    reset();
     history.push(url);
   };
 
@@ -43,7 +42,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan: ds }) => {
           level: "error",
           timeout: 4000
         });
-        setScan(false);
+        reset();
         break;
     }
   };
@@ -58,18 +57,19 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan: ds }) => {
 
   useEffect(() => {
     if (scan && scanner) {
-      scanner
-        .hasFlash()
-        .then(hasTorch => {
+      scanner.start().then(() => {
+        scanner.hasFlash().then(hasTorch => {
           if (hasTorch) setTorch(true);
-        })
-        .finally(() => scanner.start());
+        });
+      });
     }
-    if (!scan && scanner) {
-      scanner.stop();
-      scanner.destroy();
-    }
-  }, [scan, scanner]);
+    if (!scan && scanner) reset();
+  }, [reset, scan, scanner]);
+
+  const reset = useCallback(() => {
+    scanner && scanner.stop();
+    scanner && scanner.destroy();
+  });
 
   useEffect(() => {
     if (scanner && torch === true) scanner.turnFlashOn();
