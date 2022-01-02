@@ -28,7 +28,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   const [scanner, setScanner] = useState<QrScanner>();
 
   const handleUrl = (url: string) => {
-    reset();
+    resetScanner();
     history.push(url);
   };
 
@@ -42,12 +42,12 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
           level: "error",
           timeout: 4000
         });
-        reset();
+        resetScanner();
         break;
     }
   };
 
-  const reset = useCallback(() => {
+  const resetScanner = useCallback(() => {
     scanner && scanner.stop();
     scanner && scanner.destroy();
   });
@@ -68,8 +68,8 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
         });
       });
     }
-    if (!scan && scanner) reset();
-  }, [reset, scan, scanner]);
+    if (!scan && scanner) resetScanner();
+  }, [resetScanner, scan, scanner]);
 
   useEffect(() => {
     if (scanner && torch === true) scanner.turnFlashOn();
