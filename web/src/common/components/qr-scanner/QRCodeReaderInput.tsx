@@ -35,12 +35,13 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   }
 
   const handleUrl = (url: string) => {
-    alert(`URL: ${url}`);
+    console.log("handleUrl:", url);
     resetScanner();
     history.push(url);
   };
 
   const handleError = (e: string) => {
+    console.log("handleError:", e);
     switch (e.toLowerCase()) {
       case "no qr code found":
       case "scanner error: timeout":
@@ -57,6 +58,10 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   };
 
   useEffect(() => {
+    console.log("loading:", loading);
+    console.log("scan:", scan);
+    console.log("scanner:", scanner);
+    console.log("videoElem:", videoElem);
     if (!loading && scan && !scanner && videoElem) {
       setScanner(
         new QrScanner(videoElem, r => handleUrl(r), e => handleError(e))
@@ -67,7 +72,9 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   useEffect(() => {
     if (scan && scanner) {
       scanner.start().then(() => {
+        alert("HERE?");
         scanner.hasFlash().then(hasTorch => {
+          alert(`hasTorch::: ${hasTorch}`);
           if (hasTorch) setTorch(true);
         });
       });
