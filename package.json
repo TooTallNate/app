@@ -9,7 +9,8 @@
     "test": "jest --watch",
     "test:ci": "jest --maxWorkers=1",
     "e2e": "cypress open",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "lint": "eslint **/*.{js,jsx,ts,tsx} --fix"
   },
   "browserslist": {
     "production": [
