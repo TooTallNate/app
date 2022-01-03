@@ -64,15 +64,11 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
     console.log("videoElem:", videoElem);
     if (!loading && scan && !scanner && videoElem) {
       setScanner(
-        new QrScanner(
-          videoElem,
-          result => {
-            console.log("handleUrl:", result);
-            resetScanner();
-            history.push(result);
-          },
-          e => handleError(e)
-        )
+        new QrScanner(videoElem, result => {
+          alert(result);
+          resetScanner();
+          history.push(result);
+        })
       );
     }
   }, [handleError, history, loading, resetScanner, scan, scanner, videoElem]);
