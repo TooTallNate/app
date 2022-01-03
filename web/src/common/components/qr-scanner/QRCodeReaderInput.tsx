@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import Button from "../input/Button";
 import { useFlash } from "../../contexts/flash";
 
-QrScanner.WORKER_PATH = QrScannerWorkerPath;
+QrScanner.WORKER_PATH = URL.createObjectURL(new Blob([QrScannerWorkerPath]));
 
 const VIDEO_ELEMENT_ID = "qr_scanner";
 
