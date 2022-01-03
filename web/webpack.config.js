@@ -108,9 +108,6 @@ module.exports = {
         use: [
           {
             loader: "babel-loader"
-          },
-          {
-            loader: "file-loader"
           }
         ]
       },
