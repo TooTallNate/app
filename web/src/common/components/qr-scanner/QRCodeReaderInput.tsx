@@ -1,6 +1,6 @@
 /* eslint import/no-webpack-loader-syntax: off */
 
-import QrScannerWorkerPath from "!!file-loader!./qr-scanner-worker.min.js";
+import QrScannerWorkerPath from "!!file-loader!../../../../../node_modules/qr-scanner/qr-scanner-worker.min.js";
 import { LightningBoltIcon as LightningBoltOutlineIcon } from "@heroicons/react/outline";
 import { LightningBoltIcon as LightningBoltFullIcon } from "@heroicons/react/solid";
 import QrScanner from "qr-scanner";
@@ -35,13 +35,12 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   }
 
   const handleUrl = (url: string) => {
-    console.log("handleUrl:", url);
+    alert(`URL: ${url}`);
     resetScanner();
     history.push(url);
   };
 
   const handleError = (e: string) => {
-    console.log("handleError:", e);
     switch (e.toLowerCase()) {
       case "no qr code found":
       case "scanner error: timeout":
@@ -58,32 +57,20 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   };
 
   useEffect(() => {
-    console.log("loading:", loading);
-    console.log("scan:", scan);
-    console.log("scanner:", scanner);
-    console.log("videoElem:", videoElem);
     if (!loading && scan && !scanner && videoElem) {
       setScanner(
-        new QrScanner(videoElem, result => {
-          alert(result);
-          resetScanner();
-          history.push(result);
-        })
+        new QrScanner(videoElem, r => handleUrl(r), e => handleError(e))
       );
     }
-  }, [handleError, history, loading, resetScanner, scan, scanner, videoElem]);
+  }, [handleError, handleUrl, loading, scan, scanner, videoElem]);
 
   useEffect(() => {
     if (scan && scanner) {
-      scanner.start();
-      console.log("SCANNER STARTED");
-      // .then(() => {
-      //   console.log("Scanner started.");
-      //   scanner.hasFlash().then(hasTorch => {
-      //     console.log(`hasTorch::: ${hasTorch}`);
-      //     if (hasTorch) setTorch(true);
-      //   });
-      // });
+      scanner.start().then(() => {
+        scanner.hasFlash().then(hasTorch => {
+          if (hasTorch) setTorch(true);
+        });
+      });
     }
     if (!scan && scanner) resetScanner();
   }, [resetScanner, scan, scanner]);
