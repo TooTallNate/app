@@ -1,6 +1,5 @@
 /* eslint import/no-webpack-loader-syntax: off */
 
-import QrScannerWorkerPath from "!!file-loader!../../../../../node_modules/qr-scanner/qr-scanner-worker.min.js";
 import { LightningBoltIcon as LightningBoltOutlineIcon } from "@heroicons/react/outline";
 import { LightningBoltIcon as LightningBoltFullIcon } from "@heroicons/react/solid";
 import QrScanner from "qr-scanner";
@@ -8,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "../input/Button";
 import { useFlash } from "../../contexts/flash";
+import QrScannerWorkerPath from "!!file-loader!../../../../../node_modules/qr-scanner/qr-scanner-worker.min.js";
 
 const VIDEO_ELEMENT_ID = "qr_scanner";
 
@@ -20,6 +20,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   scan,
   toggle
 }) => {
+  console.log("PATH::: ", QrScannerWorkerPath);
   QrScanner.WORKER_PATH = QrScannerWorkerPath;
 
   const history = useHistory();
