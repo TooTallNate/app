@@ -9,15 +9,19 @@ import { useHistory } from "react-router-dom";
 import Button from "../input/Button";
 import { useFlash } from "../../contexts/flash";
 
-QrScanner.WORKER_PATH = QrScannerWorkerPath;
-
 const VIDEO_ELEMENT_ID = "qr_scanner";
 
 type QRCodeReaderInputProps = {
   scan: boolean;
+  toggle: Function;
 };
 
-const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
+const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
+  scan,
+  toggle
+}) => {
+  QrScanner.WORKER_PATH = QrScannerWorkerPath;
+
   const history = useHistory();
   const { setMessage } = useFlash();
 
@@ -25,18 +29,17 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
   const [torch, setTorch] = useState<Boolean | undefined>(undefined);
   const [error, setError] = useState("");
   const [videoElem, setVideoElem] = useState<HTMLVideoElement>();
-  const [scanner, setScanner] = useState<QrScanner>();
+  const [scanner, setScanner] = useState<QrScanner | null>(null);
 
   function resetScanner() {
-    if (scanner) {
-      scanner.stop();
-      scanner.destroy();
-    }
+    scanner && scanner.stop();
+    scanner && scanner.destroy();
+    toggle(false);
   }
 
   const handleUrl = (url: string) => {
-    alert(`URL: ${url}`);
     resetScanner();
+    console.log(`URL: ${url}`);
     history.push(url);
   };
 
@@ -44,6 +47,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
     switch (e.toLowerCase()) {
       case "no qr code found":
       case "scanner error: timeout":
+        console.log("common error: ", e);
         break;
       default:
         setMessage({
@@ -66,7 +70,9 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({ scan }) => {
 
   useEffect(() => {
     if (scan && scanner) {
+      console.log("STARTING");
       scanner.start().then(() => {
+        console.log("Started.");
         scanner.hasFlash().then(hasTorch => {
           if (hasTorch) setTorch(true);
         });
