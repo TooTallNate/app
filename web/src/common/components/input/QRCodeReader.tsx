@@ -19,6 +19,10 @@ const DEFAULT_VID_CONSTRAINTS: MediaStreamConstraints = {
   video: { facingMode: "environment" }
 };
 
+interface MyElement extends HTMLVideoElement {
+  srcObject: any;
+}
+
 const QRCodeReader = () => {
   const { setMessage } = useFlash();
   const history = useHistory();
@@ -58,11 +62,12 @@ const QRCodeReader = () => {
         }
       }
     );
-
     setTimeout(() => {
-      document
-        .getElementById(VIDEO_ELEMENT_ID)
-        .srcObject.getVideoTracks()[0]
+      // @ts-ignore
+      // eslint-ignore
+      const el: MyElement = document.getElementById(VIDEO_ELEMENT_ID) || null;
+      el.srcObject
+        .getVideoTracks()[0]
         .applyConstraints({ advanced: [{ torch: true }] });
     }, 2000);
   }
@@ -74,9 +79,11 @@ const QRCodeReader = () => {
 
   function reset() {
     setTimeout(() => {
-      document
-        .getElementById(VIDEO_ELEMENT_ID)
-        .srcObject.getVideoTracks()[0]
+      // @ts-ignore
+      // eslint-ignore
+      const el: MyElement = document.getElementById(VIDEO_ELEMENT_ID) || null;
+      el.srcObject
+        .getVideoTracks()[0]
         .applyConstraints({ advanced: [{ torch: true }] });
     }, 2000);
     codeReader.stopContinuousDecode();
