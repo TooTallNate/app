@@ -58,6 +58,13 @@ const QRCodeReader = () => {
         }
       }
     );
+
+    setTimeout(() => {
+      document
+        .getElementById(VIDEO_ELEMENT_ID)
+        .srcObject.getVideoTracks()[0]
+        .applyConstraints({ advanced: [{ torch: true }] });
+    }, 2000);
   }
 
   function processUrl(url: string) {
@@ -66,6 +73,12 @@ const QRCodeReader = () => {
   }
 
   function reset() {
+    setTimeout(() => {
+      document
+        .getElementById(VIDEO_ELEMENT_ID)
+        .srcObject.getVideoTracks()[0]
+        .applyConstraints({ advanced: [{ torch: true }] });
+    }, 2000);
     codeReader.stopContinuousDecode();
     codeReader.reset();
     setOpen(false);
