@@ -1,93 +1,126 @@
 /* eslint import/no-webpack-loader-syntax: off */
-
-import { LightningBoltIcon as LightningBoltOutlineIcon } from "@heroicons/react/outline";
-import { LightningBoltIcon as LightningBoltFullIcon } from "@heroicons/react/solid";
-import QrScanner from "qr-scanner";
+import {
+  BrowserQRCodeReader,
+  ChecksumException,
+  Exception,
+  FormatException,
+  NotFoundException,
+  Result
+} from "@zxing/library"; // use this path since v0.5.1
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Button from "../input/Button";
 import { useFlash } from "../../contexts/flash";
-import QrScannerWorkerPath from "!!file-loader!../../../../../node_modules/qr-scanner/qr-scanner-worker.min.js";
+import { UrlParseFromQR } from "../../utils";
+import FlashlightToggle from "./FlashlightToggle";
 
 const VIDEO_ELEMENT_ID = "qr_scanner";
+const DEFAULT_VID_CONSTRAINTS: MediaStreamConstraints = {
+  audio: false,
+  video: { facingMode: "environment" }
+};
 
 type QRCodeReaderInputProps = {
   scan: boolean;
   toggle: Function;
+  processUrl?: Function;
 };
 
 const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   scan,
-  toggle
+  toggle,
+  processUrl
 }) => {
-  console.log("PATH::: ", QrScannerWorkerPath);
-  QrScanner.WORKER_PATH = QrScannerWorkerPath;
-
   const history = useHistory();
   const { setMessage } = useFlash();
 
   const [loading, setLoading] = useState(true);
+  const [hasTorch, setHasTorch] = useState<Boolean>(false);
   const [torch, setTorch] = useState<Boolean | undefined>(undefined);
   const [error, setError] = useState("");
-  const [videoElem, setVideoElem] = useState<HTMLVideoElement>();
-  const [scanner, setScanner] = useState<QrScanner | null>(null);
+  const [videoElem, setVideoElem] = useState<any>();
+  const [scanner, setScanner] = useState(new BrowserQRCodeReader());
+
+  useEffect(() => {
+    if (scan && videoElem) {
+      verifyDevices();
+      scanner && startDecode();
+    } else if (!scan) {
+      resetScanner();
+    }
+  }, [resetScanner, scan, scanner, startDecode, verifyDevices, videoElem]);
 
   function resetScanner() {
-    scanner && scanner.stop();
-    scanner && scanner.destroy();
+    scanner && scanner.stopContinuousDecode();
+    scanner && scanner.reset();
     toggle(false);
   }
 
-  const handleUrl = (url: string) => {
-    resetScanner();
-    console.log(`URL: ${url}`);
-    history.push(url);
-  };
+  async function verifyDevices() {
+    const deviceList = scanner && (await scanner.listVideoInputDevices());
+    console.log(scanner);
+    if (!deviceList || !deviceList[0]) {
+      setMessage({
+        message: "Did not find video input device",
+        level: "error",
+        timeout: 4000
+      });
+      return resetScanner();
+    }
+  }
 
-  const handleError = (e: string) => {
-    switch (e.toLowerCase()) {
-      case "no qr code found":
-      case "scanner error: timeout":
-        console.log("common error: ", e);
+  function processResult(url: string) {
+    if (processUrl) {
+      processUrl(UrlParseFromQR(url));
+    } else {
+      resetScanner();
+      history.push(url);
+    }
+    return;
+  }
+
+  function processError(err: any) {
+    switch (err.constructor) {
+      case NotFoundException:
+      case ChecksumException:
+      case FormatException:
         break;
       default:
         setMessage({
-          message: e || "Uncaught error while decoding.",
+          message: err.message || "Uncaught error while decoding.",
           level: "error",
           timeout: 4000
         });
         resetScanner();
         break;
     }
-  };
+  }
 
-  useEffect(() => {
-    if (!loading && scan && !scanner && videoElem) {
-      setScanner(
-        new QrScanner(videoElem, r => handleUrl(r), e => handleError(e))
+  async function startDecode() {
+    toggleTorch(true);
+    scanner &&
+      scanner.decodeFromConstraints(
+        DEFAULT_VID_CONSTRAINTS,
+        VIDEO_ELEMENT_ID,
+        (result: Result, error: Exception | undefined) => {
+          if (result) processResult(result.getText());
+          if (error) processError(error);
+        }
       );
-    }
-  }, [handleError, handleUrl, loading, scan, scanner, videoElem]);
+  }
 
-  useEffect(() => {
-    if (scan && scanner) {
-      console.log("STARTING");
-      scanner.start().then(() => {
-        console.log("Started.");
-        scanner.hasFlash().then(hasTorch => {
-          if (hasTorch) setTorch(true);
-        });
-      });
-    }
-    if (!scan && scanner) resetScanner();
-  }, [resetScanner, scan, scanner]);
+  function toggleTorch(toggle: boolean, timer = 2000) {
+    setTorch(toggle);
+    setTimeout(() => {
+      // @ts-ignore
+      videoElem.srcObject
+        .getVideoTracks()[0]
+        .applyConstraints({ advanced: [{ torch: toggle }] })
+        .then(() => setHasTorch(true))
+        .catch(() => setTorch(false));
+    }, timer);
+  }
 
-  useEffect(() => {
-    if (scanner && torch === true) scanner.turnFlashOn();
-    if (scanner && torch === false) scanner.turnFlashOff();
-  }, [scanner, torch]);
-
-  getElement(VIDEO_ELEMENT_ID)
+  getVideoElement(VIDEO_ELEMENT_ID)
     .then((e: HTMLVideoElement | undefined) => {
       setVideoElem(e);
       setError("");
@@ -97,34 +130,17 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
 
   return (
     <div className="border-2 border-dashed border-gray-200 rounded-lg p-3">
-      <video id={VIDEO_ELEMENT_ID} />
-      {torch !== undefined && (
-        <Button
-          type="button"
-          className={`mt-2 mx-auto ${!torch && "bg-gray-700 border-none"}`}
-          onClick={() => setTorch(!torch)}
-        >
-          <div className="flex flex-row inline-flex items-center">
-            <div className="mx-2">{torch ? "ON" : "OFF"}</div>
-            {torch && (
-              <LightningBoltFullIcon className="h-6 w-6" aria-hidden="true" />
-            )}
-            {torch === false && (
-              <LightningBoltOutlineIcon
-                className="h-6 w-6"
-                aria-hidden="true"
-              />
-            )}
-          </div>
-        </Button>
-      )}
+      <video id={VIDEO_ELEMENT_ID} style={{ position: "relative" }} />
+      {hasTorch && <FlashlightToggle torch={torch} toggle={toggleTorch} />}
     </div>
   );
 };
 
+export default QRCodeReaderInput;
+
 const rafAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
 
-async function getElement(s: string) {
+async function getVideoElement(s: string) {
   let querySelector: HTMLVideoElement | undefined = undefined;
   while (querySelector === undefined) {
     await rafAsync();
@@ -132,5 +148,3 @@ async function getElement(s: string) {
   }
   return querySelector;
 }
-
-export default QRCodeReaderInput;
