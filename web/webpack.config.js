@@ -79,7 +79,7 @@ module.exports = {
     globalObject: "this"
   },
   devServer: {
-    https: true,
+    // https: true,
     contentBase: path.resolve(__dirname, "public"),
     historyApiFallback: true,
     proxy: {
