@@ -3,10 +3,7 @@ import Button from "../components/input/Button";
 import QRCodeReaderInput from "../components/qr-scanner/QRCodeReaderInput";
 import FullPageSlideover from "../components/view/FullPageSlideover";
 
-const QRCodeReader = React.forwardRef<HTMLElement>(function QRCodeReader(
-  {},
-  ref
-) {
+const QRCodeReader = React.forwardRef<HTMLElement>(function QRCodeReader() {
   const [showQrReader, setShowQrReader] = useState(false);
 
   return (

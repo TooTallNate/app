@@ -33,39 +33,39 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   const history = useHistory();
   const { setMessage } = useFlash();
 
-  const [loading, setLoading] = useState(true);
+  const [scanner, setScanner] = useState<BrowserQRCodeReader | null>(null);
+  const [scanning, setScanning] = useState(false);
   const [hasTorch, setHasTorch] = useState<Boolean>(false);
   const [torch, setTorch] = useState<Boolean | undefined>(undefined);
-  const [error, setError] = useState("");
   const [videoElem, setVideoElem] = useState<any>();
-  const [scanner, setScanner] = useState(new BrowserQRCodeReader());
+
+  !videoElem &&
+    getVideoElement(VIDEO_ELEMENT_ID)
+      .then((e: HTMLVideoElement | undefined) => {
+        setVideoElem(e);
+      })
+      .catch(() =>
+        setMessage({
+          message: "Unable to create camera video element.",
+          level: "error",
+          timeout: 4000
+        })
+      );
 
   useEffect(() => {
-    if (scan && videoElem) {
-      verifyDevices();
-      scanner && startDecode();
-    } else if (!scan) {
-      resetScanner();
-    }
-  }, [resetScanner, scan, scanner, startDecode, verifyDevices, videoElem]);
+    if (!scanner) setScanner(new BrowserQRCodeReader());
+
+    if (scan && videoElem && !scanning) startDecode();
+    else if (!scan) resetScanner();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scan, scanning, videoElem, resetScanner, startDecode]);
 
   function resetScanner() {
     scanner && scanner.stopContinuousDecode();
     scanner && scanner.reset();
+    setScanning(false);
     toggle(false);
-  }
-
-  async function verifyDevices() {
-    const deviceList = scanner && (await scanner.listVideoInputDevices());
-    console.log(scanner);
-    if (!deviceList || !deviceList[0]) {
-      setMessage({
-        message: "Did not find video input device",
-        level: "error",
-        timeout: 4000
-      });
-      return resetScanner();
-    }
   }
 
   function processResult(url: string) {
@@ -96,11 +96,12 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   }
 
   async function startDecode() {
+    setScanning(true);
     toggleTorch(true);
     scanner &&
       scanner.decodeFromConstraints(
         DEFAULT_VID_CONSTRAINTS,
-        VIDEO_ELEMENT_ID,
+        videoElem,
         (result: Result, error: Exception | undefined) => {
           if (result) processResult(result.getText());
           if (error) processError(error);
@@ -119,14 +120,6 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
         .catch(() => setTorch(false));
     }, timer);
   }
-
-  getVideoElement(VIDEO_ELEMENT_ID)
-    .then((e: HTMLVideoElement | undefined) => {
-      setVideoElem(e);
-      setError("");
-    })
-    .catch(() => setError("Unable to create camera."))
-    .finally(() => setLoading(false));
 
   return (
     <div className="border-2 border-dashed border-gray-200 rounded-lg p-3">
