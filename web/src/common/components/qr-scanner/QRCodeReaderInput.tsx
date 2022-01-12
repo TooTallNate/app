@@ -62,6 +62,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   }, [scan, scanning, videoElem, resetScanner, startDecode]);
 
   function resetScanner() {
+    toggleTorch(false, 50);
     scanner && scanner.stopContinuousDecode();
     scanner && scanner.reset();
     setScanning(false);
@@ -72,9 +73,9 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
     if (processUrl) {
       processUrl(UrlParseFromQR(url));
     } else {
-      resetScanner();
       history.push(url);
     }
+    resetScanner();
     return;
   }
 
