@@ -36,7 +36,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   const [scanner, setScanner] = useState<BrowserQRCodeReader | null>(null);
   const [scanning, setScanning] = useState(false);
   const [hasTorch, setHasTorch] = useState<Boolean>(false);
-  const [torch, setTorch] = useState<Boolean | undefined>(undefined);
+  const [torch, setTorch] = useState<Boolean>(false);
   const [videoElem, setVideoElem] = useState<any>();
 
   !videoElem &&
@@ -97,7 +97,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
 
   async function startDecode() {
     setScanning(true);
-    toggleTorch(true);
+    toggleTorch(false);
     scanner &&
       scanner.decodeFromConstraints(
         DEFAULT_VID_CONSTRAINTS,
