@@ -76,11 +76,6 @@ const InventoryView: React.FC = () => {
 
   const onSubmit: OnSubmit<FormData> = async ({ postingDate, comments }) => {
     try {
-      //unregister(["item", "quantity"]);
-      console.log(
-        `${params.location} - ${params.group} - ${postingDate} - ${comments}`
-      );
-      console.log(list);
       await post({
         variables: {
           input: {
@@ -112,9 +107,7 @@ const InventoryView: React.FC = () => {
 
   const removeItem = (item: ItemProps) => {
     if (list) {
-      console.log(list);
       const newList = list.filter(i => i.item.number !== item.number);
-      console.log(newList);
       setList(newList);
     }
   };
@@ -154,11 +147,13 @@ const InventoryView: React.FC = () => {
   };
 
   useEffect(() => {
-    if (list) {
+    if (list && list.length > 0) {
       const newTotal = list
         .map(item => item.item.cost * item.quantity)
         .reduce((prev, next) => prev + next);
       setTotal(newTotal);
+    } else {
+      setTotal(0);
     }
   }, [list]);
 
