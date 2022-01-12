@@ -61,7 +61,7 @@ const InventoryView: React.FC = () => {
   const [list, setList] = useState<ItemListProps[]>();
   const [total, setTotal] = useState<Number>(0);
   const { setMessage } = useFlash();
-  const { watch, reset, triggerValidation, unregister } = formContext;
+  const { watch, reset } = formContext;
   const { loading, data } = useInventoryItemQuery({
     variables: {
       job: params.group

@@ -73,6 +73,7 @@ export interface NavItemJournalLine {
   Gen_Prod_Posting_Group: string;
   Quantity: number;
   Unit_Amount: number;
+  Amount: number;
   Unit_Cost: number;
   Reason_Code: NavReasonCode;
   Weight: number;

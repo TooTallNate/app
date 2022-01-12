@@ -1,6 +1,10 @@
 import { parse } from "date-fns";
 import { MutationResolvers, QueryResolvers } from "../common/graphql";
-import { NavEntryType, NavItemJournalBatch } from "../common/nav";
+import {
+  NavEntryType,
+  NavItemJournalBatch,
+  NavItemJournalTemplate
+} from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 import { postItemJournal } from "../livestock-activity/resolvers/livestock-activity";
 
@@ -21,32 +25,44 @@ export const queries: QueryResolvers = {
 
 export const mutations: MutationResolvers = {
   async postInventory(_, { input }, { dataSources, user, navConfig }) {
-    const docNo = getDocumentNumber("MEDS", user.name);
+    const docNo = getDocumentNumber("INV", user.name);
     const date = navDate(
       input.postingDate
         ? parse(input.postingDate, "yyyy-MM-dd", new Date())
         : new Date()
     );
+
+    const job = await dataSources.navJob.getByNo(input.group);
+
+    const [
+      standardJournal
+    ] = await dataSources.navItemJournal.getStandardJournalLines({
+      code: "FE-INVENT",
+      template: NavItemJournalTemplate.Inventory
+    });
+
     for (const item of input.itemList) {
+      const itemTotal = item.item.cost * item.quantity;
       await postItemJournal(
         {
-          //...standardJournal,
+          ...standardJournal,
           Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-          Entry_Type: NavEntryType.Positive,
+          Entry_Type: NavEntryType.Negative,
           Item_No: item.item.number,
           Document_No: docNo,
           Description: input.comments,
           Location_Code: input.location,
           Quantity: item.quantity,
           Posting_Date: date,
-          Job_No: input.group,
-          Unit_Amount: item.item.cost
-          // Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
-          //   ? standardJournal.Shortcut_Dimension_1_Code
-          //   : job.Entity,
-          // Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
-          //   ? standardJournal.Shortcut_Dimension_2_Code
-          //   : job.Cost_Center
+          Job_No: job.No,
+          Amount: itemTotal,
+          Gen_Prod_Posting_Group: item.item.type,
+          Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
+            ? standardJournal.Shortcut_Dimension_1_Code
+            : job.Entity,
+          Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
+            ? standardJournal.Shortcut_Dimension_2_Code
+            : job.Cost_Center
         },
         dataSources.navItemJournal
       );
