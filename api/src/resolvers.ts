@@ -21,7 +21,8 @@ export default {
     ...scorecard.mutations,
     ...livestockActivity.mutations,
     ...fuel.mutations,
-    ...maintenance.mutations
+    ...maintenance.mutations,
+    ...inventory.mutations
   },
   ...users.types,
   ...scorecard.types,

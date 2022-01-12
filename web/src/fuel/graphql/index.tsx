@@ -239,7 +239,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
-  postInventory: FuelResult;
+  postInventory: InventoryResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -270,7 +270,7 @@ export type MutationPostFuelArgs = {
 };
 
 export type MutationPostInventoryArgs = {
-  input: PostFuelInput;
+  input: PostInventoryInput;
 };
 
 export type MutationPostLivestockAdjustmentArgs = {
@@ -347,6 +347,47 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type Inventory = {
+  __typename?: "Inventory";
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  item?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemList = {
+  __typename?: "ItemList";
+  item: Item;
+  quantity: Scalars["Float"];
+};
+
+export type ItemInput = {
+  number: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  cost: Scalars["Float"];
+};
+
+export type ItemListInput = {
+  item: ItemInput;
+  quantity: Scalars["Float"];
+};
+
+export type PostInventoryInput = {
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  itemList?: Maybe<Array<ItemListInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type InventoryResult = {
+  __typename?: "InventoryResult";
+  success: Scalars["Boolean"];
 };
 
 export type LivestockActivityDefaults = {

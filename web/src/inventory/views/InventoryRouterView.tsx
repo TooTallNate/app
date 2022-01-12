@@ -10,7 +10,7 @@ const InventoryRouterView: React.FC = () => {
       <Route exact path={`${match.url}`} component={InventorySelectionView} />
       <Route
         exact
-        path={`${match.url}/inventory/:item`}
+        path={`${match.url}/inventory/:location/:group`}
         component={InventoryView}
       />
       <Redirect to={`${match.url}`} />

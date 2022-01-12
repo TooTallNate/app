@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { OnSubmit, useForm } from "react-hook-form";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import Form from "../../common/components/form/Form";
@@ -15,21 +15,23 @@ import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
 import ViewHeader from "../../common/components/view/ViewHeader";
 import Title from "../../common/components/view/ViewTitle";
-import { useInventoryItemQuery } from "../graphql";
+import { useInventorySelectQuery } from "../graphql";
 
 interface FormData {
-  item: string;
+  location: string;
+  group: string;
 }
 
 const InventorySelectionView: React.FC = () => {
   const history = useHistory();
   const formContext = useForm<FormData>();
-  const { loading, data } = useInventoryItemQuery();
+  const { loading, data } = useInventorySelectQuery();
+  const [jobsList, setJobsList] = useState();
 
   const match = useRouteMatch();
 
   const onSubmit: OnSubmit<FormData> = data => {
-    history.push(`${match.url}/inventory/${data.item}`);
+    history.push(`${match.url}/inventory/${data.location}/${data.group}`);
   };
 
   const onBack = () => history.push("/");
@@ -38,23 +40,40 @@ const InventorySelectionView: React.FC = () => {
     <View>
       <ViewHeader>
         <BackButton />
-        <Title>Inventory Item Selection</Title>
+        <Title>Group/Location Selection</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
         {data && (
           <Form context={formContext} onSubmit={onSubmit}>
             <FormField
-              name="item"
+              name="location"
+              rules={{
+                required: "A location is required"
+              }}
+            >
+              <FormFieldLabel>Select Location</FormFieldLabel>
+              <FormFieldInput>
+                <TypeaheadInput
+                  items={data.locations.map(loc => ({
+                    value: loc.code || "",
+                    title: `${loc.name}` || ""
+                  }))}
+                />
+              </FormFieldInput>
+              <FormFieldErrors />
+            </FormField>
+            <FormField
+              name="group"
               rules={{
                 required: "An item is required"
               }}
             >
-              <FormFieldLabel>Select Item</FormFieldLabel>
+              <FormFieldLabel>Select Group</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
-                  items={data.items.map(item => ({
-                    value: item.number || "",
-                    title: `${item.description}` || ""
+                  items={data.jobs.map(job => ({
+                    value: job.number || "",
+                    title: `${job.description}` || ""
                   }))}
                 />
               </FormFieldInput>

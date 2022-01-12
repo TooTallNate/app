@@ -1,8 +1,10 @@
-query InventoryItem {
-    items {
+query InventorySelect {
+    jobs(input: {}) {
         number
         description
-        type
-        cost
+    }
+    locations {
+        code
+        name
     }
 }

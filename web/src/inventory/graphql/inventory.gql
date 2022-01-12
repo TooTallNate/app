@@ -1,0 +1,17 @@
+query InventoryItem($job: String!) {
+    items {
+        number
+        description
+        type
+        cost
+    }
+    job (number: $job) {
+        number
+        description
+    }
+}
+mutation PostInventory($input: PostInventoryInput!) {
+  postInventory(input: $input) {
+    success
+  }
+}

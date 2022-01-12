@@ -129,7 +129,7 @@ type Mutation {
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFuel(input: PostFuelInput!): FuelResult!
-  postInventory(input: PostFuelInput!): FuelResult!
+  postInventory(input: PostInventoryInput!): InventoryResult!
   postLivestockAdjustment(input: PostLivestockAdjustmentInput!): LivestockAdjustmentResult!
   postLivestockGradeOff(input: PostLivestockGradeOffInput!): LivestockGradeOffResult!
   postLivestockMortality(input: PostLivestockMortalityInput!): LivestockMortalityResult!
@@ -149,6 +149,44 @@ type Mutation {
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
   updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
+}
+
+type Inventory {
+  location: String!
+  group: String!
+  postingDate: String
+  item: String
+  quantity: Float
+  comments: String
+}
+
+type ItemList {
+  item: Item!
+  quantity: Float!
+}
+
+input ItemInput {
+  number: String!
+  description: String!
+  type: String!
+  cost: Float!
+}
+
+input ItemListInput {
+  item: ItemInput!
+  quantity: Float!
+}
+
+input PostInventoryInput {
+  location: String!
+  group: String!
+  postingDate: String
+  itemList: [ItemListInput!]
+  comments: String
+}
+
+type InventoryResult {
+  success: Boolean!
 }
 
 type LivestockActivityDefaults {

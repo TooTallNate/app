@@ -239,7 +239,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
-  postInventory: FuelResult;
+  postInventory: InventoryResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -270,7 +270,7 @@ export type MutationPostFuelArgs = {
 };
 
 export type MutationPostInventoryArgs = {
-  input: PostFuelInput;
+  input: PostInventoryInput;
 };
 
 export type MutationPostLivestockAdjustmentArgs = {
@@ -347,6 +347,47 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type Inventory = {
+  __typename?: "Inventory";
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  item?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemList = {
+  __typename?: "ItemList";
+  item: Item;
+  quantity: Scalars["Float"];
+};
+
+export type ItemInput = {
+  number: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  cost: Scalars["Float"];
+};
+
+export type ItemListInput = {
+  item: ItemInput;
+  quantity: Scalars["Float"];
+};
+
+export type PostInventoryInput = {
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  itemList?: Maybe<Array<ItemListInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type InventoryResult = {
+  __typename?: "InventoryResult";
+  success: Scalars["Boolean"];
 };
 
 export type LivestockActivityDefaults = {
@@ -862,7 +903,18 @@ export type UpdateUserMenuOptionsResult = {
   menuOptions: UserMenuOptions;
 };
 
-export type InventoryItemQueryVariables = {};
+export type InventorySelectQueryVariables = {};
+
+export type InventorySelectQuery = { __typename?: "Query" } & {
+  jobs: Array<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
+  locations: Array<
+    { __typename?: "Location" } & Pick<Location, "code" | "name">
+  >;
+};
+
+export type InventoryItemQueryVariables = {
+  job: Scalars["String"];
+};
 
 export type InventoryItemQuery = { __typename?: "Query" } & {
   items: Array<
@@ -871,15 +923,91 @@ export type InventoryItemQuery = { __typename?: "Query" } & {
       "number" | "description" | "type" | "cost"
     >
   >;
+  job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
 };
 
+export type PostInventoryMutationVariables = {
+  input: PostInventoryInput;
+};
+
+export type PostInventoryMutation = { __typename?: "Mutation" } & {
+  postInventory: { __typename?: "InventoryResult" } & Pick<
+    InventoryResult,
+    "success"
+  >;
+};
+
+export const InventorySelectDocument = gql`
+  query InventorySelect {
+    jobs(input: {}) {
+      number
+      description
+    }
+    locations {
+      code
+      name
+    }
+  }
+`;
+
+/**
+ * __useInventorySelectQuery__
+ *
+ * To run a query within a React component, call `useInventorySelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventorySelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventorySelectQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInventorySelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    InventorySelectQuery,
+    InventorySelectQueryVariables
+  >
+) {
+  return Apollo.useQuery<InventorySelectQuery, InventorySelectQueryVariables>(
+    InventorySelectDocument,
+    baseOptions
+  );
+}
+export function useInventorySelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    InventorySelectQuery,
+    InventorySelectQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    InventorySelectQuery,
+    InventorySelectQueryVariables
+  >(InventorySelectDocument, baseOptions);
+}
+export type InventorySelectQueryHookResult = ReturnType<
+  typeof useInventorySelectQuery
+>;
+export type InventorySelectLazyQueryHookResult = ReturnType<
+  typeof useInventorySelectLazyQuery
+>;
+export type InventorySelectQueryResult = Apollo.QueryResult<
+  InventorySelectQuery,
+  InventorySelectQueryVariables
+>;
 export const InventoryItemDocument = gql`
-  query InventoryItem {
+  query InventoryItem($job: String!) {
     items {
       number
       description
       type
       cost
+    }
+    job(number: $job) {
+      number
+      description
     }
   }
 `;
@@ -896,11 +1024,12 @@ export const InventoryItemDocument = gql`
  * @example
  * const { data, loading, error } = useInventoryItemQuery({
  *   variables: {
+ *      job: // value for 'job'
  *   },
  * });
  */
 export function useInventoryItemQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     InventoryItemQuery,
     InventoryItemQueryVariables
   >
@@ -930,4 +1059,54 @@ export type InventoryItemLazyQueryHookResult = ReturnType<
 export type InventoryItemQueryResult = Apollo.QueryResult<
   InventoryItemQuery,
   InventoryItemQueryVariables
+>;
+export const PostInventoryDocument = gql`
+  mutation PostInventory($input: PostInventoryInput!) {
+    postInventory(input: $input) {
+      success
+    }
+  }
+`;
+export type PostInventoryMutationFn = Apollo.MutationFunction<
+  PostInventoryMutation,
+  PostInventoryMutationVariables
+>;
+
+/**
+ * __usePostInventoryMutation__
+ *
+ * To run a mutation, you first call `usePostInventoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostInventoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postInventoryMutation, { data, loading, error }] = usePostInventoryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePostInventoryMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PostInventoryMutation,
+    PostInventoryMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    PostInventoryMutation,
+    PostInventoryMutationVariables
+  >(PostInventoryDocument, baseOptions);
+}
+export type PostInventoryMutationHookResult = ReturnType<
+  typeof usePostInventoryMutation
+>;
+export type PostInventoryMutationResult = Apollo.MutationResult<
+  PostInventoryMutation
+>;
+export type PostInventoryMutationOptions = Apollo.BaseMutationOptions<
+  PostInventoryMutation,
+  PostInventoryMutationVariables
 >;

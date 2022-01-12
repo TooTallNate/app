@@ -68,7 +68,6 @@ export default class NavItemJournalDataSource extends NavDataSource {
   }
 
   getAllItems(): Promise<NavItem[]> {
-    console.log("got here");
     return this.get(`/Items`);
   }
 }

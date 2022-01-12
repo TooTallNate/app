@@ -43,5 +43,5 @@ export const MenuOptions = [
   { Name: "Scorecards", Route: "/scorecard" },
   { Name: "Fuel", Route: "/fuel" },
   { Name: "Maintenance", Route: "/maintenance" },
-  { Name: "Inventory  Use", Route: "/inventory" }
+  { Name: "Inventory Consumption", Route: "/inventory" }
 ];
