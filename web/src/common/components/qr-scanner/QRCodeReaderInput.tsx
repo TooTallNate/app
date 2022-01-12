@@ -123,7 +123,7 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
 
   return (
     <div className="border-2 border-dashed border-gray-200 rounded-lg p-3">
-      <video id={VIDEO_ELEMENT_ID} style={{ position: "relative" }} />
+      {scan && <video id={VIDEO_ELEMENT_ID} style={{ position: "relative" }} />}
       {hasTorch && <FlashlightToggle torch={torch} toggle={toggleTorch} />}
     </div>
   );
