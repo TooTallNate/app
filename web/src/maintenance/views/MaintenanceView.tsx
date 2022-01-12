@@ -56,7 +56,6 @@ const MaintenanceView: React.FC = () => {
 
   const {
     loading: historyLoading,
-    error: historyError,
     data: historyData
   } = useMaintenanceHistoryAssetQuery({
     variables: { number: params.asset }
@@ -131,14 +130,17 @@ const MaintenanceView: React.FC = () => {
               </FormFieldLabel>
               <FormFieldErrors />
             </FormField>
-            <FormFieldLabel className="p-0">
-              <a
-                className="font-medium underline text-yellow-700 hover:text-yellow-600"
-                onClick={() => setShowHistory(true)}
-              >
-                View Asset History
-              </a>
-            </FormFieldLabel>
+            <FormField name="AssetHistory">
+              <FormFieldLabel className="p-0">
+                <button
+                  type="button"
+                  className="font-medium underline text-yellow-700 hover:text-yellow-600"
+                  onClick={() => setShowHistory(true)}
+                >
+                  View Asset History
+                </button>
+              </FormFieldLabel>
+            </FormField>
             <FormField name="postingDate">
               <FormFieldLabel>Activity Date</FormFieldLabel>
               <FormFieldInput>
@@ -153,9 +155,15 @@ const MaintenanceView: React.FC = () => {
               }}
             >
               <FormFieldLabel>Maintenance Type</FormFieldLabel>
-              <FormField name="AssetHistory"></FormField>
               <FormFieldInput>
-                <TypeaheadInput items={maintenanceTypes} />
+                <TypeaheadInput
+                  items={((data && data.maintenanceAssetsByNo) || []).map(
+                    interval => ({
+                      value: interval.code || "",
+                      title: interval.maintenanceDesc || ""
+                    })
+                  )}
+                />
               </FormFieldInput>
               <FormFieldErrors />
             </FormField>

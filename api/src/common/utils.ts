@@ -7,9 +7,7 @@ export function getDocumentNumber(form: string, username: string) {
 }
 
 export function navDate(date: Date) {
-  const x = format(date, "yyyy-MM-dd");
-  console.log(x);
-  return x;
+  return format(date, "yyyy-MM-dd");
 }
 
 export function parseNavDate(dateStr: string) {
