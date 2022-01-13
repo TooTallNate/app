@@ -59,9 +59,9 @@ export const mutations: MutationResolvers = {
         Quantity: item.quantity,
         Description: input.comments || "",
         //Work_Type_Code: job.Job_Posting_Group,
+        Unit_Cost: item.item.cost,
         Posting_Date: date,
         Document_Date: date,
-        Total_Cost: itemTotal,
         Reason_Code: "ADJ"
       });
       // await postItemJournal(

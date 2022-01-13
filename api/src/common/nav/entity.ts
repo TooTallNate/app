@@ -95,7 +95,7 @@ export interface NavJobJournalLine {
   Quantity: number;
   No: string;
   Work_Type_Code: string;
-  Total_Cost: number;
+  Unit_Cost: number;
   Reason_Code: string;
 }
 
