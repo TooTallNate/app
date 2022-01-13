@@ -55,39 +55,14 @@ export const mutations: MutationResolvers = {
         Job_No: job.No,
         Location_Code: input.location,
         Job_Task_No: item.item.type,
-        //No: caretaker.stringValue,
-        // negative adj
         Quantity: item.quantity,
-        Description: input.comments || "",
+        Description: input.comments ? input.comments : item.item.description,
         //Work_Type_Code: job.Job_Posting_Group,
         Unit_Cost: item.item.cost,
         Posting_Date: date,
         Document_Date: date,
         Reason_Code: "ADJ"
       });
-      // await postItemJournal(
-      //   {
-      //     ...standardJournal,
-      //     Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-      //     Entry_Type: NavEntryType.Negative,
-      //     Item_No: item.item.number,
-      //     Document_No: docNo,
-      //     Description: input.comments,
-      //     Location_Code: input.location,
-      //     Quantity: item.quantity,
-      //     Posting_Date: date,
-      //     Job_No: job.No,
-      //     Amount: itemTotal,
-      //     Gen_Prod_Posting_Group: item.item.type,
-      //     Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
-      //       ? standardJournal.Shortcut_Dimension_1_Code
-      //       : job.Entity,
-      //     Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
-      //       ? standardJournal.Shortcut_Dimension_2_Code
-      //       : job.Cost_Center
-      //   },
-      //   dataSources.navItemJournal
-      // );
     }
 
     return { success: true };
