@@ -72,7 +72,7 @@ const InventorySelectionView: React.FC = () => {
                 <TypeaheadInput
                   items={data.jobs.map(job => ({
                     value: job.number || "",
-                    title: `${job.description}` || ""
+                    title: `${job.number} - ${job.description}` || ""
                   }))}
                 />
               </FormFieldInput>

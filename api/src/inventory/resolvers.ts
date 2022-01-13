@@ -4,7 +4,8 @@ import {
   NavEntryType,
   NavItemJournalBatch,
   NavItemJournalTemplate,
-  NavJobJournalBatch
+  NavJobJournalBatch,
+  NavJobJournalTemplate
 } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 import { postItemJournal } from "../livestock-activity/resolvers/livestock-activity";
@@ -46,7 +47,7 @@ export const mutations: MutationResolvers = {
       const itemTotal = item.item.cost * item.quantity;
 
       await dataSources.navJobJournal.postEntry({
-        Journal_Template_Name: job.Job_Posting_Group,
+        Journal_Template_Name: NavItemJournalTemplate.Inventory,
         Journal_Batch_Name: NavJobJournalBatch.FarmApp,
         Type: "ITEM",
         Document_No: docNo,
@@ -57,7 +58,7 @@ export const mutations: MutationResolvers = {
         // negative adj
         Quantity: item.quantity,
         Description: input.comments || "",
-        Work_Type_Code: job.Job_Posting_Group,
+        //Work_Type_Code: job.Job_Posting_Group,
         Posting_Date: date,
         Document_Date: date,
         Total_Cost: itemTotal,

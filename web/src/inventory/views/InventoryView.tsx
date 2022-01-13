@@ -191,7 +191,7 @@ const InventoryView: React.FC = () => {
                   <TypeaheadInput
                     items={data.items.map(item => ({
                       value: item || "",
-                      title: `${item.description}` || ""
+                      title: `${item.number} - ${item.description}` || ""
                     }))}
                   />
                 </FormFieldInput>
