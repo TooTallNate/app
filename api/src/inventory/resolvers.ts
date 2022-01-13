@@ -50,6 +50,7 @@ export const mutations: MutationResolvers = {
         Journal_Template_Name: NavItemJournalTemplate.Inventory,
         Journal_Batch_Name: NavJobJournalBatch.FarmApp,
         Type: "ITEM",
+        No: item.item.number,
         Document_No: docNo,
         Job_No: job.No,
         Location_Code: input.location,
