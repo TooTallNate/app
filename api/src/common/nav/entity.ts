@@ -84,6 +84,7 @@ export interface NavItemJournalLine {
 export interface NavJobJournalLine {
   Journal_Template_Name: string;
   Journal_Batch_Name: string;
+  Type: string;
   Posting_Date: string;
   Document_Date: string;
   Document_No: string;
@@ -94,6 +95,8 @@ export interface NavJobJournalLine {
   Quantity: number;
   No: string;
   Work_Type_Code: string;
+  Total_Cost: number;
+  Reason_Code: string;
 }
 
 export interface NavStandardItemJournal {

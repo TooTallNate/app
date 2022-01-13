@@ -3,7 +3,8 @@ import { MutationResolvers, QueryResolvers } from "../common/graphql";
 import {
   NavEntryType,
   NavItemJournalBatch,
-  NavItemJournalTemplate
+  NavItemJournalTemplate,
+  NavJobJournalBatch
 } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 import { postItemJournal } from "../livestock-activity/resolvers/livestock-activity";
@@ -43,29 +44,48 @@ export const mutations: MutationResolvers = {
 
     for (const item of input.itemList) {
       const itemTotal = item.item.cost * item.quantity;
-      await postItemJournal(
-        {
-          ...standardJournal,
-          Journal_Batch_Name: NavItemJournalBatch.FarmApp,
-          Entry_Type: NavEntryType.Negative,
-          Item_No: item.item.number,
-          Document_No: docNo,
-          Description: input.comments,
-          Location_Code: input.location,
-          Quantity: item.quantity,
-          Posting_Date: date,
-          Job_No: job.No,
-          Amount: itemTotal,
-          Gen_Prod_Posting_Group: item.item.type,
-          Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
-            ? standardJournal.Shortcut_Dimension_1_Code
-            : job.Entity,
-          Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
-            ? standardJournal.Shortcut_Dimension_2_Code
-            : job.Cost_Center
-        },
-        dataSources.navItemJournal
-      );
+
+      await dataSources.navJobJournal.postEntry({
+        Journal_Template_Name: job.Job_Posting_Group,
+        Journal_Batch_Name: NavJobJournalBatch.FarmApp,
+        Type: "ITEM",
+        Document_No: docNo,
+        Job_No: job.No,
+        Location_Code: input.location,
+        Job_Task_No: item.item.type,
+        //No: caretaker.stringValue,
+        // negative adj
+        Quantity: item.quantity,
+        Description: input.comments || "",
+        Work_Type_Code: job.Job_Posting_Group,
+        Posting_Date: date,
+        Document_Date: date,
+        Total_Cost: itemTotal,
+        Reason_Code: "ADJ"
+      });
+      // await postItemJournal(
+      //   {
+      //     ...standardJournal,
+      //     Journal_Batch_Name: NavItemJournalBatch.FarmApp,
+      //     Entry_Type: NavEntryType.Negative,
+      //     Item_No: item.item.number,
+      //     Document_No: docNo,
+      //     Description: input.comments,
+      //     Location_Code: input.location,
+      //     Quantity: item.quantity,
+      //     Posting_Date: date,
+      //     Job_No: job.No,
+      //     Amount: itemTotal,
+      //     Gen_Prod_Posting_Group: item.item.type,
+      //     Shortcut_Dimension_1_Code: standardJournal.Shortcut_Dimension_1_Code
+      //       ? standardJournal.Shortcut_Dimension_1_Code
+      //       : job.Entity,
+      //     Shortcut_Dimension_2_Code: standardJournal.Shortcut_Dimension_2_Code
+      //       ? standardJournal.Shortcut_Dimension_2_Code
+      //       : job.Cost_Center
+      //   },
+      //   dataSources.navItemJournal
+      // );
     }
 
     return { success: true };

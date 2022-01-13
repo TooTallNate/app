@@ -26,7 +26,6 @@ const InventorySelectionView: React.FC = () => {
   const history = useHistory();
   const formContext = useForm<FormData>();
   const { loading, data } = useInventorySelectQuery();
-  const [jobsList, setJobsList] = useState();
 
   const match = useRouteMatch();
 
@@ -51,7 +50,7 @@ const InventorySelectionView: React.FC = () => {
                 required: "A location is required"
               }}
             >
-              <FormFieldLabel>Select Location</FormFieldLabel>
+              <FormFieldLabel>Source Location</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   items={data.locations.map(loc => ({
@@ -68,7 +67,7 @@ const InventorySelectionView: React.FC = () => {
                 required: "An item is required"
               }}
             >
-              <FormFieldLabel>Select Group</FormFieldLabel>
+              <FormFieldLabel>Group</FormFieldLabel>
               <FormFieldInput>
                 <TypeaheadInput
                   items={data.jobs.map(job => ({
