@@ -1,23 +1,7 @@
 import { parse } from "date-fns";
 import { MutationResolvers, QueryResolvers } from "../common/graphql";
-import {
-  NavEntryType,
-  NavItemJournalBatch,
-  NavItemJournalTemplate,
-  NavJobJournalBatch,
-  NavJobJournalTemplate
-} from "../common/nav";
+import { NavItemJournalTemplate, NavJobJournalBatch } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
-import { postItemJournal } from "../livestock-activity/resolvers/livestock-activity";
-
-// export const FuelAsset: FuelAssetResolvers = {
-//   number: navFuelAsset => navFuelAsset.No,
-//   code: navFuelAsset => navFuelAsset.Dimension_Code,
-//   description: navFuelAsset => navFuelAsset.FA_Description,
-//   fuelType: navFuelAsset => navFuelAsset.Item_Description,
-//   fuelCost: navFuelAsset => navFuelAsset.Last_Direct_Cost,
-//   unitOfMeasureCode: navFuelAsset => navFuelAsset.Unit_of_Measure_Code
-// };
 
 export const queries: QueryResolvers = {
   items(_, __, { dataSources }) {
@@ -57,7 +41,6 @@ export const mutations: MutationResolvers = {
         Job_Task_No: item.item.type,
         Quantity: item.quantity,
         Description: input.comments ? input.comments : item.item.description,
-        //Work_Type_Code: job.Job_Posting_Group,
         Unit_Cost: item.item.cost,
         Posting_Date: date,
         Document_Date: date,

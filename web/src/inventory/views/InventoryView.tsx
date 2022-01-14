@@ -11,6 +11,7 @@ import FormSubmit from "../../common/components/form/FormSubmit";
 import Button from "../../common/components/input/Button";
 import DateInput from "../../common/components/input/DateInput";
 import DecimalInput from "../../common/components/input/DecimalInput";
+import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
@@ -60,6 +61,7 @@ const InventoryView: React.FC = () => {
   const [jobData, setJobData] = useState("");
   const [list, setList] = useState<ItemListProps[]>();
   const [total, setTotal] = useState<Number>(0);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const { setMessage } = useFlash();
   const { watch, reset } = formContext;
   const { loading, data } = useInventoryItemQuery({
@@ -110,40 +112,34 @@ const InventoryView: React.FC = () => {
       const newList = list.filter(i => i.item.number !== item.number);
       setList(newList);
     }
+    handleItemListRadio();
   };
 
   const addItem = () => {
-    if (!item.number || item.number.trim() === "" || isNaN(quantity)) {
-      setMessage({
-        message: "Please enter an item and quantity",
-        level: "error",
-        timeout: 1500
-      });
+    const newItem: ItemListProps = {
+      item: {
+        number: item.number,
+        description: item.description,
+        type: item.type,
+        cost: item.cost
+      },
+      quantity: quantity
+    };
+    if (list) {
+      setList([...list, newItem]);
     } else {
-      const newItem: ItemListProps = {
-        item: {
-          number: item.number,
-          description: item.description,
-          type: item.type,
-          cost: item.cost
-        },
-        quantity: quantity
-      };
-      if (list) {
-        setList([...list, newItem]);
-      } else {
-        setList([newItem]);
-      }
-      reset({
-        item: {
-          number: "",
-          description: "",
-          type: "N/A",
-          cost: 0
-        },
-        quantity: NaN
-      });
+      setList([newItem]);
     }
+    reset({
+      item: {
+        number: "",
+        description: "",
+        type: "N/A",
+        cost: 0
+      },
+      quantity: NaN
+    });
+    handleItemListRadio();
   };
 
   useEffect(() => {
@@ -156,6 +152,18 @@ const InventoryView: React.FC = () => {
       setTotal(0);
     }
   }, [list]);
+
+  useEffect(() => {
+    if (item && quantity) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [item, quantity]);
+
+  const handleItemListRadio = () => {
+    return list && list.length > 0 ? 1 : -1;
+  };
 
   return (
     <View>
@@ -221,33 +229,27 @@ const InventoryView: React.FC = () => {
                 </FormFieldLabel>
                 <FormFieldErrors />
               </FormField>
-              {/*
-              
-              <FormField
-                name="mileage"
-                rules={{ required: "Number of miles field is required." }}
-              >
-                <FormFieldLabel>Current Miles/Hours</FormFieldLabel>
-                <FormFieldInput>
-                  <DecimalInput decimalPlaces={2} step=".01" className="w-32" />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField> */}
               <Button
                 id="add"
                 className="mr-4 w-32"
+                disabled={buttonDisabled}
                 onClick={() => {
                   addItem();
                 }}
               >
                 Add
               </Button>
-              {/* <FormField name="itemList">
+              <FormField
+                name="itemList"
+                rules={{
+                  required: "Item needs to be added."
+                }}
+              >
                 <FormFieldInput>
-                  <StaticValue className="hidden" value={list} />
+                  <StackedRadioButton value={handleItemListRadio} />
                 </FormFieldInput>
                 <FormFieldErrors />
-              </FormField> */}
+              </FormField>
               {list && (
                 <div className="overflow-x-auto pb-3">
                   <table className="divide-y divide-gray-200 box-shadow min-w-full">
@@ -307,6 +309,3 @@ const InventoryView: React.FC = () => {
 };
 
 export default InventoryView;
-function setValue(arg0: string, list: ItemListProps[] | undefined) {
-  throw new Error("Function not implemented.");
-}
