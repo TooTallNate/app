@@ -11,7 +11,6 @@ import FormSubmit from "../../common/components/form/FormSubmit";
 import Button from "../../common/components/input/Button";
 import DateInput from "../../common/components/input/DateInput";
 import DecimalInput from "../../common/components/input/DecimalInput";
-import StackedRadioButton from "../../common/components/input/StackedRadioButton";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
@@ -47,7 +46,7 @@ interface FormData {
   group: string;
   postingDate?: string;
   item: ItemProps;
-  itemList: ItemListProps[];
+  itemList: number;
   quantity: number;
   finalAmount: number;
   comments?: string;
@@ -77,45 +76,52 @@ const InventoryView: React.FC = () => {
   const [post] = usePostInventoryMutation();
 
   const onSubmit: OnSubmit<FormData> = async ({ postingDate, comments }) => {
-    try {
-      await post({
-        variables: {
-          input: {
-            location: params.location,
-            group: params.group,
-            postingDate: postingDate,
-            itemList: list,
-            comments: comments
-          }
-        }
-      });
+    if (!list || list.length < 1) {
       setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
+        message: "Item needs to be added to list",
+        level: "error",
         timeout: 2000
       });
-      history.push("/inventory");
-    } catch (e) {
-      const error: any = e;
-      setMessage({
-        message: error.toString(),
-        level: "error",
-        timeout: 3000
-      });
+    } else {
+      try {
+        await post({
+          variables: {
+            input: {
+              location: params.location,
+              group: params.group,
+              postingDate: postingDate,
+              itemList: list,
+              comments: comments
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+        history.push("/inventory");
+      } catch (e) {
+        const error: any = e;
+        setMessage({
+          message: error.toString(),
+          level: "error",
+          timeout: 3000
+        });
+      }
     }
   };
   let quantity = watch("quantity");
   let item = watch("item") || undefined;
 
-  const removeItem = (item: ItemProps) => {
+  const removeItem = useCallback((item: ItemProps) => {
     if (list) {
       const newList = list.filter(i => i.item.number !== item.number);
       setList(newList);
     }
-    handleItemListRadio();
-  };
+  });
 
-  const addItem = () => {
+  const addItem = useCallback(() => {
     const newItem: ItemListProps = {
       item: {
         number: item.number,
@@ -139,8 +145,7 @@ const InventoryView: React.FC = () => {
       },
       quantity: NaN
     });
-    handleItemListRadio();
-  };
+  });
 
   useEffect(() => {
     if (list && list.length > 0) {
@@ -151,7 +156,7 @@ const InventoryView: React.FC = () => {
     } else {
       setTotal(0);
     }
-  }, [list]);
+  }, [list, addItem, removeItem]);
 
   useEffect(() => {
     if (item && quantity) {
@@ -160,10 +165,6 @@ const InventoryView: React.FC = () => {
       setButtonDisabled(true);
     }
   }, [item, quantity]);
-
-  const handleItemListRadio = () => {
-    return list && list.length > 0 ? 1 : -1;
-  };
 
   return (
     <View>
@@ -239,17 +240,6 @@ const InventoryView: React.FC = () => {
               >
                 Add
               </Button>
-              <FormField
-                name="itemList"
-                rules={{
-                  required: "Item needs to be added."
-                }}
-              >
-                <FormFieldInput>
-                  <StackedRadioButton value={handleItemListRadio} />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
               {list && (
                 <div className="overflow-x-auto pb-3">
                   <table className="divide-y divide-gray-200 box-shadow min-w-full">
