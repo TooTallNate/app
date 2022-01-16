@@ -114,14 +114,14 @@ const InventoryView: React.FC = () => {
   let quantity = watch("quantity");
   let item = watch("item") || undefined;
 
-  const removeItem = useCallback((item: ItemProps) => {
+  const removeItem = (item: ItemProps) => {
     if (list) {
       const newList = list.filter(i => i.item.number !== item.number);
       setList(newList);
     }
-  });
+  };
 
-  const addItem = useCallback(() => {
+  const addItem = () => {
     const newItem: ItemListProps = {
       item: {
         number: item.number,
@@ -145,7 +145,7 @@ const InventoryView: React.FC = () => {
       },
       quantity: NaN
     });
-  });
+  };
 
   useEffect(() => {
     if (list && list.length > 0) {
@@ -156,7 +156,7 @@ const InventoryView: React.FC = () => {
     } else {
       setTotal(0);
     }
-  }, [list, addItem, removeItem]);
+  }, [list]);
 
   useEffect(() => {
     if (item && quantity) {
