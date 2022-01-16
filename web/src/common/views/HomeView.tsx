@@ -5,7 +5,7 @@ import Title from "../components/view/ViewTitle";
 import View from "../components/view/View";
 import ViewHeader from "../components/view/ViewHeader";
 import ViewContent from "../components/view/ViewContent";
-import QRCodeReader from "../components/input/QRCodeReader";
+import QRCodeReader from "./QRCodeReader";
 import Divider from "../components/layout/Divider";
 import { useHomeViewQuery } from "../graphql";
 import { MenuOption } from "../../livestock-activity/graphql";

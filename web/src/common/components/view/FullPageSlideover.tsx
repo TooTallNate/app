@@ -8,18 +8,17 @@ type FullPageSlideoverProps = {
   open: boolean;
   toggle: Function;
   title?: String;
-  onclick?: Function;
   children?: ReactElement;
   loading?: boolean;
 };
 
 const FullPageSlideover = React.forwardRef<HTMLElement, FullPageSlideoverProps>(
   function FullPageSlideover(
-    { open, toggle, onclick, children, title, loading, ...props },
+    { open, toggle, children, title, loading, ...props },
     ref
   ) {
     const SlideoverHeader = () => (
-      <div className="px-4 sm:px-6">
+      <div className="px-4 sm:px-6 pb-1">
         <div className="flex items-start justify-between">
           {title && (
             <Dialog.Title className="flex-grow font-bold text-xl">
