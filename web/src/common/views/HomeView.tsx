@@ -9,9 +9,11 @@ import QRCodeReader from "../components/input/QRCodeReader";
 import Divider from "../components/layout/Divider";
 import { useHomeViewQuery } from "../graphql";
 import { MenuOption } from "../../livestock-activity/graphql";
+import { useHistory } from "react-router-dom";
 
 const HomeView: React.FC = () => {
   const [menu, setMenu] = useState(Array<MenuOption>());
+  const history = useHistory();
   const { loading } = useHomeViewQuery({
     fetchPolicy: "no-cache",
     onCompleted(data) {
