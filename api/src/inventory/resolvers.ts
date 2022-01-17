@@ -5,7 +5,7 @@ import { getDocumentNumber, navDate } from "../common/utils";
 
 export const queries: QueryResolvers = {
   items(_, __, { dataSources }) {
-    return dataSources.navItemJournal.getAllItems();
+    return dataSources.navItemJournal.getFilteredItems();
   }
 };
 
