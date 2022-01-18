@@ -18,7 +18,8 @@ type Job {
 type Item {
   number: String!
   description: String!
-  cost: Int
+  type: String
+  cost: Float
 }
 
 type Reason {

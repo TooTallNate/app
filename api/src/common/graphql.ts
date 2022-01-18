@@ -63,7 +63,8 @@ export type Item = {
   __typename?: "Item";
   number: Scalars["String"];
   description: Scalars["String"];
-  cost?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]>;
+  cost?: Maybe<Scalars["Float"]>;
 };
 
 export type Reason = {
@@ -104,6 +105,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
+  items: Array<Item>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
@@ -268,6 +270,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postInventory: InventoryResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -295,6 +298,10 @@ export type MutationLoginArgs = {
 
 export type MutationPostFuelArgs = {
   input: PostFuelInput;
+};
+
+export type MutationPostInventoryArgs = {
+  input: PostInventoryInput;
 };
 
 export type MutationPostLivestockAdjustmentArgs = {
@@ -371,6 +378,47 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type Inventory = {
+  __typename?: "Inventory";
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  item?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemList = {
+  __typename?: "ItemList";
+  item: Item;
+  quantity: Scalars["Float"];
+};
+
+export type ItemInput = {
+  number: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  cost: Scalars["Float"];
+};
+
+export type ItemListInput = {
+  item: ItemInput;
+  quantity: Scalars["Float"];
+};
+
+export type PostInventoryInput = {
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  itemList?: Maybe<Array<ItemListInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type InventoryResult = {
+  __typename?: "InventoryResult";
+  success: Scalars["Boolean"];
 };
 
 export type LivestockActivityDefaults = {
@@ -1003,7 +1051,6 @@ export type ResolversTypes = ResolversObject<{
   Job: ResolverTypeWrapper<NavJob>;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
   Item: ResolverTypeWrapper<NavItem>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Reason: ResolverTypeWrapper<NavReason>;
   Resource: ResolverTypeWrapper<NavResource>;
   Location: ResolverTypeWrapper<NavLocation>;
@@ -1012,9 +1059,18 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
   FuelHistoryAsset: ResolverTypeWrapper<NavFuelHistoryAsset>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   PostFuelInput: PostFuelInput;
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
+  Inventory: ResolverTypeWrapper<Inventory>;
+  ItemList: ResolverTypeWrapper<
+    Omit<ItemList, "item"> & { item: ResolversTypes["Item"] }
+  >;
+  ItemInput: ItemInput;
+  ItemListInput: ItemListInput;
+  PostInventoryInput: PostInventoryInput;
+  InventoryResult: ResolverTypeWrapper<InventoryResult>;
   LivestockActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   LivestockWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   LivestockGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
@@ -1147,7 +1203,6 @@ export type ResolversParentTypes = ResolversObject<{
   Job: NavJob;
   Float: Scalars["Float"];
   Item: NavItem;
-  Int: Scalars["Int"];
   Reason: NavReason;
   Resource: NavResource;
   Location: NavLocation;
@@ -1156,9 +1211,16 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   FuelAsset: NavFuelAsset;
   FuelHistoryAsset: NavFuelHistoryAsset;
+  Int: Scalars["Int"];
   PostFuelInput: PostFuelInput;
   FuelResult: FuelResult;
   Mutation: {};
+  Inventory: Inventory;
+  ItemList: Omit<ItemList, "item"> & { item: ResolversParentTypes["Item"] };
+  ItemInput: ItemInput;
+  ItemListInput: ItemListInput;
+  PostInventoryInput: PostInventoryInput;
+  InventoryResult: InventoryResult;
   LivestockActivityDefaults: UserSettingsDocument;
   LivestockWeanEvent: NavStandardItemJournal;
   LivestockGradeOffEvent: NavStandardItemJournal;
@@ -1325,7 +1387,8 @@ export type ItemResolvers<
 > = ResolversObject<{
   number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  cost?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  cost?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1395,6 +1458,7 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  items?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
   job?: Resolver<
     Maybe<ResolversTypes["Job"]>,
     ParentType,
@@ -1631,6 +1695,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationPostFuelArgs, "input">
   >;
+  postInventory?: Resolver<
+    ResolversTypes["InventoryResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationPostInventoryArgs, "input">
+  >;
   postLivestockAdjustment?: Resolver<
     ResolversTypes["LivestockAdjustmentResult"],
     ParentType,
@@ -1745,6 +1815,40 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateUserMenuOptionsArgs, "input">
   >;
+}>;
+
+export type InventoryResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Inventory"] = ResolversParentTypes["Inventory"]
+> = ResolversObject<{
+  location?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  group?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  postingDate?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  item?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ItemListResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ItemList"] = ResolversParentTypes["ItemList"]
+> = ResolversObject<{
+  item?: Resolver<ResolversTypes["Item"], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type InventoryResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["InventoryResult"] = ResolversParentTypes["InventoryResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
 export type LivestockActivityDefaultsResolvers<
@@ -2439,6 +2543,9 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FuelHistoryAsset?: FuelHistoryAssetResolvers<ContextType>;
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Inventory?: InventoryResolvers<ContextType>;
+  ItemList?: ItemListResolvers<ContextType>;
+  InventoryResult?: InventoryResultResolvers<ContextType>;
   LivestockActivityDefaults?: LivestockActivityDefaultsResolvers<ContextType>;
   LivestockWeanEvent?: LivestockWeanEventResolvers<ContextType>;
   LivestockGradeOffEvent?: LivestockGradeOffEventResolvers<ContextType>;

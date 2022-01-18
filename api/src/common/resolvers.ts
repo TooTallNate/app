@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import { getDateFromWeekNumber } from "../common/utils";
 import {
+  InclusivityMode,
   ItemResolvers,
   JobResolvers,
   LocationResolvers,
@@ -10,6 +11,7 @@ import {
   ReasonResolvers,
   ResourceResolvers
 } from "./graphql";
+import UserSettingsModel from "./models/UserSettings";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 
@@ -48,6 +50,7 @@ const Job: JobResolvers = {
 const Item: ItemResolvers = {
   number: animal => animal.No,
   description: animal => animal.Description,
+  type: animal => animal.Gen_Prod_Posting_Group,
   cost: animal => animal.Last_Direct_Cost
 };
 
@@ -67,13 +70,25 @@ const MenuOption: MenuOptionResolvers = {
 };
 
 export const queries: QueryResolvers = {
-  jobs(_, { input }, { dataSources }) {
-    const x = dataSources.navJob.getAll({
+  async jobs(_, { input }, { user, navConfig, dataSources }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    });
+    if (settings && settings.locations.list) {
+      if (settings.locations.mode === InclusivityMode.Include) {
+        var includeLocations = settings.locations.list;
+      } else {
+        var excludeLocations = settings.locations.list;
+      }
+    }
+    return dataSources.navJob.getAll({
       isOpen: true,
       ...(input.groups && { postingGroups: input.groups }),
-      ...(input.locations && { includeLocations: input.locations })
+      //...(input.locations && { includeLocations: input.locations }),
+      includeLocations,
+      excludeLocations
     });
-    return x;
   },
   job(_, { number }, { dataSources }) {
     const x = dataSources.navJob.getByNo(number);

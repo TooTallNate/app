@@ -42,6 +42,7 @@ export interface NavReason {
 export interface NavItem {
   No: string;
   Description: string;
+  Gen_Prod_Posting_Group: string;
   Last_Direct_Cost: number;
 }
 
@@ -72,6 +73,7 @@ export interface NavItemJournalLine {
   Gen_Prod_Posting_Group: string;
   Quantity: number;
   Unit_Amount: number;
+  Amount: number;
   Unit_Cost: number;
   Reason_Code: NavReasonCode;
   Weight: number;
@@ -82,6 +84,7 @@ export interface NavItemJournalLine {
 export interface NavJobJournalLine {
   Journal_Template_Name: string;
   Journal_Batch_Name: string;
+  Type: string;
   Posting_Date: string;
   Document_Date: string;
   Document_No: string;
@@ -92,6 +95,8 @@ export interface NavJobJournalLine {
   Quantity: number;
   No: string;
   Work_Type_Code: string;
+  Unit_Cost: number;
+  Reason_Code: string;
 }
 
 export interface NavStandardItemJournal {

@@ -40,5 +40,6 @@ export const MenuOptions = [
   { Name: "Livestock Activity", Route: "/livestock-activity" },
   { Name: "Scorecards", Route: "/scorecard" },
   { Name: "Fuel", Route: "/fuel" },
-  { Name: "Maintenance", Route: "/maintenance" }
+  { Name: "Maintenance", Route: "/maintenance" },
+  { Name: "Inventory Consumption", Route: "/inventory" }
 ];

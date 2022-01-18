@@ -1,0 +1,10 @@
+query InventorySelect {
+    jobs(input: {}) {
+        number
+        description
+    }
+    locations {
+        code
+        name
+    }
+}

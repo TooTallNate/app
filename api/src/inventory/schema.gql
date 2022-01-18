@@ -1,0 +1,59 @@
+type Inventory {
+  location: String!
+  group: String!
+  postingDate: String
+  item: String
+  quantity: Float
+  comments: String
+}
+
+type ItemList {
+  item: Item!
+  quantity: Float!
+}
+
+input ItemInput {
+  number: String!
+  description: String!
+  type: String!
+  cost: Float!
+}
+
+input ItemListInput {
+  item: ItemInput!
+  quantity: Float!
+}
+
+input PostInventoryInput {
+  location: String!
+  group: String!
+  postingDate: String
+  itemList: [ItemListInput!]
+  comments: String
+}
+
+# input SaveInventoryInput {
+#   location: String!
+#   group: String!
+#   postingDate: String
+#   item: String!
+#   type: String
+#   quantity: Float
+#   comments: String
+# }
+
+type InventoryResult {
+  success: Boolean!
+  # inventoryItem: InventoryItem
+}
+
+type Query {
+  items: [Item!]!
+  # TODO for save functionality
+  # inventoryItem(input: InventoryItem): InventoryItem
+}
+
+type Mutation {
+  # saveInventory(input: SaveInventoryInput!): InventoryResult!
+  postInventory(input: PostInventoryInput!): InventoryResult!
+}

@@ -32,7 +32,8 @@ export type Item = {
   __typename?: "Item";
   number: Scalars["String"];
   description: Scalars["String"];
-  cost?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]>;
+  cost?: Maybe<Scalars["Float"]>;
 };
 
 export type Reason = {
@@ -73,6 +74,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
+  items: Array<Item>;
   job?: Maybe<Job>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
@@ -237,6 +239,7 @@ export type Mutation = {
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
+  postInventory: InventoryResult;
   postLivestockAdjustment: LivestockAdjustmentResult;
   postLivestockGradeOff: LivestockGradeOffResult;
   postLivestockMortality: LivestockMortalityResult;
@@ -264,6 +267,10 @@ export type MutationLoginArgs = {
 
 export type MutationPostFuelArgs = {
   input: PostFuelInput;
+};
+
+export type MutationPostInventoryArgs = {
+  input: PostInventoryInput;
 };
 
 export type MutationPostLivestockAdjustmentArgs = {
@@ -340,6 +347,47 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type Inventory = {
+  __typename?: "Inventory";
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  item?: Maybe<Scalars["String"]>;
+  quantity?: Maybe<Scalars["Float"]>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemList = {
+  __typename?: "ItemList";
+  item: Item;
+  quantity: Scalars["Float"];
+};
+
+export type ItemInput = {
+  number: Scalars["String"];
+  description: Scalars["String"];
+  type: Scalars["String"];
+  cost: Scalars["Float"];
+};
+
+export type ItemListInput = {
+  item: ItemInput;
+  quantity: Scalars["Float"];
+};
+
+export type PostInventoryInput = {
+  location: Scalars["String"];
+  group: Scalars["String"];
+  postingDate?: Maybe<Scalars["String"]>;
+  itemList?: Maybe<Array<ItemListInput>>;
+  comments?: Maybe<Scalars["String"]>;
+};
+
+export type InventoryResult = {
+  __typename?: "InventoryResult";
+  success: Scalars["Boolean"];
 };
 
 export type LivestockActivityDefaults = {
