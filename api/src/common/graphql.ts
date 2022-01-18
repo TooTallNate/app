@@ -419,11 +419,13 @@ export type PostInventoryInput = {
 export type InventoryResult = {
   __typename?: "InventoryResult";
   success: Scalars["Boolean"];
+  defaults: LivestockActivityDefaults;
 };
 
 export type LivestockActivityDefaults = {
   __typename?: "LivestockActivityDefaults";
   job?: Maybe<Job>;
+  location?: Maybe<Location>;
   prices: Array<PriceEntry>;
 };
 
@@ -1070,7 +1072,11 @@ export type ResolversTypes = ResolversObject<{
   ItemInput: ItemInput;
   ItemListInput: ItemListInput;
   PostInventoryInput: PostInventoryInput;
-  InventoryResult: ResolverTypeWrapper<InventoryResult>;
+  InventoryResult: ResolverTypeWrapper<
+    Omit<InventoryResult, "defaults"> & {
+      defaults: ResolversTypes["LivestockActivityDefaults"];
+    }
+  >;
   LivestockActivityDefaults: ResolverTypeWrapper<UserSettingsDocument>;
   LivestockWeanEvent: ResolverTypeWrapper<NavStandardItemJournal>;
   LivestockGradeOffEvent: ResolverTypeWrapper<NavStandardItemJournal>;
@@ -1220,7 +1226,9 @@ export type ResolversParentTypes = ResolversObject<{
   ItemInput: ItemInput;
   ItemListInput: ItemListInput;
   PostInventoryInput: PostInventoryInput;
-  InventoryResult: InventoryResult;
+  InventoryResult: Omit<InventoryResult, "defaults"> & {
+    defaults: ResolversParentTypes["LivestockActivityDefaults"];
+  };
   LivestockActivityDefaults: UserSettingsDocument;
   LivestockWeanEvent: NavStandardItemJournal;
   LivestockGradeOffEvent: NavStandardItemJournal;
@@ -1848,6 +1856,11 @@ export type InventoryResultResolvers<
   ParentType extends ResolversParentTypes["InventoryResult"] = ResolversParentTypes["InventoryResult"]
 > = ResolversObject<{
   success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  defaults?: Resolver<
+    ResolversTypes["LivestockActivityDefaults"],
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -1856,6 +1869,11 @@ export type LivestockActivityDefaultsResolvers<
   ParentType extends ResolversParentTypes["LivestockActivityDefaults"] = ResolversParentTypes["LivestockActivityDefaults"]
 > = ResolversObject<{
   job?: Resolver<Maybe<ResolversTypes["Job"]>, ParentType, ContextType>;
+  location?: Resolver<
+    Maybe<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
+  >;
   prices?: Resolver<
     Array<ResolversTypes["PriceEntry"]>,
     ParentType,

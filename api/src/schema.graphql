@@ -187,10 +187,12 @@ input PostInventoryInput {
 
 type InventoryResult {
   success: Boolean!
+  defaults: LivestockActivityDefaults!
 }
 
 type LivestockActivityDefaults {
   job: Job
+  location: Location
   prices: [PriceEntry!]!
 }
 

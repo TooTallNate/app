@@ -1,5 +1,6 @@
 type LivestockActivityDefaults {
   job: Job
+  location: Location
   prices: [PriceEntry!]!
 }
 

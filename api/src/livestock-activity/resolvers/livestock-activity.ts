@@ -50,6 +50,7 @@ export async function updateUserSettings({
   username: string;
   subdomain: string;
   livestockJob?: string;
+  location?: string;
   animal?: string;
   price?: number;
 }): Promise<UserSettingsDocument> {
@@ -75,6 +76,9 @@ export async function updateUserSettings({
   if (typeof doc.livestockJob === "string") {
     settings.livestockJob = doc.livestockJob;
   }
+  if (typeof doc.location === "string") {
+    settings.location = doc.location;
+  }
   await settings.save();
   return settings;
 }
@@ -87,7 +91,14 @@ export const LivestockActivityDefaults: LivestockActivityDefaultsResolvers = {
       return null;
     }
   },
-  prices: userSettings => (userSettings ? userSettings.prices : null)
+  prices: userSettings => (userSettings ? userSettings.prices : null),
+  location(userSettings, _, { dataSources }) {
+    if (userSettings && userSettings.location) {
+      return dataSources.navLocation.getByCode(userSettings.location);
+    } else {
+      return null;
+    }
+  }
 };
 
 export const LivestockActivityQueries: QueryResolvers = {
