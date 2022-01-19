@@ -9,16 +9,21 @@ import QRCodeReader from "./QRCodeReader";
 import Divider from "../components/layout/Divider";
 import { useHomeViewQuery } from "../graphql";
 import { MenuOption } from "../../livestock-activity/graphql";
-import { useHistory } from "react-router-dom";
 
 const HomeView: React.FC = () => {
   const [menu, setMenu] = useState(Array<MenuOption>());
-  const history = useHistory();
   const { loading } = useHomeViewQuery({
     fetchPolicy: "no-cache",
     onCompleted(data) {
       if (data && data.user && data.user.menuOptions.list.length > 0) {
-        setMenu(data.user.menuOptions.list);
+        const userMenu = data.user.menuOptions.list;
+        data.user.menuOptions.mode === "EXCLUDE"
+          ? setMenu(
+              data.menuOptions.filter(option =>
+                userMenu.every(userList => userList.name !== option.name)
+              )
+            )
+          : setMenu(data.user.menuOptions.list);
       } else {
         setMenu(data.menuOptions);
       }
