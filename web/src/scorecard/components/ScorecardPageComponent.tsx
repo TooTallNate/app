@@ -36,6 +36,7 @@ import ScorecardPassFail, {
   isComplete as isPassFailComplete
 } from "./ScorecardPassFail";
 import { FormValue } from "../contexts/scorecard";
+import ScorecardRangeInput from "./ScorecardRange";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -47,35 +48,46 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
   code,
   ...props
 }) => {
-  switch (code) {
-    case "YN":
-      return <ScorecardYesNo {...props} />;
-    case "JOB":
-      return <ScorecardLivestockJob {...props} />;
-    case "CARETAKER":
-      return <ScorecardCaretaker {...props} />;
-    case "SUPERVISOR":
-      return <ScorecardSupervisor {...props} />;
-    case "SCORE5":
-      return <ScorecardScores {...props} min={1} max={5} step={1} />;
-    case "SCORE10":
-      return <ScorecardScores {...props} min={1} max={10} step={1} />;
-    case "HEALTH":
-      return <ScorecardHealthInput {...props} min={0} max={100} />;
-    case "WEEKSONFEED":
-      return <ScorecardWeeksOnFeed {...props} />;
-    case "MORTALITY":
-      return <ScorecardMortality {...props} />;
-    case "POSTDATE":
-      return <ScorecardPostingDate {...props} />;
-    case "TARGETTEMP":
-      return <ScorecardTargetTemp {...props} />;
-    case "TEMP":
-      return <ScorecardTempInput {...props} />;
-    case "PASSFAIL":
-      return <ScorecardPassFail {...props} />;
-    default:
-      return null;
+  const codeArray = code.split("-");
+  if (codeArray[0] == "RANGE") {
+    return (
+      <ScorecardRangeInput
+        {...props}
+        min={parseInt(codeArray[1])}
+        max={parseInt(codeArray[2])}
+      />
+    );
+  } else {
+    switch (code) {
+      case "YN":
+        return <ScorecardYesNo {...props} />;
+      case "JOB":
+        return <ScorecardLivestockJob {...props} />;
+      case "CARETAKER":
+        return <ScorecardCaretaker {...props} />;
+      case "SUPERVISOR":
+        return <ScorecardSupervisor {...props} />;
+      case "SCORE5":
+        return <ScorecardScores {...props} min={1} max={5} step={1} />;
+      case "SCORE10":
+        return <ScorecardScores {...props} min={1} max={10} step={1} />;
+      case "HEALTH":
+        return <ScorecardHealthInput {...props} min={0} max={100} />;
+      case "WEEKSONFEED":
+        return <ScorecardWeeksOnFeed {...props} />;
+      case "MORTALITY":
+        return <ScorecardMortality {...props} />;
+      case "POSTDATE":
+        return <ScorecardPostingDate {...props} />;
+      case "TARGETTEMP":
+        return <ScorecardTargetTemp {...props} />;
+      case "TEMP":
+        return <ScorecardTempInput {...props} />;
+      case "PASSFAIL":
+        return <ScorecardPassFail {...props} />;
+      default:
+        return null;
+    }
   }
 };
 
