@@ -49,9 +49,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
 
     useImperativeHandle(
       ref,
-      () => ({
-        focus: () => inputRef.current && inputRef.current.focus()
-      }),
+      () => ({ focus: () => inputRef.current && inputRef.current.focus() }),
       []
     );
 
@@ -138,8 +136,14 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             type="button"
             className="rounded-l-none text-center focus:shadow-none"
             aria-label={"Toggle Menu"}
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <FontAwesomeIcon className="text-white" icon="chevron-down" />
+            {isOpen && (
+              <FontAwesomeIcon className="text-white" icon="chevron-up" />
+            )}
+            {!isOpen && (
+              <FontAwesomeIcon className="text-white" icon="chevron-down" />
+            )}
           </Button>
         </div>
         {isOpen && (
