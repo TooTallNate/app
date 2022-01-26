@@ -41,6 +41,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<TypeaheadItem[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState<string | undefined>("");
     const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(
       null
@@ -64,6 +65,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
     // Filter the items when the input value changes.
     useEffect(() => {
       if (inputValue) {
+        setIsOpen(true);
         const matcher = new RegExp(inputValue, "i");
         setItems(
           itemsProp
@@ -71,13 +73,13 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             .sort(sortPredicate(sort))
         );
       } else {
+        setIsOpen(false);
         setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
       }
     }, [inputValue, itemsProp, sort]);
 
     // Configure downshift.
     const {
-      isOpen,
       highlightedIndex,
       getToggleButtonProps,
       getMenuProps,
@@ -91,9 +93,11 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
       labelId: ariaLabelledBy,
       onStateChange: state => {
         if (state.selectedItem !== selectedItem) {
+          alert("HOWDY");
           onChange(state.selectedItem ? state.selectedItem.value : undefined);
         }
         if (state.inputValue !== inputValue) {
+          alert("WOAH");
           setInputValue(state.inputValue);
         }
       },
