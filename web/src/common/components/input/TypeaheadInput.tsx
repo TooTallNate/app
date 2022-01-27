@@ -41,6 +41,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<TypeaheadItem[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState<string | undefined>("");
     const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(
       null
@@ -48,9 +49,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
 
     useImperativeHandle(
       ref,
-      () => ({
-        focus: () => inputRef.current && inputRef.current.focus()
-      }),
+      () => ({ focus: () => inputRef.current && inputRef.current.focus() }),
       []
     );
 
@@ -64,6 +63,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
     // Filter the items when the input value changes.
     useEffect(() => {
       if (inputValue) {
+        setIsOpen(true);
         const matcher = new RegExp(inputValue, "i");
         setItems(
           itemsProp
@@ -71,13 +71,13 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             .sort(sortPredicate(sort))
         );
       } else {
+        setIsOpen(false);
         setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
       }
     }, [inputValue, itemsProp, sort]);
 
     // Configure downshift.
     const {
-      isOpen,
       highlightedIndex,
       getToggleButtonProps,
       getMenuProps,
@@ -134,8 +134,14 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             type="button"
             className="rounded-l-none text-center focus:shadow-none"
             aria-label={"Toggle Menu"}
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <FontAwesomeIcon className="text-white" icon="chevron-down" />
+            {isOpen && (
+              <FontAwesomeIcon className="text-white" icon="chevron-up" />
+            )}
+            {!isOpen && (
+              <FontAwesomeIcon className="text-white" icon="chevron-down" />
+            )}
           </Button>
         </div>
         {isOpen && (
