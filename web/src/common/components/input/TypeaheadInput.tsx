@@ -91,11 +91,9 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
       labelId: ariaLabelledBy,
       onStateChange: state => {
         if (state.selectedItem !== selectedItem) {
-          alert("HOWDY");
           onChange(state.selectedItem ? state.selectedItem.value : undefined);
         }
         if (state.inputValue !== inputValue) {
-          alert("WOAH");
           setInputValue(state.inputValue);
         }
       },
