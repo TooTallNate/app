@@ -70,11 +70,10 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
   }
 
   function processResult(url: string) {
-    console.log({ url });
     if (processUrl) {
       processUrl(UrlParseFromQR(url));
     } else {
-      history.push(UrlParseFromQR(url));
+      history.push(url);
     }
     resetScanner();
     return;
@@ -115,15 +114,11 @@ const QRCodeReaderInput: React.FC<QRCodeReaderInputProps> = ({
     setTorch(toggle);
     setTimeout(() => {
       // @ts-ignore
-      try {
-        videoElem.srcObject
-          .getVideoTracks()[0]
-          .applyConstraints({ advanced: [{ torch: toggle }] })
-          .then(() => setHasTorch(true))
-          .catch(() => setTorch(false));
-      } catch {
-        return setTorch(false);
-      }
+      videoElem.srcObject
+        .getVideoTracks()[0]
+        .applyConstraints({ advanced: [{ torch: toggle }] })
+        .then(() => setHasTorch(true))
+        .catch(() => setTorch(false));
     }, timer);
   }
 
