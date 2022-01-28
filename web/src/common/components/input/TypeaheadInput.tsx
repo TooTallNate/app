@@ -41,7 +41,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<TypeaheadItem[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState<string | undefined>("");
     const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(
       null
@@ -63,7 +62,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
     // Filter the items when the input value changes.
     useEffect(() => {
       if (inputValue) {
-        setIsOpen(true);
         const matcher = new RegExp(inputValue, "i");
         setItems(
           itemsProp
@@ -71,7 +69,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             .sort(sortPredicate(sort))
         );
       } else {
-        setIsOpen(false);
         setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
       }
     }, [inputValue, itemsProp, sort]);
@@ -83,7 +80,10 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
       getMenuProps,
       getInputProps,
       getComboboxProps,
-      getItemProps
+      getItemProps,
+      openMenu,
+      closeMenu,
+      isOpen
     } = useCombobox<TypeaheadItem>({
       items,
       selectedItem: selectedItem as any,
@@ -116,6 +116,9 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             rounded-r-none border-r-0 focus:shadow-none
             ${isOpen ? "rounded-bl-none" : ""}
           `}
+            onFocus={() => {
+              if (!isOpen) openMenu();
+            }}
           />
           <button
             type="button"
@@ -125,6 +128,7 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             onClick={() => {
               onChange(undefined);
               setInputValue("");
+              closeMenu();
             }}
           >
             <FontAwesomeIcon icon="times" />
@@ -134,7 +138,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             type="button"
             className="rounded-l-none text-center focus:shadow-none"
             aria-label={"Toggle Menu"}
-            onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen && (
               <FontAwesomeIcon className="text-white" icon="chevron-up" />
