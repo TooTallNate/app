@@ -41,7 +41,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>();
     const [items, setItems] = useState<TypeaheadItem[]>([]);
-    // const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState<string | undefined>("");
     const [selectedItem, setSelectedItem] = useState<TypeaheadItem | null>(
       null
@@ -70,7 +69,6 @@ const TypeaheadInput = React.forwardRef<TypeaheadInputRef, TypeaheadInputProps>(
             .sort(sortPredicate(sort))
         );
       } else {
-        // setIsOpen(false);
         setItems(Array.from(itemsProp).sort(sortPredicate(sort)));
       }
     }, [inputValue, itemsProp, sort]);
