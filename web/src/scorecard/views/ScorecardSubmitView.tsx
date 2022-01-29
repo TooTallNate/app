@@ -26,7 +26,9 @@ const ScorecardSubmitView: React.FC = () => {
   const pages = formConfig.map((page, i) => ({
     ...page,
     isComplete: page.elements.every(element =>
-      isElementComplete(element.code, formState[element.id] || {})
+      element.code.includes("RANGE")
+        ? isElementComplete("RANGE", formState[element.id] || {})
+        : isElementComplete(element.code, formState[element.id] || {})
     )
   }));
 
