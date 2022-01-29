@@ -216,9 +216,9 @@ export type FuelHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
 };
 
 export type PostFuelInput = {
@@ -388,11 +388,13 @@ export type PostInventoryInput = {
 export type InventoryResult = {
   __typename?: "InventoryResult";
   success: Scalars["Boolean"];
+  defaults: LivestockActivityDefaults;
 };
 
 export type LivestockActivityDefaults = {
   __typename?: "LivestockActivityDefaults";
   job?: Maybe<Job>;
+  location?: Maybe<Location>;
   prices: Array<PriceEntry>;
 };
 
@@ -757,9 +759,9 @@ export type MaintenanceHistoryAsset = {
   maintenanceCode: Scalars["String"];
   reasonCode: Scalars["String"];
   postingDate: Scalars["String"];
-  quantity: Scalars["Int"];
+  quantity: Scalars["Float"];
   description: Scalars["String"];
-  meta: Scalars["Int"];
+  meta: Scalars["Float"];
   codeDescription: Scalars["String"];
   payToName: Scalars["String"];
   documentNo: Scalars["String"];
@@ -910,6 +912,10 @@ export type InventorySelectQuery = { __typename?: "Query" } & {
   locations: Array<
     { __typename?: "Location" } & Pick<Location, "code" | "name">
   >;
+  livestockActivityDefaults: { __typename?: "LivestockActivityDefaults" } & {
+    job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number">>;
+    location?: Maybe<{ __typename?: "Location" } & Pick<Location, "code">>;
+  };
 };
 
 export type InventoryItemQueryVariables = {
@@ -946,6 +952,14 @@ export const InventorySelectDocument = gql`
     locations {
       code
       name
+    }
+    livestockActivityDefaults {
+      job {
+        number
+      }
+      location {
+        code
+      }
     }
   }
 `;

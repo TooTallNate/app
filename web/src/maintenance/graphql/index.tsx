@@ -388,11 +388,13 @@ export type PostInventoryInput = {
 export type InventoryResult = {
   __typename?: "InventoryResult";
   success: Scalars["Boolean"];
+  defaults: LivestockActivityDefaults;
 };
 
 export type LivestockActivityDefaults = {
   __typename?: "LivestockActivityDefaults";
   job?: Maybe<Job>;
+  location?: Maybe<Location>;
   prices: Array<PriceEntry>;
 };
 

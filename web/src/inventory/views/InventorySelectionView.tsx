@@ -25,7 +25,16 @@ interface FormData {
 const InventorySelectionView: React.FC = () => {
   const history = useHistory();
   const formContext = useForm<FormData>();
-  const { loading, data } = useInventorySelectQuery();
+  const { loading, data } = useInventorySelectQuery({
+    onCompleted({ livestockActivityDefaults: defaults }) {
+      if (defaults.job) {
+        formContext.setValue("group", defaults.job.number);
+      }
+      if (defaults.location) {
+        formContext.setValue("location", defaults.location.code);
+      }
+    }
+  });
 
   const match = useRouteMatch();
 

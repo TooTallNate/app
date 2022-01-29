@@ -7,4 +7,12 @@ query InventorySelect {
         code
         name
     }
+    livestockActivityDefaults {
+        job {
+            number
+        }  
+        location {
+            code
+        }
+  }
 }

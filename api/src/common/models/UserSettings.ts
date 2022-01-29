@@ -4,6 +4,7 @@ import { InclusivityMode } from "../graphql";
 export interface UserSettingsDocument extends Document {
   username: string;
   livestockJob: string | null | undefined;
+  location: string | null | undefined;
   price: number | null | undefined;
   prices: {
     animal: string;
@@ -36,6 +37,7 @@ const UserSettingsSchema = new Schema(
       required: true
     },
     livestockJob: String,
+    location: String,
     prices: [
       {
         _id: false,

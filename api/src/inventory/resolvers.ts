@@ -2,6 +2,7 @@ import { parse } from "date-fns";
 import { MutationResolvers, QueryResolvers } from "../common/graphql";
 import { NavItemJournalTemplate, NavJobJournalBatch } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
+import { updateUserSettings } from "../livestock-activity/resolvers/livestock-activity";
 
 export const queries: QueryResolvers = {
   items(_, __, { dataSources }) {
@@ -20,16 +21,7 @@ export const mutations: MutationResolvers = {
 
     const job = await dataSources.navJob.getByNo(input.group);
 
-    const [
-      standardJournal
-    ] = await dataSources.navItemJournal.getStandardJournalLines({
-      code: "FE-INVENT",
-      template: NavItemJournalTemplate.Inventory
-    });
-
     for (const item of input.itemList) {
-      const itemTotal = item.item.cost * item.quantity;
-
       await dataSources.navJobJournal.postEntry({
         Journal_Template_Name: NavItemJournalTemplate.Inventory,
         Journal_Batch_Name: NavJobJournalBatch.FarmApp,
@@ -48,6 +40,13 @@ export const mutations: MutationResolvers = {
       });
     }
 
-    return { success: true };
+    const userSettings = await updateUserSettings({
+      username: user.username,
+      livestockJob: job.No,
+      location: input.location,
+      subdomain: navConfig.subdomain
+    });
+
+    return { success: true, defaults: userSettings };
   }
 };
