@@ -51,7 +51,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
   ...props
 }) => {
   const codeArray = code.split("-");
-  if (codeArray[0] == "RANGE") {
+  if (codeArray[0] === "RANGE") {
     return (
       <ScorecardRangeInput
         {...props}
