@@ -36,7 +36,9 @@ import ScorecardPassFail, {
   isComplete as isPassFailComplete
 } from "./ScorecardPassFail";
 import { FormValue } from "../contexts/scorecard";
-import ScorecardRangeInput from "./ScorecardRange";
+import ScorecardRangeInput, {
+  isComplete as isRangeComplete
+} from "./ScorecardRange";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -105,7 +107,8 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   POSTDATE: isPostingDateComplete,
   TARGETTEMP: isTargetTempComplete,
   TEMP: isTempComplete,
-  PASSFAIL: isPassFailComplete
+  PASSFAIL: isPassFailComplete,
+  RANGE: isRangeComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {
