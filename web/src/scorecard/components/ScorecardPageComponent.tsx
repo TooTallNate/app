@@ -70,9 +70,9 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
       case "SUPERVISOR":
         return <ScorecardSupervisor {...props} />;
       case "SCORE5":
-        return <ScorecardScores {...props} min={1} max={5} step={1} />;
+        return <ScorecardScores {...props} min={0} max={5} step={1} />;
       case "SCORE10":
-        return <ScorecardScores {...props} min={1} max={10} step={1} />;
+        return <ScorecardScores {...props} min={0} max={10} step={1} />;
       case "HEALTH":
         return <ScorecardHealthInput {...props} min={0} max={100} />;
       case "WEEKSONFEED":
