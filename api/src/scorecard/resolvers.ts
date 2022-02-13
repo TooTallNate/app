@@ -114,6 +114,10 @@ export const mutations: MutationResolvers = {
       }
     }
 
+    // TODO - if sourceCode = FARMAPP --> post that shit
+    // fetch JobJournalTemplate by name
+    // if Source_Code = FARMAPP --> trigger auto post(job posting group, source_code)
+
     const doc =
       (await ScorecardModel.findOne({
         job: input.job

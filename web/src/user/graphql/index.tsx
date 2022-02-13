@@ -65,6 +65,14 @@ export type ResourceFilter = {
   type?: Maybe<Scalars["String"]>;
 };
 
+export type JobJournalTemplate = {
+  __typename?: "JobJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
@@ -76,6 +84,8 @@ export type Query = {
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   items: Array<Item>;
   job?: Maybe<Job>;
+  jobJournalTemplate?: Maybe<JobJournalTemplate>;
+  jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
   livestockActivityJobs: Array<Job>;
@@ -124,6 +134,10 @@ export type QueryItemArgs = {
 
 export type QueryJobArgs = {
   number: Scalars["String"];
+};
+
+export type QueryJobJournalTemplateArgs = {
+  name: Scalars["String"];
 };
 
 export type QueryJobsArgs = {
