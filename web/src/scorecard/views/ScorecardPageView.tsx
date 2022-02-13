@@ -68,11 +68,11 @@ const ScorecardPageView: React.FC = () => {
 
   return (
     <View>
-      <ViewHeader>
+      <ViewHeader className="justify-between">
         <Title>{(pageConfig && pageConfig.title) || "Page"}</Title>
         <Link
           to={match.path.replace("page/:page", "submit")}
-          className="text-blue-700"
+          className="w-max text-blue-700"
           onClick={async e => {
             e.stopPropagation();
             e.preventDefault();
