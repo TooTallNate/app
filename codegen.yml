@@ -19,7 +19,7 @@ generates:
         Job: "./nav#NavJob"
         Item: "./nav#NavItem"
         ItemJournalTemplate: "./nav#ItemJournalTemplateObject"
-        JobJournalTemplate: "./nav#JobJournalTemplate"
+        JobJournalTemplate: "./nav#JobJournalTemplateObject"
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"

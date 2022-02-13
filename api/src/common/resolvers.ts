@@ -4,6 +4,7 @@ import { getDateFromWeekNumber } from "../common/utils";
 import {
   InclusivityMode,
   ItemResolvers,
+  JobJournalTemplateResolvers,
   JobResolvers,
   LocationResolvers,
   MenuOptionResolvers,
@@ -67,6 +68,13 @@ const Location: LocationResolvers = {
 const MenuOption: MenuOptionResolvers = {
   name: menuOption => menuOption.Name,
   route: menuOption => menuOption.Route
+};
+
+export const JobJournalTemplate: JobJournalTemplateResolvers = {
+  name: jobJournalTemplate => JobJournalTemplate.Name,
+  description: jobJournalTemplate => jobJournalTemplate.Description,
+  sourceCode: jobJournalTemplate => jobJournalTemplate.Source_Code,
+  reasonCode: jobJournalTemplate => jobJournalTemplate.Reason_Code
 };
 
 export const queries: QueryResolvers = {

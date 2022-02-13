@@ -123,13 +123,6 @@ export interface ItemJournalTemplateObject {
   Reason_Code: string;
 }
 
-export interface JobJournalTemplate {
-  Name: string;
-  Description: string;
-  Source_Code: string;
-  Reason_Code: string;
-}
-
 export interface NavFuelAsset {
   No: string;
   Dimension_Code: string;
@@ -228,4 +221,11 @@ export interface NavDimensionPacker {
   Code: string;
   DimensionCode: string;
   DimensionName: string;
+}
+
+export interface JobJournalTemplateObject {
+  Name: string;
+  Description: string;
+  Source_Code: string;
+  Reason_Code: string;
 }

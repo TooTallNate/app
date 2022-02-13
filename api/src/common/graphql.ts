@@ -4,7 +4,7 @@ import {
   NavJob,
   NavItem,
   ItemJournalTemplateObject,
-  JobJournalTemplate,
+  JobJournalTemplateObject,
   NavResource,
   NavReason,
   NavLocation,
@@ -1073,7 +1073,7 @@ export type ResolversTypes = ResolversObject<{
   Location: ResolverTypeWrapper<NavLocation>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
-  JobJournalTemplate: ResolverTypeWrapper<JobJournalTemplate>;
+  JobJournalTemplate: ResolverTypeWrapper<JobJournalTemplateObject>;
   Query: ResolverTypeWrapper<{}>;
   FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
   FuelHistoryAsset: ResolverTypeWrapper<NavFuelHistoryAsset>;
@@ -1230,7 +1230,7 @@ export type ResolversParentTypes = ResolversObject<{
   Location: NavLocation;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
-  JobJournalTemplate: JobJournalTemplate;
+  JobJournalTemplate: JobJournalTemplateObject;
   Query: {};
   FuelAsset: NavFuelAsset;
   FuelHistoryAsset: NavFuelHistoryAsset;
