@@ -118,7 +118,7 @@ const ScorecardSubmitView: React.FC = () => {
             </tbody>
           </table>
           <section className="flex justify-center mt-5">
-            <div className="p-1 w-6/12 rounded text-center border-2 flex justify-center">
+            <div className="p-1 w-6/12 rounded-md text-center border-2 flex justify-center">
               <p className="text-base">
                 <FontAwesomeIcon
                   className={"text-yellow-600"}
