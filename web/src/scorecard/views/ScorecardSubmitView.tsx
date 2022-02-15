@@ -23,14 +23,21 @@ const ScorecardSubmitView: React.FC = () => {
 
   const { formConfig, formState, submit } = useScorecard();
 
-  const pages = formConfig.map((page, i) => ({
-    ...page,
-    isComplete: page.elements.every(element =>
-      element.code.includes("RANGE")
-        ? isElementComplete("RANGE", formState[element.id] || {})
-        : isElementComplete(element.code, formState[element.id] || {})
-    )
-  }));
+  const pages = formConfig.map((page, i) => {
+    const containsZero = page.elements.some(element => {
+      const value = formState[element.id] || {};
+      return value.numericValue === 0;
+    });
+    return {
+      ...page,
+      isComplete: page.elements.every(element =>
+        element.code.includes("RANGE")
+          ? isElementComplete("RANGE", formState[element.id] || {})
+          : isElementComplete(element.code, formState[element.id] || {})
+      ),
+      hasZero: containsZero
+    };
+  });
 
   const canSubmit = pages.every(page => page.isComplete);
 
@@ -92,7 +99,11 @@ const ScorecardSubmitView: React.FC = () => {
                     <td className="text-center">
                       <FontAwesomeIcon
                         className={
-                          page.isComplete ? "text-green-600" : "text-red-600"
+                          page.isComplete
+                            ? page.hasZero
+                              ? "text-yellow-600"
+                              : "text-green-600"
+                            : "text-red-600"
                         }
                         icon={page.isComplete ? "check" : "times"}
                         aria-hidden
@@ -106,6 +117,20 @@ const ScorecardSubmitView: React.FC = () => {
               })}
             </tbody>
           </table>
+          <section className="flex justify-center mt-5">
+            <div className="p-1 w-6/12 rounded-md text-center border-2 flex justify-center">
+              <p className="text-base">
+                <FontAwesomeIcon
+                  className={"text-yellow-600"}
+                  icon={"check"}
+                  aria-hidden
+                />
+                <span className="pl-1">
+                  {`- Indicates page contains a value of 0`}
+                </span>
+              </p>
+            </div>
+          </section>
           <div className="flex-grow" />
           <div className="flex absolute w-full p-4 left-0 bottom-0 bg-white">
             <FormSubmit onClick={() => (submitAction.current = "back")}>

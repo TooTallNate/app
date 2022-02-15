@@ -1,8 +1,14 @@
 import React from "react";
 
-const ViewHeader: React.FC = ({ children }) => {
+interface ViewHeaderProps {
+  className?: string;
+}
+
+const ViewHeader: React.FC<ViewHeaderProps> = ({ className, children }) => {
   return (
-    <header className="flex items-center px-4 border-b border-gray-500">
+    <header
+      className={`flex items-center px-4 border-b border-gray-500 ${className}`}
+    >
       {children}
     </header>
   );
