@@ -197,8 +197,6 @@ const InventoryView: React.FC = () => {
         {inventoryData && jobAndLocationData && (
           <>
             <Form context={formContext} onSubmit={onSubmit}>
-              {/* ========= GROUP =========*/}
-
               <FormField
                 name="group"
                 rules={{
@@ -217,8 +215,6 @@ const InventoryView: React.FC = () => {
                 <FormFieldErrors />
               </FormField>
 
-              {/* ========= LOCATION =========*/}
-
               <FormField
                 name="location"
                 rules={{
@@ -236,8 +232,6 @@ const InventoryView: React.FC = () => {
                 </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
-
-              <Divider className="mt-3" />
 
               <FormField name="postingDate">
                 <FormFieldLabel>Activity Date</FormFieldLabel>
