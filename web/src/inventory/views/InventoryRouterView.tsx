@@ -1,18 +1,12 @@
 import React from "react";
-import { Route, Switch, Redirect, useRouteMatch } from "react-router-dom";
-import InventorySelectionView from "./InventorySelectionView";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import InventoryView from "./InventoryView";
 
 const InventoryRouterView: React.FC = () => {
   const match = useRouteMatch();
   return (
     <Switch>
-      <Route exact path={`${match.url}`} component={InventorySelectionView} />
-      <Route
-        exact
-        path={`${match.url}/inventory/:location/:group`}
-        component={InventoryView}
-      />
+      <Route exact path={`${match.url}`} component={InventoryView} />
       <Redirect to={`${match.url}`} />
     </Switch>
   );
