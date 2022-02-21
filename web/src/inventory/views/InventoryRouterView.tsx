@@ -6,7 +6,10 @@ const InventoryRouterView: React.FC = () => {
   const match = useRouteMatch();
   return (
     <Switch>
-      <Route exact path={`${match.url}`} component={InventoryView} />
+      <Route
+        path={`${match.url}/:location?/:group?`}
+        component={InventoryView}
+      />
       <Redirect to={`${match.url}`} />
     </Switch>
   );

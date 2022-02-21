@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { OnSubmit, useForm } from "react-hook-form";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
@@ -70,6 +70,8 @@ const InventoryView: React.FC = () => {
   const { setMessage } = useFlash();
   const { watch, reset } = formContext;
 
+  const match = useRouteMatch();
+
   const {
     loading: jobAndLocationLoading,
     data: jobAndLocationData
@@ -116,12 +118,18 @@ const InventoryView: React.FC = () => {
             }
           }
         });
+        setList(undefined);
+        formContext.reset({
+          group,
+          location,
+          comments: ""
+        });
         setMessage({
           message: "Entry recorded successfully.",
           level: "success",
           timeout: 2000
         });
-        history.push("/inventory");
+        history.push(`${match.url}`);
       } catch (e) {
         const error: any = e;
         setMessage({
@@ -206,6 +214,7 @@ const InventoryView: React.FC = () => {
                 <FormFieldLabel>Group</FormFieldLabel>
                 <FormFieldInput>
                   <TypeaheadInput
+                    value={params.group || ""}
                     items={jobAndLocationData.jobs.map(job => ({
                       value: job.number || "",
                       title: `${job.number} - ${job.description}` || ""
@@ -224,6 +233,7 @@ const InventoryView: React.FC = () => {
                 <FormFieldLabel>Source Location</FormFieldLabel>
                 <FormFieldInput>
                   <TypeaheadInput
+                    value={params.location || ""}
                     items={jobAndLocationData.locations.map(loc => ({
                       value: loc.code || "",
                       title: `${loc.name}` || ""
