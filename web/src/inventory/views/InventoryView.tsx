@@ -161,7 +161,7 @@ const InventoryView: React.FC = () => {
       quantity: quantity
     };
     if (list) {
-      setList([...list, newItem]);
+      setList([newItem, ...list]);
     } else {
       setList([newItem]);
     }
