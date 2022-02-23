@@ -206,25 +206,6 @@ const InventoryView: React.FC = () => {
           <>
             <Form context={formContext} onSubmit={onSubmit}>
               <FormField
-                name="group"
-                rules={{
-                  required: "An item is required"
-                }}
-              >
-                <FormFieldLabel>Group</FormFieldLabel>
-                <FormFieldInput>
-                  <TypeaheadInput
-                    value={params.group || ""}
-                    items={jobAndLocationData.jobs.map(job => ({
-                      value: job.number || "",
-                      title: `${job.number} - ${job.description}` || ""
-                    }))}
-                  />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
-
-              <FormField
                 name="location"
                 rules={{
                   required: "A location is required"
@@ -242,7 +223,24 @@ const InventoryView: React.FC = () => {
                 </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
-
+              <FormField
+                name="group"
+                rules={{
+                  required: "An item is required"
+                }}
+              >
+                <FormFieldLabel>Group</FormFieldLabel>
+                <FormFieldInput>
+                  <TypeaheadInput
+                    value={params.group || ""}
+                    items={jobAndLocationData.jobs.map(job => ({
+                      value: job.number || "",
+                      title: `${job.number} - ${job.description}` || ""
+                    }))}
+                  />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
               <FormField name="postingDate">
                 <FormFieldLabel>Activity Date</FormFieldLabel>
                 <FormFieldInput>
