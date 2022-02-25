@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { OnSubmit, useForm } from "react-hook-form";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import Form from "../../common/components/form/Form";
 import FormField from "../../common/components/form/FormField";
 import FormFieldErrors from "../../common/components/form/FormFieldErrors";
@@ -13,6 +13,7 @@ import DateInput from "../../common/components/input/DateInput";
 import DecimalInput from "../../common/components/input/DecimalInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
+import Divider from "../../common/components/layout/Divider";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
@@ -23,7 +24,12 @@ import ViewHeader from "../../common/components/view/ViewHeader";
 import ViewTitle from "../../common/components/view/ViewTitle";
 import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../../livestock-activity/components/CommentsField";
-import { useInventoryItemQuery, usePostInventoryMutation } from "../graphql";
+import {
+  Item,
+  useInventoryItemQuery,
+  useInventorySelectQuery,
+  usePostInventoryMutation
+} from "../graphql";
 
 interface ViewParams {
   location: string;
@@ -44,6 +50,7 @@ interface ItemProps {
 
 interface FormData {
   group: string;
+  location: string;
   postingDate?: string;
   item: ItemProps;
   itemList: number;
@@ -57,25 +64,41 @@ const InventoryView: React.FC = () => {
   const params = useParams<ViewParams>();
   const formContext = useForm<FormData>({ reValidateMode: "onSubmit" });
 
-  const [jobData, setJobData] = useState("");
   const [list, setList] = useState<ItemListProps[]>();
   const [total, setTotal] = useState<Number>(0);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const { setMessage } = useFlash();
   const { watch, reset } = formContext;
-  const { loading, data } = useInventoryItemQuery({
-    variables: {
-      job: params.group
-    },
-    onCompleted({ job }) {
-      if (job) {
-        setJobData(`${job.number} - ${job.description}`);
+
+  const match = useRouteMatch();
+
+  const {
+    loading: jobAndLocationLoading,
+    data: jobAndLocationData
+  } = useInventorySelectQuery({
+    onCompleted({ livestockActivityDefaults: defaults }) {
+      if (defaults.job) {
+        formContext.setValue("group", defaults.job.number);
+      }
+      if (defaults.location) {
+        formContext.setValue("location", defaults.location.code);
       }
     }
   });
+
+  const {
+    loading: inventoryLoading,
+    data: inventoryData
+  } = useInventoryItemQuery();
+
   const [post] = usePostInventoryMutation();
 
-  const onSubmit: OnSubmit<FormData> = async ({ postingDate, comments }) => {
+  const onSubmit: OnSubmit<FormData> = async ({
+    postingDate,
+    comments,
+    location,
+    group
+  }) => {
     if (!list || list.length < 1) {
       setMessage({
         message: "Item needs to be added to list",
@@ -87,20 +110,26 @@ const InventoryView: React.FC = () => {
         await post({
           variables: {
             input: {
-              location: params.location,
-              group: params.group,
+              location: location,
+              group: group,
               postingDate: postingDate,
               itemList: list,
               comments: comments
             }
           }
         });
+        setList(undefined);
+        formContext.reset({
+          group,
+          location,
+          comments: ""
+        });
         setMessage({
           message: "Entry recorded successfully.",
           level: "success",
           timeout: 2000
         });
-        history.push("/inventory");
+        history.push(`${match.url}`);
       } catch (e) {
         const error: any = e;
         setMessage({
@@ -132,7 +161,7 @@ const InventoryView: React.FC = () => {
       quantity: quantity
     };
     if (list) {
-      setList([...list, newItem]);
+      setList([newItem, ...list]);
     } else {
       setList([newItem]);
     }
@@ -172,14 +201,44 @@ const InventoryView: React.FC = () => {
         <BackButton />
         <ViewTitle>Inventory</ViewTitle>
       </ViewHeader>
-      <ViewContent loading={loading}>
-        {data && (
+      <ViewContent loading={jobAndLocationLoading && inventoryLoading}>
+        {inventoryData && jobAndLocationData && (
           <>
             <Form context={formContext} onSubmit={onSubmit}>
-              <FormField name="group">
-                <FormFieldLabel className="text-xl">
-                  {`Group Number: ${jobData}`}
-                </FormFieldLabel>
+              <FormField
+                name="location"
+                rules={{
+                  required: "A location is required"
+                }}
+              >
+                <FormFieldLabel>Source Location</FormFieldLabel>
+                <FormFieldInput>
+                  <TypeaheadInput
+                    value={params.location || ""}
+                    items={jobAndLocationData.locations.map(loc => ({
+                      value: loc.code || "",
+                      title: `${loc.name}` || ""
+                    }))}
+                  />
+                </FormFieldInput>
+                <FormFieldErrors />
+              </FormField>
+              <FormField
+                name="group"
+                rules={{
+                  required: "An item is required"
+                }}
+              >
+                <FormFieldLabel>Group</FormFieldLabel>
+                <FormFieldInput>
+                  <TypeaheadInput
+                    value={params.group || ""}
+                    items={jobAndLocationData.jobs.map(job => ({
+                      value: job.number || "",
+                      title: `${job.number} - ${job.description}` || ""
+                    }))}
+                  />
+                </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
               <FormField name="postingDate">
@@ -198,7 +257,7 @@ const InventoryView: React.FC = () => {
                 <FormFieldLabel>Select Item:</FormFieldLabel>
                 <FormFieldInput>
                   <TypeaheadInput
-                    items={data.items.map(item => ({
+                    items={inventoryData.items.map(item => ({
                       value: item || "",
                       title: `${item.number} - ${item.description}` || ""
                     }))}

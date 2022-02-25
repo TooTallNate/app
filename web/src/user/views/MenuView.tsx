@@ -60,7 +60,6 @@ const MenuView: React.FC = () => {
   const menuOptions = data ? data.menuOptions : [];
   const optionSelected = !!watch("selectedMenuOption");
 
-  console.log(data);
   return (
     <View>
       <ViewHeader>
