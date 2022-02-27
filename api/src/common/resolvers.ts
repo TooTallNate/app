@@ -71,7 +71,7 @@ const MenuOption: MenuOptionResolvers = {
 };
 
 export const JobJournalTemplate: JobJournalTemplateResolvers = {
-  name: jobJournalTemplate => JobJournalTemplate.Name,
+  name: jobJournalTemplate => jobJournalTemplate.Name,
   description: jobJournalTemplate => jobJournalTemplate.Description,
   sourceCode: jobJournalTemplate => jobJournalTemplate.Source_Code,
   reasonCode: jobJournalTemplate => jobJournalTemplate.Reason_Code
@@ -119,6 +119,12 @@ export const queries: QueryResolvers = {
   async resource(_, { code }, { dataSources }) {
     const result = await dataSources.navResource.getByCode(code);
     return result;
+  },
+  jobJournalTemplates(_, __, { dataSources }) {
+    return dataSources.navJobJournal.getJobJournalTemplates();
+  },
+  jobJournalTemplate(_, { name }, { dataSources }) {
+    return dataSources.navJobJournal.getJobJournalTemplate(name);
   }
 };
 
@@ -128,5 +134,6 @@ export const types = {
   Resource,
   Reason,
   Location,
-  MenuOption
+  MenuOption,
+  JobJournalTemplate
 };

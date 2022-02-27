@@ -4,12 +4,14 @@ import {
   InclusivityMode,
   ItemJournalTemplateResolvers
 } from "../../common/graphql";
-import { NavItemJournalLine } from "../../common/nav";
+import { AutoPostEnum, NavItemJournalLine } from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
-import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
+import NavItemJournalDataSource, {
+  AutoPostParams
+} from "../../common/datasources/NavItemJournalDataSource";
 
 export const ItemJournalTemplate: ItemJournalTemplateResolvers = {
   name: itemJournalTemplate => itemJournalTemplate.Name,
@@ -19,18 +21,9 @@ export const ItemJournalTemplate: ItemJournalTemplateResolvers = {
   reasonCode: itemJournalTemplate => itemJournalTemplate.Reason_Code
 };
 
-export function getItemJournalTemplate(
-  entry: Partial<NavItemJournalLine>,
-  dataSource: NavItemJournalDataSource
-): Promise<NavItemJournalLine> {
-  const date = navDate(new Date());
-  entry.Document_Date = date;
-  entry.Posting_Date = entry.Posting_Date || date;
-  entry.Description = entry.Description || " ";
-  return dataSource.postJournalLine(entry);
-}
+export const NUMBER_OF_LINES: number = 10000;
 
-export function postItemJournal(
+export async function postItemJournal(
   entry: Partial<NavItemJournalLine>,
   dataSource: NavItemJournalDataSource
 ): Promise<NavItemJournalLine> {
@@ -38,7 +31,24 @@ export function postItemJournal(
   entry.Document_Date = date;
   entry.Posting_Date = entry.Posting_Date || date;
   entry.Description = entry.Description || " ";
-  return dataSource.postJournalLine(entry);
+  const postResponse = dataSource.postJournalLine(entry);
+
+  const itemJournalTemplate = await dataSource.getItemJournalTemplateByName(
+    entry.Journal_Template_Name
+  );
+
+  if (
+    itemJournalTemplate &&
+    itemJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+  ) {
+    dataSource.autoPostItemJournals({
+      templateName: entry.Journal_Template_Name,
+      batchName: entry.Journal_Batch_Name,
+      lines: NUMBER_OF_LINES
+    });
+  }
+
+  return postResponse;
 }
 
 export async function updateUserSettings({
@@ -103,7 +113,7 @@ export const LivestockActivityDefaults: LivestockActivityDefaultsResolvers = {
 
 export const LivestockActivityQueries: QueryResolvers = {
   async itemJournalTemplates(_, __, { dataSources }) {
-    return dataSources.navItemJournal.getItemJournalTemplate();
+    return dataSources.navItemJournal.getItemJournalTemplates();
   },
   async animals(_, __, { dataSources }) {
     return dataSources.navConfig.getItems({

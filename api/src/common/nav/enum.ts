@@ -56,3 +56,7 @@ export enum JobTaskNumber {
   Crate = "CRATE",
   GeneralRoom = "GEN ROOM"
 }
+
+export enum AutoPostEnum {
+  AutoPost = "FARMAUTO"
+}

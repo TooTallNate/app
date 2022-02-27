@@ -1,9 +1,14 @@
-import { NavJobJournalTemplate, NavJobJournalLine } from "../nav";
+import {
+  NavJobJournalTemplate,
+  NavJobJournalLine,
+  JobJournalTemplateObject
+} from "../nav";
 import NavDataSource from "./NavDataSource";
 
 interface AutoPostParams {
   templateName: string;
   batchName: string;
+  lines: number;
 }
 
 export default class NavJobJournalDataSource extends NavDataSource {
@@ -13,15 +18,17 @@ export default class NavJobJournalDataSource extends NavDataSource {
     return this.post("/JobJournal", entry);
   }
 
-  async autoPostJobJournals(tempAndBatchName: AutoPostParams): Promise<any> {
-    return this.post("/JobJournalAutoPost", tempAndBatchName);
+  async autoPostJobJournals(autoPostParams: AutoPostParams): Promise<any> {
+    return this.post(`/JobJournal(${autoPostParams})/NAV.APP_Post`);
   }
 
-  getJobJournalTemplates(): Promise<NavJobJournalTemplate[] | null> {
+  getJobJournalTemplates(): Promise<JobJournalTemplateObject[] | null> {
     return this.get(`/JobJournalTemplate`);
   }
 
-  getJobJournalTemplate(name: string): Promise<NavJobJournalTemplate | null> {
-    return this.get(`/JobJournalTemplate('${name})`);
+  getJobJournalTemplate(
+    name: string
+  ): Promise<JobJournalTemplateObject | null> {
+    return this.get(`/JobJournalTemplate('${name}')`);
   }
 }

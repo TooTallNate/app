@@ -344,18 +344,38 @@ type Query {
 }
 
 type Mutation {
-  postLivestockAdjustment(input: PostLivestockAdjustmentInput!): LivestockAdjustmentResult!
-  saveLivestockAdjustment(input: SaveLivestockAdjustmentInput!): LivestockAdjustmentResult!
-  postLivestockGradeOff(input: PostLivestockGradeOffInput!): LivestockGradeOffResult!
-  saveLivestockGradeOff(input: SaveLivestockGradeOffInput!): LivestockGradeOffResult!
-  postLivestockMortality(input: PostLivestockMortalityInput!): LivestockMortalityResult!
-  saveLivestockMortality(input: SaveLivestockMortalityInput!): LivestockMortalityResult!
+  postLivestockAdjustment(
+    input: PostLivestockAdjustmentInput!
+  ): LivestockAdjustmentResult!
+  saveLivestockAdjustment(
+    input: SaveLivestockAdjustmentInput!
+  ): LivestockAdjustmentResult!
+  postLivestockGradeOff(
+    input: PostLivestockGradeOffInput!
+  ): LivestockGradeOffResult!
+  saveLivestockGradeOff(
+    input: SaveLivestockGradeOffInput!
+  ): LivestockGradeOffResult!
+  postLivestockMortality(
+    input: PostLivestockMortalityInput!
+  ): LivestockMortalityResult!
+  saveLivestockMortality(
+    input: SaveLivestockMortalityInput!
+  ): LivestockMortalityResult!
   postLivestockMove(input: PostLivestockMoveInput!): LivestockMoveResult!
   saveLivestockMove(input: SaveLivestockMoveInput!): LivestockMoveResult!
-  postLivestockPurchase(input: PostLivestockPurchaseInput!): LivestockPurchaseResult!
-  saveLivestockPurchase(input: SaveLivestockPurchaseInput!): LivestockPurchaseResult!
+  postLivestockPurchase(
+    input: PostLivestockPurchaseInput!
+  ): LivestockPurchaseResult!
+  saveLivestockPurchase(
+    input: SaveLivestockPurchaseInput!
+  ): LivestockPurchaseResult!
   postLivestockWean(input: PostLivestockWeanInput!): LivestockWeanResult!
   saveLivestockWean(input: SaveLivestockWeanInput!): LivestockWeanResult!
-  postLivestockShipment(input: PostLivestockShipmentInput!): LivestockShipmentResult!
-  saveLivestockShipment(input: SaveLivestockShipmentInput!): LivestockShipmentResult!
+  postLivestockShipment(
+    input: PostLivestockShipmentInput!
+  ): LivestockShipmentResult!
+  saveLivestockShipment(
+    input: SaveLivestockShipmentInput!
+  ): LivestockShipmentResult!
 }

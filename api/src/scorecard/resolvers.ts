@@ -5,7 +5,11 @@ import {
   ScorecardConfigResolvers,
   ScorecardGroupResolvers
 } from "../common/graphql";
-import { NavJobJournalBatch } from "../common/nav";
+import {
+  NavJobJournalBatch,
+  AutoPostEnum,
+  NavJobJournalTemplate
+} from "../common/nav";
 import { navDate, getDocumentNumber } from "../common/utils";
 import ScorecardModel from "./Scorecard";
 import parse from "date-fns/parse";
@@ -114,9 +118,20 @@ export const mutations: MutationResolvers = {
       }
     }
 
-    // TODO - if sourceCode = FARMAPP --> post that shit
-    // fetch JobJournalTemplate by name
-    // if Source_Code = FARMAPP --> trigger auto post(job posting group, source_code)
+    const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
+      job.Job_Posting_Group
+    );
+
+    if (
+      jobJournalTemplate &&
+      jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+    ) {
+      dataSources.navJobJournal.autoPostJobJournals({
+        templateName: job.Job_Posting_Group,
+        batchName: NavJobJournalTemplate.Job,
+        lines: 10000
+      });
+    }
 
     const doc =
       (await ScorecardModel.findOne({
