@@ -1,18 +1,18 @@
 query InventorySelect {
-    jobs(input: {}) {
-        number
-        description
+  jobs(input: {}) {
+    number
+    description
+  }
+  locations {
+    code
+    name
+  }
+  livestockActivityDefaults {
+    job {
+      number
     }
-    locations {
-        code
-        name
+    location {
+      code
     }
-    livestockActivityDefaults {
-        job {
-            number
-        }  
-        location {
-            code
-        }
   }
 }

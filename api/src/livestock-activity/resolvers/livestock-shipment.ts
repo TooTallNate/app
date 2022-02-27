@@ -45,7 +45,6 @@ export const LivestockShipmentQueries: QueryResolvers = {
   },
   async dimensionPackers(_, __, { dataSources }) {
     const x = await dataSources.navMisc.getAllDimensionPackers();
-    console.log(x);
     return x;
   }
 };

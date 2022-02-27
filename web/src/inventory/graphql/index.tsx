@@ -932,9 +932,7 @@ export type InventorySelectQuery = { __typename?: "Query" } & {
   };
 };
 
-export type InventoryItemQueryVariables = {
-  job: Scalars["String"];
-};
+export type InventoryItemQueryVariables = {};
 
 export type InventoryItemQuery = { __typename?: "Query" } & {
   items: Array<
@@ -943,7 +941,6 @@ export type InventoryItemQuery = { __typename?: "Query" } & {
       "number" | "description" | "type" | "cost"
     >
   >;
-  job?: Maybe<{ __typename?: "Job" } & Pick<Job, "number" | "description">>;
 };
 
 export type PostInventoryMutationVariables = {
@@ -1026,16 +1023,12 @@ export type InventorySelectQueryResult = Apollo.QueryResult<
   InventorySelectQueryVariables
 >;
 export const InventoryItemDocument = gql`
-  query InventoryItem($job: String!) {
+  query InventoryItem {
     items {
       number
       description
       type
       cost
-    }
-    job(number: $job) {
-      number
-      description
     }
   }
 `;
@@ -1052,12 +1045,11 @@ export const InventoryItemDocument = gql`
  * @example
  * const { data, loading, error } = useInventoryItemQuery({
  *   variables: {
- *      job: // value for 'job'
  *   },
  * });
  */
 export function useInventoryItemQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     InventoryItemQuery,
     InventoryItemQueryVariables
   >

@@ -141,9 +141,6 @@ const ActivityMoveView: React.FC = () => {
     if (params.toJob) {
       loadJobs({ variables: { job: params.toJob } });
     }
-    // if (toJobData && toJobData.job) {
-    //   console.log(toJobData.job);
-    // }
   }, [loadJobs, params.toJob, toJobData]);
 
   return (
