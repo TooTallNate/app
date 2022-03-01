@@ -1,12 +1,6 @@
 import { NavFuelMaintenanceJournalLine } from "../nav";
 import NavDataSource from "./NavDataSource";
 
-interface AutoPostParams {
-  templateName: string;
-  batchName: string;
-  lines: number;
-}
-
 export default class NavFuelMaintenanceJournalDataSource extends NavDataSource {
   async postEntry(
     entry: Partial<NavFuelMaintenanceJournalLine>
@@ -14,7 +8,13 @@ export default class NavFuelMaintenanceJournalDataSource extends NavDataSource {
     return this.post("/FixedAssetGLJournal", entry);
   }
 
-  async autoPostFAJournals(autoPostParams: AutoPostParams): Promise<any> {
-    return this.post(`/FixedAssetGLJournal(${autoPostParams})/NAV.APP_Post`);
+  async autoPostFAJournals(
+    template: string,
+    batch: string,
+    lines: number
+  ): Promise<any> {
+    return this.post(
+      `/FixedAssetGLJournal('${template}','${batch}',${lines})/NAV.APP_Post`
+    );
   }
 }

@@ -11,12 +11,6 @@ export interface StandardJournalOptions {
   template: string;
 }
 
-export interface AutoPostParams {
-  templateName: string;
-  batchName: string;
-  lines: number;
-}
-
 export default class NavItemJournalDataSource extends NavDataSource {
   async postJournalLine(
     entry: Partial<NavItemJournalLine>
@@ -56,7 +50,7 @@ export default class NavItemJournalDataSource extends NavDataSource {
   getItemJournalTemplateByName(
     name: string
   ): Promise<ItemJournalTemplateObject | null> {
-    return this.get(`/ItemJournalTemplate('${name})`);
+    return this.get(`/ItemJournalTemplate('${name}')`);
   }
 
   getAllByName(names: string[]): Promise<ItemJournalTemplateObject[]> {
@@ -83,7 +77,13 @@ export default class NavItemJournalDataSource extends NavDataSource {
     return this.get(`/ItemConsumption`);
   }
 
-  async autoPostItemJournals(autoPostParams: AutoPostParams): Promise<any> {
-    return this.post(`/ItemJournal(${autoPostParams})/NAV.APP_Post`);
+  async autoPostItemJournals(
+    template: string,
+    batch: string,
+    lines: number
+  ): Promise<any> {
+    return this.post(
+      `/ItemJournal('${template}','${batch}',${lines})/NAV.APP_Post`
+    );
   }
 }

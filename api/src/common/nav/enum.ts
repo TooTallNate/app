@@ -58,5 +58,5 @@ export enum JobTaskNumber {
 }
 
 export enum AutoPostEnum {
-  AutoPost = "FARMAUTO"
+  AutoPost = "FARMAPP"
 }

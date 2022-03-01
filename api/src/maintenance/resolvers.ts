@@ -118,11 +118,11 @@ export const mutations: MutationResolvers = {
       Description: input.comments
     });
 
-    dataSources.navFuelMaintenanceJournal.autoPostFAJournals({
-      templateName: NavJobJournalTemplate.Asset,
-      batchName: NavJobJournalBatch.FarmApp,
-      lines: 10000
-    });
+    dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+      NavJobJournalTemplate.Asset,
+      NavJobJournalBatch.FarmApp,
+      10000
+    );
 
     return { success: true };
   }

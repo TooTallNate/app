@@ -9,9 +9,7 @@ import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
 import { navDate } from "../../common/utils";
-import NavItemJournalDataSource, {
-  AutoPostParams
-} from "../../common/datasources/NavItemJournalDataSource";
+import NavItemJournalDataSource from "../../common/datasources/NavItemJournalDataSource";
 
 export const ItemJournalTemplate: ItemJournalTemplateResolvers = {
   name: itemJournalTemplate => itemJournalTemplate.Name,
@@ -41,11 +39,12 @@ export async function postItemJournal(
     itemJournalTemplate &&
     itemJournalTemplate.Source_Code === AutoPostEnum.AutoPost
   ) {
-    dataSource.autoPostItemJournals({
-      templateName: entry.Journal_Template_Name,
-      batchName: entry.Journal_Batch_Name,
-      lines: NUMBER_OF_LINES
-    });
+    console.log("inside autopost");
+    dataSource.autoPostItemJournals(
+      entry.Journal_Template_Name,
+      entry.Journal_Batch_Name,
+      NUMBER_OF_LINES
+    );
   }
 
   return postResponse;

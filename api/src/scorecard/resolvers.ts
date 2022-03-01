@@ -126,11 +126,11 @@ export const mutations: MutationResolvers = {
       jobJournalTemplate &&
       jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
     ) {
-      dataSources.navJobJournal.autoPostJobJournals({
-        templateName: job.Job_Posting_Group,
-        batchName: NavJobJournalTemplate.Job,
-        lines: 10000
-      });
+      dataSources.navJobJournal.autoPostJobJournals(
+        job.Job_Posting_Group,
+        NavJobJournalBatch.FarmApp,
+        10000
+      );
     }
 
     const doc =
