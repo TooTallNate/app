@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ScorecardYesNo, {
   isComplete as isYesNoComplete
 } from "./ScorecardYesNo";
@@ -39,6 +39,10 @@ import { FormValue } from "../contexts/scorecard";
 import ScorecardRangeInput, {
   isComplete as isRangeComplete
 } from "./ScorecardRange";
+import ScorecardSliderInput, {
+  isComplete as isSliderComplete
+} from "./ScorecardSlider";
+import ScorecardSlider from "./ScorecardSlider";
 
 export interface ScorecardPageComponentProps {
   code: string;
@@ -51,12 +55,24 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
   ...props
 }) => {
   const codeArray = code.split("-");
-  if (codeArray[0] === "RANGE") {
+  const codeMap = {
+    title: codeArray[0],
+    min: parseInt(codeArray[1]),
+    max: parseInt(codeArray[2]),
+    step: parseInt(codeArray[3] || "1")
+  };
+
+  if (codeMap.title === "RANGE") {
     return (
-      <ScorecardRangeInput
+      <ScorecardRangeInput {...props} min={codeMap.min} max={codeMap.max} />
+    );
+  } else if (codeMap.title === "SLIDER") {
+    return (
+      <ScorecardSliderInput
         {...props}
-        min={parseInt(codeArray[1])}
-        max={parseInt(codeArray[2])}
+        min={codeMap.min}
+        max={codeMap.max}
+        step={codeMap.step}
       />
     );
   } else {
