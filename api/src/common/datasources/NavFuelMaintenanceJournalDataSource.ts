@@ -14,7 +14,7 @@ export default class NavFuelMaintenanceJournalDataSource extends NavDataSource {
     lines: number
   ): Promise<any> {
     return this.post(
-      `/FAJournal('${template}','${batch}',${lines})/NAV.APP_Post`
+      `/FixedAssetGLJournal('${template}','${batch}',${lines})/NAV.APP_Post`
     );
   }
 }
