@@ -96,6 +96,24 @@ export const mutations: MutationResolvers = {
         : new Date()
     );
 
+    const triggerAutoPost = async () => {
+      const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
+        job.Job_Posting_Group
+      );
+      if (
+        jobJournalTemplate &&
+        jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+      ) {
+        console.log("triggering autopost");
+        await dataSources.navJobJournal.autoPostJobJournals(
+          job.Job_Posting_Group,
+          NavJobJournalBatch.FarmApp,
+          10000
+        );
+      }
+    };
+
+    let counter = 0;
     for (const task of jobTasks) {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
@@ -116,21 +134,10 @@ export const mutations: MutationResolvers = {
           Document_Date: date
         });
       }
-    }
-
-    const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
-      job.Job_Posting_Group
-    );
-
-    if (
-      jobJournalTemplate &&
-      jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
-    ) {
-      dataSources.navJobJournal.autoPostJobJournals(
-        job.Job_Posting_Group,
-        NavJobJournalBatch.FarmApp,
-        10000
-      );
+      counter++;
+      if (counter === jobTasks.length) {
+        triggerAutoPost();
+      }
     }
 
     const doc =

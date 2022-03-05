@@ -1,4 +1,5 @@
 import { parse } from "date-fns";
+import { post } from "request-promise-native";
 import {
   FuelAssetResolvers,
   FuelHistoryAssetResolvers,
@@ -72,7 +73,7 @@ export const mutations: MutationResolvers = {
 
     const totalAmount: number = input.gallons * fuelAsset.Last_Direct_Cost;
 
-    await dataSources.navFuelMaintenanceJournal.postEntry({
+    const postResult = await dataSources.navFuelMaintenanceJournal.postEntry({
       Journal_Template_Name: NavJobJournalTemplate.Asset,
       Journal_Batch_Name: NavJobJournalBatch.FarmApp,
       Document_No: docNo,
@@ -90,11 +91,17 @@ export const mutations: MutationResolvers = {
       Description: input.comments
     });
 
-    dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
-      NavJobJournalTemplate.Asset,
-      NavJobJournalBatch.FarmApp,
-      10000
-    );
+    const checkPostComplete = async () => {
+      if (postResult) {
+        await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+          NavJobJournalTemplate.Asset,
+          NavJobJournalBatch.FarmApp,
+          10000
+        );
+      } else {
+        checkPostComplete();
+      }
+    };
 
     return { success: true };
   }
