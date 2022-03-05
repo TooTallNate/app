@@ -104,7 +104,6 @@ export const mutations: MutationResolvers = {
         jobJournalTemplate &&
         jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
       ) {
-        console.log("triggering autopost");
         await dataSources.navJobJournal.autoPostJobJournals(
           job.Job_Posting_Group,
           NavJobJournalBatch.FarmApp,
@@ -113,11 +112,11 @@ export const mutations: MutationResolvers = {
       }
     };
 
-    let counter = 0;
-    for (const task of jobTasks) {
+    for (const [index, task] of jobTasks.entries()) {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
       );
+      console.log(index);
       if (element && element.numericValue !== 0) {
         await dataSources.navJobJournal.postEntry({
           Journal_Template_Name: job.Job_Posting_Group,
@@ -134,8 +133,7 @@ export const mutations: MutationResolvers = {
           Document_Date: date
         });
       }
-      counter++;
-      if (counter === jobTasks.length) {
+      if (index + 1 === jobTasks.length) {
         triggerAutoPost();
       }
     }

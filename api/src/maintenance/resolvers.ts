@@ -7,7 +7,11 @@ import {
   QueryResolvers
 } from "../common/graphql";
 import UserSettingsModel from "../common/models/UserSettings";
-import { NavJobJournalBatch, NavJobJournalTemplate } from "../common/nav";
+import {
+  NavFuelMaintenanceJournalLine,
+  NavJobJournalBatch,
+  NavJobJournalTemplate
+} from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 
 export const MaintenanceAsset: MaintenanceAssetResolvers = {
@@ -100,35 +104,37 @@ export const mutations: MutationResolvers = {
     );
     const totalAmount: number = laborCost * input.workHours;
 
-    const postResult = await dataSources.navFuelMaintenanceJournal.postEntry({
-      Journal_Template_Name: NavJobJournalTemplate.Asset,
-      Journal_Batch_Name: NavJobJournalBatch.FarmApp,
-      Document_No: docNo,
-      Posting_Date: date,
-      Account_Type: "Fixed Asset",
-      Account_No: input.asset,
-      FA_Posting_Type: "Maintenance",
-      Maintenance_Code: input.type,
-      Bal_Account_No: account.Maintenance_Expense_Account,
-      Shortcut_Dimension_1_Code: maintenanceAsset.Global_Dimension_1_Code,
-      Shortcut_Dimension_2_Code: maintenanceAsset.Global_Dimension_2_Code,
-      Quantity: input.workHours,
-      Meta: input.mileage,
-      Amount: totalAmount,
-      Description: input.comments
-    });
-
-    const checkPostComplete = async () => {
-      if (postResult) {
+    const triggerAutoPost = async () => {
+      if (postResult && postResult !== undefined) {
         await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
           NavJobJournalTemplate.Asset,
           NavJobJournalBatch.FarmApp,
           10000
         );
-      } else {
-        checkPostComplete();
       }
     };
+
+    let postResult: NavFuelMaintenanceJournalLine = undefined;
+    try {
+      postResult = await dataSources.navFuelMaintenanceJournal.postEntry({
+        Journal_Template_Name: NavJobJournalTemplate.Asset,
+        Journal_Batch_Name: NavJobJournalBatch.FarmApp,
+        Document_No: docNo,
+        Posting_Date: date,
+        Account_Type: "Fixed Asset",
+        Account_No: input.asset,
+        FA_Posting_Type: "Maintenance",
+        Maintenance_Code: input.type,
+        Bal_Account_No: account.Maintenance_Expense_Account,
+        Shortcut_Dimension_1_Code: maintenanceAsset.Global_Dimension_1_Code,
+        Shortcut_Dimension_2_Code: maintenanceAsset.Global_Dimension_2_Code,
+        Quantity: input.workHours,
+        Meta: input.mileage,
+        Amount: totalAmount,
+        Description: input.comments
+      });
+      triggerAutoPost();
+    } catch (e) {}
 
     return { success: true };
   }
