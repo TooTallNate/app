@@ -104,7 +104,9 @@ export const mutations: MutationResolvers = {
     );
     const totalAmount: number = laborCost * input.workHours;
 
-    const triggerAutoPost = async () => {
+    const triggerAutoPost = async (
+      postResult: NavFuelMaintenanceJournalLine
+    ) => {
       if (postResult && postResult !== undefined) {
         await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
           NavJobJournalTemplate.Asset,
@@ -133,7 +135,7 @@ export const mutations: MutationResolvers = {
         Amount: totalAmount,
         Description: input.comments
       });
-      triggerAutoPost();
+      triggerAutoPost(postResult);
     } catch (e) {}
 
     return { success: true };
