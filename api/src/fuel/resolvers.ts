@@ -1,5 +1,4 @@
 import { parse } from "date-fns";
-import { post } from "request-promise-native";
 import {
   FuelAssetResolvers,
   FuelHistoryAssetResolvers,
