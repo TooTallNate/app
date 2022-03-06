@@ -75,11 +75,13 @@ export const mutations: MutationResolvers = {
     );
 
     const triggerAutoPost = async () => {
-      await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
-        NavJobJournalTemplate.Asset,
-        NavJobJournalBatch.FarmApp,
-        10000
-      );
+      try {
+        await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+          NavJobJournalTemplate.Asset,
+          NavJobJournalBatch.FarmApp,
+          10000
+        );
+      } catch (e) {}
     };
 
     const totalAmount: number = input.gallons * fuelAsset.Last_Direct_Cost;

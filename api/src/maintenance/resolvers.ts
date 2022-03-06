@@ -108,11 +108,13 @@ export const mutations: MutationResolvers = {
       postResult: NavFuelMaintenanceJournalLine
     ) => {
       if (postResult && postResult !== undefined) {
-        await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
-          NavJobJournalTemplate.Asset,
-          NavJobJournalBatch.FarmApp,
-          10000
-        );
+        try {
+          await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+            NavJobJournalTemplate.Asset,
+            NavJobJournalBatch.FarmApp,
+            10000
+          );
+        } catch (e) {}
       }
     };
 
