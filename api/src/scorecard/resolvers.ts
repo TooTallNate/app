@@ -133,7 +133,7 @@ export const mutations: MutationResolvers = {
         });
       }
       if (index + 1 === jobTasks.length) {
-        setTimeout(() => triggerAutoPost(), 10000);
+        triggerAutoPost();
       }
     }
 
