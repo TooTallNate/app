@@ -4,6 +4,7 @@ import { getDateFromWeekNumber } from "../common/utils";
 import {
   InclusivityMode,
   ItemResolvers,
+  JobJournalTemplateResolvers,
   JobResolvers,
   LocationResolvers,
   MenuOptionResolvers,
@@ -69,6 +70,13 @@ const MenuOption: MenuOptionResolvers = {
   route: menuOption => menuOption.Route
 };
 
+export const JobJournalTemplate: JobJournalTemplateResolvers = {
+  name: jobJournalTemplate => jobJournalTemplate.Name,
+  description: jobJournalTemplate => jobJournalTemplate.Description,
+  sourceCode: jobJournalTemplate => jobJournalTemplate.Source_Code,
+  reasonCode: jobJournalTemplate => jobJournalTemplate.Reason_Code
+};
+
 export const queries: QueryResolvers = {
   async jobs(_, { input }, { user, navConfig, dataSources }) {
     const settings = await UserSettingsModel.findOne({
@@ -111,6 +119,12 @@ export const queries: QueryResolvers = {
   async resource(_, { code }, { dataSources }) {
     const result = await dataSources.navResource.getByCode(code);
     return result;
+  },
+  jobJournalTemplates(_, __, { dataSources }) {
+    return dataSources.navJobJournal.getJobJournalTemplates();
+  },
+  jobJournalTemplate(_, { name }, { dataSources }) {
+    return dataSources.navJobJournal.getJobJournalTemplate(name);
   }
 };
 
@@ -120,5 +134,6 @@ export const types = {
   Resource,
   Reason,
   Location,
-  MenuOption
+  MenuOption,
+  JobJournalTemplate
 };

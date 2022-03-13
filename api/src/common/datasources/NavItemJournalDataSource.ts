@@ -43,8 +43,14 @@ export default class NavItemJournalDataSource extends NavDataSource {
     );
   }
 
-  getItemJournalTemplate(): Promise<ItemJournalTemplateObject[] | null> {
+  getItemJournalTemplates(): Promise<ItemJournalTemplateObject[] | null> {
     return this.get(`/ItemJournalTemplate`);
+  }
+
+  getItemJournalTemplateByName(
+    name: string
+  ): Promise<ItemJournalTemplateObject | null> {
+    return this.get(`/ItemJournalTemplate('${name}')`);
   }
 
   getAllByName(names: string[]): Promise<ItemJournalTemplateObject[]> {
@@ -69,5 +75,15 @@ export default class NavItemJournalDataSource extends NavDataSource {
 
   getFilteredItems(): Promise<NavItem[]> {
     return this.get(`/ItemConsumption`);
+  }
+
+  async autoPostItemJournals(
+    template: string,
+    batch: string,
+    lines: number
+  ): Promise<any> {
+    return this.post(
+      `/ItemJournal('${template}','${batch}',${lines})/NAV.APP_Post`
+    );
   }
 }

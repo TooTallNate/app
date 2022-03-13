@@ -5,7 +5,11 @@ import {
   ScorecardConfigResolvers,
   ScorecardGroupResolvers
 } from "../common/graphql";
-import { NavJobJournalBatch } from "../common/nav";
+import {
+  NavJobJournalBatch,
+  AutoPostEnum,
+  NavJobJournalTemplate
+} from "../common/nav";
 import { navDate, getDocumentNumber } from "../common/utils";
 import ScorecardModel from "./Scorecard";
 import parse from "date-fns/parse";
@@ -92,7 +96,23 @@ export const mutations: MutationResolvers = {
         : new Date()
     );
 
-    for (const task of jobTasks) {
+    const triggerAutoPost = async () => {
+      const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
+        job.Job_Posting_Group
+      );
+      if (
+        jobJournalTemplate &&
+        jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+      ) {
+        await dataSources.navJobJournal.autoPostJobJournals(
+          job.Job_Posting_Group,
+          NavJobJournalBatch.FarmApp,
+          10000
+        );
+      }
+    };
+
+    for (const [index, task] of jobTasks.entries()) {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
       );
@@ -111,6 +131,9 @@ export const mutations: MutationResolvers = {
           Posting_Date: date,
           Document_Date: date
         });
+      }
+      if (index + 1 === jobTasks.length) {
+        triggerAutoPost();
       }
     }
 

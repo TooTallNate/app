@@ -42,7 +42,7 @@ export async function createContext({
   if (!navConfig) {
     navConfig = {
       subdomain: "moglerfarms",
-      url: `${process.env.NAV_BASE_URL}/Company('${process.env.NAV_COMPANY}')`,
+      url: `${process.env.NAV_BASE_URL}`,
       user: process.env.NAV_USER,
       accessKey: process.env.NAV_ACCESS_KEY
     };

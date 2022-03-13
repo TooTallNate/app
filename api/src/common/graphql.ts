@@ -4,6 +4,7 @@ import {
   NavJob,
   NavItem,
   ItemJournalTemplateObject,
+  JobJournalTemplateObject,
   NavResource,
   NavReason,
   NavLocation,
@@ -96,6 +97,14 @@ export type ResourceFilter = {
   type?: Maybe<Scalars["String"]>;
 };
 
+export type JobJournalTemplate = {
+  __typename?: "JobJournalTemplate";
+  name: Scalars["String"];
+  description: Scalars["String"];
+  sourceCode: Scalars["String"];
+  reasonCode: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
@@ -107,6 +116,8 @@ export type Query = {
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
   items: Array<Item>;
   job?: Maybe<Job>;
+  jobJournalTemplate?: Maybe<JobJournalTemplate>;
+  jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
   livestockActivityJobs: Array<Job>;
@@ -155,6 +166,10 @@ export type QueryItemArgs = {
 
 export type QueryJobArgs = {
   number: Scalars["String"];
+};
+
+export type QueryJobJournalTemplateArgs = {
+  name: Scalars["String"];
 };
 
 export type QueryJobsArgs = {
@@ -1058,6 +1073,7 @@ export type ResolversTypes = ResolversObject<{
   Location: ResolverTypeWrapper<NavLocation>;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
+  JobJournalTemplate: ResolverTypeWrapper<JobJournalTemplateObject>;
   Query: ResolverTypeWrapper<{}>;
   FuelAsset: ResolverTypeWrapper<NavFuelAsset>;
   FuelHistoryAsset: ResolverTypeWrapper<NavFuelHistoryAsset>;
@@ -1214,6 +1230,7 @@ export type ResolversParentTypes = ResolversObject<{
   Location: NavLocation;
   JobFilter: JobFilter;
   ResourceFilter: ResourceFilter;
+  JobJournalTemplate: JobJournalTemplateObject;
   Query: {};
   FuelAsset: NavFuelAsset;
   FuelHistoryAsset: NavFuelHistoryAsset;
@@ -1428,6 +1445,17 @@ export type LocationResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type JobJournalTemplateResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["JobJournalTemplate"] = ResolversParentTypes["JobJournalTemplate"]
+> = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  sourceCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  reasonCode?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type QueryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
@@ -1472,6 +1500,17 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryJobArgs, "number">
+  >;
+  jobJournalTemplate?: Resolver<
+    Maybe<ResolversTypes["JobJournalTemplate"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryJobJournalTemplateArgs, "name">
+  >;
+  jobJournalTemplates?: Resolver<
+    Maybe<Array<ResolversTypes["JobJournalTemplate"]>>,
+    ParentType,
+    ContextType
   >;
   jobs?: Resolver<
     Array<ResolversTypes["Job"]>,
@@ -2556,6 +2595,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Reason?: ReasonResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
+  JobJournalTemplate?: JobJournalTemplateResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   FuelAsset?: FuelAssetResolvers<ContextType>;
   FuelHistoryAsset?: FuelHistoryAssetResolvers<ContextType>;

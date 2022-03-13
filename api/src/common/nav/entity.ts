@@ -222,3 +222,10 @@ export interface NavDimensionPacker {
   DimensionCode: string;
   DimensionName: string;
 }
+
+export interface JobJournalTemplateObject {
+  Name: string;
+  Description: string;
+  Source_Code: string;
+  Reason_Code: string;
+}

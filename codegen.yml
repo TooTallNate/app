@@ -19,6 +19,7 @@ generates:
         Job: "./nav#NavJob"
         Item: "./nav#NavItem"
         ItemJournalTemplate: "./nav#ItemJournalTemplateObject"
+        JobJournalTemplate: "./nav#JobJournalTemplateObject"
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
@@ -128,15 +129,15 @@ generates:
       afterOneFileWrite:
         - eslint --fix
   web/src/inventory/graphql/index.tsx:
-      documents: "web/src/inventory/graphql/*.gql"
-      plugins:
-        - "typescript"
-        - "typescript-operations"
-        - "typescript-react-apollo"
-      config:
-        withHOC: false
-        withHooks: true
-        withComponent: false
-      hooks:
-        afterOneFileWrite:
-          - eslint --fix
+    documents: "web/src/inventory/graphql/*.gql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
+    hooks:
+      afterOneFileWrite:
+        - eslint --fix

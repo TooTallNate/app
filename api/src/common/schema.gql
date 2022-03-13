@@ -48,6 +48,13 @@ input ResourceFilter {
   type: String
 }
 
+type JobJournalTemplate {
+  name: String!
+  description: String!
+  sourceCode: String!
+  reasonCode: String!
+}
+
 type Query {
   resources(input: ResourceFilter): [Resource!]!
   resource(code: String!): Resource
@@ -56,5 +63,6 @@ type Query {
   livestockJobs(input: JobFilter): [Job!]!
   livestockJob(number: String!): Job
   item(number: String!): Item
+  jobJournalTemplates: [JobJournalTemplate!]
+  jobJournalTemplate(name: String!): JobJournalTemplate
 }
-

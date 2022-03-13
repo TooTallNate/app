@@ -110,7 +110,7 @@ const ScorecardPageComponent: React.FC<ScorecardPageComponentProps> = ({
 };
 
 const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
-  //TODO Anytihng not here but in the switch up there needs to be added
+  // Anytihng not here but in the switch up there needs to be added
   YN: isYesNoComplete,
   JOB: isLivestockJobComplete,
   CARETAKER: isCaretakerComplete,
