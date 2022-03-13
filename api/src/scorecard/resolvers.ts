@@ -116,7 +116,7 @@ export const mutations: MutationResolvers = {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
       );
-      console.log(index);
+      console.log(`does index ${index} ===== ${jobTasks.length}`);
       if (element && element.numericValue !== 0) {
         await dataSources.navJobJournal.postEntry({
           Journal_Template_Name: job.Job_Posting_Group,
@@ -134,7 +134,8 @@ export const mutations: MutationResolvers = {
         });
       }
       if (index + 1 === jobTasks.length) {
-        triggerAutoPost();
+        console.log(`index = ${index}`);
+        setTimeout(() => triggerAutoPost(), 3000);
       }
     }
 

@@ -74,14 +74,18 @@ export const mutations: MutationResolvers = {
         : new Date()
     );
 
-    const triggerAutoPost = async () => {
-      try {
-        await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
-          NavJobJournalTemplate.Asset,
-          NavJobJournalBatch.FarmApp,
-          10000
-        );
-      } catch (e) {}
+    const triggerAutoPost = async (
+      postResult: NavFuelMaintenanceJournalLine
+    ) => {
+      if (postResult && postResult !== undefined) {
+        try {
+          await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+            NavJobJournalTemplate.Asset,
+            NavJobJournalBatch.FarmApp,
+            10000
+          );
+        } catch (e) {}
+      }
     };
 
     const totalAmount: number = input.gallons * fuelAsset.Last_Direct_Cost;
@@ -105,10 +109,7 @@ export const mutations: MutationResolvers = {
         Amount: totalAmount,
         Description: input.comments
       });
-
-      if (postResult !== undefined) {
-        triggerAutoPost();
-      }
+      setTimeout(() => triggerAutoPost(postResult), 3000);
     } catch (e) {}
 
     return { success: true };

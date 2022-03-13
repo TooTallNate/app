@@ -39,12 +39,13 @@ export async function postItemJournal(
     itemJournalTemplate &&
     itemJournalTemplate.Source_Code === AutoPostEnum.AutoPost
   ) {
-    console.log("inside autopost");
-    dataSource.autoPostItemJournals(
-      entry.Journal_Template_Name,
-      entry.Journal_Batch_Name,
-      NUMBER_OF_LINES
-    );
+    try {
+      dataSource.autoPostItemJournals(
+        entry.Journal_Template_Name,
+        entry.Journal_Batch_Name,
+        NUMBER_OF_LINES
+      );
+    } catch (e) {}
   }
 
   return postResponse;
