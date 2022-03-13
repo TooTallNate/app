@@ -135,7 +135,7 @@ export const mutations: MutationResolvers = {
       }
       if (index + 1 === jobTasks.length) {
         console.log(`index = ${index}`);
-        setTimeout(() => triggerAutoPost(), 3000);
+        triggerAutoPost();
       }
     }
 
