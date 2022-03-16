@@ -109,8 +109,10 @@ export const mutations: MutationResolvers = {
         Amount: totalAmount,
         Description: input.comments
       });
-      setTimeout(() => triggerAutoPost(postResult), 30000);
     } catch (e) {}
+
+    triggerAutoPost(postResult);
+    triggerAutoPost(postResult);
 
     return { success: true };
   }
