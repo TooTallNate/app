@@ -282,6 +282,7 @@ export type FuelResult = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  autoPostFuelMaintenance: FuelResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -1729,6 +1730,11 @@ export type MutationResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
+  autoPostFuelMaintenance?: Resolver<
+    ResolversTypes["FuelResult"],
+    ParentType,
+    ContextType
+  >;
   login?: Resolver<
     ResolversTypes["LoginResult"],
     ParentType,

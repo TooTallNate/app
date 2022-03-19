@@ -250,6 +250,7 @@ export type FuelResult = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  autoPostFuelMaintenance: FuelResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;

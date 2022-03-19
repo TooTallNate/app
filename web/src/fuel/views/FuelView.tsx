@@ -20,6 +20,7 @@ import ViewTitle from "../../common/components/view/ViewTitle";
 import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../../livestock-activity/components/CommentsField";
 import {
+  useAutoPostMutation,
   useFuelAssetQuery,
   useFuelHistoryAssetQuery,
   usePostFuelMutation
@@ -65,6 +66,7 @@ const FuelView: React.FC = () => {
   const { setMessage } = useFlash();
   const { watch } = formContext;
   const [post] = usePostFuelMutation();
+  const [autoPost] = useAutoPostMutation();
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -76,11 +78,20 @@ const FuelView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPost();
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/fuel");
     } catch (e) {
       const error: any = e;

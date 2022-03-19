@@ -135,6 +135,7 @@ type FuelResult {
 }
 
 type Mutation {
+  autoPostFuelMaintenance: FuelResult!
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFuel(input: PostFuelInput!): FuelResult!
