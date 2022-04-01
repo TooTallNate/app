@@ -11,7 +11,8 @@ import {
   useScorecardLazyQuery,
   useSaveScorecardMutation,
   ScorecardQuery,
-  usePostScorecardMutation
+  usePostScorecardMutation,
+  useAutoPostScorecardsMutation
 } from "../graphql";
 
 export interface ScorecardContextValue {
@@ -21,6 +22,7 @@ export interface ScorecardContextValue {
   formConfig: FormPage[];
   saveProgress(values?: FormValues): Promise<void>;
   submit(): Promise<void>;
+  autoPost(): Promise<void>;
 }
 
 export interface Job {
@@ -69,6 +71,7 @@ const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
 
   const [save] = useSaveScorecardMutation();
   const [submitForm] = usePostScorecardMutation();
+  const [autoPostScorecards] = useAutoPostScorecardsMutation();
 
   // Only use the lazy query result if it matches the selected job number.
   // There is some delay until the results are loaded.
@@ -141,6 +144,18 @@ const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
     }
   }, [formState, jobNumber, submitForm]);
 
+  const autoPost = useCallback(async () => {
+    if (jobNumber) {
+      await autoPostScorecards({
+        variables: {
+          input: {
+            job: jobNumber
+          }
+        }
+      });
+    }
+  }, [autoPostScorecards, jobNumber]);
+
   const saveProgress = useCallback(async (values: Partial<FormValues> = {}) => {
     setFormState(prev => ({ ...prev, ...values }));
   }, []);
@@ -178,7 +193,8 @@ const ScorecardProvider: React.FC<ScorecardProviderProps> = ({
         formState,
         formConfig,
         saveProgress,
-        submit
+        submit,
+        autoPost
       }}
     >
       {children}

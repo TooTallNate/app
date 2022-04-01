@@ -321,6 +321,14 @@ type DimensionPacker {
   dimensionName: String!
 }
 
+input AutoPostInput {
+  itemJournalTemplate: String!
+}
+
+type AutoPostResult {
+  success: Boolean!
+}
+
 type Query {
   animals: [Item!]!
   dimensionPackers: [DimensionPacker!]!
@@ -378,4 +386,5 @@ type Mutation {
   saveLivestockShipment(
     input: SaveLivestockShipmentInput!
   ): LivestockShipmentResult!
+  autoPostItemJournal(input: AutoPostInput!): AutoPostResult
 }

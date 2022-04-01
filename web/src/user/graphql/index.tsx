@@ -251,6 +251,8 @@ export type FuelResult = {
 export type Mutation = {
   __typename?: "Mutation";
   autoPostFuelMaintenance: FuelResult;
+  autoPostItemJournal?: Maybe<AutoPostResult>;
+  autoPostScorecards: AutoPostResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -274,6 +276,14 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+};
+
+export type MutationAutoPostItemJournalArgs = {
+  input: AutoPostInput;
+};
+
+export type MutationAutoPostScorecardsArgs = {
+  input?: Maybe<ScorecardAutoPostInput>;
 };
 
 export type MutationLoginArgs = {
@@ -755,6 +765,15 @@ export type DimensionPacker = {
   dimensionName: Scalars["String"];
 };
 
+export type AutoPostInput = {
+  itemJournalTemplate: Scalars["String"];
+};
+
+export type AutoPostResult = {
+  __typename?: "AutoPostResult";
+  success: Scalars["Boolean"];
+};
+
 export type MaintenanceAsset = {
   __typename?: "MaintenanceAsset";
   number: Scalars["String"];
@@ -851,6 +870,10 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
+};
+
+export type ScorecardAutoPostInput = {
+  job: Scalars["String"];
 };
 
 export type UserLocations = {

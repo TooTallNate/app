@@ -251,6 +251,8 @@ export type FuelResult = {
 export type Mutation = {
   __typename?: "Mutation";
   autoPostFuelMaintenance: FuelResult;
+  autoPostItemJournal?: Maybe<AutoPostResult>;
+  autoPostScorecards: AutoPostResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -274,6 +276,14 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+};
+
+export type MutationAutoPostItemJournalArgs = {
+  input: AutoPostInput;
+};
+
+export type MutationAutoPostScorecardsArgs = {
+  input?: Maybe<ScorecardAutoPostInput>;
 };
 
 export type MutationLoginArgs = {
@@ -755,6 +765,15 @@ export type DimensionPacker = {
   dimensionName: Scalars["String"];
 };
 
+export type AutoPostInput = {
+  itemJournalTemplate: Scalars["String"];
+};
+
+export type AutoPostResult = {
+  __typename?: "AutoPostResult";
+  success: Scalars["Boolean"];
+};
+
 export type MaintenanceAsset = {
   __typename?: "MaintenanceAsset";
   number: Scalars["String"];
@@ -851,6 +870,10 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
+};
+
+export type ScorecardAutoPostInput = {
+  job: Scalars["String"];
 };
 
 export type UserLocations = {
@@ -950,6 +973,16 @@ export type LivestockActivityJobsQuery = { __typename?: "Query" } & {
       Job,
       "number" | "description" | "inventory" | "deadQuantity"
     >
+  >;
+};
+
+export type AutoPostItemMutationVariables = {
+  input: AutoPostInput;
+};
+
+export type AutoPostItemMutation = { __typename?: "Mutation" } & {
+  autoPostItemJournal?: Maybe<
+    { __typename?: "AutoPostResult" } & Pick<AutoPostResult, "success">
   >;
 };
 
@@ -1660,6 +1693,56 @@ export type LivestockActivityJobsLazyQueryHookResult = ReturnType<
 export type LivestockActivityJobsQueryResult = Apollo.QueryResult<
   LivestockActivityJobsQuery,
   LivestockActivityJobsQueryVariables
+>;
+export const AutoPostItemDocument = gql`
+  mutation AutoPostItem($input: AutoPostInput!) {
+    autoPostItemJournal(input: $input) {
+      success
+    }
+  }
+`;
+export type AutoPostItemMutationFn = Apollo.MutationFunction<
+  AutoPostItemMutation,
+  AutoPostItemMutationVariables
+>;
+
+/**
+ * __useAutoPostItemMutation__
+ *
+ * To run a mutation, you first call `useAutoPostItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAutoPostItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [autoPostItemMutation, { data, loading, error }] = useAutoPostItemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAutoPostItemMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AutoPostItemMutation,
+    AutoPostItemMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    AutoPostItemMutation,
+    AutoPostItemMutationVariables
+  >(AutoPostItemDocument, baseOptions);
+}
+export type AutoPostItemMutationHookResult = ReturnType<
+  typeof useAutoPostItemMutation
+>;
+export type AutoPostItemMutationResult = Apollo.MutationResult<
+  AutoPostItemMutation
+>;
+export type AutoPostItemMutationOptions = Apollo.BaseMutationOptions<
+  AutoPostItemMutation,
+  AutoPostItemMutationVariables
 >;
 export const LivestockAdjustmentDocument = gql`
   query LivestockAdjustment($job: String!) {

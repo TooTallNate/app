@@ -77,6 +77,23 @@ export const mutations: MutationResolvers = {
     await doc.save();
     return { success: true, scorecard: doc };
   },
+  async autoPostScorecards(_, { input }, { dataSources }) {
+    const job = await dataSources.navJob.getByNo(input.job);
+    const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
+      job.Job_Posting_Group
+    );
+    if (
+      jobJournalTemplate &&
+      jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+    ) {
+      await dataSources.navJobJournal.autoPostJobJournals(
+        job.Job_Posting_Group,
+        NavJobJournalBatch.FarmApp,
+        10000
+      );
+    }
+    return { success: true };
+  },
   async postScorecard(_, { input }, { dataSources, user }) {
     const job = await dataSources.navJob.getByNo(input.job);
     const jobTasks = (await dataSources.navJob.getJobTasks(job.No)).filter(
@@ -96,23 +113,7 @@ export const mutations: MutationResolvers = {
         : new Date()
     );
 
-    const triggerAutoPost = async () => {
-      const jobJournalTemplate = await dataSources.navJobJournal.getJobJournalTemplate(
-        job.Job_Posting_Group
-      );
-      if (
-        jobJournalTemplate &&
-        jobJournalTemplate.Source_Code === AutoPostEnum.AutoPost
-      ) {
-        await dataSources.navJobJournal.autoPostJobJournals(
-          job.Job_Posting_Group,
-          NavJobJournalBatch.FarmApp,
-          10000
-        );
-      }
-    };
-
-    for (const [index, task] of jobTasks.entries()) {
+    for (const task of jobTasks) {
       const element = input.data.find(
         element => element.elementId === task.Job_Task_No
       );
@@ -131,9 +132,6 @@ export const mutations: MutationResolvers = {
           Posting_Date: date,
           Document_Date: date
         });
-      }
-      if (index + 1 === jobTasks.length) {
-        triggerAutoPost();
       }
     }
 

@@ -7,11 +7,7 @@ import {
   QueryResolvers
 } from "../common/graphql";
 import UserSettingsModel from "../common/models/UserSettings";
-import {
-  NavFuelMaintenanceJournalLine,
-  NavJobJournalBatch,
-  NavJobJournalTemplate
-} from "../common/nav";
+import { NavJobJournalBatch, NavJobJournalTemplate } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 
 export const FuelAsset: FuelAssetResolvers = {

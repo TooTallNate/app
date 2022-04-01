@@ -1,6 +1,7 @@
 import {
   ItemJournalTemplate,
   LivestockActivityDefaults,
+  LivestockActivityMutations,
   LivestockActivityQueries
 } from "./livestock-activity";
 import {
@@ -59,6 +60,7 @@ export const queries = {
 };
 
 export const mutations = {
+  ...LivestockActivityMutations,
   ...LivestockAdjustmentMutations,
   ...LivestockGradeOffMutations,
   ...LivestockMortalityMutations,

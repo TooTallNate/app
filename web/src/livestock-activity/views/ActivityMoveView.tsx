@@ -7,7 +7,8 @@ import {
   useLivestockMoveQuery,
   useSaveLivestockMoveMutation,
   usePostLivestockMoveMutation,
-  useLivestockJobLazyQuery
+  useLivestockJobLazyQuery,
+  useAutoPostItemMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -77,6 +78,9 @@ const ActivityMoveView: React.FC = () => {
   const [save] = useSaveLivestockMoveMutation();
   const { setMessage } = useFlash();
   const { getValues, watch, triggerValidation, formState } = formContext;
+  const [autoPostItem] = useAutoPostItemMutation();
+
+  const TEMPLATE_NAME = "MOVE";
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -89,15 +93,31 @@ const ActivityMoveView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPostItem({
+          variables: {
+            input: {
+              itemJournalTemplate: TEMPLATE_NAME
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }
@@ -121,8 +141,9 @@ const ActivityMoveView: React.FC = () => {
       });
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }

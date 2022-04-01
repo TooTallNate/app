@@ -13,6 +13,7 @@ import Form from "../../common/components/form/Form";
 import FormSubmit from "../../common/components/form/FormSubmit";
 import { useForm } from "react-hook-form";
 import { useFlash } from "../../common/contexts/flash";
+import { useAutoPostScorecardsMutation } from "../graphql";
 
 const ScorecardSubmitView: React.FC = () => {
   const submitAction = useRef<string | null>(null);
@@ -21,7 +22,7 @@ const ScorecardSubmitView: React.FC = () => {
   const formContext = useForm();
   const { addMessage, setMessage } = useFlash();
 
-  const { formConfig, formState, submit } = useScorecard();
+  const { formConfig, formState, submit, autoPost } = useScorecard();
 
   const pages = formConfig.map((page, i) => {
     const containsZero = page.elements.some(element => {
@@ -52,6 +53,14 @@ const ScorecardSubmitView: React.FC = () => {
       default:
         try {
           await submit();
+          try {
+            autoPost();
+          } catch (e) {
+            setMessage({
+              level: "error",
+              message: "An error occurred auto posting scorecard entries"
+            });
+          }
           history.push("/scorecard");
           addMessage({
             level: "success",

@@ -7,7 +7,8 @@ import { useParams, useHistory } from "react-router";
 import {
   useLivestockMortalityQuery,
   useSaveLivestockMortalityMutation,
-  usePostLivestockMortalityMutation
+  usePostLivestockMortalityMutation,
+  useAutoPostItemMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -79,6 +80,7 @@ const ActivityMortalityView: React.FC = () => {
   const [save] = useSaveLivestockMortalityMutation();
   const { setMessage } = useFlash();
   const { getValues, watch } = formContext;
+  const [autoPostItem] = useAutoPostItemMutation();
 
   const quantities = watch("quantities") || {};
   const totalQuantity = Object.values(quantities).reduce<number>(
@@ -90,6 +92,8 @@ const ActivityMortalityView: React.FC = () => {
   const eventConfig = data
     ? data.livestockMortalityEventTypes.find(elem => elem.code === event)
     : undefined;
+
+  const TEMPLATE_NAME = "MORTALITY";
 
   const onSubmit: OnSubmit<FormData> = async ({
     event,
@@ -114,15 +118,31 @@ const ActivityMortalityView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPostItem({
+          variables: {
+            input: {
+              itemJournalTemplate: TEMPLATE_NAME
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }
@@ -154,8 +174,9 @@ const ActivityMortalityView: React.FC = () => {
       });
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }

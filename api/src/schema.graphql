@@ -136,6 +136,8 @@ type FuelResult {
 
 type Mutation {
   autoPostFuelMaintenance: FuelResult!
+  autoPostItemJournal(input: AutoPostInput!): AutoPostResult
+  autoPostScorecards(input: ScorecardAutoPostInput): AutoPostResult!
   login(input: LoginInput!): LoginResult!
   logout: LogoutResult!
   postFuel(input: PostFuelInput!): FuelResult!
@@ -523,6 +525,14 @@ type DimensionPacker {
   dimensionName: String!
 }
 
+input AutoPostInput {
+  itemJournalTemplate: String!
+}
+
+type AutoPostResult {
+  success: Boolean!
+}
+
 type MaintenanceAsset {
   number: String!
   description: String
@@ -609,6 +619,10 @@ type ScorecardElementResponse {
 type Scorecard {
   job: Job!
   data: [ScorecardElementResponse!]!
+}
+
+input ScorecardAutoPostInput {
+  job: String!
 }
 
 type UserLocations {

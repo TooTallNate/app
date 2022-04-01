@@ -6,7 +6,8 @@ import { useParams, useHistory } from "react-router";
 import {
   useLivestockGradeOffQuery,
   useSaveLivestockGradeOffMutation,
-  usePostLivestockGradeOffMutation
+  usePostLivestockGradeOffMutation,
+  useAutoPostItemMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -81,6 +82,7 @@ const ActivityGradeOffView: React.FC = () => {
   const [save] = useSaveLivestockGradeOffMutation();
   const { setMessage } = useFlash();
   const { getValues, watch } = formContext;
+  const [autoPostItem] = useAutoPostItemMutation();
 
   const quantities = watch("quantities");
   const totalQuantity = Object.values(quantities).reduce<number>(
@@ -92,6 +94,8 @@ const ActivityGradeOffView: React.FC = () => {
   const eventConfig = data
     ? data.livestockGradeOffEventTypes.find(elem => elem.code === event)
     : undefined;
+
+  const TEMPLATE_NAME = "GRADEOFF";
 
   const onSubmit: OnSubmit<FormData> = async ({
     event,
@@ -118,15 +122,31 @@ const ActivityGradeOffView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPostItem({
+          variables: {
+            input: {
+              itemJournalTemplate: TEMPLATE_NAME
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }
@@ -165,8 +185,9 @@ const ActivityGradeOffView: React.FC = () => {
       });
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }

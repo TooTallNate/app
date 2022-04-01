@@ -28,3 +28,9 @@ query LivestockActivityJobs($isShipment: Boolean) {
     deadQuantity
   }
 }
+
+mutation AutoPostItem($input: AutoPostInput!) {
+  autoPostItemJournal(input: $input) {
+    success
+  }
+}
