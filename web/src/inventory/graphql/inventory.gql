@@ -4,6 +4,7 @@ query InventoryItem {
     description
     type
     cost
+    unit
   }
 }
 mutation PostInventory($input: PostInventoryInput!) {

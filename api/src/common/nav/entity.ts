@@ -44,6 +44,7 @@ export interface NavItem {
   Description: string;
   Gen_Prod_Posting_Group: string;
   Last_Direct_Cost: number;
+  Base_Unit_of_Measure: string;
 }
 
 export interface NavLocation {
