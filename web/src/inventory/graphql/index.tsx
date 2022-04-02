@@ -34,6 +34,7 @@ export type Item = {
   description: Scalars["String"];
   type?: Maybe<Scalars["String"]>;
   cost?: Maybe<Scalars["Float"]>;
+  unit?: Maybe<Scalars["String"]>;
 };
 
 export type Reason = {
@@ -938,7 +939,7 @@ export type InventoryItemQuery = { __typename?: "Query" } & {
   items: Array<
     { __typename?: "Item" } & Pick<
       Item,
-      "number" | "description" | "type" | "cost"
+      "number" | "description" | "type" | "cost" | "unit"
     >
   >;
 };
@@ -1029,6 +1030,7 @@ export const InventoryItemDocument = gql`
       description
       type
       cost
+      unit
     }
   }
 `;

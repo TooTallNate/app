@@ -20,6 +20,7 @@ type Item {
   description: String!
   type: String
   cost: Float
+  unit: String
 }
 
 type Reason {
