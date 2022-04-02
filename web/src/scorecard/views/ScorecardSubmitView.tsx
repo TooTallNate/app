@@ -31,6 +31,7 @@ const ScorecardSubmitView: React.FC = () => {
     return {
       ...page,
       isComplete: page.elements.every(element =>
+        // TODO - refactor this
         element.code.includes("RANGE")
           ? isElementComplete("RANGE", formState[element.id] || {})
           : isElementComplete(element.code, formState[element.id] || {}) ||
