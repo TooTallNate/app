@@ -124,7 +124,8 @@ const isCompleteMap: { [code: string]: (values: FormValue) => boolean } = {
   TARGETTEMP: isTargetTempComplete,
   TEMP: isTempComplete,
   PASSFAIL: isPassFailComplete,
-  RANGE: isRangeComplete
+  RANGE: isRangeComplete,
+  SLIDER: isSliderComplete
 };
 
 export const isElementComplete = (code: string, values: FormValue) => {
