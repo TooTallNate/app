@@ -31,15 +31,14 @@ const ScorecardSubmitView: React.FC = () => {
     });
     return {
       ...page,
-      isComplete: page.elements.every(element =>
+      isComplete: page.elements.every(element => {
         // TODO - refactor this
         element.code.includes("RANGE")
           ? isElementComplete("RANGE", formState[element.id] || {})
-          : isElementComplete(element.code, formState[element.id] || {}) ||
-            element.code.includes("SLIDER")
+          : element.code.includes("SLIDER")
           ? isElementComplete("SLIDER", formState[element.id] || {})
-          : isElementComplete(element.code, formState[element.id] || {})
-      ),
+          : isElementComplete(element.code, formState[element.id] || {});
+      }),
       hasZero: containsZero
     };
   });
