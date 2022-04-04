@@ -283,6 +283,9 @@ export type FuelResult = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  autoPostFuelMaintenance: FuelResult;
+  autoPostItemJournal?: Maybe<AutoPostResult>;
+  autoPostScorecards: AutoPostResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -306,6 +309,14 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+};
+
+export type MutationAutoPostItemJournalArgs = {
+  input: AutoPostInput;
+};
+
+export type MutationAutoPostScorecardsArgs = {
+  input?: Maybe<ScorecardAutoPostInput>;
 };
 
 export type MutationLoginArgs = {
@@ -787,6 +798,15 @@ export type DimensionPacker = {
   dimensionName: Scalars["String"];
 };
 
+export type AutoPostInput = {
+  itemJournalTemplate: Scalars["String"];
+};
+
+export type AutoPostResult = {
+  __typename?: "AutoPostResult";
+  success: Scalars["Boolean"];
+};
+
 export type MaintenanceAsset = {
   __typename?: "MaintenanceAsset";
   number: Scalars["String"];
@@ -883,6 +903,10 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
+};
+
+export type ScorecardAutoPostInput = {
+  job: Scalars["String"];
 };
 
 export type UserLocations = {
@@ -1171,6 +1195,8 @@ export type ResolversTypes = ResolversObject<{
   >;
   ItemJournalTemplate: ResolverTypeWrapper<ItemJournalTemplateObject>;
   DimensionPacker: ResolverTypeWrapper<NavDimensionPacker>;
+  AutoPostInput: AutoPostInput;
+  AutoPostResult: ResolverTypeWrapper<AutoPostResult>;
   MaintenanceAsset: ResolverTypeWrapper<NavMaintenanceAsset>;
   MaintenanceHistoryAsset: ResolverTypeWrapper<NavMaintenanceHistoryAsset>;
   PostMaintenanceInput: PostMaintenanceInput;
@@ -1189,6 +1215,7 @@ export type ResolversTypes = ResolversObject<{
   >;
   ScorecardElementResponse: ResolverTypeWrapper<ScorecardElementResponse>;
   Scorecard: ResolverTypeWrapper<ScorecardDocument>;
+  ScorecardAutoPostInput: ScorecardAutoPostInput;
   UserLocations: ResolverTypeWrapper<
     Omit<UserLocations, "list"> & { list: Array<ResolversTypes["Location"]> }
   >;
@@ -1331,6 +1358,8 @@ export type ResolversParentTypes = ResolversObject<{
   };
   ItemJournalTemplate: ItemJournalTemplateObject;
   DimensionPacker: NavDimensionPacker;
+  AutoPostInput: AutoPostInput;
+  AutoPostResult: AutoPostResult;
   MaintenanceAsset: NavMaintenanceAsset;
   MaintenanceHistoryAsset: NavMaintenanceHistoryAsset;
   PostMaintenanceInput: PostMaintenanceInput;
@@ -1347,6 +1376,7 @@ export type ResolversParentTypes = ResolversObject<{
   };
   ScorecardElementResponse: ScorecardElementResponse;
   Scorecard: ScorecardDocument;
+  ScorecardAutoPostInput: ScorecardAutoPostInput;
   UserLocations: Omit<UserLocations, "list"> & {
     list: Array<ResolversParentTypes["Location"]>;
   };
@@ -1731,6 +1761,23 @@ export type MutationResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
+  autoPostFuelMaintenance?: Resolver<
+    ResolversTypes["FuelResult"],
+    ParentType,
+    ContextType
+  >;
+  autoPostItemJournal?: Resolver<
+    Maybe<ResolversTypes["AutoPostResult"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAutoPostItemJournalArgs, "input">
+  >;
+  autoPostScorecards?: Resolver<
+    ResolversTypes["AutoPostResult"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationAutoPostScorecardsArgs, never>
+  >;
   login?: Resolver<
     ResolversTypes["LoginResult"],
     ParentType,
@@ -2358,6 +2405,14 @@ export type DimensionPackerResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
+export type AutoPostResultResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["AutoPostResult"] = ResolversParentTypes["AutoPostResult"]
+> = ResolversObject<{
+  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
 export type MaintenanceAssetResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["MaintenanceAsset"] = ResolversParentTypes["MaintenanceAsset"]
@@ -2632,6 +2687,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   LivestockShipmentResult?: LivestockShipmentResultResolvers<ContextType>;
   ItemJournalTemplate?: ItemJournalTemplateResolvers<ContextType>;
   DimensionPacker?: DimensionPackerResolvers<ContextType>;
+  AutoPostResult?: AutoPostResultResolvers<ContextType>;
   MaintenanceAsset?: MaintenanceAssetResolvers<ContextType>;
   MaintenanceHistoryAsset?: MaintenanceHistoryAssetResolvers<ContextType>;
   MaintenanceResult?: MaintenanceResultResolvers<ContextType>;

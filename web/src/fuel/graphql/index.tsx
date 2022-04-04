@@ -251,6 +251,9 @@ export type FuelResult = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  autoPostFuelMaintenance: FuelResult;
+  autoPostItemJournal?: Maybe<AutoPostResult>;
+  autoPostScorecards: AutoPostResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -274,6 +277,14 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+};
+
+export type MutationAutoPostItemJournalArgs = {
+  input: AutoPostInput;
+};
+
+export type MutationAutoPostScorecardsArgs = {
+  input?: Maybe<ScorecardAutoPostInput>;
 };
 
 export type MutationLoginArgs = {
@@ -755,6 +766,15 @@ export type DimensionPacker = {
   dimensionName: Scalars["String"];
 };
 
+export type AutoPostInput = {
+  itemJournalTemplate: Scalars["String"];
+};
+
+export type AutoPostResult = {
+  __typename?: "AutoPostResult";
+  success: Scalars["Boolean"];
+};
+
 export type MaintenanceAsset = {
   __typename?: "MaintenanceAsset";
   number: Scalars["String"];
@@ -851,6 +871,10 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
+};
+
+export type ScorecardAutoPostInput = {
+  job: Scalars["String"];
 };
 
 export type UserLocations = {
@@ -976,6 +1000,15 @@ export type PostFuelMutationVariables = {
 
 export type PostFuelMutation = { __typename?: "Mutation" } & {
   postFuel: { __typename?: "FuelResult" } & Pick<FuelResult, "success">;
+};
+
+export type AutoPostMutationVariables = {};
+
+export type AutoPostMutation = { __typename?: "Mutation" } & {
+  autoPostFuelMaintenance: { __typename?: "FuelResult" } & Pick<
+    FuelResult,
+    "success"
+  >;
 };
 
 export const FuelAssetsDocument = gql`
@@ -1199,4 +1232,49 @@ export type PostFuelMutationResult = Apollo.MutationResult<PostFuelMutation>;
 export type PostFuelMutationOptions = Apollo.BaseMutationOptions<
   PostFuelMutation,
   PostFuelMutationVariables
+>;
+export const AutoPostDocument = gql`
+  mutation AutoPost {
+    autoPostFuelMaintenance {
+      success
+    }
+  }
+`;
+export type AutoPostMutationFn = Apollo.MutationFunction<
+  AutoPostMutation,
+  AutoPostMutationVariables
+>;
+
+/**
+ * __useAutoPostMutation__
+ *
+ * To run a mutation, you first call `useAutoPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAutoPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [autoPostMutation, { data, loading, error }] = useAutoPostMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAutoPostMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AutoPostMutation,
+    AutoPostMutationVariables
+  >
+) {
+  return Apollo.useMutation<AutoPostMutation, AutoPostMutationVariables>(
+    AutoPostDocument,
+    baseOptions
+  );
+}
+export type AutoPostMutationHookResult = ReturnType<typeof useAutoPostMutation>;
+export type AutoPostMutationResult = Apollo.MutationResult<AutoPostMutation>;
+export type AutoPostMutationOptions = Apollo.BaseMutationOptions<
+  AutoPostMutation,
+  AutoPostMutationVariables
 >;

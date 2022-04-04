@@ -251,6 +251,9 @@ export type FuelResult = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  autoPostFuelMaintenance: FuelResult;
+  autoPostItemJournal?: Maybe<AutoPostResult>;
+  autoPostScorecards: AutoPostResult;
   login: LoginResult;
   logout: LogoutResult;
   postFuel: FuelResult;
@@ -274,6 +277,14 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+};
+
+export type MutationAutoPostItemJournalArgs = {
+  input: AutoPostInput;
+};
+
+export type MutationAutoPostScorecardsArgs = {
+  input?: Maybe<ScorecardAutoPostInput>;
 };
 
 export type MutationLoginArgs = {
@@ -755,6 +766,15 @@ export type DimensionPacker = {
   dimensionName: Scalars["String"];
 };
 
+export type AutoPostInput = {
+  itemJournalTemplate: Scalars["String"];
+};
+
+export type AutoPostResult = {
+  __typename?: "AutoPostResult";
+  success: Scalars["Boolean"];
+};
+
 export type MaintenanceAsset = {
   __typename?: "MaintenanceAsset";
   number: Scalars["String"];
@@ -851,6 +871,10 @@ export type Scorecard = {
   __typename?: "Scorecard";
   job: Job;
   data: Array<ScorecardElementResponse>;
+};
+
+export type ScorecardAutoPostInput = {
+  job: Scalars["String"];
 };
 
 export type UserLocations = {
@@ -1056,6 +1080,17 @@ export type PostScorecardMutation = { __typename?: "Mutation" } & {
   > & {
       scorecard?: Maybe<{ __typename?: "Scorecard" } & ScorecardFieldsFragment>;
     };
+};
+
+export type AutoPostScorecardsMutationVariables = {
+  input: ScorecardAutoPostInput;
+};
+
+export type AutoPostScorecardsMutation = { __typename?: "Mutation" } & {
+  autoPostScorecards: { __typename?: "AutoPostResult" } & Pick<
+    AutoPostResult,
+    "success"
+  >;
 };
 
 export const ScorecardFieldsFragmentDoc = gql`
@@ -1655,4 +1690,54 @@ export type PostScorecardMutationResult = Apollo.MutationResult<
 export type PostScorecardMutationOptions = Apollo.BaseMutationOptions<
   PostScorecardMutation,
   PostScorecardMutationVariables
+>;
+export const AutoPostScorecardsDocument = gql`
+  mutation AutoPostScorecards($input: ScorecardAutoPostInput!) {
+    autoPostScorecards(input: $input) {
+      success
+    }
+  }
+`;
+export type AutoPostScorecardsMutationFn = Apollo.MutationFunction<
+  AutoPostScorecardsMutation,
+  AutoPostScorecardsMutationVariables
+>;
+
+/**
+ * __useAutoPostScorecardsMutation__
+ *
+ * To run a mutation, you first call `useAutoPostScorecardsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAutoPostScorecardsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [autoPostScorecardsMutation, { data, loading, error }] = useAutoPostScorecardsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAutoPostScorecardsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AutoPostScorecardsMutation,
+    AutoPostScorecardsMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    AutoPostScorecardsMutation,
+    AutoPostScorecardsMutationVariables
+  >(AutoPostScorecardsDocument, baseOptions);
+}
+export type AutoPostScorecardsMutationHookResult = ReturnType<
+  typeof useAutoPostScorecardsMutation
+>;
+export type AutoPostScorecardsMutationResult = Apollo.MutationResult<
+  AutoPostScorecardsMutation
+>;
+export type AutoPostScorecardsMutationOptions = Apollo.BaseMutationOptions<
+  AutoPostScorecardsMutation,
+  AutoPostScorecardsMutationVariables
 >;

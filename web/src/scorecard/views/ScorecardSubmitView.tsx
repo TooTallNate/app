@@ -21,7 +21,7 @@ const ScorecardSubmitView: React.FC = () => {
   const formContext = useForm();
   const { addMessage, setMessage } = useFlash();
 
-  const { formConfig, formState, submit } = useScorecard();
+  const { formConfig, formState, submit, autoPost } = useScorecard();
 
   const pages = formConfig.map((page, i) => {
     const containsZero = page.elements.some(element => {
@@ -31,11 +31,9 @@ const ScorecardSubmitView: React.FC = () => {
     return {
       ...page,
       isComplete: page.elements.every(element =>
-        // TODO - refactor this
         element.code.includes("RANGE")
           ? isElementComplete("RANGE", formState[element.id] || {})
-          : isElementComplete(element.code, formState[element.id] || {}) ||
-            element.code.includes("SLIDER")
+          : element.code.includes("SLIDER")
           ? isElementComplete("SLIDER", formState[element.id] || {})
           : isElementComplete(element.code, formState[element.id] || {})
       ),
@@ -56,10 +54,9 @@ const ScorecardSubmitView: React.FC = () => {
       default:
         try {
           await submit();
-          history.push("/scorecard");
           addMessage({
             level: "success",
-            message: "Scorecard posted successully!",
+            message: "Scorecard submitted successully!",
             timeout: 3000
           });
         } catch {
@@ -68,6 +65,15 @@ const ScorecardSubmitView: React.FC = () => {
             message: "An error occurred submitting scorecard"
           });
         }
+        try {
+          autoPost();
+        } catch (e) {
+          setMessage({
+            level: "error",
+            message: "An error occurred auto posting scorecard entries"
+          });
+        }
+        history.push("/scorecard");
         break;
     }
   };

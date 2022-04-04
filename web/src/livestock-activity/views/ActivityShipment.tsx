@@ -6,7 +6,8 @@ import { useParams, useHistory } from "react-router";
 import {
   useLivestockShipmentQuery,
   useSaveLivestockShipmentMutation,
-  usePostLivestockShipmentMutation
+  usePostLivestockShipmentMutation,
+  useAutoPostItemMutation
 } from "../graphql";
 import { useFlash } from "../../common/contexts/flash";
 import Form from "../../common/components/form/Form";
@@ -73,6 +74,9 @@ const ActivityShipmentView: React.FC = () => {
   const [save] = useSaveLivestockShipmentMutation();
   const { setMessage } = useFlash();
   const { getValues, watch, triggerValidation, formState } = formContext;
+  const [autoPostItem] = useAutoPostItemMutation();
+
+  const TEMPLATE_NAME = "SHIPMENT";
 
   const quantity = watch("quantity") || 0;
 
@@ -86,15 +90,31 @@ const ActivityShipmentView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPostItem({
+          variables: {
+            input: {
+              itemJournalTemplate: TEMPLATE_NAME
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }
@@ -117,8 +137,9 @@ const ActivityShipmentView: React.FC = () => {
       });
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }

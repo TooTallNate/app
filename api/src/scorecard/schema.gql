@@ -47,6 +47,10 @@ type Scorecard {
   data: [ScorecardElementResponse!]!
 }
 
+input ScorecardAutoPostInput {
+  job: String!
+}
+
 type Query {
   scorecardGroups: [ScorecardGroup!]!
   scorecardConfig(job: String!): ScorecardConfig
@@ -56,4 +60,5 @@ type Query {
 type Mutation {
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   postScorecard(input: PostScorecardInput!): ScorecardResult!
+  autoPostScorecards(input: ScorecardAutoPostInput): AutoPostResult!
 }

@@ -2,9 +2,14 @@ import {
   QueryResolvers,
   LivestockActivityDefaultsResolvers,
   InclusivityMode,
-  ItemJournalTemplateResolvers
+  ItemJournalTemplateResolvers,
+  MutationResolvers
 } from "../../common/graphql";
-import { AutoPostEnum, NavItemJournalLine } from "../../common/nav";
+import {
+  AutoPostEnum,
+  NavItemJournalBatch,
+  NavItemJournalLine
+} from "../../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../../common/models/UserSettings";
@@ -29,26 +34,7 @@ export async function postItemJournal(
   entry.Document_Date = date;
   entry.Posting_Date = entry.Posting_Date || date;
   entry.Description = entry.Description || " ";
-  const postResponse = dataSource.postJournalLine(entry);
-
-  const itemJournalTemplate = await dataSource.getItemJournalTemplateByName(
-    entry.Journal_Template_Name
-  );
-
-  if (
-    itemJournalTemplate &&
-    itemJournalTemplate.Source_Code === AutoPostEnum.AutoPost
-  ) {
-    try {
-      dataSource.autoPostItemJournals(
-        entry.Journal_Template_Name,
-        entry.Journal_Batch_Name,
-        NUMBER_OF_LINES
-      );
-    } catch (e) {}
-  }
-
-  return postResponse;
+  return dataSource.postJournalLine(entry);
 }
 
 export async function updateUserSettings({
@@ -153,5 +139,27 @@ export const LivestockActivityQueries: QueryResolvers = {
         subdomain: navConfig.subdomain
       })
     );
+  }
+};
+
+export const LivestockActivityMutations: MutationResolvers = {
+  async autoPostItemJournal(_, { input }, { dataSources }) {
+    const itemJournalTemplate = await dataSources.navItemJournal.getItemJournalTemplateByName(
+      input.itemJournalTemplate
+    );
+
+    if (
+      itemJournalTemplate &&
+      itemJournalTemplate.Source_Code === AutoPostEnum.AutoPost
+    ) {
+      try {
+        await dataSources.navItemJournal.autoPostItemJournals(
+          input.itemJournalTemplate,
+          NavItemJournalBatch.FarmApp,
+          NUMBER_OF_LINES
+        );
+      } catch (e) {}
+    }
+    return { success: true };
   }
 };

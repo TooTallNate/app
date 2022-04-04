@@ -23,6 +23,7 @@ import InventoryField from "../components/InventoryField";
 import JobField from "../components/JobField";
 import TotalWeightField from "../components/TotalWeightField";
 import {
+  useAutoPostItemMutation,
   useLivestockAdjustmentQuery,
   usePostLivestockAdjustmentMutation,
   useSaveLivestockAdjustmentMutation
@@ -74,6 +75,9 @@ const ActivityAdjustmentView: React.FC = () => {
   const [save] = useSaveLivestockAdjustmentMutation();
   const { setMessage } = useFlash();
   const { getValues } = formContext;
+  const [autoPostItem] = useAutoPostItemMutation();
+
+  const TEMPLATE_NAME = "QTYADJ";
 
   const onSubmit: OnSubmit<FormData> = async data => {
     try {
@@ -86,15 +90,31 @@ const ActivityAdjustmentView: React.FC = () => {
           }
         }
       });
-      setMessage({
-        message: "Entry recorded successfully.",
-        level: "success",
-        timeout: 2000
-      });
+      try {
+        await autoPostItem({
+          variables: {
+            input: {
+              itemJournalTemplate: TEMPLATE_NAME
+            }
+          }
+        });
+        setMessage({
+          message: "Entry recorded successfully.",
+          level: "success",
+          timeout: 2000
+        });
+      } catch (e) {
+        setMessage({
+          message: "Entry was recorded but Posting Failed.",
+          level: "error",
+          timeout: 2000
+        });
+      }
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }
@@ -117,8 +137,9 @@ const ActivityAdjustmentView: React.FC = () => {
       });
       history.push("/livestock-activity");
     } catch (e) {
+      const error: any = e;
       setMessage({
-        message: e.toString(),
+        message: error.toString(),
         level: "error"
       });
     }

@@ -7,11 +7,7 @@ import {
   QueryResolvers
 } from "../common/graphql";
 import UserSettingsModel from "../common/models/UserSettings";
-import {
-  NavFuelMaintenanceJournalLine,
-  NavJobJournalBatch,
-  NavJobJournalTemplate
-} from "../common/nav";
+import { NavJobJournalBatch, NavJobJournalTemplate } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 
 export const FuelAsset: FuelAssetResolvers = {
@@ -74,25 +70,10 @@ export const mutations: MutationResolvers = {
         : new Date()
     );
 
-    const triggerAutoPost = async (
-      postResult: NavFuelMaintenanceJournalLine
-    ) => {
-      if (postResult && postResult !== undefined) {
-        try {
-          await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
-            NavJobJournalTemplate.Asset,
-            NavJobJournalBatch.FarmApp,
-            10000
-          );
-        } catch (e) {}
-      }
-    };
-
     const totalAmount: number = input.gallons * fuelAsset.Last_Direct_Cost;
 
-    let postResult: NavFuelMaintenanceJournalLine = undefined;
     try {
-      postResult = await dataSources.navFuelMaintenanceJournal.postEntry({
+      await dataSources.navFuelMaintenanceJournal.postEntry({
         Journal_Template_Name: NavJobJournalTemplate.Asset,
         Journal_Batch_Name: NavJobJournalBatch.FarmApp,
         Document_No: docNo,
@@ -109,7 +90,17 @@ export const mutations: MutationResolvers = {
         Amount: totalAmount,
         Description: input.comments
       });
-      triggerAutoPost(postResult);
+    } catch (e) {}
+
+    return { success: true };
+  },
+  async autoPostFuelMaintenance(_, __, { dataSources }) {
+    try {
+      await dataSources.navFuelMaintenanceJournal.autoPostFAJournals(
+        NavJobJournalTemplate.Asset,
+        NavJobJournalBatch.FarmApp,
+        10000
+      );
     } catch (e) {}
 
     return { success: true };

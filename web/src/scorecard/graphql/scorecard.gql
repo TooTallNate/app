@@ -111,3 +111,9 @@ mutation PostScorecard($input: PostScorecardInput!) {
     }
   }
 }
+
+mutation AutoPostScorecards($input: ScorecardAutoPostInput!) {
+  autoPostScorecards(input: $input) {
+    success
+  }
+}
