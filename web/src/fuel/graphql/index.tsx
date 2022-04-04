@@ -34,6 +34,7 @@ export type Item = {
   description: Scalars["String"];
   type?: Maybe<Scalars["String"]>;
   cost?: Maybe<Scalars["Float"]>;
+  unit?: Maybe<Scalars["String"]>;
 };
 
 export type Reason = {

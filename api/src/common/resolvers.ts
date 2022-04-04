@@ -52,7 +52,8 @@ const Item: ItemResolvers = {
   number: animal => animal.No,
   description: animal => animal.Description,
   type: animal => animal.Gen_Prod_Posting_Group,
-  cost: animal => animal.Last_Direct_Cost
+  cost: animal => animal.Last_Direct_Cost,
+  unit: animal => animal.Base_Unit_of_Measure
 };
 
 const Reason: ReasonResolvers = {

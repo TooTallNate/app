@@ -66,6 +66,7 @@ export type Item = {
   description: Scalars["String"];
   type?: Maybe<Scalars["String"]>;
   cost?: Maybe<Scalars["Float"]>;
+  unit?: Maybe<Scalars["String"]>;
 };
 
 export type Reason = {
@@ -1444,6 +1445,7 @@ export type ItemResolvers<
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   cost?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  unit?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 

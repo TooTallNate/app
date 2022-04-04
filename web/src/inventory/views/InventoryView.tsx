@@ -46,6 +46,7 @@ interface ItemProps {
   description: string;
   type: string;
   cost: number;
+  unit: string;
 }
 
 interface FormData {
@@ -156,7 +157,8 @@ const InventoryView: React.FC = () => {
         number: item.number,
         description: item.description,
         type: item.type,
-        cost: item.cost
+        cost: item.cost,
+        unit: item.unit
       },
       quantity: quantity
     };
@@ -170,7 +172,8 @@ const InventoryView: React.FC = () => {
         number: "",
         description: "",
         type: "N/A",
-        cost: 0
+        cost: 0,
+        unit: ""
       },
       quantity: NaN
     });
@@ -259,7 +262,9 @@ const InventoryView: React.FC = () => {
                   <TypeaheadInput
                     items={inventoryData.items.map(item => ({
                       value: item || "",
-                      title: `${item.number} - ${item.description}` || ""
+                      title:
+                        `${item.number} - ${item.description} - ${item.unit}` ||
+                        ""
                     }))}
                   />
                 </FormFieldInput>
@@ -306,6 +311,7 @@ const InventoryView: React.FC = () => {
                       <tr>
                         <TableHeader children="Item" />
                         <TableHeader children="Quantity" />
+                        <TableHeader children="Units" />
                         <TableHeader children="Total Cost" />
                         <TableHeader children="Remove" />
                       </tr>
@@ -315,6 +321,7 @@ const InventoryView: React.FC = () => {
                         <tr key={index}>
                           <TableData children={item.item.description} />
                           <TableData children={item.quantity} />
+                          <TableData children={item.item.unit} />
                           <TableData
                             children={`$${(
                               item.item.cost * item.quantity
