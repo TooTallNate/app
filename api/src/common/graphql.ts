@@ -428,6 +428,7 @@ export type ItemInput = {
   description: Scalars["String"];
   type: Scalars["String"];
   cost: Scalars["Float"];
+  unit?: Maybe<Scalars["String"]>;
 };
 
 export type ItemListInput = {

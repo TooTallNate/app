@@ -17,6 +17,7 @@ input ItemInput {
   description: String!
   type: String!
   cost: Float!
+  unit: String
 }
 
 input ItemListInput {
