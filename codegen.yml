@@ -23,6 +23,7 @@ generates:
         Resource: "./nav#NavResource"
         Reason: "./nav#NavReason"
         Location: "./nav#NavLocation"
+        JobPostingGroup: "./nav#NavJobPostingGroup"
         MenuOption: "./nav#NavMenuOption"
         LivestockAdjustment: "../livestock-activity/models/LivestockAdjustment#LivestockAdjustmentDocument"
         LivestockGradeOff: "../livestock-activity/models/LivestockGradeOff#LivestockGradeOffDocument"

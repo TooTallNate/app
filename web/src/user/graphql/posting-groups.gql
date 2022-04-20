@@ -1,0 +1,28 @@
+fragment UserPostingGroupFields on UserPostingGroups {
+  mode
+  list {
+    code
+    description
+  }
+}
+
+query JobPostingGroups {
+  jobPostingGroups {
+    code
+    description
+  }
+  user {
+    username
+    postingGroups {
+      ...UserPostingGroupFields
+    }
+  }
+}
+
+mutation UpdatePostingGroups($input: UpdateUserPostingGroupsInput!) {
+  updateUserPostingGroups(input: $input) {
+    postingGroups {
+      ...UserPostingGroupFields
+    }
+  }
+}

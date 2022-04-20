@@ -26,6 +26,9 @@ const AccountView: React.FC = () => {
           <StackedNavLink to={`${match.path}/menu-selection`}>
             Menu Selection
           </StackedNavLink>
+          <StackedNavLink to={`${match.path}/posting-groups`}>
+            Job Posting Groups
+          </StackedNavLink>
           <StackedNavButton onClick={() => logout()}>Log Out</StackedNavButton>
         </StackedNav>
       </ViewContent>

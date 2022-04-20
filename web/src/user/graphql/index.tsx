@@ -74,6 +74,12 @@ export type JobJournalTemplate = {
   reasonCode: Scalars["String"];
 };
 
+export type JobPostingGroup = {
+  __typename?: "JobPostingGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
@@ -87,6 +93,7 @@ export type Query = {
   job?: Maybe<Job>;
   jobJournalTemplate?: Maybe<JobJournalTemplate>;
   jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
+  jobPostingGroups: Array<JobPostingGroup>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
   livestockActivityJobs: Array<Job>;
@@ -277,6 +284,7 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+  updateUserPostingGroups: UpdateUserPostingGroupsResult;
 };
 
 export type MutationAutoPostItemJournalArgs = {
@@ -373,6 +381,10 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type MutationUpdateUserPostingGroupsArgs = {
+  input: UpdateUserPostingGroupsInput;
 };
 
 export type Inventory = {
@@ -896,6 +908,12 @@ export type UserMenuOptions = {
   list: Array<MenuOption>;
 };
 
+export type UserPostingGroups = {
+  __typename?: "UserPostingGroups";
+  mode: InclusivityMode;
+  list: Array<JobPostingGroup>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
@@ -903,6 +921,7 @@ export type User = {
   name: Scalars["String"];
   locations: UserLocations;
   menuOptions: UserMenuOptions;
+  postingGroups: UserPostingGroups;
 };
 
 export type LoginInput = {
@@ -933,6 +952,12 @@ export type UpdateUserMenuOptionsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserPostingGroupsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
@@ -943,6 +968,12 @@ export type UpdateUserMenuOptionsResult = {
   __typename?: "UpdateUserMenuOptionsResult";
   success: Scalars["Boolean"];
   menuOptions: UserMenuOptions;
+};
+
+export type UpdateUserPostingGroupsResult = {
+  __typename?: "UpdateUserPostingGroupsResult";
+  success: Scalars["Boolean"];
+  postingGroups: UserPostingGroups;
 };
 
 export type UserLocationsFieldsFragment = {
@@ -1011,6 +1042,47 @@ export type UpdateMenuOptionsMutation = { __typename?: "Mutation" } & {
   };
 };
 
+export type UserPostingGroupFieldsFragment = {
+  __typename?: "UserPostingGroups";
+} & Pick<UserPostingGroups, "mode"> & {
+    list: Array<
+      { __typename?: "JobPostingGroup" } & Pick<
+        JobPostingGroup,
+        "code" | "description"
+      >
+    >;
+  };
+
+export type JobPostingGroupsQueryVariables = {};
+
+export type JobPostingGroupsQuery = { __typename?: "Query" } & {
+  jobPostingGroups: Array<
+    { __typename?: "JobPostingGroup" } & Pick<
+      JobPostingGroup,
+      "code" | "description"
+    >
+  >;
+  user?: Maybe<
+    { __typename?: "User" } & Pick<User, "username"> & {
+        postingGroups: {
+          __typename?: "UserPostingGroups";
+        } & UserPostingGroupFieldsFragment;
+      }
+  >;
+};
+
+export type UpdatePostingGroupsMutationVariables = {
+  input: UpdateUserPostingGroupsInput;
+};
+
+export type UpdatePostingGroupsMutation = { __typename?: "Mutation" } & {
+  updateUserPostingGroups: { __typename?: "UpdateUserPostingGroupsResult" } & {
+    postingGroups: {
+      __typename?: "UserPostingGroups";
+    } & UserPostingGroupFieldsFragment;
+  };
+};
+
 export type UserPartsFragment = { __typename?: "User" } & Pick<
   User,
   "username" | "name"
@@ -1053,6 +1125,15 @@ export const UserMenuOptionsFieldsFragmentDoc = gql`
     list {
       name
       route
+    }
+  }
+`;
+export const UserPostingGroupFieldsFragmentDoc = gql`
+  fragment UserPostingGroupFields on UserPostingGroups {
+    mode
+    list {
+      code
+      description
     }
   }
 `;
@@ -1286,6 +1367,122 @@ export type UpdateMenuOptionsMutationResult = Apollo.MutationResult<
 export type UpdateMenuOptionsMutationOptions = Apollo.BaseMutationOptions<
   UpdateMenuOptionsMutation,
   UpdateMenuOptionsMutationVariables
+>;
+export const JobPostingGroupsDocument = gql`
+  query JobPostingGroups {
+    jobPostingGroups {
+      code
+      description
+    }
+    user {
+      username
+      postingGroups {
+        ...UserPostingGroupFields
+      }
+    }
+  }
+  ${UserPostingGroupFieldsFragmentDoc}
+`;
+
+/**
+ * __useJobPostingGroupsQuery__
+ *
+ * To run a query within a React component, call `useJobPostingGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useJobPostingGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useJobPostingGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useJobPostingGroupsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    JobPostingGroupsQuery,
+    JobPostingGroupsQueryVariables
+  >
+) {
+  return Apollo.useQuery<JobPostingGroupsQuery, JobPostingGroupsQueryVariables>(
+    JobPostingGroupsDocument,
+    baseOptions
+  );
+}
+export function useJobPostingGroupsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    JobPostingGroupsQuery,
+    JobPostingGroupsQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    JobPostingGroupsQuery,
+    JobPostingGroupsQueryVariables
+  >(JobPostingGroupsDocument, baseOptions);
+}
+export type JobPostingGroupsQueryHookResult = ReturnType<
+  typeof useJobPostingGroupsQuery
+>;
+export type JobPostingGroupsLazyQueryHookResult = ReturnType<
+  typeof useJobPostingGroupsLazyQuery
+>;
+export type JobPostingGroupsQueryResult = Apollo.QueryResult<
+  JobPostingGroupsQuery,
+  JobPostingGroupsQueryVariables
+>;
+export const UpdatePostingGroupsDocument = gql`
+  mutation UpdatePostingGroups($input: UpdateUserPostingGroupsInput!) {
+    updateUserPostingGroups(input: $input) {
+      postingGroups {
+        ...UserPostingGroupFields
+      }
+    }
+  }
+  ${UserPostingGroupFieldsFragmentDoc}
+`;
+export type UpdatePostingGroupsMutationFn = Apollo.MutationFunction<
+  UpdatePostingGroupsMutation,
+  UpdatePostingGroupsMutationVariables
+>;
+
+/**
+ * __useUpdatePostingGroupsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePostingGroupsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePostingGroupsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePostingGroupsMutation, { data, loading, error }] = useUpdatePostingGroupsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePostingGroupsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePostingGroupsMutation,
+    UpdatePostingGroupsMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    UpdatePostingGroupsMutation,
+    UpdatePostingGroupsMutationVariables
+  >(UpdatePostingGroupsDocument, baseOptions);
+}
+export type UpdatePostingGroupsMutationHookResult = ReturnType<
+  typeof useUpdatePostingGroupsMutation
+>;
+export type UpdatePostingGroupsMutationResult = Apollo.MutationResult<
+  UpdatePostingGroupsMutation
+>;
+export type UpdatePostingGroupsMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePostingGroupsMutation,
+  UpdatePostingGroupsMutationVariables
 >;
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {

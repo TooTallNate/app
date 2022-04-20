@@ -4,7 +4,7 @@ import {
   QueryResolvers,
   InclusivityMode
 } from "../common/graphql";
-import { NavMenuOption, NavLocation } from "../common/nav";
+import { NavMenuOption, NavLocation, NavJobPostingGroup } from "../common/nav";
 import UserSettingsModel, {
   UserSettingsDocument
 } from "../common/models/UserSettings";
@@ -129,6 +129,47 @@ export const mutations: MutationResolvers = {
         list: list
       }
     };
+  },
+  async updateUserPostingGroups(
+    _,
+    { input },
+    { user, dataSources, navConfig }
+  ) {
+    const settings =
+      (await UserSettingsModel.findOne({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      })) ||
+      new UserSettingsModel({
+        username: user.username,
+        subdomain: navConfig.subdomain
+      });
+    if (input.add) {
+      settings.postingGroups.list.push(...input.add);
+    }
+    if (input.remove) {
+      settings.postingGroups.list = settings.postingGroups.list.filter(
+        code => !input.remove.includes(code)
+      );
+    }
+    if (input.mode) {
+      settings.postingGroups.mode = input.mode;
+    }
+    await settings.save();
+
+    let list: NavJobPostingGroup[] = [];
+    if (settings.postingGroups.list.length > 0) {
+      list = await dataSources.navJob.getPostingGroupsByCode(
+        settings.postingGroups.list
+      );
+    }
+    return {
+      success: true,
+      postingGroups: {
+        mode: settings.postingGroups.mode || InclusivityMode.Include,
+        list: list
+      }
+    };
   }
 };
 
@@ -176,6 +217,31 @@ export const User: UserResolvers = {
       return {
         mode:
           (settings.menuOptions.mode as InclusivityMode) ||
+          InclusivityMode.Include,
+        list
+      };
+    } else {
+      return {
+        mode: InclusivityMode.Include,
+        list: []
+      };
+    }
+  },
+  async postingGroups(_, __, { dataSources, user, navConfig }) {
+    const settings = await UserSettingsModel.findOne({
+      username: user.username,
+      subdomain: navConfig.subdomain
+    }).lean<UserSettingsDocument>();
+    if (settings && settings.postingGroups) {
+      let list: NavJobPostingGroup[] = [];
+      if (settings.postingGroups.list.length > 0) {
+        list = await dataSources.navJob.getPostingGroupsByCode(
+          settings.postingGroups.list
+        );
+      }
+      return {
+        mode:
+          (settings.postingGroups.mode as InclusivityMode) ||
           InclusivityMode.Include,
         list
       };

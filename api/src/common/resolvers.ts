@@ -5,6 +5,7 @@ import {
   InclusivityMode,
   ItemResolvers,
   JobJournalTemplateResolvers,
+  JobPostingGroupResolvers,
   JobResolvers,
   LocationResolvers,
   MenuOptionResolvers,
@@ -78,6 +79,11 @@ export const JobJournalTemplate: JobJournalTemplateResolvers = {
   reasonCode: jobJournalTemplate => jobJournalTemplate.Reason_Code
 };
 
+const JobPostingGroup: JobPostingGroupResolvers = {
+  code: postingGroup => postingGroup.Code,
+  description: postingGroup => postingGroup.Description
+};
+
 export const queries: QueryResolvers = {
   async jobs(_, { input }, { user, navConfig, dataSources }) {
     const settings = await UserSettingsModel.findOne({
@@ -91,12 +97,21 @@ export const queries: QueryResolvers = {
         var excludeLocations = settings.locations.list;
       }
     }
+    if (settings && settings.postingGroups.list) {
+      if (settings.postingGroups.mode === InclusivityMode.Include) {
+        var includePostingGroups = settings.postingGroups.list;
+      } else {
+        var excludePostingGroups = settings.postingGroups.list;
+      }
+    }
     return dataSources.navJob.getAll({
       isOpen: true,
       ...(input.groups && { postingGroups: input.groups }),
       //...(input.locations && { includeLocations: input.locations }),
       includeLocations,
-      excludeLocations
+      excludeLocations,
+      includePostingGroups,
+      excludePostingGroups
     });
   },
   job(_, { number }, { dataSources }) {
@@ -126,6 +141,9 @@ export const queries: QueryResolvers = {
   },
   jobJournalTemplate(_, { name }, { dataSources }) {
     return dataSources.navJobJournal.getJobJournalTemplate(name);
+  },
+  async jobPostingGroups(_, __, { dataSources }) {
+    return await dataSources.navJob.getAllJobPostingGroups();
   }
 };
 
@@ -136,5 +154,6 @@ export const types = {
   Reason,
   Location,
   MenuOption,
-  JobJournalTemplate
+  JobJournalTemplate,
+  JobPostingGroup
 };
