@@ -13,12 +13,18 @@ type UserMenuOptions {
   list: [MenuOption!]!
 }
 
+type UserPostingGroups {
+  mode: InclusivityMode!
+  list: [JobPostingGroup!]!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
   locations: UserLocations!
   menuOptions: UserMenuOptions!
+  postingGroups: UserPostingGroups!
 }
 
 input LoginInput {
@@ -47,6 +53,12 @@ input UpdateUserMenuOptionsInput {
   mode: InclusivityMode
 }
 
+input UpdateUserPostingGroupsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
 type UpdateUserLocationsResult {
   success: Boolean!
   locations: UserLocations!
@@ -55,6 +67,11 @@ type UpdateUserLocationsResult {
 type UpdateUserMenuOptionsResult {
   success: Boolean!
   menuOptions: UserMenuOptions!
+}
+
+type UpdateUserPostingGroupsResult {
+  success: Boolean!
+  postingGroups: UserPostingGroups!
 }
 
 type Query {
@@ -69,4 +86,5 @@ type Mutation {
   logout: LogoutResult!
   updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
+  updateUserPostingGroups(input: UpdateUserPostingGroupsInput!): UpdateUserPostingGroupsResult!
 }

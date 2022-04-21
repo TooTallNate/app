@@ -122,9 +122,19 @@ export const LivestockActivityQueries: QueryResolvers = {
         var excludeLocations = settings.locations.list;
       }
     }
+    console.log(settings.postingGroups);
+    if (settings && settings.postingGroups.list) {
+      if (settings.postingGroups.mode === InclusivityMode.Include) {
+        var includePostingGroups = settings.postingGroups.list;
+      } else {
+        var excludePostingGroups = settings.postingGroups.list;
+      }
+    }
     return dataSources.navJob.getAllJobLivestock({
       includeLocations,
       excludeLocations,
+      includePostingGroups,
+      excludePostingGroups,
       isShipment
     });
   },

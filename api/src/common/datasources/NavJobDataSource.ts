@@ -1,4 +1,4 @@
-import { NavJob, NavJobTask } from "../nav";
+import { NavJob, NavJobPostingGroup, NavJobTask } from "../nav";
 import NavDataSource from "./NavDataSource";
 import { BooleanFilterExpression } from "../nav/filter";
 import { filterExtensionDefinitions } from "@graphql-tools/schema";
@@ -8,6 +8,8 @@ export interface JobFilter {
   postingGroups?: string[];
   excludeLocations?: string[];
   includeLocations?: string[];
+  includePostingGroups?: string[];
+  excludePostingGroups?: string[];
   isShipment?: boolean;
 }
 
@@ -21,6 +23,18 @@ export default class LivestockJobNavDataSource extends NavDataSource {
     return this.get(`/JobPostingGroups?${filterStr}`);
   }
 
+  getPostingGroupsByCode(codes: string[]): Promise<NavJobPostingGroup[]> {
+    return this.get(
+      `/JobPostingGroups?$filter=${this.buildFilter(f =>
+        f.or(...codes.map(code => f.equals("Code", code)))
+      )}`
+    );
+  }
+
+  getAllJobPostingGroups(): Promise<NavJobPostingGroup[]> {
+    return this.get(`/JobPostingGroups`);
+  }
+
   getByNo(no: string): Promise<NavJob | undefined> {
     const resp = this.get(`/Jobs('${no}')`).catch(() => null);
     return resp;
@@ -29,6 +43,8 @@ export default class LivestockJobNavDataSource extends NavDataSource {
   getAll({
     excludeLocations,
     includeLocations,
+    includePostingGroups,
+    excludePostingGroups,
     isOpen,
     postingGroups
   }: JobFilter = {}): Promise<NavJob[]> {
@@ -55,6 +71,21 @@ export default class LivestockJobNavDataSource extends NavDataSource {
       } else if (excludeLocations && excludeLocations.length > 0) {
         filters.push(
           f.and(...excludeLocations.map(loc => f.notEquals("Site", loc)))
+        );
+      }
+      if (includePostingGroups && includePostingGroups.length > 0) {
+        filters.push(
+          f.or(
+            ...includePostingGroups.map(pg => f.equals("Job_Posting_Group", pg))
+          )
+        );
+      } else if (excludePostingGroups && excludePostingGroups.length > 0) {
+        filters.push(
+          f.and(
+            ...excludePostingGroups.map(pg =>
+              f.notEquals("Job_Posting_Group", pg)
+            )
+          )
         );
       }
       return f.and(...filters);
@@ -84,7 +115,9 @@ export default class LivestockJobNavDataSource extends NavDataSource {
     return this.get(`/JobTasks?$filter=${filter}`);
   }
 
-  //from JobLivestock
+  //////////////////////////
+  //  from JobLivestock   //
+  //////////////////////////
 
   getJobLivestockByNo(no: string): Promise<NavJob | undefined> {
     const resp = this.get(`/JobsLivestock('${no}')`).catch(() => null);
@@ -94,6 +127,8 @@ export default class LivestockJobNavDataSource extends NavDataSource {
   getAllJobLivestock({
     excludeLocations,
     includeLocations,
+    includePostingGroups,
+    excludePostingGroups,
     isShipment
   }: JobFilter = {}): Promise<NavJob[]> {
     let odataFilter = this.buildFilter(f => {
@@ -107,6 +142,21 @@ export default class LivestockJobNavDataSource extends NavDataSource {
           f.and(...excludeLocations.map(loc => f.notEquals("Site", loc)))
         );
       }
+      if (includePostingGroups && includePostingGroups.length > 0) {
+        filters.push(
+          f.or(
+            ...includePostingGroups.map(pg => f.equals("Job_Posting_Group", pg))
+          )
+        );
+      } else if (excludePostingGroups && excludePostingGroups.length > 0) {
+        filters.push(
+          f.and(
+            ...excludePostingGroups.map(pg =>
+              f.notEquals("Job_Posting_Group", pg)
+            )
+          )
+        );
+      }
       if (isShipment) {
         filters.push(
           f.or(
@@ -114,8 +164,6 @@ export default class LivestockJobNavDataSource extends NavDataSource {
             f.equals("Barn_Type", "Wean to Finish")
           )
         );
-        // filters.push(f.notEquals("Barn_Type", ""));
-        // filters.push(f.notEquals("Barn_Type", " "));
         filters.push(f.greaterThan("Inventory_Left", 0));
       }
       return f.and(...filters);

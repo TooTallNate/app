@@ -56,6 +56,11 @@ type JobJournalTemplate {
   reasonCode: String!
 }
 
+type JobPostingGroup {
+  code: String!
+  description: String!
+}
+
 type Query {
   resources(input: ResourceFilter): [Resource!]!
   resource(code: String!): Resource
@@ -66,4 +71,5 @@ type Query {
   item(number: String!): Item
   jobJournalTemplates: [JobJournalTemplate!]
   jobJournalTemplate(name: String!): JobJournalTemplate
+  jobPostingGroups: [JobPostingGroup!]!
 }

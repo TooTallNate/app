@@ -56,6 +56,11 @@ type JobJournalTemplate {
   reasonCode: String!
 }
 
+type JobPostingGroup {
+  code: String!
+  description: String!
+}
+
 type Query {
   animals: [Item!]!
   dimensionPackers: [DimensionPacker!]!
@@ -68,6 +73,7 @@ type Query {
   job(number: String!): Job
   jobJournalTemplate(name: String!): JobJournalTemplate
   jobJournalTemplates: [JobJournalTemplate!]
+  jobPostingGroups: [JobPostingGroup!]!
   jobs(input: JobFilter): [Job!]!
   livestockActivityDefaults: LivestockActivityDefaults!
   livestockActivityJobs(isShipment: Boolean): [Job!]!
@@ -162,6 +168,7 @@ type Mutation {
   saveScorecard(input: PostScorecardInput!): ScorecardResult!
   updateUserLocations(input: UpdateUserLocationsInput!): UpdateUserLocationsResult!
   updateUserMenuOptions(input: UpdateUserMenuOptionsInput!): UpdateUserMenuOptionsResult!
+  updateUserPostingGroups(input: UpdateUserPostingGroupsInput!): UpdateUserPostingGroupsResult!
 }
 
 type Inventory {
@@ -642,12 +649,18 @@ type UserMenuOptions {
   list: [MenuOption!]!
 }
 
+type UserPostingGroups {
+  mode: InclusivityMode!
+  list: [JobPostingGroup!]!
+}
+
 type User {
   username: String!
   license: String!
   name: String!
   locations: UserLocations!
   menuOptions: UserMenuOptions!
+  postingGroups: UserPostingGroups!
 }
 
 input LoginInput {
@@ -676,6 +689,12 @@ input UpdateUserMenuOptionsInput {
   mode: InclusivityMode
 }
 
+input UpdateUserPostingGroupsInput {
+  add: [String!]
+  remove: [String!]
+  mode: InclusivityMode
+}
+
 type UpdateUserLocationsResult {
   success: Boolean!
   locations: UserLocations!
@@ -684,4 +703,9 @@ type UpdateUserLocationsResult {
 type UpdateUserMenuOptionsResult {
   success: Boolean!
   menuOptions: UserMenuOptions!
+}
+
+type UpdateUserPostingGroupsResult {
+  success: Boolean!
+  postingGroups: UserPostingGroups!
 }

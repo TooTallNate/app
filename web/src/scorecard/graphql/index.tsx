@@ -74,6 +74,12 @@ export type JobJournalTemplate = {
   reasonCode: Scalars["String"];
 };
 
+export type JobPostingGroup = {
+  __typename?: "JobPostingGroup";
+  code: Scalars["String"];
+  description: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   animals: Array<Item>;
@@ -87,6 +93,7 @@ export type Query = {
   job?: Maybe<Job>;
   jobJournalTemplate?: Maybe<JobJournalTemplate>;
   jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
+  jobPostingGroups: Array<JobPostingGroup>;
   jobs: Array<Job>;
   livestockActivityDefaults: LivestockActivityDefaults;
   livestockActivityJobs: Array<Job>;
@@ -277,6 +284,7 @@ export type Mutation = {
   saveScorecard: ScorecardResult;
   updateUserLocations: UpdateUserLocationsResult;
   updateUserMenuOptions: UpdateUserMenuOptionsResult;
+  updateUserPostingGroups: UpdateUserPostingGroupsResult;
 };
 
 export type MutationAutoPostItemJournalArgs = {
@@ -373,6 +381,10 @@ export type MutationUpdateUserLocationsArgs = {
 
 export type MutationUpdateUserMenuOptionsArgs = {
   input: UpdateUserMenuOptionsInput;
+};
+
+export type MutationUpdateUserPostingGroupsArgs = {
+  input: UpdateUserPostingGroupsInput;
 };
 
 export type Inventory = {
@@ -896,6 +908,12 @@ export type UserMenuOptions = {
   list: Array<MenuOption>;
 };
 
+export type UserPostingGroups = {
+  __typename?: "UserPostingGroups";
+  mode: InclusivityMode;
+  list: Array<JobPostingGroup>;
+};
+
 export type User = {
   __typename?: "User";
   username: Scalars["String"];
@@ -903,6 +921,7 @@ export type User = {
   name: Scalars["String"];
   locations: UserLocations;
   menuOptions: UserMenuOptions;
+  postingGroups: UserPostingGroups;
 };
 
 export type LoginInput = {
@@ -933,6 +952,12 @@ export type UpdateUserMenuOptionsInput = {
   mode?: Maybe<InclusivityMode>;
 };
 
+export type UpdateUserPostingGroupsInput = {
+  add?: Maybe<Array<Scalars["String"]>>;
+  remove?: Maybe<Array<Scalars["String"]>>;
+  mode?: Maybe<InclusivityMode>;
+};
+
 export type UpdateUserLocationsResult = {
   __typename?: "UpdateUserLocationsResult";
   success: Scalars["Boolean"];
@@ -943,6 +968,12 @@ export type UpdateUserMenuOptionsResult = {
   __typename?: "UpdateUserMenuOptionsResult";
   success: Scalars["Boolean"];
   menuOptions: UserMenuOptions;
+};
+
+export type UpdateUserPostingGroupsResult = {
+  __typename?: "UpdateUserPostingGroupsResult";
+  success: Scalars["Boolean"];
+  postingGroups: UserPostingGroups;
 };
 
 export type ScorecardFieldsFragment = { __typename?: "Scorecard" } & {
