@@ -301,9 +301,9 @@ const InventoryView: React.FC = () => {
                   </FormField>
                 </>
               ) : (
-                <span className="py-2 pl-1 font-bold text-red-700 leading-none">
+                <div className="py-2 pl-1 font-bold text-red-700 leading-none">
                   Please choose a Location to see item list
-                </span>
+                </div>
               )}
               <FormField name="type">
                 <FormFieldLabel className=".text-lg">
