@@ -33,7 +33,7 @@ const HomeView: React.FC = () => {
   return (
     <View>
       <ViewHeader>
-        <Title>Home</Title>
+        <Title>Home - Test</Title>
       </ViewHeader>
       <ViewContent loading={loading}>
         <StackedNav>
