@@ -6,6 +6,8 @@ export interface AnimalTypeFilter {
   postingGroups: string[];
 }
 
+//build test
+
 export default class NavConfigDataSouce extends NavDataSource {
   getItems({ postingGroups }: AnimalTypeFilter): Promise<NavItem[]> {
     let odataFilter = this.buildFilter(f => {
