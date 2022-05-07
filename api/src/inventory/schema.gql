@@ -7,6 +7,16 @@ type Inventory {
   comments: String
 }
 
+type ItemConsumption {
+  number: String!
+  location: String
+  balance: Float!
+  description: String
+  cost: Float!
+  unit: String
+  type: String
+}
+
 type ItemList {
   item: Item!
   quantity: Float!
@@ -50,7 +60,7 @@ type InventoryResult {
 }
 
 type Query {
-  items: [Item!]!
+  items(location: String!): [ItemConsumption!]!
   # TODO for save functionality
   # inventoryItem(input: InventoryItem): InventoryItem
 }

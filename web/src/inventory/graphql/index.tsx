@@ -89,7 +89,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
-  items: Array<Item>;
+  items: Array<ItemConsumption>;
   job?: Maybe<Job>;
   jobJournalTemplate?: Maybe<JobJournalTemplate>;
   jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
@@ -138,6 +138,10 @@ export type QueryFuelHistoryAssetArgs = {
 
 export type QueryItemArgs = {
   number: Scalars["String"];
+};
+
+export type QueryItemsArgs = {
+  location: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -395,6 +399,17 @@ export type Inventory = {
   item?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemConsumption = {
+  __typename?: "ItemConsumption";
+  number: Scalars["String"];
+  location?: Maybe<Scalars["String"]>;
+  balance: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
+  cost: Scalars["Float"];
+  unit?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
 };
 
 export type ItemList = {
@@ -989,13 +1004,21 @@ export type InventorySelectQuery = { __typename?: "Query" } & {
   };
 };
 
-export type InventoryItemQueryVariables = {};
+export type InventoryItemQueryVariables = {
+  input: Scalars["String"];
+};
 
 export type InventoryItemQuery = { __typename?: "Query" } & {
   items: Array<
-    { __typename?: "Item" } & Pick<
-      Item,
-      "number" | "description" | "type" | "cost" | "unit"
+    { __typename?: "ItemConsumption" } & Pick<
+      ItemConsumption,
+      | "number"
+      | "location"
+      | "balance"
+      | "description"
+      | "type"
+      | "cost"
+      | "unit"
     >
   >;
 };
@@ -1080,9 +1103,11 @@ export type InventorySelectQueryResult = Apollo.QueryResult<
   InventorySelectQueryVariables
 >;
 export const InventoryItemDocument = gql`
-  query InventoryItem {
-    items {
+  query InventoryItem($input: String!) {
+    items(location: $input) {
       number
+      location
+      balance
       description
       type
       cost
@@ -1103,11 +1128,12 @@ export const InventoryItemDocument = gql`
  * @example
  * const { data, loading, error } = useInventoryItemQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
 export function useInventoryItemQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     InventoryItemQuery,
     InventoryItemQueryVariables
   >

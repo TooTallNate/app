@@ -1,6 +1,8 @@
-query InventoryItem {
-  items {
+query InventoryItem($input: String!) {
+  items(location: $input) {
     number
+    location
+    balance
     description
     type
     cost

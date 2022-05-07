@@ -29,5 +29,6 @@ export default {
   ...livestockActivity.types,
   ...common.types,
   ...fuel.types,
-  ...maintenance.types
+  ...maintenance.types,
+  ...inventory.types
 };

@@ -1,12 +1,29 @@
 import { parse } from "date-fns";
-import { MutationResolvers, QueryResolvers } from "../common/graphql";
+import {
+  ItemConsumptionResolvers,
+  MutationResolvers,
+  QueryResolvers
+} from "../common/graphql";
 import { NavItemJournalTemplate, NavJobJournalBatch } from "../common/nav";
 import { getDocumentNumber, navDate } from "../common/utils";
 import { updateUserSettings } from "../livestock-activity/resolvers/livestock-activity";
 
+const ItemConsumption: ItemConsumptionResolvers = {
+  number: item => item.Item_No,
+  location: item => item.Location_Code,
+  balance: item => item.BalanceQty,
+  description: item => item.Description,
+  cost: item => item.Last_Direct_Cost,
+  unit: item => item.Base_Unit_of_Measure,
+  type: item => item.Gen_Prod_Posting_Group
+};
+
 export const queries: QueryResolvers = {
-  items(_, __, { dataSources }) {
-    return dataSources.navItemJournal.getFilteredItems();
+  items(_, { location }, { dataSources }) {
+    console.log("=============");
+    const x = dataSources.navItemJournal.getFilteredItems(location);
+    console.log(x);
+    return x;
   }
 };
 
@@ -49,4 +66,8 @@ export const mutations: MutationResolvers = {
 
     return { success: true, defaults: userSettings };
   }
+};
+
+export const types = {
+  ItemConsumption
 };

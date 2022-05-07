@@ -13,7 +13,6 @@ import DateInput from "../../common/components/input/DateInput";
 import DecimalInput from "../../common/components/input/DecimalInput";
 import StaticValue from "../../common/components/input/StaticValue";
 import TypeaheadInput from "../../common/components/input/TypeaheadInput";
-import Divider from "../../common/components/layout/Divider";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
@@ -25,8 +24,7 @@ import ViewTitle from "../../common/components/view/ViewTitle";
 import { useFlash } from "../../common/contexts/flash";
 import CommentsField from "../../livestock-activity/components/CommentsField";
 import {
-  Item,
-  useInventoryItemQuery,
+  useInventoryItemLazyQuery,
   useInventorySelectQuery,
   usePostInventoryMutation
 } from "../graphql";
@@ -60,6 +58,16 @@ interface FormData {
   comments?: string;
 }
 
+interface ItemConsumption {
+  number: string;
+  location: string;
+  balance: number;
+  description: string;
+  cost: number;
+  unit: string;
+  type: string;
+}
+
 const InventoryView: React.FC = () => {
   const history = useHistory();
   const params = useParams<ViewParams>();
@@ -67,6 +75,7 @@ const InventoryView: React.FC = () => {
 
   const [list, setList] = useState<ItemListProps[]>();
   const [total, setTotal] = useState<Number>(0);
+  const [currentLocation, setCurrLocation] = useState<String>();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const { setMessage } = useFlash();
   const { watch, reset } = formContext;
@@ -87,10 +96,27 @@ const InventoryView: React.FC = () => {
     }
   });
 
-  const {
-    loading: inventoryLoading,
-    data: inventoryData
-  } = useInventoryItemQuery();
+  const [loadInventory, { data: inventoryData }] = useInventoryItemLazyQuery();
+
+  let location = watch("location");
+
+  useEffect(() => {
+    if (location && location !== currentLocation) {
+      loadInventory({ variables: { input: location } });
+      setCurrLocation(location);
+      setList([]);
+      reset({
+        item: {
+          number: "",
+          description: "",
+          type: "N/A",
+          cost: 0,
+          unit: ""
+        },
+        quantity: NaN
+      });
+    }
+  }, [currentLocation, loadInventory, location, reset]);
 
   const [post] = usePostInventoryMutation();
 
@@ -119,12 +145,12 @@ const InventoryView: React.FC = () => {
             }
           }
         });
-        setList(undefined);
-        formContext.reset({
-          group,
-          location,
-          comments: ""
-        });
+        // setList(undefined);
+        // formContext.reset({
+        //   group,
+        //   location,
+        //   comments: ""
+        // });
         setMessage({
           message: "Entry recorded successfully.",
           level: "success",
@@ -141,8 +167,9 @@ const InventoryView: React.FC = () => {
       }
     }
   };
+
   let quantity = watch("quantity");
-  let item = watch("item") || undefined;
+  let item = watch("item");
 
   const removeItem = (item: ItemProps) => {
     if (list) {
@@ -204,8 +231,8 @@ const InventoryView: React.FC = () => {
         <BackButton />
         <ViewTitle>Inventory</ViewTitle>
       </ViewHeader>
-      <ViewContent loading={jobAndLocationLoading && inventoryLoading}>
-        {inventoryData && jobAndLocationData && (
+      <ViewContent loading={jobAndLocationLoading}>
+        {jobAndLocationData && (
           <>
             <Form context={formContext} onSubmit={onSubmit}>
               <FormField
@@ -251,25 +278,33 @@ const InventoryView: React.FC = () => {
                 </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
-              <FormField
-                name="item"
-                rules={{
-                  required: "Item is required."
-                }}
-              >
-                <FormFieldLabel>Select Item:</FormFieldLabel>
-                <FormFieldInput>
-                  <TypeaheadInput
-                    items={inventoryData.items.map(item => ({
-                      value: item || "",
-                      title:
-                        `${item.number} - ${item.description} - ${item.unit}` ||
-                        ""
-                    }))}
-                  />
-                </FormFieldInput>
-                <FormFieldErrors />
-              </FormField>
+              {location && inventoryData ? (
+                <>
+                  <FormField
+                    name="item"
+                    rules={{
+                      required: "Item is required."
+                    }}
+                  >
+                    <FormFieldLabel>Select Item:</FormFieldLabel>
+                    <FormFieldInput>
+                      <TypeaheadInput
+                        items={inventoryData.items.map(item => ({
+                          value: item || "",
+                          title:
+                            `${item.number} - ${item.description} - Inventory: ${item.balance} - ${item.unit}` ||
+                            ""
+                        }))}
+                      />
+                    </FormFieldInput>
+                    <FormFieldErrors />
+                  </FormField>
+                </>
+              ) : (
+                <span className="py-2 pl-1 font-bold text-red-700 leading-none">
+                  Please choose a Location to see item list
+                </span>
+              )}
               <FormField name="type">
                 <FormFieldLabel className=".text-lg">
                   Type: {item ? item.type : "N/A"}

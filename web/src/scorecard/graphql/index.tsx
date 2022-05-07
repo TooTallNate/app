@@ -89,7 +89,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
-  items: Array<Item>;
+  items: Array<ItemConsumption>;
   job?: Maybe<Job>;
   jobJournalTemplate?: Maybe<JobJournalTemplate>;
   jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
@@ -138,6 +138,10 @@ export type QueryFuelHistoryAssetArgs = {
 
 export type QueryItemArgs = {
   number: Scalars["String"];
+};
+
+export type QueryItemsArgs = {
+  location: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -395,6 +399,17 @@ export type Inventory = {
   item?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemConsumption = {
+  __typename?: "ItemConsumption";
+  number: Scalars["String"];
+  location?: Maybe<Scalars["String"]>;
+  balance: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
+  cost: Scalars["Float"];
+  unit?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
 };
 
 export type ItemList = {

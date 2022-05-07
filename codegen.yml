@@ -18,6 +18,7 @@ generates:
         User: "./nav#NavUser"
         Job: "./nav#NavJob"
         Item: "./nav#NavItem"
+        ItemConsumption: "./nav#NavItemConsumption"
         ItemJournalTemplate: "./nav#ItemJournalTemplateObject"
         JobJournalTemplate: "./nav#JobJournalTemplateObject"
         Resource: "./nav#NavResource"

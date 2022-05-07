@@ -3,6 +3,7 @@ import {
   NavUser,
   NavJob,
   NavItem,
+  NavItemConsumption,
   ItemJournalTemplateObject,
   JobJournalTemplateObject,
   NavResource,
@@ -121,7 +122,7 @@ export type Query = {
   fuelHistoryAsset: Array<FuelHistoryAsset>;
   item?: Maybe<Item>;
   itemJournalTemplates?: Maybe<Array<ItemJournalTemplate>>;
-  items: Array<Item>;
+  items: Array<ItemConsumption>;
   job?: Maybe<Job>;
   jobJournalTemplate?: Maybe<JobJournalTemplate>;
   jobJournalTemplates?: Maybe<Array<JobJournalTemplate>>;
@@ -170,6 +171,10 @@ export type QueryFuelHistoryAssetArgs = {
 
 export type QueryItemArgs = {
   number: Scalars["String"];
+};
+
+export type QueryItemsArgs = {
+  location: Scalars["String"];
 };
 
 export type QueryJobArgs = {
@@ -427,6 +432,17 @@ export type Inventory = {
   item?: Maybe<Scalars["String"]>;
   quantity?: Maybe<Scalars["Float"]>;
   comments?: Maybe<Scalars["String"]>;
+};
+
+export type ItemConsumption = {
+  __typename?: "ItemConsumption";
+  number: Scalars["String"];
+  location?: Maybe<Scalars["String"]>;
+  balance: Scalars["Float"];
+  description?: Maybe<Scalars["String"]>;
+  cost: Scalars["Float"];
+  unit?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
 };
 
 export type ItemList = {
@@ -1140,6 +1156,7 @@ export type ResolversTypes = ResolversObject<{
   FuelResult: ResolverTypeWrapper<FuelResult>;
   Mutation: ResolverTypeWrapper<{}>;
   Inventory: ResolverTypeWrapper<Inventory>;
+  ItemConsumption: ResolverTypeWrapper<NavItemConsumption>;
   ItemList: ResolverTypeWrapper<
     Omit<ItemList, "item"> & { item: ResolversTypes["Item"] }
   >;
@@ -1312,6 +1329,7 @@ export type ResolversParentTypes = ResolversObject<{
   FuelResult: FuelResult;
   Mutation: {};
   Inventory: Inventory;
+  ItemConsumption: NavItemConsumption;
   ItemList: Omit<ItemList, "item"> & { item: ResolversParentTypes["Item"] };
   ItemInput: ItemInput;
   ItemListInput: ItemListInput;
@@ -1588,7 +1606,12 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
-  items?: Resolver<Array<ResolversTypes["Item"]>, ParentType, ContextType>;
+  items?: Resolver<
+    Array<ResolversTypes["ItemConsumption"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryItemsArgs, "location">
+  >;
   job?: Resolver<
     Maybe<ResolversTypes["Job"]>,
     ParentType,
@@ -2000,6 +2023,24 @@ export type InventoryResolvers<
   item?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   quantity?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   comments?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+}>;
+
+export type ItemConsumptionResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["ItemConsumption"] = ResolversParentTypes["ItemConsumption"]
+> = ResolversObject<{
+  number?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  location?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  balance?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  cost?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  unit?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 }>;
 
@@ -2764,6 +2805,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   FuelResult?: FuelResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Inventory?: InventoryResolvers<ContextType>;
+  ItemConsumption?: ItemConsumptionResolvers<ContextType>;
   ItemList?: ItemListResolvers<ContextType>;
   InventoryResult?: InventoryResultResolvers<ContextType>;
   LivestockActivityDefaults?: LivestockActivityDefaultsResolvers<ContextType>;

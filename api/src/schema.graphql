@@ -69,7 +69,7 @@ type Query {
   fuelHistoryAsset(number: String!): [FuelHistoryAsset!]!
   item(number: String!): Item
   itemJournalTemplates: [ItemJournalTemplate!]
-  items: [Item!]!
+  items(location: String!): [ItemConsumption!]!
   job(number: String!): Job
   jobJournalTemplate(name: String!): JobJournalTemplate
   jobJournalTemplates: [JobJournalTemplate!]
@@ -178,6 +178,16 @@ type Inventory {
   item: String
   quantity: Float
   comments: String
+}
+
+type ItemConsumption {
+  number: String!
+  location: String
+  balance: Float!
+  description: String
+  cost: Float!
+  unit: String
+  type: String
 }
 
 type ItemList {

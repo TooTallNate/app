@@ -1,6 +1,7 @@
 import {
   ItemJournalTemplateObject,
   NavItem,
+  NavItemConsumption,
   NavItemJournalLine,
   NavStandardItemJournal
 } from "../nav";
@@ -73,8 +74,9 @@ export default class NavItemJournalDataSource extends NavDataSource {
     return this.get(`/Items('${No}')`);
   }
 
-  getFilteredItems(): Promise<NavItem[]> {
-    return this.get(`/ItemConsumption`);
+  getFilteredItems(location: string): Promise<NavItemConsumption[]> {
+    let filter = this.buildFilter(f => f.equals("Location_Code", location));
+    return this.get(`/ItemConsumption?$filter=${filter}`);
   }
 
   async autoPostItemJournals(

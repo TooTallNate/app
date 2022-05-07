@@ -47,6 +47,18 @@ export interface NavItem {
   Base_Unit_of_Measure: string;
 }
 
+export interface NavItemConsumption {
+  Item_No: string;
+  Location_Code: string;
+  MonthDate: string;
+  BalanceQty: number;
+  No: string;
+  Description: string;
+  Last_Direct_Cost: number;
+  Base_Unit_of_Measure: string;
+  Gen_Prod_Posting_Group: string;
+}
+
 export interface NavLocation {
   Code: string;
   Name: string;
