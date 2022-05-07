@@ -16,6 +16,7 @@ import TypeaheadInput from "../../common/components/input/TypeaheadInput";
 import HorizontalSpacer from "../../common/components/layout/HorizontalSpacer";
 import TableData from "../../common/components/layout/Table/TableData";
 import TableHeader from "../../common/components/layout/Table/TableHeader";
+import Spinner from "../../common/components/Spinner";
 import BackButton from "../../common/components/view/BackButton";
 import View from "../../common/components/view/View";
 import ViewContent from "../../common/components/view/ViewContent";
@@ -96,7 +97,10 @@ const InventoryView: React.FC = () => {
     }
   });
 
-  const [loadInventory, { data: inventoryData }] = useInventoryItemLazyQuery();
+  const [
+    loadInventory,
+    { loading, data: inventoryData }
+  ] = useInventoryItemLazyQuery();
 
   let location = watch("location");
 
@@ -278,14 +282,14 @@ const InventoryView: React.FC = () => {
                 </FormFieldInput>
                 <FormFieldErrors />
               </FormField>
-              {location && inventoryData ? (
-                <>
-                  <FormField
-                    name="item"
-                    rules={{
-                      required: "Item is required."
-                    }}
-                  >
+              <FormField
+                name="item"
+                rules={{
+                  required: "Item is required."
+                }}
+              >
+                {location && inventoryData ? (
+                  <>
                     <FormFieldLabel>Select Item:</FormFieldLabel>
                     <FormFieldInput>
                       <TypeaheadInput
@@ -298,13 +302,16 @@ const InventoryView: React.FC = () => {
                       />
                     </FormFieldInput>
                     <FormFieldErrors />
-                  </FormField>
-                </>
-              ) : (
-                <div className="py-2 pl-1 font-bold text-red-700 leading-none">
-                  Please choose a Location to see item list
-                </div>
-              )}
+                  </>
+                ) : loading ? (
+                  <Spinner />
+                ) : (
+                  <FormFieldLabel className={`text-red-600`}>
+                    Please Select a Location to Choose Items
+                  </FormFieldLabel>
+                )}
+              </FormField>
+
               <FormField name="type">
                 <FormFieldLabel className=".text-lg">
                   Type: {item ? item.type : "N/A"}
