@@ -72,6 +72,7 @@ const InventoryView: React.FC = () => {
   const { watch, reset } = formContext;
 
   const match = useRouteMatch();
+  console.log("hello");
 
   const {
     loading: jobAndLocationLoading,
